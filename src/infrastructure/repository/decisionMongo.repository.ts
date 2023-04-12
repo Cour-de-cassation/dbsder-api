@@ -1,6 +1,6 @@
 import { ServiceUnavailableException } from '@nestjs/common'
 import mongoose, { Mongoose } from 'mongoose'
-import { DecisionDTO, DecisionSchema } from '../decision.dto'
+import { DecisionDTO, DecisionSchema } from '../../domain/decision.dto'
 
 export class DecisionMongoRepository {
   private mongoClient: Mongoose
