@@ -26,4 +26,13 @@ describe('DecisionsController', () => {
       expect(result.statusCode).toEqual(HttpStatus.OK)
     })
   })
+  it('GET /decision/id returns an error 404', async () => {
+    // GIVEN
+
+    // WHEN
+    const result = await request(app.getHttpServer()).get('/decision/id')
+
+    // THEN
+    expect(result.statusCode).toEqual(HttpStatus.NOT_FOUND)
+  })
 })
