@@ -40,6 +40,14 @@ describe('DecisionsController', () => {
       expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
     })
 
+    it('returns an error 400 if status does not exist', async () => {
+      // WHEN
+      const result = await request(app.getHttpServer()).get('/decisions').query({ status: 'tata' })
+
+      // THEN
+      expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
+    })
+
     it('returns an error 404 when url is wrong', async () => {
       // WHEN
       const result = await request(app.getHttpServer()).get('/decision')
