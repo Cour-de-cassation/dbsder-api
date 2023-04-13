@@ -9,6 +9,6 @@ export class DecisionsController {
   @Get('id')
   getDecisionsIds(): DecisionDTO[] {
     // Avec usecase ? ex : return getAllDecisionIdsUsecase.execute()
-    return [new MockUtils().decision]
+    return new MockUtils().allDecisionsToBeTreated
   }
 }
