@@ -3,6 +3,7 @@ import { HttpStatus, INestApplication } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
+import { DecisionStatus } from '../../domain/enum'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -17,6 +18,7 @@ describe('DecisionsController', () => {
 
     await app.init()
   })
+
   describe('GET /decisions', () => {
     it('returns a 200 with a list of decisions', async () => {
       // GIVEN
@@ -25,7 +27,7 @@ describe('DecisionsController', () => {
       // WHEN
       const result = await request(app.getHttpServer())
         .get('/decisions')
-        .query({ status: 'toBeTreated' })
+        .query({ status: DecisionStatus.TOBETREATED })
 
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.OK)
@@ -41,8 +43,13 @@ describe('DecisionsController', () => {
     })
 
     it('returns an error 400 if status does not exist', async () => {
+      // GIVEN
+      const statusNotAccepted = 'tata'
+
       // WHEN
-      const result = await request(app.getHttpServer()).get('/decisions').query({ status: 'tata' })
+      const result = await request(app.getHttpServer())
+        .get('/decisions')
+        .query({ status: statusNotAccepted })
 
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
