@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
-import { RedirectController } from './app.controller'
+import { DecisionsController } from './infrastructure/controllers/decisions.controller'
 
 @Module({
   imports: [],
-  controllers: [RedirectController],
+  controllers: [DecisionsController],
   providers: []
 })
 export class AppModule {}
