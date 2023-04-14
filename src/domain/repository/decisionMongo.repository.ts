@@ -6,7 +6,7 @@ export class DecisionMongoRepository {
   private mongoClient: Mongoose
 
   async saveDecision(decision: DecisionDTO): Promise<DecisionDTO> {
-    console.log("Decision test");
+    console.log('Decision test')
     this.mongoClient = await mongoose.connect(process.env.MONGODB_URL)
 
     const collections = this.mongoClient.model('decisions', DecisionSchema)
