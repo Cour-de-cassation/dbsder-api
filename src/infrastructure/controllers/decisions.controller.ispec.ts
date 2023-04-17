@@ -28,6 +28,7 @@ describe('DecisionsController', () => {
       const result = await request(app.getHttpServer())
         .get('/decisions')
         .query({ status: DecisionStatus.TOBETREATED })
+        .set({ 'x-api-key': 'test' })
 
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.OK)
@@ -36,7 +37,9 @@ describe('DecisionsController', () => {
 
     it('returns an error 400 if status is missing', async () => {
       // WHEN
-      const result = await request(app.getHttpServer()).get('/decisions')
+      const result = await request(app.getHttpServer())
+        .get('/decisions')
+        .set({ 'x-api-key': 'test' })
 
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
@@ -50,6 +53,7 @@ describe('DecisionsController', () => {
       const result = await request(app.getHttpServer())
         .get('/decisions')
         .query({ status: statusNotAccepted })
+        .set({ 'x-api-key': 'test' })
 
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
@@ -57,10 +61,20 @@ describe('DecisionsController', () => {
 
     it('returns an error 404 when url is wrong', async () => {
       // WHEN
-      const result = await request(app.getHttpServer()).get('/decision')
+      const result = await request(app.getHttpServer())
+        .get('/decision')
+        .set({ 'x-api-key': 'test' })
 
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.NOT_FOUND)
+    })
+
+    it('returns an error 401 when apiKey is not provided', async () => {
+      // WHEN
+      const result = await request(app.getHttpServer()).get('/decisions')
+
+      // THEN
+      expect(result.statusCode).toEqual(HttpStatus.UNAUTHORIZED)
     })
   })
 })
