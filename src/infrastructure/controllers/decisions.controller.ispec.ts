@@ -8,6 +8,7 @@ import { DecisionStatus } from '../../domain/enum'
 describe('DecisionsController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
+  const readApiKey = 'e4f747f0-35f0-4127-b415-9a39f7537cc8'
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -28,7 +29,7 @@ describe('DecisionsController', () => {
       const result = await request(app.getHttpServer())
         .get('/decisions')
         .query({ status: DecisionStatus.TOBETREATED })
-        .set({ 'x-api-key': 'test' })
+        .set({ 'x-api-key': readApiKey })
 
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.OK)
@@ -39,7 +40,7 @@ describe('DecisionsController', () => {
       // WHEN
       const result = await request(app.getHttpServer())
         .get('/decisions')
-        .set({ 'x-api-key': 'test' })
+        .set({ 'x-api-key': readApiKey })
 
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
@@ -53,7 +54,7 @@ describe('DecisionsController', () => {
       const result = await request(app.getHttpServer())
         .get('/decisions')
         .query({ status: statusNotAccepted })
-        .set({ 'x-api-key': 'test' })
+        .set({ 'x-api-key': readApiKey })
 
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
@@ -63,7 +64,7 @@ describe('DecisionsController', () => {
       // WHEN
       const result = await request(app.getHttpServer())
         .get('/decision')
-        .set({ 'x-api-key': 'test' })
+        .set({ 'x-api-key': readApiKey })
 
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.NOT_FOUND)
