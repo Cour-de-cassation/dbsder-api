@@ -6,16 +6,15 @@ import { HeaderAPIKeyStrategy } from 'passport-headerapikey'
 export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy) {
   constructor() {
     super({ header: 'x-api-key', prefix: '' }, true, (apikey, done, req) => {
-      const checkKey = this.validateApiKey(apikey, req.method)
+      const checkKey = this.validateApiKey(apikey)
       if (!checkKey) {
         return done(false)
       }
       return done(true)
     })
   }
-  validateApiKey(apikey: string, verbMethod: string): boolean {
-    const readApiKey = process.env.READ_API_KEY || 'e4f747f0-35f0-4127-b415-9a39f7537cc8'
-    if (apikey === readApiKey && verbMethod == 'GET') {
+  validateApiKey(apikey: string): boolean {
+    if (apikey === process.env.LABEL_API_KEY) {
       return true
     }
     return false
