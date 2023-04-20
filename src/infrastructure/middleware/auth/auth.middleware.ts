@@ -4,6 +4,10 @@ import * as passport from 'passport'
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   use(req: any, res: any, next: () => void) {
+    this.callPassportAuthentication(req, res, next)
+  }
+
+  callPassportAuthentication(req: any, res: any, next: () => void) {
     passport.authenticate(
       'headerapikey',
       { session: false, failureRedirect: '/api/unauthorized' },
