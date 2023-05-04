@@ -5,5 +5,8 @@
     "testRegex": ".ispec.ts",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
-    }
+    },
+    "setupFiles": [
+      "<rootDir>/src/.jest/setupEnvVars.ts"
+    ]
   }

@@ -1,0 +1,119 @@
+{
+	"info": {
+		"_postman_id": "894bb4e1-8a68-4bfd-ba3e-9f84e0c49fe1",
+		"name": "API DBSDER",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "200 - Liste les décisions toBeTreated",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{LABEL_API_KEY}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/decisions?status=toBeTreated",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"decisions"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "toBeTreated"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "400 - Liste decisions avec mauvais status",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{LABEL_API_KEY}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/decisions?status=wrongStatus",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"decisions"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "wrongStatus"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "401 - Liste les décisions sans API Key",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOSTNAME}}/decisions?status=toBeTreated",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"decisions"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "toBeTreated"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "401 - Liste les décisions avec mauvaise API Key",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "wrongApiKey",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/decisions?status=toBeTreated",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"decisions"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "toBeTreated"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
