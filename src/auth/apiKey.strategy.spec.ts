@@ -1,8 +1,9 @@
 import { ApiKeyStrategy } from './apiKey.strategy'
 
-let apiKeyStrategy
 
 describe('ApiKeyStrategy', () => {
+  let apiKeyStrategy : ApiKeyStrategy
+
   beforeAll(async () => {
     apiKeyStrategy = new ApiKeyStrategy()
   })
