@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Controller, Get, HttpStatus, ParseEnumPipe, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { MockUtils } from '../utils/mock.utils'
