@@ -44,4 +44,5 @@ LABEL_API_KEY=some_uuid
 
 ### Documentation complémentaire 
 
-// TODO
+Le dossier `/documentation` contient : 
+- Les requêtes Postman et comment les installer [lien](documentation/postman/README.md)
