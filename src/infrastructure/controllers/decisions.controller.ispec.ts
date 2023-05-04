@@ -78,4 +78,15 @@ describe('DecisionsController', () => {
       expect(result.statusCode).toEqual(HttpStatus.UNAUTHORIZED)
     })
   })
+
+  it('returns an error 401 when apiKey does not exist', async () => {
+    // WHEN
+    const unknownApiKey = 'notTestLabelApiKey'
+    const result = await request(app.getHttpServer())
+      .get('/decisions')
+      .set({ 'x-api-key': unknownApiKey })
+
+    // THEN
+    expect(result.statusCode).toEqual(HttpStatus.UNAUTHORIZED)
+  })
 })
