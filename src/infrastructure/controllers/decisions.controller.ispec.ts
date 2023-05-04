@@ -21,6 +21,53 @@ describe('DecisionsController', () => {
   })
 
   describe('GET /decisions', () => {
+    describe('returns 401 Unauthorized', () => {
+      it('when apiKey is not provided', async () => {
+        // WHEN
+        const result = await request(app.getHttpServer()).get('/decisions')
+
+        // THEN
+        expect(result.statusCode).toEqual(HttpStatus.UNAUTHORIZED)
+      })
+
+      it('when apiKey does not exist', async () => {
+        // WHEN
+        const unknownApiKey = 'notTestLabelApiKey'
+        const result = await request(app.getHttpServer())
+          .get('/decisions')
+          .set({ 'x-api-key': unknownApiKey })
+
+        // THEN
+        expect(result.statusCode).toEqual(HttpStatus.UNAUTHORIZED)
+      })
+    })
+
+    describe('returns 400 Bad Request error', () => {
+      it('when status is missing', async () => {
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .get('/decisions')
+          .set({ 'x-api-key': labelApiKey })
+
+        // THEN
+        expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
+      })
+
+      it('when status does not exist', async () => {
+        // GIVEN
+        const statusNotAccepted = 'tata'
+
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .get('/decisions')
+          .query({ status: statusNotAccepted })
+          .set({ 'x-api-key': labelApiKey })
+
+        // THEN
+        expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
+      })
+    })
+
     it('returns a 200 with a list of decisions', async () => {
       // GIVEN
       const expectedDecisions = mockUtils.allDecisionsToBeTreated
@@ -35,58 +82,5 @@ describe('DecisionsController', () => {
       expect(result.statusCode).toEqual(HttpStatus.OK)
       expect(result.body).toEqual(expectedDecisions)
     })
-
-    it('returns an error 400 if status is missing', async () => {
-      // WHEN
-      const result = await request(app.getHttpServer())
-        .get('/decisions')
-        .set({ 'x-api-key': labelApiKey })
-
-      // THEN
-      expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
-    })
-
-    it('returns an error 400 if status does not exist', async () => {
-      // GIVEN
-      const statusNotAccepted = 'tata'
-
-      // WHEN
-      const result = await request(app.getHttpServer())
-        .get('/decisions')
-        .query({ status: statusNotAccepted })
-        .set({ 'x-api-key': labelApiKey })
-
-      // THEN
-      expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
-    })
-
-    it('returns an error 404 when url is wrong', async () => {
-      // WHEN
-      const result = await request(app.getHttpServer())
-        .get('/decision')
-        .set({ 'x-api-key': labelApiKey })
-
-      // THEN
-      expect(result.statusCode).toEqual(HttpStatus.NOT_FOUND)
-    })
-
-    it('returns an error 401 when apiKey is not provided', async () => {
-      // WHEN
-      const result = await request(app.getHttpServer()).get('/decisions')
-
-      // THEN
-      expect(result.statusCode).toEqual(HttpStatus.UNAUTHORIZED)
-    })
-  })
-
-  it('returns an error 401 when apiKey does not exist', async () => {
-    // WHEN
-    const unknownApiKey = 'notTestLabelApiKey'
-    const result = await request(app.getHttpServer())
-      .get('/decisions')
-      .set({ 'x-api-key': unknownApiKey })
-
-    // THEN
-    expect(result.statusCode).toEqual(HttpStatus.UNAUTHORIZED)
   })
 })

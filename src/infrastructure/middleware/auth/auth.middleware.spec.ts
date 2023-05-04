@@ -28,7 +28,7 @@ describe('AuthMiddleware', () => {
   it('continues the process if the consumer is authorized', () => {
     // GIVEN
     jest.spyOn(middleware, 'callPassportAuthentication').mockImplementation(() => {
-      console.log('called')
+      passFunction()
     })
 
     // WHEN
@@ -36,6 +36,5 @@ describe('AuthMiddleware', () => {
 
     // THEN
     expect(call).toBeTruthy()
-    //expect(call).toHaveBeenCalledWith(null, null , passFunction)
   })
 })

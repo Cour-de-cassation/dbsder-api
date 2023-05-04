@@ -38,7 +38,8 @@ npm run test
 Créer un fichier `.env` à la racine du dossier avec les variables suivantes :
 
 ```.env
-### TODO
+## Clés API des consommateurs de l'API DBSDER
+LABEL_API_KEY=some_uuid
 ```
 
 ### Documentation complémentaire 

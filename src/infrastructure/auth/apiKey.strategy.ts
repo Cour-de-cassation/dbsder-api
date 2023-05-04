@@ -5,11 +5,8 @@ import { HeaderAPIKeyStrategy } from 'passport-headerapikey'
 @Injectable()
 export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy) {
   constructor() {
-    super({ header: 'x-api-key', prefix: '' }, true, (apikey, done, req) => {
-      if (!this.isApiKeyValid(apikey)) {
-        return done(false)
-      }
-      return done(true)
+    super({ header: 'x-api-key', prefix: '' }, true, (apikey, done) => {
+      return done(this.isApiKeyValid(apikey))
     })
   }
 
