@@ -40,4 +40,9 @@ export class DecisionsController {
     this.logger.log('GET /decisions called with status ' + status)
     return new MockUtils().allDecisionsToBeTreated
   }
+  @Post()
+  createDecisions() {
+    // if(apikey !== norm) 403
+    return 200
+  }
 }

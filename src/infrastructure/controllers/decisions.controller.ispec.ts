@@ -83,4 +83,16 @@ describe('DecisionsController', () => {
       expect(result.body).toEqual(expectedDecisions)
     })
   })
+
+  describe('POST /decisions', () => {
+    it('returns a 201', async () => {
+      // WHEN
+      const result = await request(app.getHttpServer())
+        .post('/decisions')
+        .set({ 'x-api-key': labelApiKey })
+
+      // THEN
+      expect(result.status).toEqual(HttpStatus.CREATED)
+    })
+  })
 })
