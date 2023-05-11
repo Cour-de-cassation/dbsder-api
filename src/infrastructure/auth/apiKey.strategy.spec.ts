@@ -39,47 +39,15 @@ describe('ApiKeyStrategy', () => {
     // THEN
     expect(res).toBe(true)
   })
-  describe('handle api keys per route', () => {
-    it('as label i cannot post a decision', () => {
-      // GIVEN
-      const labelApiKey = process.env.LABEL_API_KEY
-      const calledMethod = 'POST'
-      const calledPath = '/decisions'
 
-      // WHEN
+  it('validateApiKey returns true if the API key is from OpenSder', async () => {
+    // GIVEN
+    const apiKey = process.env.OPENSDER_API_KEY
 
-      const result = apiKeyStrategy.handleApiKey(labelApiKey, calledMethod, calledPath)
+    // WHEN
+    const res = apiKeyStrategy.isApiKeyValid(apiKey)
 
-      // THEN
-      expect(result).toEqual('error')
-    })
-
-    it('as label i can get a decision list', () => {
-      // GIVEN
-      const labelApiKey = process.env.LABEL_API_KEY
-      const calledMethod = 'GET'
-      const calledPath = '/decisions'
-
-      // WHEN
-
-      const result = apiKeyStrategy.handleApiKey(labelApiKey, calledMethod, calledPath)
-
-      // THEN
-      expect(result).toEqual('ok')
-    })
-
-    it('as normalization i can post a decision', () => {
-      // GIVEN
-      const labelApiKey = process.env.NORMALIZATION_API_KEY
-      const calledMethod = 'POST'
-      const calledPath = '/decisions'
-
-      // WHEN
-
-      const result = apiKeyStrategy.handleApiKey(labelApiKey, calledMethod, calledPath)
-
-      // THEN
-      expect(result).toEqual('ok')
-    })
+    // THEN
+    expect(res).toBe(true)
   })
 })

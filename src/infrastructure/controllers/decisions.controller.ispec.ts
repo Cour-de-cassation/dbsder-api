@@ -68,6 +68,24 @@ describe('DecisionsController', () => {
       })
     })
 
+    describe('returns 403 Forbidden', () => {
+      it('when the apiKey is not authorized to call this endpoint', async () => {
+        // GIVEN
+        const normalisationApiKey = process.env.NORMALIZATION_API_KEY
+
+        // WHEN
+
+        const result = await request(app.getHttpServer())
+          .get('/decisions')
+          .query({ status: DecisionStatus.TOBETREATED })
+          .set({ 'x-api-key': normalisationApiKey })
+
+        // THEN
+
+        expect(result.statusCode).toEqual(HttpStatus.FORBIDDEN)
+      })
+    })
+
     it('returns a 200 with a list of decisions', async () => {
       // GIVEN
       const expectedDecisions = mockUtils.allDecisionsToBeTreated
@@ -86,13 +104,37 @@ describe('DecisionsController', () => {
 
   describe('POST /decisions', () => {
     it('returns a 201', async () => {
+      // GIVEN
+      const normalizationApiKey = process.env.NORMALIZATION_API_KEY
+
+      // WHEN
+      const result = await request(app.getHttpServer())
+        .post('/decisions')
+        .set({ 'x-api-key': normalizationApiKey })
+
+      // THEN
+      expect(result.status).toEqual(HttpStatus.CREATED)
+    })
+
+    it('returns a 401 when apiKey is missing', async () => {
+      // WHEN
+      const result = await request(app.getHttpServer()).post('/decisions').set({ 'x-api-key': '' })
+
+      // THEN
+      expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
+    })
+
+    it('returns a 403 when a consumer not authorized (label) calls POST /decisions', async () => {
+      // GIVEN
+      const labelApiKey = process.env.LABEL_API_KEY
+
       // WHEN
       const result = await request(app.getHttpServer())
         .post('/decisions')
         .set({ 'x-api-key': labelApiKey })
 
       // THEN
-      expect(result.status).toEqual(HttpStatus.CREATED)
+      expect(result.status).toEqual(HttpStatus.FORBIDDEN)
     })
   })
 })

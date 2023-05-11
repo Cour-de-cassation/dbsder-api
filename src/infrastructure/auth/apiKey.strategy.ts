@@ -13,7 +13,12 @@ export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy) {
   }
 
   isApiKeyValid(apikey: string): boolean {
-    if (apikey !== process.env.LABEL_API_KEY && apikey !== process.env.NORMALIZATION_API_KEY) {
+    const validApiKeys = [
+      process.env.LABEL_API_KEY,
+      process.env.NORMALIZATION_API_KEY,
+      process.env.OPENSDER_API_KEY
+    ]
+    if (!validApiKeys.includes(apikey)) {
       this.logger.error('[AUTH] Invalid API Key')
       return false
     }

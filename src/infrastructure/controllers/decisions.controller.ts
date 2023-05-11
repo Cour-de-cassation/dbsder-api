@@ -1,14 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Controller, Get, HttpStatus, Logger, ParseEnumPipe, Query } from '@nestjs/common'
 import {
-  ApiAcceptedResponse,
+  Controller,
+  ForbiddenException,
+  Get,
+  HttpStatus,
+  Logger,
+  ParseEnumPipe,
+  Post,
+  Query,
+  Request
+} from '@nestjs/common'
+import {ApiAcceptedResponse,
   ApiBadRequestResponse,
   ApiHeader,
   ApiQuery,
   ApiTags
 } from '@nestjs/swagger'
 import { MockUtils } from '../utils/mock.utils'
-import { DecisionDTO } from 'src/domain/decision.dto'
+import { GetDecisionListDTO } from 'src/domain/getDecisionList.dto'
 import { DecisionStatus } from '../../domain/enum'
 
 @ApiTags('DbSder')
@@ -35,14 +44,22 @@ export class DecisionsController {
       'status',
       new ParseEnumPipe(DecisionStatus, { errorHttpStatusCode: HttpStatus.BAD_REQUEST })
     )
-    status: DecisionStatus
-  ): DecisionDTO[] {
+    status: DecisionStatus,
+    @Request() req
+  ): GetDecisionListDTO[] {
+    const apiKey = req.headers['x-api-key']
+    if (apiKey !== process.env.LABEL_API_KEY) {
+      throw new ForbiddenException()
+    }
     this.logger.log('GET /decisions called with status ' + status)
     return new MockUtils().allDecisionsToBeTreated
   }
   @Post()
-  createDecisions() {
-    // if(apikey !== norm) 403
+  createDecisions(@Request() req) {
+    const apiKey = req.headers['x-api-key']
+    if (apiKey !== process.env.NORMALIZATION_API_KEY) {
+      throw new ForbiddenException()
+    }
     return 200
   }
 }
