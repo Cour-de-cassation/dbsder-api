@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
+  Body,
   Controller,
   ForbiddenException,
   Get,
@@ -8,7 +9,9 @@ import {
   ParseEnumPipe,
   Post,
   Query,
-  Request
+  Request,
+  UsePipes,
+  ValidationPipe
 } from '@nestjs/common'
 import {ApiAcceptedResponse,
   ApiBadRequestResponse,
@@ -17,8 +20,9 @@ import {ApiAcceptedResponse,
   ApiTags
 } from '@nestjs/swagger'
 import { MockUtils } from '../utils/mock.utils'
-import { GetDecisionListDTO } from 'src/domain/getDecisionList.dto'
+import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
 import { DecisionStatus } from '../../domain/enum'
+import { createDecisionDTO } from '../../domain/createDecision.dto'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -55,7 +59,8 @@ export class DecisionsController {
     return new MockUtils().allDecisionsToBeTreated
   }
   @Post()
-  createDecisions(@Request() req) {
+  @UsePipes()
+  createDecisions(@Request() req, @Body('decision', ValidationPipe) decision: createDecisionDTO) {
     const apiKey = req.headers['x-api-key']
     if (apiKey !== process.env.NORMALIZATION_API_KEY) {
       throw new ForbiddenException()

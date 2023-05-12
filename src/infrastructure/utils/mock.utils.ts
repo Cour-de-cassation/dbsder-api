@@ -28,4 +28,8 @@ export class MockUtils {
     this.decisionTJToBeTreated,
     this.decisionCAToBeTreated
   ]
+
+  createDecisionDTO = {
+    id: 'someID'
+  }
 }
