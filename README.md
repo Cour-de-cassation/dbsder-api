@@ -4,7 +4,10 @@ L'API DBSDER est une brique applicative du projet [Judilibre](https://www.courde
 Elle offre la possibilité de stocker, lire et mettre à jour des décisions de justice pour les Tribunaux Judiciaires, Cour d'Appel et Cour de Cassation. 
 
 ### Pré-requis
-- Installer [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) 
+- Installer [nvm](https://github.com/nvm-sh/nvm) afin d'avoir la version utilisée pour cette application et lancer la commande :
+```bash
+nvm install
+```
 
 ### Installation 
 
