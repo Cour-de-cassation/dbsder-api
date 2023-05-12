@@ -129,6 +129,20 @@ describe('DecisionsController', () => {
       expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
     })
 
+    it('returns a 400 when called with an incorrect body', async () => {
+      // GIVEN
+      const normalizationApiKey = process.env.NORMALIZATION_API_KEY
+
+      // WHEN
+      const result = await request(app.getHttpServer())
+        .post('/decisions')
+        .set({ 'x-api-key': normalizationApiKey })
+        .send({ decision: { wrongKey: 'wrongValue' } })
+
+      // THEN
+      expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
+    })
+
     it('returns a 401 when apiKey is missing', async () => {
       // WHEN
       const result = await request(app.getHttpServer()).post('/decisions').set({ 'x-api-key': '' })
