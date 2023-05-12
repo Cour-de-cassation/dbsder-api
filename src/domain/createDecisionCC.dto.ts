@@ -1,6 +1,6 @@
-import { createDecisionDTO } from './createDecision.dto'
+import { CreateDecisionDTO } from './createDecisionDTO'
 
-export class createDecisionCCDTO extends createDecisionDTO {
+export class createDecisionCCDTO extends CreateDecisionDTO {
   NACCode: string
   NPCode: string
   endCaseCode: string

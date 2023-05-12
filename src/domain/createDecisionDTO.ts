@@ -1,7 +1,7 @@
 import { IsString } from 'class-validator'
 import { DecisionStatus } from './enum'
 
-export class createDecisionDTO {
+export class CreateDecisionDTO {
   @IsString()
   id: string
 
