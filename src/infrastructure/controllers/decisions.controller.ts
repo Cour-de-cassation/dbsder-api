@@ -24,6 +24,7 @@ import { DecisionStatus } from '../../domain/enum'
 import { CreateDecisionDTO } from '../../domain/createDecisionDTO'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { CreateDecisionUsecase } from '../../domain/usecase/createDecision.usecase'
+import { MongoRepository } from '../db/repositories/mongo.repository'
 
 @ApiTags('DbSder')
 @Controller('decisions')

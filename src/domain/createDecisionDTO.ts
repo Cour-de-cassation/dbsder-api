@@ -1,5 +1,4 @@
 import {
-  IsArray,
   IsBoolean,
   IsDefined,
   IsEnum,
@@ -56,16 +55,7 @@ export class CreateDecisionDTO {
   @IsNotEmptyObject()
   @ValidateNested()
   @Type(() => DecisionAnalyse)
-  analysis: {
-    analyse: string[]
-    doctrine: string
-    link: string
-    reference: string[]
-    source: string
-    summary: string
-    target: string
-    title: string[]
-  }
+  analysis: DecisionAnalyse
 
   @IsString({ each: true })
   appeals: string[]
