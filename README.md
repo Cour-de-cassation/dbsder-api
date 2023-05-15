@@ -43,6 +43,8 @@ Créer un fichier `.env` à la racine du dossier avec les variables suivantes :
 ```.env
 ## Clés API des consommateurs de l'API DBSDER
 LABEL_API_KEY=some_uuid
+NORMALIZATION_API_KEY=some_uuid
+OPENSDER_API_KEY=some_uuid
 
 ## Identifiants Swagger
 DOC_LOGIN=login

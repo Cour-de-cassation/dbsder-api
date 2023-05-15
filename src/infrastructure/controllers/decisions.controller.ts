@@ -23,6 +23,7 @@ import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
 import { DecisionStatus } from '../../domain/enum'
 import { CreateDecisionDTO } from '../../domain/createDecisionDTO'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
+import { CreateDecisionUsecase } from '../../domain/usecase/createDecision.usecase'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -58,6 +59,7 @@ export class DecisionsController {
     this.logger.log('GET /decisions called with status ' + status)
     return new MockUtils().allDecisionsToBeTreated
   }
+
   @Post()
   @UsePipes()
   createDecisions(
@@ -68,6 +70,11 @@ export class DecisionsController {
     if (apiKey !== process.env.NORMALIZATION_API_KEY) {
       throw new ForbiddenException()
     }
-    return 200
+
+    const createDecisionUsecase = new CreateDecisionUsecase()
+    createDecisionUsecase.execute(decision)
+    return {
+      message: 'Decision créée'
+    }
   }
 }

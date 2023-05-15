@@ -51,7 +51,7 @@ export class MockUtils {
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',
-    labelStatus: 'toBeTreated',
+    labelStatus: DecisionStatus.TOBETREATED,
     occultation: {
       additionalTerms: 'someAdditionalTerms',
       categoriesToOmit: ['someCategoriesToOmit']
