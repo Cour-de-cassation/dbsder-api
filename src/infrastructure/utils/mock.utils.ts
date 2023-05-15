@@ -30,6 +30,29 @@ export class MockUtils {
   ]
 
   createDecisionDTO = {
-    id: 'someID'
+    id: 'someID',
+    analysis: {},
+    appeals: ['someAppeal'],
+    chamberId: 'someChamberId',
+    chamberName: 'someChamberName',
+    iddecision: 'someIddecision',
+    dateCreation: 'someDateCreation',
+    dateDecision: 'someDateDecision',
+    decatt: [1, 2],
+    jurisdictionCode: 'someJurisdictionCode',
+    jurisdictionId: 'someJurisdictionId',
+    jurisdictionName: 'someJurisdictionName',
+    originalText: 'someOriginalText',
+    registerNumber: 'someRegisterNumber',
+    solution: 'someSolution',
+    sourceId: 1,
+    sourceName: 'someSourceName',
+    publication: ['somePublication'],
+    formation: 'someFormation',
+    blocOccultation: 1,
+    NAOCode: 'someNAOCode',
+    natureAffaireCivil: 'someNatureAffaireCivil',
+    natureAffairePenal: 'someNatureAffairePenal',
+    codeMatiereCivil: 'someCodeMatiereCivil'
   }
 }
