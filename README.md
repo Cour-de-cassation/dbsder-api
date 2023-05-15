@@ -45,6 +45,24 @@ Créer un fichier `.env` à la racine du dossier avec les variables suivantes :
 LABEL_API_KEY=some_uuid
 ```
 
+### Démarrer l'application via Docker
+
+Démarrer l'application nécessite au préalable d'initaliser les fichiers de variables d'environnement. 
+
+Pour lancer l'ensemble de DBSDER-api avec Docker, écrire dans un terminal : 
+
+```bash
+npm run docker:build
+npm run docker:start
+```
+
+Pour lancer l'API en phase de développement et afin de disposer d'une mise à jour à chaud du serveur à chaque changement, écrire dans un terminal : 
+```bash
+npm run docker:build
+npm run docker:start:db
+npm run start:dev
+```
+
 ### Documentation complémentaire 
 
 Le dossier `/documentation` contient : 
