@@ -1,0 +1,34 @@
+version: "3.7"
+
+services:
+  db:
+    image: mongo:4.4
+    command: mongod --port 55432
+    volumes:
+      - dbsder-mongo-storage:/data/db-sder/db
+    expose:
+      - 55432
+    ports:
+      - 55432:55432
+
+  api:
+    build:
+      context: ./
+      target: api
+    env_file:
+      - .env
+    expose: 
+      - 3008
+    ports:
+      - 3008:3000
+
+networks:
+  default:
+    name: dbsder-api-network
+
+volumes:
+  dbsder-mongo-storage:
+    driver: local
+    name: dbsder-mongo-storage
+
+
