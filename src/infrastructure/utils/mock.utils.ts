@@ -31,7 +31,16 @@ export class MockUtils {
 
   createDecisionDTO = {
     id: 'someID',
-    analysis: {},
+    analysis: {
+      analyse: ['someAnalyse'],
+      doctrine: 'someDoctrine',
+      link: 'someLink',
+      reference: ['someReference'],
+      source: 'someSource',
+      summary: 'someSummary',
+      target: 'someTarget',
+      title: ['someTitle']
+    },
     appeals: ['someAppeal'],
     chamberId: 'someChamberId',
     chamberName: 'someChamberName',
@@ -42,6 +51,11 @@ export class MockUtils {
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',
+    labelStatus: 'toBeTreated',
+    occultation: {
+      additionalTerms: 'someAdditionalTerms',
+      categoriesToOmit: ['someCategoriesToOmit']
+    },
     originalText: 'someOriginalText',
     registerNumber: 'someRegisterNumber',
     solution: 'someSolution',

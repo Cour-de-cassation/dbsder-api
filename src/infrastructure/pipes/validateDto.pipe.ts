@@ -9,7 +9,7 @@ export class ValidateDtoPipe implements PipeTransform {
       return value
     }
     if (!value) {
-      throw new BadRequestException("Vous devez fournir le champ 'metadonnees'.")
+      throw new BadRequestException("Vous devez fournir le champ 'decision'.")
     }
     const object = plainToInstance(metatype, value)
     const errors: ValidationError[] = await validate(object)

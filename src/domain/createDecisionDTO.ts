@@ -1,10 +1,61 @@
-import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator'
+import {
+  IsArray,
+  IsBoolean,
+  IsDefined,
+  IsEnum,
+  IsNotEmptyObject,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateNested
+} from 'class-validator'
 import { DecisionStatus } from './enum'
+import { Type } from 'class-transformer'
+
+export class DecisionOccultation {
+  @IsString()
+  additionalTerms: string
+
+  @IsString({ each: true })
+  categoriesToOmit: string[]
+}
+
+export class DecisionAnalyse {
+  @IsString({ each: true })
+  analyse: string[]
+
+  @IsString()
+  doctrine: string
+
+  @IsString()
+  link: string
+
+  @IsString({ each: true })
+  reference: string[]
+
+  @IsString()
+  source: string
+
+  @IsString()
+  summary: string
+
+  @IsString()
+  target: string
+
+  @IsString({ each: true })
+  title: string[]
+}
 
 export class CreateDecisionDTO {
   @IsString()
   id: string
 
+  @IsDefined()
+  @IsObject()
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => DecisionAnalyse)
   analysis: {
     analyse: string[]
     doctrine: string
@@ -16,7 +67,7 @@ export class CreateDecisionDTO {
     title: string[]
   }
 
-  @IsArray()
+  @IsString({ each: true })
   appeals: string[]
 
   @IsString()
@@ -34,7 +85,7 @@ export class CreateDecisionDTO {
   @IsString()
   dateDecision: string
 
-  @IsArray()
+  @IsNumber({}, { each: true })
   decatt: number[]
 
   @IsString()
@@ -46,11 +97,16 @@ export class CreateDecisionDTO {
   @IsString()
   jurisdictionName: string
 
-  // labelStatus: DecisionStatus
-  // occultation: {
-  //   additionalTerms: string
-  //   categoriesToOmit: string[]
-  // }
+  @IsEnum(DecisionStatus)
+  labelStatus: DecisionStatus
+
+  @ValidateNested()
+  @Type(() => DecisionOccultation)
+  occultation: {
+    additionalTerms: string
+    categoriesToOmit: string[]
+  }
+
   @IsString()
   originalText: string
 
@@ -62,7 +118,9 @@ export class CreateDecisionDTO {
   @IsOptional()
   pseudoText?: string
 
-  // public?: boolean | null
+  @IsBoolean()
+  @IsOptional()
+  public?: boolean
 
   @IsString()
   registerNumber: string
@@ -76,9 +134,11 @@ export class CreateDecisionDTO {
   @IsString()
   sourceName: string
 
-  // zoning?: object
+  @IsObject()
+  @IsOptional()
+  zoning?: object
 
-  @IsArray()
+  @IsString({ each: true })
   publication: string[]
 
   @IsString()
