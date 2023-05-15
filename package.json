@@ -7,6 +7,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "docker:build": "docker-compose -f docker-compose.local.yml build",
+    "docker:start": "docker-compose -f docker-compose.local.yml up -d",
+    "docker:start:db": "docker-compose -f docker-compose.local.yml up -d db",
+    "docker:stop:db": "docker-compose -f docker-compose.local.yml stop db",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -19,6 +23,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:integration": "jest --config ./jest-integration.json"
+
   },
   "dependencies": {
     "@nestjs/common": "9.4.0",
