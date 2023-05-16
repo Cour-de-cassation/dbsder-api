@@ -8,11 +8,12 @@
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { MockUtils } from '../../utils/mock.utils'
 import { MongoRepository } from './mongo.repository'
+import { ServiceUnavailableException } from '@nestjs/common'
 
 describe('MongoRepository', () => {
   let mongoServer
   let mongodbServerMemoryUri
-  let repository : MongoRepository;
+  let repository: MongoRepository
   const mockUtils = new MockUtils()
 
   beforeAll(async () => {
@@ -25,7 +26,7 @@ describe('MongoRepository', () => {
     repository.disconnect()
     mongoServer.stop()
   })
-  
+
   it('Je veux pouvoir insérer une décision dans la db', async () => {
     // GIVEN
     const decision = mockUtils.createDecisionDTO
@@ -35,5 +36,19 @@ describe('MongoRepository', () => {
 
     // THEN
     expect(result).toEqual('decision saved in db.')
+  })
+
+  // Fixed by ChatGPT (c'est pas ce que tu crois Armen)
+  it("Je reçois un message d'erreur si l'insertion en db a échoué", () => {
+    // GIVEN
+    const decision = mockUtils.createDecisionDTO
+    jest.spyOn(repository, 'create').mockImplementationOnce(() => {
+      throw new ServiceUnavailableException('Error from database')
+    })
+
+    expect(() => {
+      // WHEN
+      repository.create(decision)
+    }).toThrow(new ServiceUnavailableException('Error from database'))
   })
 })
