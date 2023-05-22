@@ -21,8 +21,8 @@ describe('DecisionsController', () => {
     await app.init()
   })
 
-  afterAll(() => {
-    mongoose.connection.close()
+  afterAll(async () => {
+    await mongoose.disconnect()
   })
 
   describe('GET /decisions', () => {

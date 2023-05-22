@@ -12,6 +12,7 @@ import { MockUtils } from '../../infrastructure/utils/mock.utils'
 import { CreateDecisionUsecase } from './createDecision.usecase'
 import { MongoRepository } from '../../infrastructure/db/repositories/mongo.repository'
 import { ServiceUnavailableException } from '@nestjs/common'
+import mongoose from 'mongoose'
 
 describe('createDecisionUsecase', () => {
   let mockUtils: MockUtils
@@ -28,8 +29,8 @@ describe('createDecisionUsecase', () => {
     repository = new MongoRepository(memoryServerMongooseUri)
   })
 
-  afterAll(() => {
-    repository.disconnect()
+  afterAll(async () => {
+    await mongoose.disconnect()
     mongoServer.stop()
   })
 

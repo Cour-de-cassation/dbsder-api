@@ -24,10 +24,4 @@ export class MongoRepository implements IDatabaseRepository {
       this.mongoClient = await mongoose.connect(this.mongoURL)
     }
   }
-
-  disconnect() {
-    if (this.mongoClient) {
-      this.mongoClient.disconnect()
-    }
-  }
 }

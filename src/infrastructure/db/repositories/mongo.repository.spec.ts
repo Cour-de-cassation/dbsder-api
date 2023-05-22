@@ -9,21 +9,20 @@ import { MongoMemoryServer } from 'mongodb-memory-server'
 import { MockUtils } from '../../utils/mock.utils'
 import { MongoRepository } from './mongo.repository'
 import { ServiceUnavailableException } from '@nestjs/common'
+import mongoose from 'mongoose'
 
 describe('MongoRepository', () => {
-  let mongoServer
-  let mongodbServerMemoryUri
+  let mongoServer: MongoMemoryServer
   let repository: MongoRepository
   const mockUtils = new MockUtils()
 
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create()
-    mongodbServerMemoryUri = mongoServer.getUri()
-    repository = new MongoRepository(mongodbServerMemoryUri)
+    repository = new MongoRepository(mongoServer.getUri())
   })
 
-  afterAll(() => {
-    repository.disconnect()
+  afterAll(async () => {
+    await mongoose.disconnect()
     mongoServer.stop()
   })
 
@@ -38,7 +37,6 @@ describe('MongoRepository', () => {
     expect(result).toEqual('decision saved in db.')
   })
 
-  // Fixed by ChatGPT (c'est pas ce que tu crois Armen)
   it("Je reçois un message d'erreur si l'insertion en db a échoué", () => {
     // GIVEN
     const decision = mockUtils.createDecisionDTO
