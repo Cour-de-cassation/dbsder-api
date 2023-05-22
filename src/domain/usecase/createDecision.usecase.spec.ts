@@ -66,18 +66,6 @@ describe('createDecisionUsecase', () => {
       throw new ServiceUnavailableException('Error from repository')
     })
 
-    expect(() => {
-      usecase.execute(decision)
-    }).toThrow(new ServiceUnavailableException('Error from repository'))
-  })
-
-  it("Je reçois une erreur lors d'un dysfonctionnement de la DB", async () => {
-    // GIVEN
-    const decision = mockUtils.createDecisionDTO
-    jest.spyOn(repository, 'create').mockImplementationOnce(() => {
-      throw new ServiceUnavailableException('Error from repository')
-    })
-
     await expect(usecase.execute(decision)).rejects.toThrow(
       new ServiceUnavailableException('Error from repository')
     )

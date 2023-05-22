@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { DecisionStatus } from '../../domain/enum'
+import mongoose from 'mongoose'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -18,6 +19,10 @@ describe('DecisionsController', () => {
     app = moduleFixture.createNestApplication()
 
     await app.init()
+  })
+
+  afterAll(() => {
+    mongoose.connection.close()
   })
 
   describe('GET /decisions', () => {
