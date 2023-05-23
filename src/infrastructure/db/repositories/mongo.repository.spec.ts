@@ -1,10 +1,3 @@
-/**
- * Checklist :
- *
- * - Je veux pouvoir insérer une decision dans la db
- * - Recevoir une erreur si l'insertion ne s'est pas produite
- */
-
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { MockUtils } from '../../utils/mock.utils'
 import { MongoRepository } from './mongo.repository'
