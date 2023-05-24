@@ -12,7 +12,8 @@ import {
   Request,
   UsePipes
 } from '@nestjs/common'
-import {ApiAcceptedResponse,
+import {
+  ApiAcceptedResponse,
   ApiBadRequestResponse,
   ApiHeader,
   ApiQuery,
