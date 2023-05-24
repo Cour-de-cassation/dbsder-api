@@ -3,7 +3,7 @@ import * as passport from 'passport'
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  EXCEPTION_PATHS = ['/doc', '/']
+  EXCEPTION_PATHS = ['/doc', '/', '/doc-json']
   use(req: any, res: any, next: () => void) {
     if (this.EXCEPTION_PATHS.includes(req.path)) {
       next()

@@ -21,7 +21,7 @@ export class DecisionsController {
   private readonly logger = new Logger()
 
   @Get()
-  @ApiConsumes('multipart/form-data')
+  @ApiConsumes('application/json')
   @ApiHeader({
     name: 'x-api-key',
     description: 'Clé API'
@@ -31,7 +31,7 @@ export class DecisionsController {
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
     enum: DecisionStatus
   })
-  @ApiAcceptedResponse({ description: 'une liste de décisions' })
+  @ApiAcceptedResponse({ description: 'Une liste de décisions' })
   @ApiBadRequestResponse({
     description: "Le paramètre  écrit n'est présent dans la liste des valeurs acceptées"
   })

@@ -73,5 +73,5 @@ Le dossier `/documentation` contient :
 - Les requêtes Postman et comment les installer [lien](documentation/postman/README.md)
 
 ### Swagger 
-Un Swagger est disponible à l'url `/doc`
+Un Swagger est disponible à l'url `/doc` ou via `/doc-json`
 il vous suffit d'entrer les variables que vous avez en `DOC_LOGIN` et `DOC_PASSWORD`
