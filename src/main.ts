@@ -13,7 +13,7 @@ async function bootstrap() {
   app.setGlobalPrefix('v1')
 
   // setup custom logs
-  const customLogger = new CustomLogger('DBSder-API')
+  const customLogger = new CustomLogger()
   app.useLogger(customLogger)
 
   // setup Swagger
@@ -30,7 +30,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('DBSder API')
     .setDescription(
-      "Documentation de DBSder API qui permet de fournir une interface aux appels de la DBSder"
+      'Documentation de DBSder API qui permet de fournir une interface aux appels de la DBSder'
     )
     .setVersion('1.0')
     .addTag('DbSder')

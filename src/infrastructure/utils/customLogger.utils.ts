@@ -2,23 +2,25 @@ import { ConsoleLogger } from '@nestjs/common'
 
 export class CustomLogger extends ConsoleLogger {
   private readonly date = '[' + new Date().toISOString() + ']'
-  private appName: string
+  private readonly APP_NAME = 'DBSderApi'
 
-  constructor(appName: string) {
+  constructor() {
     super()
-    this.appName = '[' + appName + ']'
   }
 
   error(message: string, decisionId?: string): void {
-    const prefix = '[ERROR]' + this.date + formatDecisionIdInLog(decisionId) + this.appName
+    const prefix =
+      '[ERROR]' + this.date + formatDecisionIdInLog(decisionId) + '[' + this.APP_NAME + ']'
     super.error(prefix + ' ' + message)
   }
   log(message: string, decisionId?: string): void {
-    const prefix = '[LOG]' + this.date + formatDecisionIdInLog(decisionId) + this.appName
+    const prefix =
+      '[LOG]' + this.date + formatDecisionIdInLog(decisionId) + '[' + this.APP_NAME + ']'
     super.log(prefix + ' ' + message)
   }
   warn(message: string, decisionId?: string): void {
-    const prefix = '[WARN]' + this.date + formatDecisionIdInLog(decisionId) + this.appName
+    const prefix =
+      '[WARN]' + this.date + formatDecisionIdInLog(decisionId) + '[' + this.APP_NAME + ']'
     super.warn(prefix + ' ' + message)
   }
 }
