@@ -62,6 +62,18 @@ export class DecisionsController {
   }
 
   @Post()
+  @ApiHeader({
+    name: 'x-api-key',
+    description: 'Clé API'
+  })
+  @ApiQuery({
+    name: 'decision',
+    description: 'Décision intègre au format wordperfect et metadonnées associées.'
+  })
+  @ApiAcceptedResponse({ description: 'Decision créée' })
+  @ApiBadRequestResponse({
+    description: 'Il manque un ou plusieurs champs obligatoires pour la décision'
+  })
   @UsePipes()
   createDecisions(
     @Request() req,
