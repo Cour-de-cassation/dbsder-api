@@ -16,7 +16,7 @@ describe('AuthMiddleware', () => {
 
     // WHEN
     const error = () => {
-      middleware.use(null, null, () => {
+      middleware.use({ path: '/decisions' }, null, () => {
         console.log('')
       })
     }

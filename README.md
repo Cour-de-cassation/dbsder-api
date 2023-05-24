@@ -43,6 +43,10 @@ Créer un fichier `.env` à la racine du dossier avec les variables suivantes :
 ```.env
 ## Clés API des consommateurs de l'API DBSDER
 LABEL_API_KEY=some_uuid
+
+## Identifiants Swagger
+DOC_LOGIN=login
+DOC_PASSWORD=pwd
 ```
 
 ### Démarrer l'application via Docker
@@ -67,3 +71,7 @@ npm run start:dev
 
 Le dossier `/documentation` contient : 
 - Les requêtes Postman et comment les installer [lien](documentation/postman/README.md)
+
+### Swagger 
+Un Swagger est disponible à l'url `/doc` ou via `/doc-json`
+il vous suffit d'entrer les variables que vous avez en `DOC_LOGIN` et `DOC_PASSWORD`
