@@ -3,10 +3,11 @@ import { MiddlewareConsumer, Module } from '@nestjs/common'
 import { AuthModule } from './infrastructure/auth/auth.module'
 import { AuthMiddleware } from './infrastructure/middleware/auth/auth.middleware'
 import { DecisionsController } from './infrastructure/controllers/decisions.controller'
+import { RedirectController } from './app.controller'
 
 @Module({
   imports: [ConfigModule.forRoot(), AuthModule],
-  controllers: [DecisionsController],
+  controllers: [RedirectController, DecisionsController],
   providers: []
 })
 export class AppModule {

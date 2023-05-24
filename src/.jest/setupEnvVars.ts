@@ -1,3 +1,5 @@
 process.env = {
-  LABEL_API_KEY: 'testLabelApiKey'
+  LABEL_API_KEY: 'testLabelApiKey',
+  NORMALIZATION_API_KEY: 'testNormalizationApiKey',
+  OPENSDER_API_KEY: 'testOpenSderApiKey'
 }
