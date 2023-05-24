@@ -3,12 +3,8 @@ import { Controller, Get, HttpStatus, Logger, ParseEnumPipe, Query } from '@nest
 import {
   ApiAcceptedResponse,
   ApiBadRequestResponse,
-  ApiBody,
-  ApiConsumes,
   ApiHeader,
-  ApiParam,
   ApiQuery,
-  ApiServiceUnavailableResponse,
   ApiTags
 } from '@nestjs/swagger'
 import { MockUtils } from '../utils/mock.utils'
@@ -21,7 +17,6 @@ export class DecisionsController {
   private readonly logger = new Logger()
 
   @Get()
-  @ApiConsumes('application/json')
   @ApiHeader({
     name: 'x-api-key',
     description: 'Clé API'
