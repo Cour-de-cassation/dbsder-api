@@ -17,7 +17,9 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiHeader,
+  ApiOkResponse,
   ApiQuery,
+  ApiResponseProperty,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
@@ -43,7 +45,7 @@ export class DecisionsController {
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
     enum: DecisionStatus
   })
-  @ApiAcceptedResponse({ description: 'Une liste de décisions' })
+  @ApiOkResponse({ description: 'Une liste de décisions', type: GetDecisionListDTO })
   @ApiBadRequestResponse({
     description: "Le paramètre  écrit n'est présent dans la liste des valeurs acceptées"
   })
