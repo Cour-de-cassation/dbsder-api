@@ -1,64 +1,45 @@
-import { MongoMemoryServer } from 'mongodb-memory-server'
 import { MockUtils } from '../../infrastructure/utils/mock.utils'
 import { CreateDecisionUsecase } from './createDecision.usecase'
 import { MongoRepository } from '../../infrastructure/db/repositories/mongo.repository'
 import { ServiceUnavailableException } from '@nestjs/common'
-import mongoose from 'mongoose'
+import { mock, MockProxy } from 'jest-mock-extended'
 
 describe('createDecisionUsecase', () => {
+  const mockMongoRepository = new MongoRepository(process.env.MONGO_DB_URL)
   let mockUtils: MockUtils
   let usecase: CreateDecisionUsecase
-  let mongoServer
-  let memoryServerMongooseUri
-  let repository: MongoRepository
 
   beforeAll(async () => {
     mockUtils = new MockUtils()
-    usecase = new CreateDecisionUsecase()
-    mongoServer = await MongoMemoryServer.create()
-    memoryServerMongooseUri = mongoServer.getUri()
-    repository = new MongoRepository(memoryServerMongooseUri)
   })
 
   afterAll(async () => {
-    await mongoose.disconnect()
-    mongoServer.stop()
+    //jest.clearAllMocks()
   })
 
   it("J'arrive à envoyer ma décision à l'API", async () => {
     // GIVEN
-    const decision = mockUtils.createDecisionDTO
+    usecase = new CreateDecisionUsecase(mockMongoRepository)
+    const expectedDecision = mockUtils.createDecisionDTO
+    jest.spyOn(mockMongoRepository, 'create').mockImplementationOnce(async () => expectedDecision)
 
-    jest.spyOn(usecase, 'getMongoRepository').mockImplementationOnce(() => repository)
+    jest.spyOn(usecase, 'getMongoRepository').mockImplementationOnce(() => mockMongoRepository)
     // WHEN
-    const result = await usecase.execute(decision)
+    const result = await usecase.execute(expectedDecision)
 
     // THEN
-    expect(result).toEqual('executed')
-  })
-
-  it("Je m'assure que la décision s'enregistre en DB", async () => {
-    // GIVEN
-    const decision = mockUtils.createDecisionDTO
-    jest.spyOn(usecase, 'getMongoRepository').mockImplementationOnce(() => repository)
-
-    const repositoryCreateFunction = jest.spyOn(repository, 'create')
-
-    // WHEN
-    await usecase.execute(decision)
-
-    // THEN
-    expect(repositoryCreateFunction).toHaveBeenCalledWith(decision)
+    expect(result).toEqual(expectedDecision)
   })
 
   it("Je reçois une erreur lors d'un dysfonctionnement de la DB", async () => {
     // GIVEN
-    const decision = mockUtils.createDecisionDTO
-    jest.spyOn(repository, 'create').mockImplementationOnce(() => {
+    usecase = new CreateDecisionUsecase(mockMongoRepository)
+    const rejectedDecision = mockUtils.createDecisionDTO
+    jest.spyOn(mockMongoRepository, 'create').mockImplementationOnce(() => {
       throw new ServiceUnavailableException('Error from repository')
     })
 
-    await expect(usecase.execute(decision)).rejects.toThrow(
+    await expect(usecase.execute(rejectedDecision)).rejects.toThrow(
       new ServiceUnavailableException('Error from repository')
     )
   })

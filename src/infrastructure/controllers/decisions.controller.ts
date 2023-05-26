@@ -29,6 +29,8 @@ import { DecisionStatus } from '../../domain/enum'
 import { CreateDecisionDTO } from '../../domain/createDecisionDTO'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { CreateDecisionUsecase } from '../../domain/usecase/createDecision.usecase'
+import { MongoRepository } from '../db/repositories/mongo.repository'
+import { CreateDecisionResponse } from './responses/createDecisionResponse'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -85,20 +87,23 @@ export class DecisionsController {
     description: "Vous n'avez pas accès à cette route"
   })
   @UsePipes()
-  createDecisions(
+  async createDecisions(
     @Request() req,
     @Body('decision', new ValidateDtoPipe()) decision: CreateDecisionDTO
-  ) {
+  ): Promise<CreateDecisionResponse> {
+    this.logger.log('POST /decisions called with ' + JSON.stringify(decision))
     const authorizedKeys = [process.env.NORMALIZATION_API_KEY, process.env.OPENSDER_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!authorizedKeys.includes(apiKey)) {
       throw new ForbiddenException()
     }
 
-    const createDecisionUsecase = new CreateDecisionUsecase()
-    createDecisionUsecase.execute(decision)
-    this.logger.log('POST /decisions called with ' + JSON.stringify(decision))
+    const createDecisionUsecase = new CreateDecisionUsecase(
+      new MongoRepository(process.env.MONGO_DB_URL)
+    )
+    const decisionCreated = await createDecisionUsecase.execute(decision)
     return {
+      id: decisionCreated.id,
       message: 'Decision créée'
     }
   }

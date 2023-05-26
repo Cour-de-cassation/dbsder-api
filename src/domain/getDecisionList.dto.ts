@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { DecisionStatus } from './enum'
-import { MockUtils } from 'src/infrastructure/utils/mock.utils'
+import { MockUtils } from '../infrastructure/utils/mock.utils'
 
 const mockUtils = new MockUtils()
 export class GetDecisionListDTO {

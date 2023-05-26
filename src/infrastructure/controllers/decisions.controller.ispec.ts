@@ -79,7 +79,6 @@ describe('DecisionsController', () => {
         const normalisationApiKey = process.env.NORMALIZATION_API_KEY
 
         // WHEN
-
         const result = await request(app.getHttpServer())
           .get('/decisions')
           .query({ status: DecisionStatus.TOBETREATED })

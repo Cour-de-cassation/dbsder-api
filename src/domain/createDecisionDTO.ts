@@ -12,7 +12,7 @@ import {
 import { DecisionStatus } from './enum'
 import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { MockUtils } from 'src/infrastructure/utils/mock.utils'
+import { MockUtils } from '../infrastructure/utils/mock.utils'
 
 const mockUtils = new MockUtils()
 export class DecisionOccultation {
