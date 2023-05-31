@@ -15,9 +15,6 @@ export class MongoRepository implements IDatabaseRepository {
   async create(decision: CreateDecisionDTO): Promise<DecisionModel> {
     await this.setMongoClient()
     if (this.mongoClient.model) {
-      console.log('INSIDE CREATE && MongoClient present')
-      console.log(this.mongoClient)
-
       const collection = this.mongoClient.model('decisions', DecisionSchema)
       const decisionToBeSaved = await collection.create(decision).catch(() => {
         throw new ServiceUnavailableException('Error from database')
@@ -29,7 +26,6 @@ export class MongoRepository implements IDatabaseRepository {
 
   async setMongoClient() {
     if (!this.mongoClient) {
-      console.log('INSIDE setMongoClient')
       this.mongoClient = await mongoose.connect(this.mongoURL)
     }
   }

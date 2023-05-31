@@ -1,11 +1,11 @@
 import { MockUtils } from '../../infrastructure/utils/mock.utils'
 import { CreateDecisionUsecase } from './createDecision.usecase'
-import { MongoRepository } from '../../infrastructure/db/repositories/mongo.repository'
 import { ServiceUnavailableException } from '@nestjs/common'
 import { mock, MockProxy } from 'jest-mock-extended'
+import { IDatabaseRepository } from 'src/infrastructure/db/repositories/database.repository.interface'
 
 describe('createDecisionUsecase', () => {
-  const mockMongoRepository = new MongoRepository(process.env.MONGO_DB_URL)
+  const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
   let mockUtils: MockUtils
   let usecase: CreateDecisionUsecase
 
@@ -14,16 +14,17 @@ describe('createDecisionUsecase', () => {
   })
 
   afterAll(async () => {
-    //jest.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it("J'arrive à envoyer ma décision à l'API", async () => {
     // GIVEN
-    usecase = new CreateDecisionUsecase(mockMongoRepository)
+    usecase = new CreateDecisionUsecase(mockDatabaseRepository)
     const expectedDecision = mockUtils.createDecisionDTO
-    jest.spyOn(mockMongoRepository, 'create').mockImplementationOnce(async () => expectedDecision)
+    jest
+      .spyOn(mockDatabaseRepository, 'create')
+      .mockImplementationOnce(async () => expectedDecision)
 
-    jest.spyOn(usecase, 'getMongoRepository').mockImplementationOnce(() => mockMongoRepository)
     // WHEN
     const result = await usecase.execute(expectedDecision)
 
@@ -33,9 +34,9 @@ describe('createDecisionUsecase', () => {
 
   it("Je reçois une erreur lors d'un dysfonctionnement de la DB", async () => {
     // GIVEN
-    usecase = new CreateDecisionUsecase(mockMongoRepository)
+    usecase = new CreateDecisionUsecase(mockDatabaseRepository)
     const rejectedDecision = mockUtils.createDecisionDTO
-    jest.spyOn(mockMongoRepository, 'create').mockImplementationOnce(() => {
+    jest.spyOn(mockDatabaseRepository, 'create').mockImplementationOnce(() => {
       throw new ServiceUnavailableException('Error from repository')
     })
 

@@ -1,4 +1,4 @@
-import { mockDeep } from 'jest-mock-extended'
+import { mock } from 'jest-mock-extended'
 import { MockUtils } from '../../utils/mock.utils'
 import { ServiceUnavailableException } from '@nestjs/common'
 import { IDatabaseRepository } from './database.repository.interface'
@@ -9,7 +9,7 @@ describe('MongoRepository', () => {
   const mockUtils = new MockUtils()
 
   beforeAll(async () => {
-    mockedRepository = mockDeep<IDatabaseRepository>()
+    mockedRepository = mock<IDatabaseRepository>()
   })
 
   afterAll(async () => {

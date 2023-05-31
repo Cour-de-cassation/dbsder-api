@@ -5,13 +5,22 @@ import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { DecisionStatus } from '../../domain/enum'
 import mongoose from 'mongoose'
+import { MongoMemoryServer } from 'mongodb-memory-server'
 
 describe('DecisionsController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
   const labelApiKey = process.env.LABEL_API_KEY
+  let mongoMemoryServer: MongoMemoryServer
+  // A changer aussi dans .jest/setupEnvVars.ts
+  const mongoServerMemoryPort = 5353
 
   beforeAll(async () => {
+    mongoMemoryServer = await MongoMemoryServer.create({
+      instance: {
+        port: mongoServerMemoryPort
+      }
+    })
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule]
     }).compile()
@@ -22,6 +31,7 @@ describe('DecisionsController', () => {
   })
 
   afterAll(async () => {
+    await mongoMemoryServer.stop()
     await mongoose.disconnect()
   })
 
