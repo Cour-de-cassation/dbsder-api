@@ -69,4 +69,44 @@ export class MockUtils {
     natureAffairePenal: 'someNatureAffairePenal',
     codeMatiereCivil: 'someCodeMatiereCivil'
   }
+  decisionModel = {
+    NAOCode: 'someNAOCode',
+    analysis: {
+      analyse: ['someAnalyse'],
+      doctrine: 'someDoctrine',
+      link: 'someLink',
+      reference: ['someReference'],
+      source: 'someSource',
+      summary: 'someSummary',
+      target: 'someTarget',
+      title: ['someTitle']
+    },
+    appeals: ['someAppeal'],
+    blocOccultation: 1,
+    chamberId: 'someChamberId',
+    chamberName: 'someChamberName',
+    codeMatiereCivil: 'someCodeMatiereCivil',
+    dateCreation: 'someDateCreation',
+    dateDecision: 'someDateDecision',
+    decatt: [1, 2],
+    formation: 'someFormation',
+    id: 'someID',
+    iddecision: 'someIddecision',
+    jurisdictionCode: 'someJurisdictionCode',
+    jurisdictionId: 'someJurisdictionId',
+    jurisdictionName: 'someJurisdictionName',
+    labelStatus: DecisionStatus.TOBETREATED,
+    natureAffaireCivil: 'someNatureAffaireCivil',
+    natureAffairePenal: 'someNatureAffairePenal',
+    occultation: {
+      additionalTerms: 'someAdditionalTerms',
+      categoriesToOmit: ['someCategoriesToOmit']
+    },
+    originalText: 'someOriginalText',
+    publication: ['somePublication'],
+    registerNumber: 'someRegisterNumber',
+    solution: 'someSolution',
+    sourceId: 1,
+    sourceName: 'someSourceName'
+  }
 }

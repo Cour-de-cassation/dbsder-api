@@ -6,15 +6,20 @@ import { ServiceUnavailableException } from '@nestjs/common'
 
 export class MongoRepository implements IDatabaseRepository {
   private mongoClient: Mongoose
-  constructor(private readonly mongoURL: string) {}
+  constructor(private readonly mongoURL: string, mongoClient?: Mongoose) {
+    if (mongoClient) {
+      this.mongoClient = mongoClient
+    }
+  }
 
   async create(decision: CreateDecisionDTO): Promise<DecisionModel> {
-    console.log('INSIDE CREATE')
     await this.setMongoClient()
-    if (this.mongoClient) {
+    if (this.mongoClient.model) {
+      console.log('INSIDE CREATE && MongoClient present')
+      console.log(this.mongoClient)
+
       const collection = this.mongoClient.model('decisions', DecisionSchema)
       const decisionToBeSaved = await collection.create(decision).catch(() => {
-        return Promise.resolve(decisionToBeSaved)
         throw new ServiceUnavailableException('Error from database')
       })
       return Promise.resolve(decisionToBeSaved)

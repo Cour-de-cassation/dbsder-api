@@ -1,45 +1,46 @@
-import { MongoMemoryServer } from 'mongodb-memory-server'
+import { mockDeep } from 'jest-mock-extended'
 import { MockUtils } from '../../utils/mock.utils'
-import { MongoRepository } from './mongo.repository'
 import { ServiceUnavailableException } from '@nestjs/common'
-import mongoose from 'mongoose'
+import { IDatabaseRepository } from './database.repository.interface'
+import { DecisionModel } from '../models/decision.model'
 
 describe('MongoRepository', () => {
-  let mongoServer: MongoMemoryServer
-  let repository: MongoRepository
+  let mockedRepository: IDatabaseRepository
   const mockUtils = new MockUtils()
 
   beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create()
-    repository = new MongoRepository(mongoServer.getUri())
+    mockedRepository = mockDeep<IDatabaseRepository>()
   })
 
   afterAll(async () => {
-    await mongoose.disconnect()
-    mongoServer.stop()
+    jest.clearAllMocks()
   })
 
   it('Je veux pouvoir insérer une décision dans la db', async () => {
     // GIVEN
     const decision = mockUtils.createDecisionDTO
+    const expectedDecision: DecisionModel = mockUtils.decisionModel
+    jest.spyOn(mockedRepository, 'create').mockResolvedValue(Promise.resolve(expectedDecision))
 
     // WHEN
-    const result = await repository.create(decision)
+    const result = await mockedRepository.create(decision)
 
     // THEN
-    expect(result).toEqual('decision saved in db.')
+    expect(result).toMatchObject(expectedDecision)
   })
 
   it("Je reçois un message d'erreur si l'insertion en db a échoué", () => {
     // GIVEN
     const decision = mockUtils.createDecisionDTO
-    jest.spyOn(repository, 'create').mockImplementationOnce(() => {
+    jest.spyOn(mockedRepository, 'create').mockImplementationOnce(() => {
       throw new ServiceUnavailableException('Error from database')
     })
 
     expect(() => {
       // WHEN
-      repository.create(decision)
-    }).toThrow(new ServiceUnavailableException('Error from database'))
+      mockedRepository.create(decision)
+    })
+      // THEN
+      .toThrow(new ServiceUnavailableException('Error from database'))
   })
 })
