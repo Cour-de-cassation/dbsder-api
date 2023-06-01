@@ -1,7 +1,7 @@
 import { mock } from 'jest-mock-extended'
 import { MockUtils } from '../../utils/mock.utils'
 import { ServiceUnavailableException } from '@nestjs/common'
-import { IDatabaseRepository } from './database.repository.interface'
+import { IDatabaseRepository } from '../../../domain/database.repository.interface'
 import { DecisionModel } from '../models/decision.model'
 
 describe('MongoRepository', () => {
@@ -16,7 +16,7 @@ describe('MongoRepository', () => {
     jest.clearAllMocks()
   })
 
-  it('Je veux pouvoir insérer une décision dans la db', async () => {
+  it('I want to be able to insert a decision inside the db', async () => {
     // GIVEN
     const decision = mockUtils.createDecisionDTO
     const expectedDecision: DecisionModel = mockUtils.decisionModel
@@ -29,7 +29,7 @@ describe('MongoRepository', () => {
     expect(result).toMatchObject(expectedDecision)
   })
 
-  it("Je reçois un message d'erreur si l'insertion en db a échoué", () => {
+  it('I receive an error message when the insertion in the db has failed', () => {
     // GIVEN
     const decision = mockUtils.createDecisionDTO
     jest.spyOn(mockedRepository, 'create').mockImplementationOnce(() => {

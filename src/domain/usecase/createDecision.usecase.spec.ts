@@ -2,7 +2,7 @@ import { MockUtils } from '../../infrastructure/utils/mock.utils'
 import { CreateDecisionUsecase } from './createDecision.usecase'
 import { ServiceUnavailableException } from '@nestjs/common'
 import { mock, MockProxy } from 'jest-mock-extended'
-import { IDatabaseRepository } from 'src/infrastructure/db/repositories/database.repository.interface'
+import { IDatabaseRepository } from 'src/domain/database.repository.interface'
 
 describe('createDecisionUsecase', () => {
   const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
@@ -17,7 +17,7 @@ describe('createDecisionUsecase', () => {
     jest.clearAllMocks()
   })
 
-  it("J'arrive à envoyer ma décision à l'API", async () => {
+  it('I can send my decision to the API', async () => {
     // GIVEN
     usecase = new CreateDecisionUsecase(mockDatabaseRepository)
     const expectedDecision = mockUtils.createDecisionDTO
@@ -32,7 +32,7 @@ describe('createDecisionUsecase', () => {
     expect(result).toEqual(expectedDecision)
   })
 
-  it("Je reçois une erreur lors d'un dysfonctionnement de la DB", async () => {
+  it('I receive an error if the DB malfunctions', async () => {
     // GIVEN
     usecase = new CreateDecisionUsecase(mockDatabaseRepository)
     const rejectedDecision = mockUtils.createDecisionDTO

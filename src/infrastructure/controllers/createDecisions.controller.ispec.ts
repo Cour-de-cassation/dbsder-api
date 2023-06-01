@@ -10,13 +10,11 @@ describe('DecisionsController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
   let mongoMemoryServer: MongoMemoryServer
-  // A changer aussi dans .jest/setupEnvVars.ts
-  const mongoServerMemoryPort = 5353
 
   beforeAll(async () => {
     mongoMemoryServer = await MongoMemoryServer.create({
       instance: {
-        port: mongoServerMemoryPort
+        port: parseInt(process.env.MONGO_DB_PORT)
       }
     })
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -34,7 +32,7 @@ describe('DecisionsController', () => {
   })
 
   describe('POST /decisions', () => {
-    it('returns a 201', async () => {
+    it('returns a 201 CREATED when provided body is valid', async () => {
       // GIVEN
       const normalizationApiKey = process.env.NORMALIZATION_API_KEY
 

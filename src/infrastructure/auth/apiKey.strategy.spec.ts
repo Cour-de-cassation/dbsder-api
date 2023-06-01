@@ -7,7 +7,7 @@ describe('ApiKeyStrategy', () => {
     apiKeyStrategy = new ApiKeyStrategy()
   })
 
-  it('validateApiKey returns false if the API key is unknown', async () => {
+  it('returns false if the API key is unknown', async () => {
     // GIVEN
     const apiKey = 'toto'
 
@@ -18,7 +18,7 @@ describe('ApiKeyStrategy', () => {
     expect(res).toBe(false)
   })
 
-  it('validateApiKey returns true if the API key is from Label', async () => {
+  it('returns true if the API key is from Label', async () => {
     // GIVEN
     const apiKey = process.env.LABEL_API_KEY
 
@@ -29,7 +29,7 @@ describe('ApiKeyStrategy', () => {
     expect(res).toBe(true)
   })
 
-  it('validateApiKey returns true if the API key is from JuriTJ-Normalisation', async () => {
+  it('returns true if the API key is from JuriTJ-Normalisation', async () => {
     // GIVEN
     const apiKey = process.env.NORMALIZATION_API_KEY
 
@@ -40,7 +40,7 @@ describe('ApiKeyStrategy', () => {
     expect(res).toBe(true)
   })
 
-  it('validateApiKey returns true if the API key is from OpenSder', async () => {
+  it('returns true if the API key is from OpenSder', async () => {
     // GIVEN
     const apiKey = process.env.OPENSDER_API_KEY
 

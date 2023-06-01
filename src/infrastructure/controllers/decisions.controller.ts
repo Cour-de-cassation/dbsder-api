@@ -19,14 +19,13 @@ import {
   ApiHeader,
   ApiOkResponse,
   ApiQuery,
-  ApiResponseProperty,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
 import { MockUtils } from '../utils/mock.utils'
 import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
 import { DecisionStatus } from '../../domain/enum'
-import { CreateDecisionDTO } from '../../domain/createDecisionDTO'
+import { CreateDecisionDTO } from '../createDecisionDTO'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { CreateDecisionUsecase } from '../../domain/usecase/createDecision.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
@@ -79,7 +78,7 @@ export class DecisionsController {
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
     type: CreateDecisionDTO
   })
-  @ApiAcceptedResponse({ description: 'Decision créée' })
+  @ApiAcceptedResponse({ description: 'Décision créée' })
   @ApiBadRequestResponse({
     description: 'Il manque un ou plusieurs champs obligatoires dans la décision'
   })

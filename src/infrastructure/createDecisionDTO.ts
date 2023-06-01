@@ -9,10 +9,10 @@ import {
   IsString,
   ValidateNested
 } from 'class-validator'
-import { DecisionStatus } from './enum'
+import { DecisionStatus } from '../domain/enum'
 import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { MockUtils } from '../infrastructure/utils/mock.utils'
+import { MockUtils } from './utils/mock.utils'
 
 const mockUtils = new MockUtils()
 export class DecisionOccultation {
@@ -307,7 +307,7 @@ export class CreateDecisionDTO {
 
   @ApiProperty({
     description:
-      ' Champ session dans Label :circuit de relecture, pour la Cour de cassation ex: FRR -> formation restreinte',
+      'Champ session dans Label :circuit de relecture, pour la Cour de cassation ex: FRR -> formation restreinte',
     type: [String],
     example: mockUtils.createDecisionDTO.formation
   })
@@ -315,22 +315,62 @@ export class CreateDecisionDTO {
   formation: string
 
   @ApiProperty({
-    description: "Numero du bloc d'occultation",
+    description: "Numéro du bloc d'occultation",
     type: Number,
     example: mockUtils.createDecisionDTO.blocOccultation
   })
   @IsNumber()
   blocOccultation: number
 
+  @ApiProperty({
+    description: 'Cour de cassation : circuit de relecture',
+    type: String
+  })
   @IsString()
   NAOCode: string
 
+  @ApiProperty({
+    description: 'Cour de cassation : circuit de relecture',
+    type: String
+  })
   @IsString()
   natureAffaireCivil: string
 
+  @ApiProperty({
+    description: 'Cour de cassation : circuit de relecture',
+    type: String
+  })
   @IsString()
   natureAffairePenal: string
 
+  @ApiProperty({
+    description: 'Cour de cassation : circuit de relecture',
+    type: String
+  })
   @IsString()
   codeMatiereCivil: string
+
+  @ApiPropertyOptional({
+    description: 'Utilisable pour les décisions CC',
+    type: String
+  })
+  @IsOptional()
+  @IsString()
+  NACCode?: string
+
+  @ApiPropertyOptional({
+    description: 'Utilisable pour les décisions CC',
+    type: String
+  })
+  @IsOptional()
+  @IsString()
+  NPCode?: string
+
+  @ApiPropertyOptional({
+    description: 'Utilisable pour les décisions CC',
+    type: String
+  })
+  @IsOptional()
+  @IsString()
+  endCaseCode?: string
 }
