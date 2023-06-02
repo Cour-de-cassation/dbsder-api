@@ -49,6 +49,10 @@ OPENSDER_API_KEY=some_uuid
 ## Identifiants Swagger
 DOC_LOGIN=login
 DOC_PASSWORD=pwd
+
+## Mongo URL
+
+MONGO_DB_URL=mongodb://<URL>:<PORT>
 ```
 
 ### Démarrer l'application via Docker
