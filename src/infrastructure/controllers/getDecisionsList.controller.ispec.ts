@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { DecisionStatus } from '../../domain/enum'
+import mongoose from 'mongoose'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -18,6 +19,10 @@ describe('DecisionsController', () => {
     app = moduleFixture.createNestApplication()
 
     await app.init()
+  })
+
+  afterAll(async () => {
+    await mongoose.disconnect()
   })
 
   describe('GET /decisions', () => {
@@ -65,6 +70,22 @@ describe('DecisionsController', () => {
 
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
+      })
+    })
+
+    describe('returns 403 Forbidden', () => {
+      it('when the apiKey is not authorized to call this endpoint', async () => {
+        // GIVEN
+        const normalisationApiKey = process.env.NORMALIZATION_API_KEY
+
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .get('/decisions')
+          .query({ status: DecisionStatus.TOBETREATED })
+          .set({ 'x-api-key': normalisationApiKey })
+
+        // THEN
+        expect(result.statusCode).toEqual(HttpStatus.FORBIDDEN)
       })
     })
 
