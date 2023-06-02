@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-deployment
+  namespace: dbsder
   labels:
     app: 
 spec:
@@ -22,11 +23,18 @@ spec:
           env:
             - name: LABEL_API_KEY
               value: $DBSDER_API_LABEL_API_KEY
+            - name: NORMALIZATION_API_KEY
+              value: $DBSDER_API_NORMALIZATION_API_KEY
+            - name: OPENSDER_API_KEY
+              value: $DBSDER_API_OPENSDER_API_KEY
+            - name: MONGO_DB_URL
+              value: $DBSDER_API_MONGO_DB_URL
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: api-service
+  namespace: dbsder
 spec:
   selector:
     app: api
