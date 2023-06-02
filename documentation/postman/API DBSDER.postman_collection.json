@@ -1,10 +1,126 @@
 {
 	"info": {
-		"_postman_id": "894bb4e1-8a68-4bfd-ba3e-9f84e0c49fe1",
+		"_postman_id": "66a190b8-804d-44f0-af19-e1a730f3fe8b",
 		"name": "API DBSDER",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14689636"
 	},
 	"item": [
+		{
+			"name": "201 - Enregistre une décision",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{NORMALIZATION_API_KEY}}",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"decision\": {\n        \"id\": \"someID\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"someSource\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"iddecision\": \"someIddecision\",\n        \"dateCreation\": \"someDateCreation\",\n        \"dateDecision\": \"someDateDecision\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"someSourceName\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"{{VERSION}}",
+						"decisions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "400 - Enregistre une décision sans contenu",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{LABEL_API_KEY}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"{{VERSION}}",
+						"decisions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "400 - Enregistre une décision avec un contenu invalide",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{NORMALIZATION_API_KEY}}",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"decision\": {\n        //\"id\": \"someID\", pour le test\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"someSource\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"iddecision\": \"someIddecision\",\n        \"dateCreation\": \"someDateCreation\",\n        \"dateDecision\": \"someDateDecision\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"someSourceName\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"{{VERSION}}",
+						"decisions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "401 - Enregistre une décision sans apiKey",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"{{VERSION}}",
+						"decisions"
+					]
+				}
+			},
+			"response": []
+		},
 		{
 			"name": "200 - Liste les décisions toBeTreated",
 			"request": {
@@ -17,11 +133,12 @@
 					}
 				],
 				"url": {
-					"raw": "{{HOSTNAME}}/decisions?status=toBeTreated",
+					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
+						"{{VERSION}}",
 						"decisions"
 					],
 					"query": [
@@ -46,11 +163,12 @@
 					}
 				],
 				"url": {
-					"raw": "{{HOSTNAME}}/decisions?status=wrongStatus",
+					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=wrongStatus",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
+						"{{VERSION}}",
 						"decisions"
 					],
 					"query": [
@@ -69,11 +187,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{HOSTNAME}}/decisions?status=toBeTreated",
+					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
+						"{{VERSION}}",
 						"decisions"
 					],
 					"query": [
@@ -98,11 +217,12 @@
 					}
 				],
 				"url": {
-					"raw": "{{HOSTNAME}}/decisions?status=toBeTreated",
+					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated",
 					"host": [
 						"{{HOSTNAME}}"
 					],
 					"path": [
+						"{{VERSION}}",
 						"decisions"
 					],
 					"query": [
