@@ -70,7 +70,10 @@ export class DecisionsController {
       throw new ForbiddenException()
     }
     this.logger.log('GET /decisions called with status ' + status)
-    return new MockUtils().allDecisionsToBeTreated
+    // return new MockUtils().allDecisionsToBeTreated
+    return new MockUtils().allDecisionsToBeTreated.filter(
+      (decision) => decision.source === 'CC' || decision.source === 'CA' || decision.source === 'TJ'
+    )
   }
 
   @Post()

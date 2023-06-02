@@ -23,6 +23,13 @@ export class MockUtils {
     status: DecisionStatus.TOBETREATED
   }
 
+  decisionToNotBeTreated: GetDecisionListDTO = {
+    dateCreation: '2023-04-11',
+    id: 'id2023',
+    source: 'OTHER',
+    status: DecisionStatus.TOBETREATED
+  }
+
   allDecisionsToBeTreated = [
     this.decisionCCToBeTreated,
     this.decisionTJToBeTreated,

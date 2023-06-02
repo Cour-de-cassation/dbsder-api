@@ -102,7 +102,7 @@ describe('DecisionsController', () => {
     })
 
     // Je veux rajouter un élément dans ma query, faire fail mon test, change l'implem et faire passer mon test puis refacto l'implem
-    it('returns a 200 with a list of decisions with CC source', async () => {
+    it('returns a 200 with a list of decisions with a validated source', async () => {
       // GIVEN
       const expectedDecisions = mockUtils.allDecisionsToBeTreated
 
@@ -116,6 +116,21 @@ describe('DecisionsController', () => {
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.OK)
       expect(result.body).toEqual(expectedDecisions)
+    })
+
+    it('returns a 400 with a list of decisions with non validated source', async () => {
+      // GIVEN
+      const unknownSource = 'unknownSource'
+
+      // WHEN
+      const result = await request(app.getHttpServer())
+        .get('/decisions')
+        .query({ status: DecisionStatus.TOBETREATED })
+        .query({ source: unknownSource })
+        .set({ 'x-api-key': labelApiKey })
+
+      // THEN
+      expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
     })
   })
 })
