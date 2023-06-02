@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
-import { DecisionStatus } from '../../domain/enum'
+import { DecisionStatus, Sources } from '../../domain/enum'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -77,6 +77,7 @@ describe('DecisionsController', () => {
         const result = await request(app.getHttpServer())
           .get('/decisions')
           .query({ status: DecisionStatus.TOBETREATED })
+          .query({ source: Sources.CA })
           .set({ 'x-api-key': normalisationApiKey })
 
         // THEN
@@ -92,6 +93,24 @@ describe('DecisionsController', () => {
       const result = await request(app.getHttpServer())
         .get('/decisions')
         .query({ status: DecisionStatus.TOBETREATED })
+        .query({ source: Sources.CA })
+        .set({ 'x-api-key': labelApiKey })
+
+      // THEN
+      expect(result.statusCode).toEqual(HttpStatus.OK)
+      expect(result.body).toEqual(expectedDecisions)
+    })
+
+    // Je veux rajouter un élément dans ma query, faire fail mon test, change l'implem et faire passer mon test puis refacto l'implem
+    it('returns a 200 with a list of decisions with CC source', async () => {
+      // GIVEN
+      const expectedDecisions = mockUtils.allDecisionsToBeTreated
+
+      // WHEN
+      const result = await request(app.getHttpServer())
+        .get('/decisions')
+        .query({ status: DecisionStatus.TOBETREATED })
+        .query({ source: Sources.CC })
         .set({ 'x-api-key': labelApiKey })
 
       // THEN

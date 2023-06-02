@@ -23,7 +23,7 @@ import {
 } from '@nestjs/swagger'
 import { MockUtils } from '../utils/mock.utils'
 import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
-import { DecisionStatus } from '../../domain/enum'
+import { DecisionStatus, Sources } from '../../domain/enum'
 import { CreateDecisionDTO } from '../createDecisionDTO'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { CreateDecisionUsecase } from '../../domain/usecase/createDecision.usecase'
@@ -60,6 +60,8 @@ export class DecisionsController {
       new ParseEnumPipe(DecisionStatus, { errorHttpStatusCode: HttpStatus.BAD_REQUEST })
     )
     status: DecisionStatus,
+    @Query('source', new ParseEnumPipe(Sources, { errorHttpStatusCode: HttpStatus.BAD_REQUEST }))
+    source: Sources,
     @Request() req
   ): GetDecisionListDTO[] {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
