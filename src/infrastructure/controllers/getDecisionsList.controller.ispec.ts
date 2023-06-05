@@ -88,7 +88,6 @@ describe('DecisionsController', () => {
     it('returns a 200 with a list of decisions', async () => {
       // GIVEN
       const expectedDecisions = mockUtils.allDecisionsToBeTreated
-      const decisionToNotBeTreated = mockUtils.decisionToNotBeTreated
 
       // WHEN
       const result = await request(app.getHttpServer())

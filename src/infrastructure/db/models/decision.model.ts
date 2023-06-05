@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
-import { DecisionStatus, Sources } from '../../../domain/enum'
+import { DecisionStatus } from '../../../domain/enum'
 import { DecisionAnalyse, DecisionOccultation } from '../../createDecisionDTO'
 
 @Schema()
