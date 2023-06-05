@@ -16,7 +16,8 @@ export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy) {
     const validApiKeys = [
       process.env.LABEL_API_KEY,
       process.env.NORMALIZATION_API_KEY,
-      process.env.OPENSDER_API_KEY
+      process.env.OPENSDER_API_KEY,
+      process.env.OPS_API_KEY
     ]
     if (!validApiKeys.includes(apikey)) {
       this.logger.error('[AUTH] Invalid API Key')

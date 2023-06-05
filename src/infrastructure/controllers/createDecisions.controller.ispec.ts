@@ -1,5 +1,5 @@
-import * as request from 'supertest'
 import mongoose from 'mongoose'
+import * as request from 'supertest'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { MongooseModule } from '@nestjs/mongoose'
 import { Test, TestingModule } from '@nestjs/testing'
@@ -10,15 +10,14 @@ import { DecisionSchema } from '../db/models/decision.model'
 
 describe('DecisionsController', () => {
   let app: INestApplication
-  const mockUtils = new MockUtils()
   let mongoMemoryServer: MongoMemoryServer
+  const mockUtils = new MockUtils()
 
   beforeAll(async () => {
     mongoMemoryServer = await MongoMemoryServer.create({
-      instance: {
-        port: parseInt(process.env.MONGO_DB_PORT)
-      }
+      instance: { port: parseInt(process.env.MONGO_DB_PORT), ip: process.env.MONGO_DB_IP }
     })
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         AppModule,
@@ -28,7 +27,6 @@ describe('DecisionsController', () => {
     }).compile()
 
     app = moduleFixture.createNestApplication()
-
     await app.init()
   })
 
