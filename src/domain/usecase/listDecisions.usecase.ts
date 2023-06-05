@@ -1,7 +1,7 @@
 import { IDatabaseRepository } from '../database.repository.interface'
 import { Logger, ServiceUnavailableException } from '@nestjs/common'
-import { DecisionListModel } from '../../infrastructure/db/models/decision.model'
 import { ListDecisionsDTO } from '../../infrastructure/createDecisionDTO'
+import { DecisionListModel } from '../../infrastructure/db/models/decisionsList.model'
 
 export class ListDecisionsUsecase {
   private readonly logger = new Logger()
