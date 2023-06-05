@@ -88,6 +88,7 @@ describe('DecisionsController', () => {
     it('returns a 200 with a list of decisions', async () => {
       // GIVEN
       const expectedDecisions = mockUtils.allDecisionsToBeTreated
+      const decisionToNotBeTreated = mockUtils.decisionToNotBeTreated
 
       // WHEN
       const result = await request(app.getHttpServer())
@@ -101,7 +102,6 @@ describe('DecisionsController', () => {
       expect(result.body).toEqual(expectedDecisions)
     })
 
-    // Je veux rajouter un élément dans ma query, faire fail mon test, change l'implem et faire passer mon test puis refacto l'implem
     it('returns a 200 with a list of decisions with a validated source', async () => {
       // GIVEN
       const expectedDecisions = mockUtils.allDecisionsToBeTreated

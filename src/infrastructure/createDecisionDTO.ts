@@ -9,7 +9,7 @@ import {
   IsString,
   ValidateNested
 } from 'class-validator'
-import { DecisionStatus } from '../domain/enum'
+import { DecisionStatus, Sources } from '../domain/enum'
 import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { MockUtils } from './utils/mock.utils'
@@ -373,4 +373,21 @@ export class CreateDecisionDTO {
   @IsOptional()
   @IsString()
   endCaseCode?: string
+}
+
+export class ListDecisionsDTO {
+  @IsString()
+  id: string
+
+  @IsEnum(DecisionStatus)
+  labelStatus: DecisionStatus
+
+  @IsEnum(Sources)
+  source: Sources
+
+  @IsString()
+  dateStart: string
+
+  @IsString()
+  dateEnd: string
 }

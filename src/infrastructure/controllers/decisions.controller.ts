@@ -72,7 +72,10 @@ export class DecisionsController {
     this.logger.log('GET /decisions called with status ' + status)
     // return new MockUtils().allDecisionsToBeTreated
     return new MockUtils().allDecisionsToBeTreated.filter(
-      (decision) => decision.source === 'CC' || decision.source === 'CA' || decision.source === 'TJ'
+      (decision) =>
+        decision.source === Sources.CC ||
+        decision.source === Sources.CA ||
+        decision.source === Sources.TJ
     )
   }
 

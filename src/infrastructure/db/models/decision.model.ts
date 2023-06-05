@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
-import { DecisionStatus } from '../../../domain/enum'
+import { DecisionStatus, Sources } from '../../../domain/enum'
 import { DecisionAnalyse, DecisionOccultation } from '../../createDecisionDTO'
 
 @Schema()
@@ -98,4 +98,5 @@ export class DecisionModel {
   @Prop()
   codeMatiereCivil: string
 }
+
 export const DecisionSchema = SchemaFactory.createForClass(DecisionModel)

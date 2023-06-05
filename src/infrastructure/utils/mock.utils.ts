@@ -36,6 +36,8 @@ export class MockUtils {
     this.decisionCAToBeTreated
   ]
 
+  unfilteredDecisions = [this.allDecisionsToBeTreated, this.decisionToNotBeTreated]
+
   createDecisionDTO = {
     id: 'someID',
     analysis: {
