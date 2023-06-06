@@ -9,7 +9,8 @@ import {
   Post,
   Query,
   Request,
-  UsePipes
+  UsePipes,
+  ValidationPipe
 } from '@nestjs/common'
 import {
   ApiAcceptedResponse,
@@ -24,12 +25,14 @@ import {
 import { MockUtils } from '../utils/mock.utils'
 import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
 import { DecisionStatus, Sources } from '../../domain/enum'
-import { CreateDecisionDTO } from '../createDecisionDTO'
+import { CreateDecisionDTO, ListDecisionsDTO } from '../createDecisionDTO'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { CreateDecisionUsecase } from '../../domain/usecase/createDecision.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
+import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
+import { ListDecisionsUsecase } from '../../domain/usecase/listDecisions.usecase'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -54,29 +57,43 @@ export class DecisionsController {
   @ApiUnauthorizedResponse({
     description: "Vous n'avez pas accès à cette route"
   })
-  getDecisions(
-    @Query(
+  async getDecisions(
+    /*@Query(
       'status',
       new ParseEnumPipe(DecisionStatus, { errorHttpStatusCode: HttpStatus.BAD_REQUEST })
     )
     status: DecisionStatus,
     @Query('source', new ParseEnumPipe(Sources, { errorHttpStatusCode: HttpStatus.BAD_REQUEST }))
-    source: Sources,
-    @Request() req
-  ): GetDecisionListDTO[] {
+    source: Sources,*/
+    @Request() req,
+    @Body('getDecisionList', new ValidateDtoPipe()) getDecisionList: ListDecisionsDTO
+  ): Promise<GetDecisionsListResponse[]> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenException()
     }
     this.logger.log('GET /decisions called with status ' + status)
-    // return new MockUtils().allDecisionsToBeTreated
-    return new MockUtils().allDecisionsToBeTreated.filter(
+    const decisions = new MockUtils().allDecisionsToBeTreated
+    return decisions.map((decisions) => ({
+      idDecision: decisions.id,
+      labelStatus: decisions.status,
+      source: decisions.source,
+      dateStart: decisions.dateCreation,
+      dateEnd: decisions.dateCreation
+    }))
+
+    /*return new MockUtils().allDecisionsToBeTreated.filter(
       (decision) =>
         decision.source === Sources.CC ||
         decision.source === Sources.CA ||
         decision.source === Sources.TJ
-    )
+    )*/
+    // const listDecisionsUseCase = new ListDecisionsUsecase(
+    //   new MongoRepository(process.env.MONGO_DB_URL)
+    // )
+    // const listDecisions = await listDecisionsUseCase.execute(getDecisionList)
+    // return null
   }
 
   @Post()

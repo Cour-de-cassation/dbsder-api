@@ -1,32 +1,25 @@
 import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
-import { DecisionStatus } from '../../domain/enum'
+import { DecisionStatus, Sources } from '../../domain/enum'
 
 export class MockUtils {
   decisionCCToBeTreated: GetDecisionListDTO = {
     dateCreation: '2023-04-11',
     id: 'id2023',
-    source: 'CC',
+    source: Sources.CC,
     status: DecisionStatus.TOBETREATED
   }
 
   decisionCAToBeTreated: GetDecisionListDTO = {
     dateCreation: '2023-04-11',
     id: 'id2023',
-    source: 'CA',
+    source: Sources.CA,
     status: DecisionStatus.TOBETREATED
   }
 
   decisionTJToBeTreated: GetDecisionListDTO = {
-    dateCreation: '2023-04-11',
+    dateCreation: '2023-10-10T23:00Z',
     id: 'id2023',
-    source: 'TJ',
-    status: DecisionStatus.TOBETREATED
-  }
-
-  decisionToNotBeTreated: GetDecisionListDTO = {
-    dateCreation: '2023-04-11',
-    id: 'id2023',
-    source: 'OTHER',
+    source: Sources.TJ,
     status: DecisionStatus.TOBETREATED
   }
 
@@ -36,7 +29,13 @@ export class MockUtils {
     this.decisionCAToBeTreated
   ]
 
-  unfilteredDecisions = [this.allDecisionsToBeTreated, this.decisionToNotBeTreated]
+  getDecisionsListTJInput = {
+    idDecision: 'id2023',
+    labelStatus: DecisionStatus.TOBETREATED,
+    source: Sources.TJ,
+    dateStart: '2023-10-10T23:00Z',
+    dateEnd: '2023-10-10T23:00Z'
+  }
 
   createDecisionDTO = {
     id: 'someID',

@@ -1,10 +1,11 @@
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { ServiceUnavailableException } from '@nestjs/common'
-import { DecisionModel } from '../models/decision.model'
 import { CreateDecisionDTO, ListDecisionsDTO } from '../../createDecisionDTO'
 import { IDatabaseRepository } from '../../../domain/database.repository.interface'
 import { DecisionListModel, DecisionListSchema } from '../models/decisionsList.model'
+import { DecisionModel, DecisionSchema } from '../models/decision.model'
+import { ServiceUnavailableException } from '@nestjs/common'
 
 export class MongoRepository implements IDatabaseRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
