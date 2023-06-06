@@ -9,47 +9,10 @@ spec:
     - web
 
   routes:
-    - match: Host(`dbsder.judilibre-prive.local`) && PathPrefix(`/api`)
+    - match: Host(`apidbsder.judilibre-prive.local`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: api-service
           port: api
-      middlewares:
-        - name: api-stripprefix
-    - match: Host(`dbsder.judilibre-prive.local`) && PathPrefix(`/bucket`)
-      kind: Rule
-      services:
-        - name: bucket-service
-          port: console
-      middlewares:
-        - name: bucket-stripprefix
-    - match: Host(`dbsder.judilibre-prive.local`) && PathPrefix(`/`)
-      kind: Rule
-      services:
-        - name: nginx-service
-          port: 80
 
-
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: api-stripprefix
-  namespace: dbsder
-spec:
-  replacePathRegex:
-    regex: /api(/|$)(.*)
-    replacement: /$2
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: bucket-stripprefix
-  namespace: dbsder
-spec:
-  replacePathRegex:
-    regex: /bucket(/|$)(.*)
-    replacement: /$2
 
