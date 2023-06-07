@@ -12,6 +12,10 @@ export class ListDecisionsUsecase {
       this.logger.error(error)
       throw new ServiceUnavailableException('Error from repository')
     })
-    return decisionsList
+    // faire la récupération id ici ? Déplacer dans le presenter
+    return decisionsList.map((decision) => {
+      const { iddecision, ...data } = decision
+      return { iddecision: iddecision, ...data }
+    })
   }
 }

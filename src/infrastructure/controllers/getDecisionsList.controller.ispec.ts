@@ -87,32 +87,14 @@ describe('DecisionsController', () => {
 
     it('returns a 200 with a list of decisions from TJ', async () => {
       // GIVEN
-      const expectedDecisions = mockUtils.decisionTJToBeTreated
-      const getDecisionListInput = mockUtils.getDecisionsListTJInput
-
-      // WHEN
-      const result = await request(app.getHttpServer())
-        .get('/decisions')
-        .set({ 'x-api-key': labelApiKey })
-        .send({ getDecisionList: getDecisionListInput })
-
-      console.log(result.body)
-
-      // THEN
-      expect(result.statusCode).toEqual(HttpStatus.OK)
-      expect(result.body).toEqual(expectedDecisions)
-    })
-
-    it('returns a 200 with a list of decisions with a validated source', async () => {
-      // GIVEN
       const expectedDecisions = mockUtils.allDecisionsToBeTreated
-      const getDecisionListInput = mockUtils.getDecisionsListTJInput
+      //const getDecisionListInput = mockUtils.getDecisionsListTJInput
 
       // WHEN
       const result = await request(app.getHttpServer())
         .get('/decisions')
         .set({ 'x-api-key': labelApiKey })
-        .send({ getDecisionList: getDecisionListInput })
+        .query({ status: DecisionStatus.TOBETREATED, source: Sources.TJ })
 
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.OK)

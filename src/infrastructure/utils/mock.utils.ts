@@ -68,7 +68,7 @@ export class MockUtils {
     registerNumber: 'someRegisterNumber',
     solution: 'someSolution',
     sourceId: 1,
-    sourceName: 'someSourceName',
+    sourceName: Sources.TJ,
     publication: ['somePublication'],
     formation: 'someFormation',
     blocOccultation: 1,
@@ -115,6 +115,6 @@ export class MockUtils {
     registerNumber: 'someRegisterNumber',
     solution: 'someSolution',
     sourceId: 1,
-    sourceName: 'someSourceName'
+    sourceName: Sources.TJ
   }
 }

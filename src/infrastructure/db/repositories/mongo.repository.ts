@@ -16,9 +16,9 @@ export class MongoRepository implements IDatabaseRepository {
           iddecision: decision.id,
           labelStatus: decision.labelStatus,
           sourceName: decision.source,
-          dateCreation: decision.dateStart
+          dateCreation: decision.startDate
         })
-        return savedDecisions
+        return Promise.resolve(savedDecisions)
       } catch (error) {
         throw new ServiceUnavailableException('Error from database')
       }

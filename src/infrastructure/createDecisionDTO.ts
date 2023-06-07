@@ -376,18 +376,16 @@ export class CreateDecisionDTO {
 }
 
 export class ListDecisionsDTO {
-  @IsString()
-  id: string
-
   @IsEnum(DecisionStatus)
-  labelStatus: DecisionStatus
+  status: DecisionStatus
 
   @IsEnum(Sources)
   source: Sources
 
   @IsString()
-  dateStart: string
+  startDate: string
 
   @IsString()
-  dateEnd: string
+  @IsOptional()
+  endDate?: string
 }

@@ -9,8 +9,7 @@ import {
   Post,
   Query,
   Request,
-  UsePipes,
-  ValidationPipe
+  UsePipes
 } from '@nestjs/common'
 import {
   ApiAcceptedResponse,
@@ -22,10 +21,9 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { MockUtils } from '../utils/mock.utils'
 import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
 import { DecisionStatus, Sources } from '../../domain/enum'
-import { CreateDecisionDTO, ListDecisionsDTO } from '../createDecisionDTO'
+import { CreateDecisionDTO } from '../createDecisionDTO'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { CreateDecisionUsecase } from '../../domain/usecase/createDecision.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
@@ -58,15 +56,16 @@ export class DecisionsController {
     description: "Vous n'avez pas accès à cette route"
   })
   async getDecisions(
-    /*@Query(
+    @Query(
       'status',
       new ParseEnumPipe(DecisionStatus, { errorHttpStatusCode: HttpStatus.BAD_REQUEST })
     )
     status: DecisionStatus,
     @Query('source', new ParseEnumPipe(Sources, { errorHttpStatusCode: HttpStatus.BAD_REQUEST }))
-    source: Sources,*/
-    @Request() req,
-    @Body('getDecisionList', new ValidateDtoPipe()) getDecisionList: ListDecisionsDTO
+    source: Sources,
+    @Query('startDate')
+    startDate: string,
+    @Request() req
   ): Promise<GetDecisionsListResponse[]> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
@@ -74,26 +73,22 @@ export class DecisionsController {
       throw new ForbiddenException()
     }
     this.logger.log('GET /decisions called with status ' + status)
-    const decisions = new MockUtils().allDecisionsToBeTreated
-    return decisions.map((decisions) => ({
-      idDecision: decisions.id,
-      labelStatus: decisions.status,
-      source: decisions.source,
-      dateStart: decisions.dateCreation,
-      dateEnd: decisions.dateCreation
-    }))
 
-    /*return new MockUtils().allDecisionsToBeTreated.filter(
-      (decision) =>
-        decision.source === Sources.CC ||
-        decision.source === Sources.CA ||
-        decision.source === Sources.TJ
-    )*/
-    // const listDecisionsUseCase = new ListDecisionsUsecase(
-    //   new MongoRepository(process.env.MONGO_DB_URL)
-    // )
-    // const listDecisions = await listDecisionsUseCase.execute(getDecisionList)
-    // return null
+    //return Promise.resolve(new MockUtils().allDecisionsToBeTreated)
+    const listDecisionUsecase = new ListDecisionsUsecase(
+      new MongoRepository(process.env.MONGO_DB_URL)
+    )
+
+    // les bons params ?
+    const listDecisions = listDecisionUsecase.execute({
+      source: source,
+      status: status,
+      startDate: startDate,
+      endDate: startDate
+    })
+
+    // Je souhaite retourner id, status, sourceName, startDate voire endDate
+    return listDecisions
   }
 
   @Post()
