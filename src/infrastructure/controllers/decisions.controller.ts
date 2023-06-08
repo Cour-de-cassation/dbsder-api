@@ -30,6 +30,7 @@ import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { CreateDecisionUsecase } from '../../domain/usecase/createDecision.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
+import { ApiKeyValidation } from '../auth/apiKeyValidation'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -61,8 +62,9 @@ export class DecisionsController {
     status: DecisionStatus,
     @Request() req
   ): GetDecisionListDTO[] {
+    const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
-    if (apiKey !== process.env.LABEL_API_KEY) {
+    if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenException()
     }
     this.logger.log('GET /decisions called with status ' + status)
@@ -91,9 +93,9 @@ export class DecisionsController {
     @Body('decision', new ValidateDtoPipe()) decision: CreateDecisionDTO
   ): Promise<CreateDecisionResponse> {
     this.logger.log('POST /decisions called with ' + JSON.stringify(decision))
-    const authorizedKeys = [process.env.NORMALIZATION_API_KEY, process.env.OPENSDER_API_KEY]
+    const authorizedApiKeys = [process.env.NORMALIZATION_API_KEY, process.env.OPENSDER_API_KEY]
     const apiKey = req.headers['x-api-key']
-    if (!authorizedKeys.includes(apiKey)) {
+    if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenException()
     }
 
