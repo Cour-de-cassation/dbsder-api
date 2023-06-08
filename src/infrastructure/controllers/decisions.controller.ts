@@ -35,6 +35,7 @@ import { ApiKeyValidation } from '../auth/apiKeyValidation'
 @ApiTags('DbSder')
 @Controller('decisions')
 export class DecisionsController {
+  constructor(private readonly mongoRepository: MongoRepository) {}
   private readonly logger = new Logger()
 
   @Get()
@@ -99,9 +100,7 @@ export class DecisionsController {
       throw new ForbiddenException()
     }
 
-    const createDecisionUsecase = new CreateDecisionUsecase(
-      new MongoRepository(process.env.MONGO_DB_URL)
-    )
+    const createDecisionUsecase = new CreateDecisionUsecase(this.mongoRepository)
     const decisionCreated = await createDecisionUsecase.execute(decision)
     return {
       id: decisionCreated.id,

@@ -1,10 +1,12 @@
 import * as request from 'supertest'
-import { HttpStatus, INestApplication } from '@nestjs/common'
-import { Test, TestingModule } from '@nestjs/testing'
-import { AppModule } from '../../app.module'
-import { MockUtils } from '../utils/mock.utils'
 import mongoose from 'mongoose'
 import { MongoMemoryServer } from 'mongodb-memory-server'
+import { MongooseModule } from '@nestjs/mongoose'
+import { Test, TestingModule } from '@nestjs/testing'
+import { HttpStatus, INestApplication } from '@nestjs/common'
+import { AppModule } from '../../app.module'
+import { MockUtils } from '../utils/mock.utils'
+import { DecisionSchema } from '../db/models/decision.model'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -18,7 +20,11 @@ describe('DecisionsController', () => {
       }
     })
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule]
+      imports: [
+        AppModule,
+        MongooseModule.forFeature([{ name: 'DecisionModel', schema: DecisionSchema }]),
+        MongooseModule.forRoot(mongoMemoryServer.getUri())
+      ]
     }).compile()
 
     app = moduleFixture.createNestApplication()
@@ -27,8 +33,8 @@ describe('DecisionsController', () => {
   })
 
   afterAll(async () => {
-    await mongoMemoryServer.stop()
-    await mongoose.disconnect()
+    if (mongoose) await mongoose.disconnect()
+    if (mongoMemoryServer) await mongoMemoryServer.stop()
   })
 
   describe('POST /decisions', () => {
@@ -41,6 +47,7 @@ describe('DecisionsController', () => {
         .post('/decisions')
         .set({ 'x-api-key': normalizationApiKey })
         .send({ decision: mockUtils.createDecisionDTO })
+
       // THEN
       expect(result.status).toEqual(HttpStatus.CREATED)
     })
