@@ -1,7 +1,6 @@
 import { IDatabaseRepository } from '../database.repository.interface'
 import { Logger, ServiceUnavailableException } from '@nestjs/common'
 import { ListDecisionsDTO } from '../../infrastructure/createDecisionDTO'
-import { DecisionModel } from '../../infrastructure/db/models/decision.model'
 import { GetDecisionsListResponse } from 'src/infrastructure/controllers/responses/getDecisionsListResponse'
 
 export class ListDecisionsUsecase {
@@ -13,7 +12,7 @@ export class ListDecisionsUsecase {
       this.logger.error(error)
       throw new ServiceUnavailableException('Error from repository')
     })
-    // faire la récupération id ici ? Déplacer dans le presenter
+
     return decisionsList.map((decision) => {
       return {
         id: decision.iddecision,
