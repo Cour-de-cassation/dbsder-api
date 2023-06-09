@@ -12,10 +12,11 @@ export class MongoRepository implements IDatabaseRepository {
     try {
       const savedDecisions = await this.decisionModel.find({
         labelStatus: decision.status,
-        sourceName: decision.source,
-        dateCreation: decision.startDate
+        sourceName: decision.source
+        //dateCreation: decision.startDate
       })
       return Promise.resolve(savedDecisions)
+      //return await this.decisionModel.find({}).lean()
     } catch (error) {
       throw new ServiceUnavailableException('Error from database')
     }

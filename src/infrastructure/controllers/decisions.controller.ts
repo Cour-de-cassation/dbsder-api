@@ -75,18 +75,12 @@ export class DecisionsController {
     }
     this.logger.log('GET /decisions called with status ' + status)
 
-    return Promise.resolve(new MockUtils().allDecisionsToBeTreated)
-    /*const listDecisionUsecase = new ListDecisionsUsecase(
-      new MongoRepository(process.env.MONGO_DB_URL)
-    )*/
+    // return Promise.resolve(new MockUtils().allDecisionsToBeTreated)
+    const listDecisionUsecase = new ListDecisionsUsecase(this.mongoRepository)
 
-    // les bons params ?
-    /*const listDecisions = listDecisionUsecase.execute({
-      source: source,
-      status: status,
-      startDate: startDate,
-      endDate: startDate
-    })*/
+    const listDecisions = listDecisionUsecase.execute({ source, startDate, status })
+
+    return Promise.resolve(listDecisions)
 
     // Je souhaite retourner id, status, sourceName, startDate voire endDate
     // return listDecisions
