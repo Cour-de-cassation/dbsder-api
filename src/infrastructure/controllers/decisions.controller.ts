@@ -31,6 +31,7 @@ import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
 import { ListDecisionsUsecase } from '../../domain/usecase/listDecisions.usecase'
+import { MockUtils } from '../utils/mock.utils'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -74,21 +75,21 @@ export class DecisionsController {
     }
     this.logger.log('GET /decisions called with status ' + status)
 
-    //return Promise.resolve(new MockUtils().allDecisionsToBeTreated)
-    const listDecisionUsecase = new ListDecisionsUsecase(
+    return Promise.resolve(new MockUtils().allDecisionsToBeTreated)
+    /*const listDecisionUsecase = new ListDecisionsUsecase(
       new MongoRepository(process.env.MONGO_DB_URL)
-    )
+    )*/
 
     // les bons params ?
-    const listDecisions = listDecisionUsecase.execute({
+    /*const listDecisions = listDecisionUsecase.execute({
       source: source,
       status: status,
       startDate: startDate,
       endDate: startDate
-    })
+    })*/
 
     // Je souhaite retourner id, status, sourceName, startDate voire endDate
-    return listDecisions
+    // return listDecisions
   }
 
   @Post()
