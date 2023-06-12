@@ -17,7 +17,6 @@ import { MongoRepository } from './infrastructure/db/repositories/mongo.reposito
     TerminusModule.forRoot({
       logger: false
     }),
-    // TODO : vérifier la DB URL
     MongooseModule.forRoot(process.env.MONGO_DB_URL),
     MongooseModule.forFeature([{ name: 'DecisionModel', schema: DecisionSchema }])
   ],

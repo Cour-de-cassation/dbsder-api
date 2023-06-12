@@ -52,7 +52,7 @@ DOC_LOGIN=login
 DOC_PASSWORD=pwd
 
 ## Mongo URL
-MONGO_DB_URL=mongodb://<URL>:<PORT>
+MONGO_DB_URL=mongodb://<URL>:<PORT>/<DB_NAME>
 ```
 
 ### Démarrer l'application via Docker
