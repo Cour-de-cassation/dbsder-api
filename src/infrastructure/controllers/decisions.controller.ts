@@ -9,7 +9,8 @@ import {
   Post,
   Query,
   Request,
-  UsePipes
+  UsePipes,
+  ValidationPipe
 } from '@nestjs/common'
 import {
   ApiAcceptedResponse,
@@ -23,7 +24,7 @@ import {
 } from '@nestjs/swagger'
 import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
 import { DecisionStatus, Sources } from '../../domain/enum'
-import { CreateDecisionDTO } from '../createDecisionDTO'
+import { CreateDecisionDTO, ListDecisionsDTO } from '../createDecisionDTO'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { CreateDecisionUsecase } from '../../domain/usecase/createDecision.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
@@ -56,15 +57,7 @@ export class DecisionsController {
     description: "Vous n'avez pas accès à cette route"
   })
   async getDecisions(
-    @Query(
-      'status',
-      new ParseEnumPipe(DecisionStatus, { errorHttpStatusCode: HttpStatus.BAD_REQUEST })
-    )
-    status: DecisionStatus,
-    @Query('source', new ParseEnumPipe(Sources, { errorHttpStatusCode: HttpStatus.BAD_REQUEST }))
-    source: Sources,
-    @Query('startDate')
-    startDate: string,
+    @Query(new ValidateDtoPipe()) query: ListDecisionsDTO,
     @Request() req
   ): Promise<GetDecisionsListResponse[]> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
@@ -72,11 +65,11 @@ export class DecisionsController {
     if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenException()
     }
-    this.logger.log('GET /decisions called with status ' + status)
+    this.logger.log('GET /decisions called with status ' + query.status)
 
     const listDecisionUsecase = new ListDecisionsUsecase(this.mongoRepository)
 
-    const listDecisions = listDecisionUsecase.execute({ source, startDate, status })
+    const listDecisions = listDecisionUsecase.execute(query)
 
     return Promise.resolve(listDecisions)
   }

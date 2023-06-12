@@ -10,7 +10,8 @@ describe('listDecisionUsecase', () => {
   const listCriterias = {
     status: DecisionStatus.TOBETREATED,
     source: Sources.TJ,
-    startDate: 'someIddecision'
+    startDate: '2023-10-10',
+    endDate: '2023-10-11'
   }
   let mockUtils: MockUtils
   let usecase: ListDecisionsUsecase

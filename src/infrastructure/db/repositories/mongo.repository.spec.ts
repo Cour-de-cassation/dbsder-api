@@ -53,7 +53,8 @@ describe('MongoRepository', () => {
       const decisionListDTO = {
         status: DecisionStatus.TOBETREATED,
         source: Sources.TJ,
-        startDate: 'someDateCreation'
+        startDate: '2023-10-10',
+        endDate: '2023-10-11'
       }
       const expectedDecisionsModelList = [mockUtils.decisionModel]
       jest
@@ -71,7 +72,8 @@ describe('MongoRepository', () => {
       const decisionListDTO = {
         status: DecisionStatus.TOBETREATED,
         source: Sources.TJ,
-        startDate: 'someDateCreation'
+        startDate: '2023-10-10',
+        endDate: '2023-10-11'
       }
       jest.spyOn(mockedRepository, 'list').mockImplementationOnce(() => {
         throw new ServiceUnavailableException('Error from database')

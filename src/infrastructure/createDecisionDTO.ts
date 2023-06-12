@@ -7,7 +7,9 @@ import {
   IsObject,
   IsOptional,
   IsString,
-  ValidateNested
+  IsDateString,
+  ValidateNested,
+  Matches
 } from 'class-validator'
 import { DecisionStatus, Sources } from '../domain/enum'
 import { Type } from 'class-transformer'
@@ -383,9 +385,12 @@ export class ListDecisionsDTO {
   source: Sources
 
   @IsString()
+  @Matches('^(?:[0-9]{4})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])$')
+  @IsDateString()
   startDate: string
 
   @IsString()
-  @IsOptional()
-  endDate?: string
+  @Matches('^(?:[0-9]{4})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])$')
+  @IsDateString()
+  endDate: string
 }

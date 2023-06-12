@@ -1,6 +1,6 @@
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
-import { ServiceUnavailableException } from '@nestjs/common'
+import { BadRequestException, ServiceUnavailableException } from '@nestjs/common'
 import { CreateDecisionDTO, ListDecisionsDTO } from '../../createDecisionDTO'
 import { IDatabaseRepository } from '../../../domain/database.repository.interface'
 import { DecisionModel } from '../models/decision.model'
@@ -12,8 +12,8 @@ export class MongoRepository implements IDatabaseRepository {
     try {
       const savedDecisions = await this.decisionModel.find({
         labelStatus: decision.status,
-        sourceName: decision.source
-        //dateCreation: decision.startDate
+        sourceName: decision.source,
+        dateCreation: { $gte: decision.startDate, $lte: decision.endDate }
       })
       return Promise.resolve(savedDecisions)
       //return await this.decisionModel.find({}).lean()
@@ -28,5 +28,11 @@ export class MongoRepository implements IDatabaseRepository {
       throw new ServiceUnavailableException('Error from database')
     })
     return Promise.resolve(savedDecision)
+  }
+
+  checkDate(decision: ListDecisionsDTO): void {
+    if (decision.startDate > decision.endDate) {
+      throw new BadRequestException('start date cannot be later than end date')
+    }
   }
 }
