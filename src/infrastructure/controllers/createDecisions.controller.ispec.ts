@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import * as request from 'supertest'
-import { MongoMemoryServer } from 'mongodb-memory-server'
 import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
