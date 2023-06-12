@@ -3,7 +3,5 @@ process.env = {
   NORMALIZATION_API_KEY: 'testNormalizationApiKey',
   OPENSDER_API_KEY: 'testOpenSderApiKey',
   OPS_API_KEY: 'testOpsApiKey',
-  MONGO_DB_URL: 'mongodb://127.0.0.1:5353',
-  MONGO_DB_PORT: '5353',
-  MONGO_DB_IP: '127.0.0.1'
+  MONGO_DB_URL: 'mongodb://127.0.0.1:5353/test'
 }

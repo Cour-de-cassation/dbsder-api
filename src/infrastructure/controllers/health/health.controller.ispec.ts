@@ -1,22 +1,15 @@
 import mongoose from 'mongoose'
 import * as request from 'supertest'
-import { MongoMemoryServer } from 'mongodb-memory-server'
-import { MongooseModule } from '@nestjs/mongoose'
 import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../../app.module'
 
 describe('HealthController', () => {
   let app: INestApplication
-  let mongoMemoryServer: MongoMemoryServer
 
   beforeAll(async () => {
-    mongoMemoryServer = await MongoMemoryServer.create({
-      instance: { port: parseInt(process.env.MONGO_DB_PORT), ip: process.env.MONGO_DB_IP }
-    })
-
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, MongooseModule.forRoot(mongoMemoryServer.getUri())]
+      imports: [AppModule]
     }).compile()
 
     app = moduleFixture.createNestApplication()
@@ -25,7 +18,6 @@ describe('HealthController', () => {
 
   afterAll(async () => {
     if (mongoose) await mongoose.disconnect()
-    if (mongoMemoryServer) await mongoMemoryServer.stop()
   })
 
   describe('GET /health', () => {
