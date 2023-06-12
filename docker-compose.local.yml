@@ -16,7 +16,7 @@ services:
       context: ./
       target: api
     env_file:
-      - .env
+      - docker.env
     expose: 
       - 3008
     ports:
