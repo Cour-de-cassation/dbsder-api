@@ -4,19 +4,26 @@ import { BadRequestException, ServiceUnavailableException } from '@nestjs/common
 import { CreateDecisionDTO, ListDecisionsDTO } from '../../createDecisionDTO'
 import { IDatabaseRepository } from '../../../domain/database.repository.interface'
 import { DecisionModel } from '../models/decision.model'
+import { parseDate } from '../../utils/parseDate.utils'
 
 export class MongoRepository implements IDatabaseRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
 
   async list(decision: ListDecisionsDTO): Promise<DecisionModel[]> {
     try {
+      const isStartDateLaterThanEndDate =
+        parseDate(decision.startDate) > parseDate(decision.endDate)
+      if (isStartDateLaterThanEndDate) {
+        throw new BadRequestException('startDate cannot be greater than endDate')
+      }
       const savedDecisions = await this.decisionModel.find({
         labelStatus: decision.status,
         sourceName: decision.source,
-        dateCreation: { $gte: decision.startDate, $lte: decision.endDate }
+        dateCreation: !isStartDateLaterThanEndDate
+          ? { $gte: decision.startDate, $lte: decision.endDate }
+          : ''
       })
       return Promise.resolve(savedDecisions)
-      //return await this.decisionModel.find({}).lean()
     } catch (error) {
       throw new ServiceUnavailableException('Error from database')
     }
@@ -28,11 +35,5 @@ export class MongoRepository implements IDatabaseRepository {
       throw new ServiceUnavailableException('Error from database')
     })
     return Promise.resolve(savedDecision)
-  }
-
-  checkDate(decision: ListDecisionsDTO): void {
-    if (decision.startDate > decision.endDate) {
-      throw new BadRequestException('start date cannot be later than end date')
-    }
   }
 }

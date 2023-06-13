@@ -1,5 +1,5 @@
 import { IDatabaseRepository } from '../database.repository.interface'
-import { Logger, ServiceUnavailableException } from '@nestjs/common'
+import { BadRequestException, Logger, ServiceUnavailableException } from '@nestjs/common'
 import { ListDecisionsDTO } from '../../infrastructure/createDecisionDTO'
 import { GetDecisionsListResponse } from 'src/infrastructure/controllers/responses/getDecisionsListResponse'
 
@@ -10,6 +10,9 @@ export class ListDecisionsUsecase {
   async execute(decision: ListDecisionsDTO): Promise<GetDecisionsListResponse[]> {
     const decisionsList = await this.mongoRepository.list(decision).catch((error) => {
       this.logger.error(error)
+      if (error instanceof BadRequestException) {
+        throw new BadRequestException(error.message)
+      }
       throw new ServiceUnavailableException('Error from repository')
     })
 
