@@ -29,12 +29,11 @@ export class MockUtils {
     this.decisionCAToBeTreated
   ]
 
-  getDecisionsListTJInput = {
-    idDecision: 'id2023',
-    labelStatus: DecisionStatus.TOBETREATED,
-    source: Sources.TJ,
-    dateStart: '2023-10-10T23:00Z',
-    dateEnd: '2023-10-10T23:00Z'
+  decisionQueryDTO = {
+    status: DecisionStatus.TOBETREATED,
+    source: Sources.CC,
+    startDate: '2023-10-10',
+    endDate: '2023-10-11'
   }
 
   createDecisionDTO = {

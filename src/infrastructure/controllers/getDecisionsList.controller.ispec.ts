@@ -71,13 +71,13 @@ describe('DecisionsController', () => {
     describe('returns 403 Forbidden', () => {
       it('when the apiKey is not authorized to call this endpoint', async () => {
         // GIVEN
+        const mockGetDecisionListQuery = mockUtils.decisionQueryDTO
         const normalisationApiKey = process.env.NORMALIZATION_API_KEY
 
         // WHEN
         const result = await request(app.getHttpServer())
           .get('/decisions')
-          .query({ status: DecisionStatus.TOBETREATED })
-          .query({ source: Sources.CA })
+          .query(mockGetDecisionListQuery)
           .set({ 'x-api-key': normalisationApiKey })
 
         // THEN
