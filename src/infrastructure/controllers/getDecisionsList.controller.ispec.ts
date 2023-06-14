@@ -1,6 +1,6 @@
 import * as request from 'supertest'
-import { HttpStatus, INestApplication } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
+import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { DecisionStatus } from '../../domain/enum'

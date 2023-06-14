@@ -1,40 +1,25 @@
-import * as request from 'supertest'
 import mongoose from 'mongoose'
-import { MongoMemoryServer } from 'mongodb-memory-server'
-import { MongooseModule } from '@nestjs/mongoose'
+import * as request from 'supertest'
 import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
-import { DecisionSchema } from '../db/models/decision.model'
 
 describe('DecisionsController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
-  let mongoMemoryServer: MongoMemoryServer
 
   beforeAll(async () => {
-    mongoMemoryServer = await MongoMemoryServer.create({
-      instance: {
-        port: parseInt(process.env.MONGO_DB_PORT)
-      }
-    })
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        AppModule,
-        MongooseModule.forFeature([{ name: 'DecisionModel', schema: DecisionSchema }]),
-        MongooseModule.forRoot(mongoMemoryServer.getUri())
-      ]
+      imports: [AppModule]
     }).compile()
 
     app = moduleFixture.createNestApplication()
-
     await app.init()
   })
 
   afterAll(async () => {
     if (mongoose) await mongoose.disconnect()
-    if (mongoMemoryServer) await mongoMemoryServer.stop()
   })
 
   describe('POST /decisions', () => {

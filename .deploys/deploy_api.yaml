@@ -27,12 +27,14 @@ spec:
               value: $DBSDER_API_NORMALIZATION_API_KEY
             - name: OPENSDER_API_KEY
               value: $DBSDER_API_OPENSDER_API_KEY
-            - name: MONGO_DB_URL
-              value: $DBSDER_API_MONGO_DB_URL
+            - name: OPS_API_KEY
+              value: $DBSDER_API_OPS_API_KEY
             - name: DOC_LOGIN
               value: $DBSDER_API_DOC_LOGIN
             - name: DOC_PASSWORD
               value: $DBSDER_API_DOC_PASSWORD
+            - name: MONGO_DB_URL
+              value: $DBSDER_API_MONGO_DB_URL
 
 ---
 apiVersion: v1
