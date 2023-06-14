@@ -48,7 +48,7 @@ describe('MongoRepository', () => {
   })
 
   describe('list', () => {
-    it('I receive a list of decisions matching my decision criterias', async () => {
+    it('I receive a list of decisions matching my decision criteria', async () => {
       // GIVEN
       const decisionListDTO = {
         status: DecisionStatus.TOBETREATED,

@@ -16,8 +16,6 @@ export class ListDecisionsUsecase {
       throw new ServiceUnavailableException('Error from repository')
     })
 
-    // Calcul période donnée ?
-
     return decisionsList.map((decision) => {
       return {
         id: decision.iddecision,
