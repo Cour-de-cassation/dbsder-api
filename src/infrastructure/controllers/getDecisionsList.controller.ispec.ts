@@ -3,6 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
+import mongoose from 'mongoose'
+import { DecisionSchema } from '../db/models/decision.model'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -17,6 +19,17 @@ describe('DecisionsController', () => {
     app = moduleFixture.createNestApplication()
 
     await app.init()
+
+    console.log(process.env.MONGO_DB_URL)
+    const db = await mongoose.connect(process.env.MONGO_DB_URL)
+    const decisions = db.model('decisions', DecisionSchema)
+
+    const decisionCreate = await decisions.create(mockUtils.decisionModel)
+    console.log(decisionCreate)
+  })
+
+  afterAll(async () => {
+    if (mongoose) await mongoose.disconnect()
   })
 
   describe('GET /decisions', () => {
@@ -84,7 +97,7 @@ describe('DecisionsController', () => {
       })
     })
 
-    it.skip('returns a 200 with a list of decisions from known source', async () => {
+    it('returns a 200 with a list of decisions from known source', async () => {
       // GIVEN
       const expectedDecisions = mockUtils.decisionTJToBeTreated
       const getDecisionsListDTO = mockUtils.decisionQueryDTO

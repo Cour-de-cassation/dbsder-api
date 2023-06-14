@@ -31,8 +31,8 @@ export class MockUtils {
 
   decisionQueryDTO = {
     status: DecisionStatus.TOBETREATED,
-    source: Sources.CC,
-    startDate: '2023-10-10',
+    source: Sources.TJ,
+    startDate: '2023-10-09',
     endDate: '2023-10-11'
   }
 
@@ -83,6 +83,7 @@ export class MockUtils {
     natureAffairePenal: 'someNatureAffairePenal',
     codeMatiereCivil: 'someCodeMatiereCivil'
   }
+
   decisionModel = {
     NAOCode: 'someNAOCode',
     analysis: {
@@ -100,12 +101,12 @@ export class MockUtils {
     chamberId: 'someChamberId',
     chamberName: 'someChamberName',
     codeMatiereCivil: 'someCodeMatiereCivil',
-    dateCreation: 'someDateCreation',
+    dateCreation: '2023-10-10T23:00Z',
     dateDecision: 'someDateDecision',
     decatt: [1, 2],
     formation: 'someFormation',
     id: 'someID',
-    iddecision: 'someIddecision',
+    iddecision: 'id2023',
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',

@@ -3,14 +3,11 @@ import {
   Controller,
   ForbiddenException,
   Get,
-  HttpStatus,
   Logger,
-  ParseEnumPipe,
   Post,
   Query,
   Request,
-  UsePipes,
-  ValidationPipe
+  UsePipes
 } from '@nestjs/common'
 import {
   ApiAcceptedResponse,
