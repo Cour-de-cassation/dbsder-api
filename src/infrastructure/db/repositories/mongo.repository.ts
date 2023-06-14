@@ -20,9 +20,7 @@ export class MongoRepository implements IDatabaseRepository {
       const savedDecisions = await this.decisionModel.find({
         labelStatus: decision.status,
         sourceName: decision.source,
-        dateCreation: !isStartDateLaterThanEndDate
-          ? { $gte: decision.startDate, $lte: decision.endDate }
-          : ''
+        dateCreation: { $gte: decision.startDate, $lte: decision.endDate }
       })
       return Promise.resolve(savedDecisions)
     } catch (error) {

@@ -26,12 +26,12 @@ import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
 import { DecisionStatus } from '../../domain/enum'
 import { CreateDecisionDTO } from '../createDecisionDTO'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
-import { CreateDecisionUsecase } from '../../domain/usecase/createDecision.usecase'
+import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
-import { ListDecisionsUsecase } from '../../domain/usecase/listDecisions.usecase'
+import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
 
 @ApiTags('DbSder')
 @Controller('decisions')

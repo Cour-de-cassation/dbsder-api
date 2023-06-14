@@ -36,6 +36,13 @@ export class MockUtils {
     endDate: '2023-10-11'
   }
 
+  decisionQueryWithUnknownSourceDTO = {
+    status: DecisionStatus.TOBETREATED,
+    source: 'unknownSource',
+    startDate: '2023-10-10',
+    endDate: '2023-10-11'
+  }
+
   createDecisionDTO = {
     id: 'someID',
     analysis: {

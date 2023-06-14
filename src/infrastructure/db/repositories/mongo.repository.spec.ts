@@ -3,7 +3,6 @@ import { MockUtils } from '../../utils/mock.utils'
 import { ServiceUnavailableException } from '@nestjs/common'
 import { IDatabaseRepository } from '../../../domain/database.repository.interface'
 import { DecisionModel } from '../models/decision.model'
-import { DecisionStatus, Sources } from '../../../domain/enum'
 
 describe('MongoRepository', () => {
   let mockedRepository: IDatabaseRepository
@@ -50,12 +49,7 @@ describe('MongoRepository', () => {
   describe('list', () => {
     it('I receive a list of decisions matching my decision criteria', async () => {
       // GIVEN
-      const decisionListDTO = {
-        status: DecisionStatus.TOBETREATED,
-        source: Sources.TJ,
-        startDate: '2023-10-10',
-        endDate: '2023-10-11'
-      }
+      const decisionListDTO = mockUtils.decisionQueryDTO
       const expectedDecisionsModelList = [mockUtils.decisionModel]
       jest
         .spyOn(mockedRepository, 'list')
@@ -69,12 +63,8 @@ describe('MongoRepository', () => {
 
     it('I receive an error message when the list recuperation in the db has failed', () => {
       // GIVEN
-      const decisionListDTO = {
-        status: DecisionStatus.TOBETREATED,
-        source: Sources.TJ,
-        startDate: '2023-10-10',
-        endDate: '2023-10-11'
-      }
+      const decisionListDTO = mockUtils.decisionQueryDTO
+
       jest.spyOn(mockedRepository, 'list').mockImplementationOnce(() => {
         throw new ServiceUnavailableException('Error from database')
       })

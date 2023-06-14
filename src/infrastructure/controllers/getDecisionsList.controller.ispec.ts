@@ -3,7 +3,6 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
-import { DecisionStatus, Sources } from '../../domain/enum'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -88,17 +87,13 @@ describe('DecisionsController', () => {
     it.skip('returns a 200 with a list of decisions from known source', async () => {
       // GIVEN
       const expectedDecisions = mockUtils.decisionTJToBeTreated
-      const queryFilters = {
-        status: DecisionStatus.TOBETREATED,
-        source: Sources.TJ
-      }
-      //const getDecisionListInput = mockUtils.getDecisionsListTJInput
+      const getDecisionsListDTO = mockUtils.decisionQueryDTO
 
       // WHEN
       const result = await request(app.getHttpServer())
         .get('/decisions')
+        .query(getDecisionsListDTO)
         .set({ 'x-api-key': labelApiKey })
-        .query({ status: queryFilters.status, source: queryFilters.source })
 
       // THEN
       expect(result.statusCode).toEqual(HttpStatus.OK)
@@ -107,13 +102,12 @@ describe('DecisionsController', () => {
 
     it('returns a 400 with a list of decisions with non validated source', async () => {
       // GIVEN
-      const unknownSource = 'unknownSource'
+      const getDecisionsListWithUnknownSourceDTO = mockUtils.decisionQueryWithUnknownSourceDTO
 
       // WHEN
       const result = await request(app.getHttpServer())
         .get('/decisions')
-        .query({ status: DecisionStatus.TOBETREATED })
-        .query({ source: unknownSource })
+        .query(getDecisionsListWithUnknownSourceDTO)
         .set({ 'x-api-key': labelApiKey })
 
       // THEN
