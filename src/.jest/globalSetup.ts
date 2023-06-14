@@ -1,5 +1,6 @@
-import { MongoMemoryServer } from 'mongodb-memory-server'
+// Following https://nodkz.github.io/mongodb-memory-server/docs/guides/integration-examples/test-runners
 import * as mongoose from 'mongoose'
+import { MongoMemoryServer } from 'mongodb-memory-server'
 import { mongoDbMemoryServerConf } from './mongoDbMemoryServer.conf'
 
 export default async function globalSetup() {
@@ -13,7 +14,7 @@ export default async function globalSetup() {
       }
     })
     const uri = instance.getUri()
-    ;(global as any).__MONGOINSTANCE = instance
+    global.__MONGOINSTANCE = instance
     process.env.MONGO_URI = uri.slice(0, uri.lastIndexOf('/'))
   } else {
     process.env.MONGO_URI = `mongodb://${mongoDbMemoryServerConf.IP}:${mongoDbMemoryServerConf.Port}`

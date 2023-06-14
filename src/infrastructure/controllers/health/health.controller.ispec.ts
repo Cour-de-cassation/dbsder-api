@@ -51,7 +51,7 @@ describe('HealthController', () => {
       expect(result.body.info.mongoose.status).toEqual(expectedMongoStatus)
     })
 
-    it('returns a 503 OK with DB status DOWN when DB is unavailable', async () => {
+    it('returns a 503 SERVICE UNAVAILABLE with DB status DOWN when DB is unavailable', async () => {
       // GIVEN
       const validApiKey = process.env.OPS_API_KEY
       await mongoose.disconnect()
