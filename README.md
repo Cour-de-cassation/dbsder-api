@@ -45,14 +45,14 @@ Créer un fichier `.env` à la racine du dossier avec les variables suivantes :
 LABEL_API_KEY=some_uuid
 NORMALIZATION_API_KEY=some_uuid
 OPENSDER_API_KEY=some_uuid
+OPS_API_KEY=some_uuid
 
 ## Identifiants Swagger
 DOC_LOGIN=login
 DOC_PASSWORD=pwd
 
 ## Mongo URL
-
-MONGO_DB_URL=mongodb://<URL>:<PORT>
+MONGO_DB_URL=mongodb://<URL>:<PORT>/<DB_NAME>
 ```
 
 ### Démarrer l'application via Docker

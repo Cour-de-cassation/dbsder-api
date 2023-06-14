@@ -3,6 +3,8 @@ version: "3.7"
 services:
   db:
     image: mongo:4.4
+    env_file:
+      - docker.env
     command: mongod --port 55432
     volumes:
       - dbsder-mongo-storage:/data/db-sder/db
@@ -16,7 +18,7 @@ services:
       context: ./
       target: api
     env_file:
-      - .env
+      - docker.env
     expose: 
       - 3008
     ports:
