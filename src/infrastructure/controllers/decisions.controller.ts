@@ -57,7 +57,7 @@ export class DecisionsController {
     description: "Vous n'avez pas accès à cette route"
   })
   async getDecisions(
-    @Query(new ValidateDtoPipe()) query: GetDecisionListDTO,
+    @Query(new ValidateDtoPipe()) getDecisionListDTO: GetDecisionListDTO,
     @Request() req
   ): Promise<GetDecisionsListResponse[]> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
@@ -65,13 +65,13 @@ export class DecisionsController {
     if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenException()
     }
-    this.logger.log('GET /decisions called with status ' + query.status)
+    this.logger.log('GET /decisions called with status ' + getDecisionListDTO.status)
 
     const listDecisionUsecase = new ListDecisionsUsecase(this.mongoRepository)
 
-    const listDecisions = listDecisionUsecase.execute(query)
+    const listDecisions = await listDecisionUsecase.execute(getDecisionListDTO)
 
-    return Promise.resolve(listDecisions)
+    return listDecisions
   }
 
   @Post()
