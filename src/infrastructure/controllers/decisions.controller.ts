@@ -23,8 +23,8 @@ import {
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
 import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
-import { DecisionStatus, Sources } from '../../domain/enum'
-import { CreateDecisionDTO, ListDecisionsDTO } from '../createDecisionDTO'
+import { DecisionStatus } from '../../domain/enum'
+import { CreateDecisionDTO } from '../createDecisionDTO'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { CreateDecisionUsecase } from '../../domain/usecase/createDecision.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
@@ -57,7 +57,7 @@ export class DecisionsController {
     description: "Vous n'avez pas accès à cette route"
   })
   async getDecisions(
-    @Query(new ValidateDtoPipe()) query: ListDecisionsDTO,
+    @Query(new ValidateDtoPipe()) query: GetDecisionListDTO,
     @Request() req
   ): Promise<GetDecisionsListResponse[]> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]

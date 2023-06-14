@@ -1,22 +1,22 @@
-import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
 import { DecisionStatus, Sources } from '../../domain/enum'
+import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsListResponse'
 
 export class MockUtils {
-  decisionCCToBeTreated: GetDecisionListDTO = {
+  decisionCCToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-04-11',
     id: 'id2023',
     source: Sources.CC,
     status: DecisionStatus.TOBETREATED
   }
 
-  decisionCAToBeTreated: GetDecisionListDTO = {
+  decisionCAToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-04-11',
     id: 'id2023',
     source: Sources.CA,
     status: DecisionStatus.TOBETREATED
   }
 
-  decisionTJToBeTreated: GetDecisionListDTO = {
+  decisionTJToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-10-10T23:00Z',
     id: 'id2023',
     source: Sources.TJ,

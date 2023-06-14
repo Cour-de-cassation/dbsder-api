@@ -7,11 +7,9 @@ import {
   IsObject,
   IsOptional,
   IsString,
-  IsDateString,
-  ValidateNested,
-  Matches
+  ValidateNested
 } from 'class-validator'
-import { DecisionStatus, Sources } from '../domain/enum'
+import { DecisionStatus } from '../domain/enum'
 import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { MockUtils } from './utils/mock.utils'
@@ -375,22 +373,4 @@ export class CreateDecisionDTO {
   @IsOptional()
   @IsString()
   endCaseCode?: string
-}
-
-export class ListDecisionsDTO {
-  @IsEnum(DecisionStatus)
-  status: DecisionStatus
-
-  @IsEnum(Sources)
-  source: Sources
-
-  @IsString()
-  @Matches('^(?:[0-9]{4})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])$')
-  @IsDateString()
-  startDate: string
-
-  @IsString()
-  @Matches('^(?:[0-9]{4})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])$')
-  @IsDateString()
-  endDate: string
 }
