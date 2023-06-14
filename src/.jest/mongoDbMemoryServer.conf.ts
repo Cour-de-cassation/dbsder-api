@@ -4,5 +4,5 @@ export const mongoDbMemoryServerConf = {
   Memory: true,
   IP: '127.0.0.1',
   Port: '5353',
-  Database: 'SDER'
+  Database: 'test'
 }
