@@ -4,7 +4,8 @@ import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import mongoose from 'mongoose'
-import { DecisionSchema } from '../db/models/decision.model'
+import { DecisionsController } from './decisions.controller'
+import { MongoRepository } from '../db/repositories/mongo.repository'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -19,11 +20,9 @@ describe('DecisionsController', () => {
     app = moduleFixture.createNestApplication()
 
     await app.init()
+    const mongoRepository = moduleFixture.get<MongoRepository>(MongoRepository)
 
-    await request(app.getHttpServer())
-      .post('/decisions')
-      .set({ 'x-api-key': process.env.NORMALIZATION_API_KEY })
-      .send({ decision: mockUtils.decisionModel })
+    mongoRepository.create(mockUtils.decisionModel)
   })
 
   afterAll(async () => {

@@ -6,7 +6,6 @@ import { IDatabaseRepository } from '../../../domain/database.repository.interfa
 import { DecisionModel } from '../models/decision.model'
 import { parseDate } from '../../utils/parseDate.utils'
 import { GetDecisionListDTO } from '../../../domain/getDecisionList.dto'
-import { DecisionStatus } from '../../../domain/enum'
 
 export class MongoRepository implements IDatabaseRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
