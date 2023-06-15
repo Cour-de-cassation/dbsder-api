@@ -20,12 +20,10 @@ describe('DecisionsController', () => {
 
     await app.init()
 
-    console.log(process.env.MONGO_DB_URL)
-    const db = await mongoose.connect(process.env.MONGO_DB_URL)
-    const decisions = db.model('decisions', DecisionSchema)
-
-    const decisionCreate = await decisions.create(mockUtils.decisionModel)
-    console.log(decisionCreate)
+    await request(app.getHttpServer())
+      .post('/decisions')
+      .set({ 'x-api-key': process.env.NORMALIZATION_API_KEY })
+      .send({ decision: mockUtils.decisionModel })
   })
 
   afterAll(async () => {
@@ -33,6 +31,24 @@ describe('DecisionsController', () => {
   })
 
   describe('GET /decisions', () => {
+    describe('Success case', () => {
+      it('returns a 200 with a list of decisions from known source', async () => {
+        // GIVEN
+        const expectedDecisions = [mockUtils.decisionTJToBeTreated]
+        const getDecisionsListDTO = mockUtils.decisionQueryDTO
+
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .get('/decisions')
+          .query(getDecisionsListDTO)
+          .set({ 'x-api-key': labelApiKey })
+
+        // THEN
+        expect(result.statusCode).toEqual(HttpStatus.OK)
+        expect(result.body).toEqual(expectedDecisions)
+      })
+    })
+
     describe('returns 401 Unauthorized', () => {
       it('when apiKey is not provided', async () => {
         // WHEN
@@ -95,22 +111,6 @@ describe('DecisionsController', () => {
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.FORBIDDEN)
       })
-    })
-
-    it('returns a 200 with a list of decisions from known source', async () => {
-      // GIVEN
-      const expectedDecisions = mockUtils.decisionTJToBeTreated
-      const getDecisionsListDTO = mockUtils.decisionQueryDTO
-
-      // WHEN
-      const result = await request(app.getHttpServer())
-        .get('/decisions')
-        .query(getDecisionsListDTO)
-        .set({ 'x-api-key': labelApiKey })
-
-      // THEN
-      expect(result.statusCode).toEqual(HttpStatus.OK)
-      expect(result.body).toEqual(expectedDecisions)
     })
 
     it('returns a 400 with a list of decisions with non validated source', async () => {

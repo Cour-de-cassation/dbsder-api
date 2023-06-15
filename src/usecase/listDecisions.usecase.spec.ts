@@ -7,7 +7,7 @@ import { DecisionStatus, Sources } from '../domain/enum'
 
 describe('listDecisionUsecase', () => {
   const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
-  const listCriterias = {
+  const listCriteria = {
     status: DecisionStatus.TOBETREATED,
     source: Sources.TJ,
     startDate: '2023-10-10',
@@ -31,7 +31,7 @@ describe('listDecisionUsecase', () => {
     jest.spyOn(mockDatabaseRepository, 'list').mockResolvedValue([mockUtils.decisionModel])
 
     // WHEN
-    const result = await usecase.execute(listCriterias)
+    const result = await usecase.execute(listCriteria)
 
     // THEN
     expect(result).toEqual(expectedListDecisions)
@@ -44,7 +44,7 @@ describe('listDecisionUsecase', () => {
       throw new ServiceUnavailableException('Error from repository')
     })
 
-    await expect(usecase.execute(listCriterias)).rejects.toThrow(
+    await expect(usecase.execute(listCriteria)).rejects.toThrow(
       new ServiceUnavailableException('Error from repository')
     )
   })
