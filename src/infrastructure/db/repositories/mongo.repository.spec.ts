@@ -75,4 +75,31 @@ describe('MongoRepository', () => {
         .toThrow(new ServiceUnavailableException('Error from database'))
     })
   })
+
+  describe('getDecisionById', () => {
+    it('throws an error if the database is unavailable', () => {
+      // GIVEN
+      const id = '1'
+      jest
+        .spyOn(mockedRepository, 'getDecisionById')
+        .mockRejectedValueOnce(new ServiceUnavailableException('Error from database'))
+
+      // WHEN
+      expect(() => mockedRepository.getDecisionById(id))
+        .rejects//THEN
+        .toThrow(new ServiceUnavailableException('Error from database'))
+    })
+    it('return a dicions with a valid id provided', async () => {
+      // GIVEN
+      const id = '1'
+      const expectedDecision = mockUtils.decisionModel
+      jest.spyOn(mockedRepository, 'getDecisionById').mockResolvedValueOnce(mockUtils.decisionModel)
+
+      // WHEN
+      const decision = await mockedRepository.getDecisionById(id)
+
+      // THEN
+      expect(decision).toEqual(expectedDecision)
+    })
+  })
 })

@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   Get,
   Logger,
+  Param,
   Post,
   Query,
   Request,
@@ -26,6 +27,8 @@ import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
+import { GetDecisionByIdResponse } from './responses/getDecisionByIdResponse.response'
+import { GetDecisionByIdUsecase } from 'src/domain/usecase/getDecisionById.usecase'
 import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
 import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
@@ -104,5 +107,11 @@ export class DecisionsController {
       id: decisionCreated.id,
       message: 'Decision créée'
     }
+  }
+
+  @Get(':id')
+  async getDecisionById(@Param('id') id: string): Promise<GetDecisionByIdResponse> {
+    const getDecisionByIdUsecase = new GetDecisionByIdUsecase(this.mongoRepository)
+    return {}
   }
 }
