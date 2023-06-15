@@ -17,7 +17,7 @@ describe('MongoRepository', () => {
   })
 
   describe('create', () => {
-    it('I want to be able to insert a decision inside the db', async () => {
+    it('I receive an id and message that confirms a decision is inserted in the db', async () => {
       // GIVEN
       const decision = mockUtils.createDecisionDTO
       const expectedDecision: DecisionModel = mockUtils.decisionModel
@@ -61,19 +61,17 @@ describe('MongoRepository', () => {
       expect(result).toMatchObject(expectedDecisionsModelList)
     })
 
-    it('I receive an error message when the list recuperation in the db has failed', () => {
+    it('I receive an error message when the list recuperation in the db has failed', async () => {
       // GIVEN
       const decisionListDTO = mockUtils.decisionQueryDTO
 
-      jest.spyOn(mockedRepository, 'list').mockImplementationOnce(() => {
-        throw new ServiceUnavailableException('Error from database')
-      })
+      jest
+        .spyOn(mockedRepository, 'list')
+        .mockRejectedValueOnce(new ServiceUnavailableException('Error from database'))
 
-      expect(() => {
-        // WHEN
-        mockedRepository.list(decisionListDTO)
-      })
-        // THEN
+      // WHEN
+      await expect(mockedRepository.list(decisionListDTO))
+        .rejects // THEN
         .toThrow(new ServiceUnavailableException('Error from database'))
     })
   })

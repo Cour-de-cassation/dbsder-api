@@ -19,9 +19,9 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
+import { GetDecisionsListDto } from '../dto/getDecisionsList.dto'
 import { DecisionStatus } from '../../domain/enum'
-import { CreateDecisionDTO } from '../createDecisionDTO'
+import { CreateDecisionDTO } from '../dto/createDecision.dto'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
@@ -34,6 +34,7 @@ import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
 @Controller('decisions')
 export class DecisionsController {
   constructor(private readonly mongoRepository: MongoRepository) {}
+
   private readonly logger = new Logger()
 
   @Get()
@@ -46,7 +47,7 @@ export class DecisionsController {
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
     enum: DecisionStatus
   })
-  @ApiOkResponse({ description: 'Une liste de décisions', type: GetDecisionListDTO })
+  @ApiOkResponse({ description: 'Une liste de décisions', type: GetDecisionsListDto })
   @ApiBadRequestResponse({
     description: "Le paramètre  écrit n'est présent dans la liste des valeurs acceptées"
   })
@@ -54,7 +55,7 @@ export class DecisionsController {
     description: "Vous n'avez pas accès à cette route"
   })
   async getDecisions(
-    @Query(new ValidateDtoPipe()) getDecisionListDTO: GetDecisionListDTO,
+    @Query(new ValidateDtoPipe()) getDecisionListDTO: GetDecisionsListDto,
     @Request() req
   ): Promise<GetDecisionsListResponse[]> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
@@ -66,9 +67,7 @@ export class DecisionsController {
 
     const listDecisionUsecase = new ListDecisionsUsecase(this.mongoRepository)
 
-    const listDecisions = await listDecisionUsecase.execute(getDecisionListDTO)
-
-    return listDecisions
+    return await listDecisionUsecase.execute(getDecisionListDTO)
   }
 
   @Post()

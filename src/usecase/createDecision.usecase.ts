@@ -1,4 +1,4 @@
-import { CreateDecisionDTO } from '../infrastructure/createDecisionDTO'
+import { CreateDecisionDTO } from '../infrastructure/dto/createDecision.dto'
 import { Logger, ServiceUnavailableException } from '@nestjs/common'
 import { IDatabaseRepository } from '../domain/database.repository.interface'
 import { DecisionModel } from '../infrastructure/db/models/decision.model'

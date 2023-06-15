@@ -9,10 +9,10 @@ import {
   IsString,
   ValidateNested
 } from 'class-validator'
-import { DecisionStatus } from '../domain/enum'
+import { DecisionStatus } from '../../domain/enum'
 import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { MockUtils } from './utils/mock.utils'
+import { MockUtils } from '../utils/mock.utils'
 
 const mockUtils = new MockUtils()
 export class DecisionOccultation {

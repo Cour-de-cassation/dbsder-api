@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { DecisionStatus, Sources } from './enum'
-import { MockUtils } from '../infrastructure/utils/mock.utils'
+import { DecisionStatus, Sources } from '../../domain/enum'
+import { MockUtils } from '../utils/mock.utils'
 import { IsDateString, IsEnum, IsString, Matches } from 'class-validator'
 
 const mockUtils = new MockUtils()
-export class GetDecisionListDTO {
+export class GetDecisionsListDto {
   @ApiProperty({
     description: 'Source de la décision',
     type: String,

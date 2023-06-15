@@ -124,11 +124,4 @@ export class MockUtils {
     sourceId: 1,
     sourceName: Sources.TJ
   }
-
-  decisionListResponse = {
-    status: DecisionStatus.TOBETREATED,
-    source: Sources.TJ,
-    dateCreation: '2023-10-10T23:00Z',
-    id: 'id2023'
-  }
 }

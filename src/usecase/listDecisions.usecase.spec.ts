@@ -3,31 +3,21 @@ import { ListDecisionsUsecase } from './listDecisions.usecase'
 import { ServiceUnavailableException } from '@nestjs/common'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { IDatabaseRepository } from '../domain/database.repository.interface'
-import { DecisionStatus, Sources } from '../domain/enum'
 
 describe('listDecisionUsecase', () => {
   const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
-  const listCriteria = {
-    status: DecisionStatus.TOBETREATED,
-    source: Sources.TJ,
-    startDate: '2023-10-10',
-    endDate: '2023-10-11'
-  }
-  let mockUtils: MockUtils
+  const mockUtils = new MockUtils()
+  const listCriteria = mockUtils.decisionQueryDTO
   let usecase: ListDecisionsUsecase
-
-  beforeAll(async () => {
-    mockUtils = new MockUtils()
-  })
 
   afterAll(async () => {
     jest.clearAllMocks()
   })
 
-  it('I can retrieve a list of decisions from the API', async () => {
+  it('Retrieves a list of decisions from the repository', async () => {
     // GIVEN
     usecase = new ListDecisionsUsecase(mockDatabaseRepository)
-    const expectedListDecisions = [mockUtils.decisionListResponse]
+    const expectedListDecisions = [mockUtils.decisionTJToBeTreated]
     jest.spyOn(mockDatabaseRepository, 'list').mockResolvedValue([mockUtils.decisionModel])
 
     // WHEN
