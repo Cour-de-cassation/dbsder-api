@@ -4,7 +4,6 @@ import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import mongoose from 'mongoose'
-import { DecisionsController } from './decisions.controller'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 
 describe('DecisionsController', () => {
