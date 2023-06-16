@@ -35,19 +35,18 @@ describe('GetDecisionByIdUsecase', () => {
 
       // WHEN
       expect(() => usecase.execute(id))
-        .rejects// THEN
+        .rejects // THEN
         .toThrow(ServiceUnavailableException)
     })
+
     it('returns a not found unavailable if the decision does not exist', () => {
       // GIVEN
       const id = 'id'
-      jest
-        .spyOn(mockDatabaseRepository, 'getDecisionById')
-        .mockRejectedValue(new NotFoundException())
+      jest.spyOn(mockDatabaseRepository, 'getDecisionById').mockResolvedValueOnce(undefined)
 
       // WHEN
       expect(() => usecase.execute(id))
-        .rejects// THEN
+        .rejects // THEN
         .toThrow(NotFoundException)
     })
   })

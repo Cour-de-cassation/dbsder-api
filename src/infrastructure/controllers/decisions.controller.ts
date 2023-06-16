@@ -15,7 +15,9 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiHeader,
+  ApiNotFoundResponse,
   ApiOkResponse,
+  ApiParam,
   ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse
@@ -27,8 +29,8 @@ import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
-import { GetDecisionByIdResponse } from './responses/getDecisionByIdResponse.response'
-import { GetDecisionByIdUsecase } from 'src/domain/usecase/getDecisionById.usecase'
+import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
+import { GetDecisionByIdUsecase } from '../../domain/usecase/getDecisionById.usecase'
 import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
 import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
@@ -110,8 +112,29 @@ export class DecisionsController {
   }
 
   @Get(':id')
-  async getDecisionById(@Param('id') id: string): Promise<GetDecisionByIdResponse> {
+  @ApiHeader({
+    name: 'x-api-key',
+    description: 'Clé API'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'identifiant de la décision'
+  })
+  @ApiOkResponse({ description: 'la décision', type: GetDecisionByIdResponse })
+  @ApiNotFoundResponse({
+    description: "La decision n'a pas été trouvée"
+  })
+  @ApiUnauthorizedResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
+  async getDecisionById(@Param('id') id: string, @Request() req): Promise<GetDecisionByIdResponse> {
+    const authorizedApiKeys = [process.env.LABEL_API_KEY]
+    const apiKey = req.headers['x-api-key']
+    if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
+      throw new ForbiddenException()
+    }
     const getDecisionByIdUsecase = new GetDecisionByIdUsecase(this.mongoRepository)
+    getDecisionByIdUsecase.execute(id)
     return {}
   }
 }

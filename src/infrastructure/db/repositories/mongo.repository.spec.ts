@@ -86,10 +86,11 @@ describe('MongoRepository', () => {
 
       // WHEN
       expect(() => mockedRepository.getDecisionById(id))
-        .rejects//THEN
+        .rejects //THEN
         .toThrow(new ServiceUnavailableException('Error from database'))
     })
-    it('return a dicions with a valid id provided', async () => {
+
+    it('return a decision with a valid id provided', async () => {
       // GIVEN
       const id = '1'
       const expectedDecision = mockUtils.decisionModel
