@@ -1,6 +1,6 @@
 import { mock } from 'jest-mock-extended'
 import { MockUtils } from '../../utils/mock.utils'
-import { ServiceUnavailableException } from '@nestjs/common'
+import { NotFoundException, ServiceUnavailableException } from '@nestjs/common'
 import { IDatabaseRepository } from '../database.repository.interface'
 import { DecisionModel } from '../models/decision.model'
 
@@ -88,6 +88,17 @@ describe('MongoRepository', () => {
       expect(() => mockedRepository.getDecisionById(id))
         .rejects //THEN
         .toThrow(new ServiceUnavailableException('Error from database'))
+    })
+
+    it('throws an error if the decision does not exist', () => {
+      // GIVEN
+      const id = '1'
+      jest.spyOn(mockedRepository, 'getDecisionById').mockRejectedValueOnce(new NotFoundException())
+
+      // WHEN
+      expect(() => mockedRepository.getDecisionById(id))
+        .rejects //THEN
+        .toThrow(new NotFoundException())
     })
 
     it('return a decision with a valid id provided', async () => {

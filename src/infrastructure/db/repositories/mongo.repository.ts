@@ -6,7 +6,6 @@ import { DecisionModel } from '../models/decision.model'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { CreateDecisionDTO } from '../../createDecisionDTO'
 import { IDatabaseRepository } from '../../../domain/database.repository.interface'
-import { MockUtils } from '../../utils/mock.utils'
 
 export class MongoRepository implements IDatabaseRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
@@ -33,15 +32,15 @@ export class MongoRepository implements IDatabaseRepository {
   }
   async getDecisionById(id: string): Promise<DecisionModel> {
     const decision = await this.decisionModel
-      .find({ iddecision: id })
+      .findOne({ iddecision: id })
       .lean()
       .catch(() => {
         throw new ServiceUnavailableException('Error from database')
       })
+
     if (!decision) {
       throw new NotFoundException('Decision not found')
     }
-
-    return Promise.resolve(new MockUtils().decisionModel)
+    return decision
   }
 }

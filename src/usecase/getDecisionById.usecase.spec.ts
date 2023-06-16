@@ -39,10 +39,12 @@ describe('GetDecisionByIdUsecase', () => {
         .toThrow(ServiceUnavailableException)
     })
 
-    it('returns a not found unavailable if the decision does not exist', () => {
+    it('throws a not found exception if the decision does not exist', () => {
       // GIVEN
       const id = 'id'
-      jest.spyOn(mockDatabaseRepository, 'getDecisionById').mockResolvedValueOnce(undefined)
+      jest
+        .spyOn(mockDatabaseRepository, 'getDecisionById')
+        .mockRejectedValue(new NotFoundException())
 
       // WHEN
       expect(() => usecase.execute(id))

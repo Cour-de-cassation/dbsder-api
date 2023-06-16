@@ -120,7 +120,7 @@ export class DecisionsController {
     name: 'id',
     description: 'identifiant de la décision'
   })
-  @ApiOkResponse({ description: 'la décision', type: GetDecisionByIdResponse })
+  @ApiOkResponse({ description: 'La décision', type: GetDecisionByIdResponse })
   @ApiNotFoundResponse({
     description: "La decision n'a pas été trouvée"
   })
@@ -134,7 +134,6 @@ export class DecisionsController {
       throw new ForbiddenException()
     }
     const getDecisionByIdUsecase = new GetDecisionByIdUsecase(this.mongoRepository)
-    getDecisionByIdUsecase.execute(id)
-    return {}
+    return await getDecisionByIdUsecase.execute(id)
   }
 }
