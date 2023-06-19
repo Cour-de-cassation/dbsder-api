@@ -10,6 +10,7 @@ describe('GetDecisionByIdController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
   let mongoRepository: MongoRepository
+  let id = 'testId'
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -26,13 +27,16 @@ describe('GetDecisionByIdController', () => {
   })
 
   afterAll(async () => {
-    if (mongoose) await mongoose.disconnect()
+    if (mongoose) {
+      await mongoRepository.getModel().deleteMany({})
+      await mongoose.disconnect()
+    }
   })
+
   describe('Success case', () => {
-    it('returns a decision when given a valid id', async () => {
+    it('returns a decision when given a valid ID', async () => {
       // GIVEN
       const labelApiKey = process.env.LABEL_API_KEY
-      const id = 'testId'
 
       // WHEN
       const result = await request(app.getHttpServer())
@@ -45,10 +49,10 @@ describe('GetDecisionByIdController', () => {
   })
 
   describe('Error cases', () => {
-    it('throws a 404 error if the id does not exist', async () => {
+    it('throws a 404 error if the ID does not exist', async () => {
       // GIVEN
       const labelApiKey = process.env.LABEL_API_KEY
-      const id = 'fakeId'
+      id = 'fakeId'
 
       // WHEN
       const result = await request(app.getHttpServer())
@@ -61,8 +65,6 @@ describe('GetDecisionByIdController', () => {
 
     it('throws a 401 error if the apiKey is not valid', async () => {
       // GIVEN
-      const id = 'testId'
-
       // WHEN
       const result = await request(app.getHttpServer())
         .get(`/decisions/${id}`)
@@ -74,8 +76,6 @@ describe('GetDecisionByIdController', () => {
 
     it('throws a 401 error if the apiKey is not present', async () => {
       // GIVEN
-      const id = 'testId'
-
       // WHEN
       const result = await request(app.getHttpServer()).get(`/decisions/${id}`)
 

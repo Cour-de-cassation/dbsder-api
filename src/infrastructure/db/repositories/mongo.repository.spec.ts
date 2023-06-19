@@ -77,33 +77,32 @@ describe('MongoRepository', () => {
   })
 
   describe('getDecisionById', () => {
-    it('throws an error if the database is unavailable', () => {
+    const id = '1'
+
+    it('throws an error when the database is unavailable', () => {
       // GIVEN
-      const id = '1'
       jest
         .spyOn(mockedRepository, 'getDecisionById')
         .mockRejectedValueOnce(new ServiceUnavailableException('Error from database'))
 
       // WHEN
       expect(() => mockedRepository.getDecisionById(id))
-        .rejects //THEN
-        .toThrow(new ServiceUnavailableException('Error from database'))
+        //THEN
+        .rejects.toThrow(new ServiceUnavailableException('Error from database'))
     })
 
-    it('throws an error if the decision does not exist', () => {
+    it('throws an error when the decision does not exist', () => {
       // GIVEN
-      const id = '1'
       jest.spyOn(mockedRepository, 'getDecisionById').mockRejectedValueOnce(new NotFoundException())
 
       // WHEN
       expect(() => mockedRepository.getDecisionById(id))
-        .rejects //THEN
-        .toThrow(new NotFoundException())
+        //THEN
+        .rejects.toThrow(new NotFoundException())
     })
 
     it('return a decision with a valid id provided', async () => {
       // GIVEN
-      const id = '1'
       const expectedDecision = mockUtils.decisionModel
       jest.spyOn(mockedRepository, 'getDecisionById').mockResolvedValueOnce(mockUtils.decisionModel)
 

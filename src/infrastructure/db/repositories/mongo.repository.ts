@@ -1,11 +1,10 @@
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { NotFoundException, ServiceUnavailableException } from '@nestjs/common'
-import { CreateDecisionDTO } from '../../dto/createDecision.dto'
 import { DecisionModel } from '../models/decision.model'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
-import { CreateDecisionDTO } from '../../createDecisionDTO'
-import { IDatabaseRepository } from '../../../domain/database.repository.interface'
+import { CreateDecisionDTO } from '../../dto/createDecision.dto'
+import { IDatabaseRepository } from '../database.repository.interface'
 
 export class MongoRepository implements IDatabaseRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
@@ -42,5 +41,9 @@ export class MongoRepository implements IDatabaseRepository {
       throw new NotFoundException('Decision not found')
     }
     return decision
+  }
+
+  getModel(): Model<DecisionModel> {
+    return this.decisionModel
   }
 }

@@ -1,16 +1,16 @@
 import { MockProxy, mock } from 'jest-mock-extended'
-import { IDatabaseRepository } from '../database.repository.interface'
-import { GetDecisionByIdUsecase } from './getDecisionById.usecase'
-import { MockUtils } from '../../infrastructure/utils/mock.utils'
+import { FetchDecisionByIdUsecase } from './fetchDecisionById.usecase'
+import { MockUtils } from '../infrastructure/utils/mock.utils'
 import { NotFoundException, ServiceUnavailableException } from '@nestjs/common'
+import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
 
-describe('GetDecisionByIdUsecase', () => {
+describe('FetchDecisionByIdUsecase', () => {
   const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
   const mockUtils = new MockUtils()
-  const usecase = new GetDecisionByIdUsecase(mockDatabaseRepository)
+  const usecase = new FetchDecisionByIdUsecase(mockDatabaseRepository)
 
   describe('Success case', () => {
-    it('A valid Id was provided and a decision was returned', async () => {
+    it('returns the decision when provided ID exist', async () => {
       //GIVEN
       const id = '1'
       const expectedDecision = mockUtils.decisionModel
@@ -26,30 +26,29 @@ describe('GetDecisionByIdUsecase', () => {
   })
 
   describe('Fail cases', () => {
-    it("returns a service unavailable if the respository don't respond", () => {
+    const id = 'id'
+    it("returns a service unavailable when the respository don't respond", () => {
       // GIVEN
-      const id = 'id'
       jest
         .spyOn(mockDatabaseRepository, 'getDecisionById')
         .mockRejectedValue(new ServiceUnavailableException())
 
       // WHEN
       expect(() => usecase.execute(id))
-        .rejects // THEN
-        .toThrow(ServiceUnavailableException)
+        // THEN
+        .rejects.toThrow(ServiceUnavailableException)
     })
 
-    it('throws a not found exception if the decision does not exist', () => {
+    it('throws a not found exception when the decision does not exist', () => {
       // GIVEN
-      const id = 'id'
       jest
         .spyOn(mockDatabaseRepository, 'getDecisionById')
         .mockRejectedValue(new NotFoundException())
 
       // WHEN
       expect(() => usecase.execute(id))
-        .rejects // THEN
-        .toThrow(NotFoundException)
+        // THEN
+        .rejects.toThrow(NotFoundException)
     })
   })
 })

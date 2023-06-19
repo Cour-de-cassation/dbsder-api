@@ -10,6 +10,7 @@ describe('DecisionsController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
   const labelApiKey = process.env.LABEL_API_KEY
+  let mongoRepository: MongoRepository
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -19,13 +20,16 @@ describe('DecisionsController', () => {
     app = moduleFixture.createNestApplication()
 
     await app.init()
-    const mongoRepository = moduleFixture.get<MongoRepository>(MongoRepository)
+    mongoRepository = moduleFixture.get<MongoRepository>(MongoRepository)
 
     mongoRepository.create(mockUtils.decisionModel)
   })
 
   afterAll(async () => {
-    if (mongoose) await mongoose.disconnect()
+    if (mongoose) {
+      await mongoRepository.getModel().deleteMany({})
+      await mongoose.disconnect()
+    }
   })
 
   describe('GET /decisions', () => {

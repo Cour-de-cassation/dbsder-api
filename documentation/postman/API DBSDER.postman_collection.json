@@ -260,7 +260,7 @@
 			"response": []
 		},
 		{
-			"name": "200 - Récupère une décision par son id",
+			"name": "200 - Récupère une décision par son ID",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -291,7 +291,7 @@
 			"response": []
 		},
 		{
-			"name": "404 - Récupère une décision avec son id inexistant",
+			"name": "404 - Récupère une décision avec son ID inexistant",
 			"request": {
 				"method": "GET",
 				"header": [

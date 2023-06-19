@@ -30,10 +30,10 @@ import { MongoRepository } from '../db/repositories/mongo.repository'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
-import { GetDecisionByIdUsecase } from '../../domain/usecase/getDecisionById.usecase'
 import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
 import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
+import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecase'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -118,7 +118,7 @@ export class DecisionsController {
   })
   @ApiParam({
     name: 'id',
-    description: 'identifiant de la décision'
+    description: 'Identifiant de la décision'
   })
   @ApiOkResponse({ description: 'La décision', type: GetDecisionByIdResponse })
   @ApiNotFoundResponse({
@@ -133,7 +133,8 @@ export class DecisionsController {
     if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenException()
     }
-    const getDecisionByIdUsecase = new GetDecisionByIdUsecase(this.mongoRepository)
-    return await getDecisionByIdUsecase.execute(id)
+    const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.mongoRepository)
+    this.logger.log('GET /decisions/:id called with ID ' + id)
+    return await fetchDecisionByIdUsecase.execute(id)
   }
 }

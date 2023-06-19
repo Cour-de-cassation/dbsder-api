@@ -1,5 +1,8 @@
+import {
+  DecisionAnalyse,
+  DecisionOccultation
+} from '../../../infrastructure/dto/createDecision.dto'
 import { DecisionStatus } from '../../../domain/enum'
-import { DecisionAnalyse, DecisionOccultation } from '../../../infrastructure/createDecisionDTO'
 
 export class GetDecisionByIdResponse {
   id: string
