@@ -3,38 +3,38 @@ import {
   Controller,
   ForbiddenException,
   Get,
-  HttpStatus,
   Logger,
-  ParseEnumPipe,
   Post,
   Query,
   Request,
   UsePipes
 } from '@nestjs/common'
 import {
-  ApiAcceptedResponse,
   ApiBadRequestResponse,
   ApiBody,
+  ApiCreatedResponse,
   ApiHeader,
   ApiOkResponse,
   ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { MockUtils } from '../utils/mock.utils'
-import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
 import { DecisionStatus } from '../../domain/enum'
-import { CreateDecisionDTO } from '../createDecisionDTO'
+import { CreateDecisionDTO } from '../dto/createDecision.dto'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
-import { CreateDecisionUsecase } from '../../domain/usecase/createDecision.usecase'
+import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
+import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
+import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
+import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
 
 @ApiTags('DbSder')
 @Controller('decisions')
 export class DecisionsController {
   constructor(private readonly mongoRepository: MongoRepository) {}
+
   private readonly logger = new Logger()
 
   @Get()
@@ -47,28 +47,27 @@ export class DecisionsController {
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
     enum: DecisionStatus
   })
-  @ApiOkResponse({ description: 'Une liste de décisions', type: GetDecisionListDTO })
+  @ApiOkResponse({ description: 'Une liste de décisions' })
   @ApiBadRequestResponse({
     description: "Le paramètre  écrit n'est présent dans la liste des valeurs acceptées"
   })
   @ApiUnauthorizedResponse({
     description: "Vous n'avez pas accès à cette route"
   })
-  getDecisions(
-    @Query(
-      'status',
-      new ParseEnumPipe(DecisionStatus, { errorHttpStatusCode: HttpStatus.BAD_REQUEST })
-    )
-    status: DecisionStatus,
+  async getDecisions(
+    @Query(new ValidateDtoPipe()) getDecisionListCriteria: DecisionSearchCriteria,
     @Request() req
-  ): GetDecisionListDTO[] {
+  ): Promise<GetDecisionsListResponse[]> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenException()
     }
-    this.logger.log('GET /decisions called with status ' + status)
-    return new MockUtils().allDecisionsToBeTreated
+    this.logger.log('GET /decisions called with status ' + getDecisionListCriteria.status)
+
+    const listDecisionUsecase = new ListDecisionsUsecase(this.mongoRepository)
+
+    return await listDecisionUsecase.execute(getDecisionListCriteria)
   }
 
   @Post()
@@ -80,7 +79,7 @@ export class DecisionsController {
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
     type: CreateDecisionDTO
   })
-  @ApiAcceptedResponse({ description: 'Décision créée' })
+  @ApiCreatedResponse({ description: 'Décision créée' })
   @ApiBadRequestResponse({
     description: 'Il manque un ou plusieurs champs obligatoires dans la décision'
   })

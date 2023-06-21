@@ -1,7 +1,7 @@
-import { CreateDecisionDTO } from '../../infrastructure/createDecisionDTO'
+import { CreateDecisionDTO } from '../infrastructure/dto/createDecision.dto'
 import { Logger, ServiceUnavailableException } from '@nestjs/common'
-import { IDatabaseRepository } from '../database.repository.interface'
-import { DecisionModel } from '../../infrastructure/db/models/decision.model'
+import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
+import { DecisionModel } from '../infrastructure/db/models/decision.model'
 
 export class CreateDecisionUsecase {
   private readonly logger = new Logger()

@@ -1,25 +1,25 @@
-import { GetDecisionListDTO } from '../../domain/getDecisionList.dto'
-import { DecisionStatus } from '../../domain/enum'
+import { DecisionStatus, Sources } from '../../domain/enum'
+import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsListResponse'
 
 export class MockUtils {
-  decisionCCToBeTreated: GetDecisionListDTO = {
+  decisionCCToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-04-11',
     id: 'id2023',
-    source: 'CC',
+    source: Sources.CC,
     status: DecisionStatus.TOBETREATED
   }
 
-  decisionCAToBeTreated: GetDecisionListDTO = {
+  decisionCAToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-04-11',
     id: 'id2023',
-    source: 'CA',
+    source: Sources.CA,
     status: DecisionStatus.TOBETREATED
   }
 
-  decisionTJToBeTreated: GetDecisionListDTO = {
-    dateCreation: '2023-04-11',
+  decisionTJToBeTreated: GetDecisionsListResponse = {
+    dateCreation: '2023-10-10T23:00Z',
     id: 'id2023',
-    source: 'TJ',
+    source: Sources.TJ,
     status: DecisionStatus.TOBETREATED
   }
 
@@ -28,6 +28,20 @@ export class MockUtils {
     this.decisionTJToBeTreated,
     this.decisionCAToBeTreated
   ]
+
+  decisionQueryDTO = {
+    status: DecisionStatus.TOBETREATED,
+    source: Sources.TJ,
+    startDate: '2023-10-09',
+    endDate: '2023-10-11'
+  }
+
+  decisionQueryWithUnknownSourceDTO = {
+    status: DecisionStatus.TOBETREATED,
+    source: 'unknownSource',
+    startDate: '2023-10-10',
+    endDate: '2023-10-11'
+  }
 
   createDecisionDTO = {
     id: 'someID',
@@ -60,7 +74,7 @@ export class MockUtils {
     registerNumber: 'someRegisterNumber',
     solution: 'someSolution',
     sourceId: 1,
-    sourceName: 'someSourceName',
+    sourceName: Sources.TJ,
     publication: ['somePublication'],
     formation: 'someFormation',
     blocOccultation: 1,
@@ -69,6 +83,7 @@ export class MockUtils {
     natureAffairePenal: 'someNatureAffairePenal',
     codeMatiereCivil: 'someCodeMatiereCivil'
   }
+
   decisionModel = {
     NAOCode: 'someNAOCode',
     analysis: {
@@ -86,12 +101,12 @@ export class MockUtils {
     chamberId: 'someChamberId',
     chamberName: 'someChamberName',
     codeMatiereCivil: 'someCodeMatiereCivil',
-    dateCreation: 'someDateCreation',
+    dateCreation: '2023-10-10T23:00Z',
     dateDecision: 'someDateDecision',
     decatt: [1, 2],
     formation: 'someFormation',
     id: 'someID',
-    iddecision: 'someIddecision',
+    iddecision: 'id2023',
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',
@@ -107,6 +122,6 @@ export class MockUtils {
     registerNumber: 'someRegisterNumber',
     solution: 'someSolution',
     sourceId: 1,
-    sourceName: 'someSourceName'
+    sourceName: Sources.TJ
   }
 }

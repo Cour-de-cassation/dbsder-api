@@ -12,6 +12,9 @@ export class ValidateDtoPipe implements PipeTransform {
       throw new BadRequestException("Vous devez fournir le champ 'decision'.")
     }
     const object = plainToInstance(metatype, value)
+    if (object.startDate && object.endDate && object.startDate > object.endDate) {
+      throw new BadRequestException("'startDate' must be before 'endDate'.")
+    }
     const errors: ValidationError[] = await validate(object)
     if (errors.length > 0) {
       const messages = errors.map((err) => this.findPropertyNameInErrorMessage(err.toString(false)))
