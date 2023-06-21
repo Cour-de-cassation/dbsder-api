@@ -1,7 +1,7 @@
 import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
 import { BadRequestException, Logger, ServiceUnavailableException } from '@nestjs/common'
 import { GetDecisionsListResponse } from 'src/infrastructure/controllers/responses/getDecisionsListResponse'
-import { MapDTOToDomainObjectService } from '../service/mapDTOToDomainObject.service'
+import { MapModelToResponseService } from '../service/mapDTOToDomainObject.service'
 import {
   DecisionSearchCriteria,
   mapDecisionSearchCriteriaToDTO
@@ -23,6 +23,6 @@ export class ListDecisionsUsecase {
       throw new ServiceUnavailableException('Error from repository')
     })
 
-    return new MapDTOToDomainObjectService().mapGetDecisionsListModelToObjectDomain(decisionsList)
+    return new MapModelToResponseService().mapGetDecisionsListModelToResponse(decisionsList)
   }
 }

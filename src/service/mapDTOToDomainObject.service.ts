@@ -1,8 +1,8 @@
 import { GetDecisionsListResponse } from '../infrastructure/controllers/responses/getDecisionsListResponse'
 import { DecisionModel } from '../infrastructure/db/models/decision.model'
 
-export class MapDTOToDomainObjectService {
-  mapGetDecisionsListModelToObjectDomain(
+export class MapModelToResponseService {
+  mapGetDecisionsListModelToResponse(
     decisionsListModel: DecisionModel[]
   ): Promise<GetDecisionsListResponse[]> {
     return Promise.all(
