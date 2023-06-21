@@ -10,16 +10,15 @@ import {
   UsePipes
 } from '@nestjs/common'
 import {
-  ApiAcceptedResponse,
   ApiBadRequestResponse,
   ApiBody,
+  ApiCreatedResponse,
   ApiHeader,
   ApiOkResponse,
   ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { GetDecisionsListDto } from '../dto/getDecisionsList.dto'
 import { DecisionStatus } from '../../domain/enum'
 import { CreateDecisionDTO } from '../dto/createDecision.dto'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
@@ -29,6 +28,7 @@ import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
 import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
+import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -47,7 +47,7 @@ export class DecisionsController {
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
     enum: DecisionStatus
   })
-  @ApiOkResponse({ description: 'Une liste de décisions', type: GetDecisionsListDto })
+  @ApiOkResponse({ description: 'Une liste de décisions' })
   @ApiBadRequestResponse({
     description: "Le paramètre  écrit n'est présent dans la liste des valeurs acceptées"
   })
@@ -55,7 +55,7 @@ export class DecisionsController {
     description: "Vous n'avez pas accès à cette route"
   })
   async getDecisions(
-    @Query(new ValidateDtoPipe()) getDecisionListDTO: GetDecisionsListDto,
+    @Query(new ValidateDtoPipe()) getDecisionListCriteria: DecisionSearchCriteria,
     @Request() req
   ): Promise<GetDecisionsListResponse[]> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
@@ -63,11 +63,11 @@ export class DecisionsController {
     if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenException()
     }
-    this.logger.log('GET /decisions called with status ' + getDecisionListDTO.status)
+    this.logger.log('GET /decisions called with status ' + getDecisionListCriteria.status)
 
     const listDecisionUsecase = new ListDecisionsUsecase(this.mongoRepository)
 
-    return await listDecisionUsecase.execute(getDecisionListDTO)
+    return await listDecisionUsecase.execute(getDecisionListCriteria)
   }
 
   @Post()
@@ -79,7 +79,7 @@ export class DecisionsController {
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
     type: CreateDecisionDTO
   })
-  @ApiAcceptedResponse({ description: 'Décision créée' })
+  @ApiCreatedResponse({ description: 'Décision créée' })
   @ApiBadRequestResponse({
     description: 'Il manque un ou plusieurs champs obligatoires dans la décision'
   })

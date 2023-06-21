@@ -2,7 +2,7 @@ import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { ServiceUnavailableException } from '@nestjs/common'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
-import { IDatabaseRepository } from '../../../domain/database.repository.interface'
+import { IDatabaseRepository } from '../database.repository.interface'
 import { DecisionModel } from '../models/decision.model'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 

@@ -2,7 +2,7 @@ import { MockUtils } from '../infrastructure/utils/mock.utils'
 import { ListDecisionsUsecase } from './listDecisions.usecase'
 import { ServiceUnavailableException } from '@nestjs/common'
 import { mock, MockProxy } from 'jest-mock-extended'
-import { IDatabaseRepository } from '../domain/database.repository.interface'
+import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
 
 describe('listDecisionUsecase', () => {
   const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()

@@ -1,7 +1,7 @@
 import { mock } from 'jest-mock-extended'
 import { MockUtils } from '../../utils/mock.utils'
 import { ServiceUnavailableException } from '@nestjs/common'
-import { IDatabaseRepository } from '../../../domain/database.repository.interface'
+import { IDatabaseRepository } from '../database.repository.interface'
 import { DecisionModel } from '../models/decision.model'
 
 describe('MongoRepository', () => {
