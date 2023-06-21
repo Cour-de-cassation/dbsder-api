@@ -17,7 +17,7 @@ describe('createDecisionUsecase', () => {
     jest.clearAllMocks()
   })
 
-  it('I can send my decision to the API', async () => {
+  it('creates decision successfully when database is available', async () => {
     // GIVEN
     usecase = new CreateDecisionUsecase(mockDatabaseRepository)
     const expectedDecision = mockUtils.createDecisionDTO
@@ -32,16 +32,16 @@ describe('createDecisionUsecase', () => {
     expect(result).toEqual(expectedDecision)
   })
 
-  it('I receive an error if the DB malfunctions', async () => {
+  it('throws a 503 Service Unavailable when database is unavailable', async () => {
     // GIVEN
     usecase = new CreateDecisionUsecase(mockDatabaseRepository)
     const rejectedDecision = mockUtils.createDecisionDTO
     jest.spyOn(mockDatabaseRepository, 'create').mockImplementationOnce(() => {
-      throw new ServiceUnavailableException('Error from repository')
+      throw new ServiceUnavailableException('Some error message')
     })
 
     await expect(usecase.execute(rejectedDecision)).rejects.toThrow(
-      new ServiceUnavailableException('Error from repository')
+      new ServiceUnavailableException('Some error message')
     )
   })
 })
