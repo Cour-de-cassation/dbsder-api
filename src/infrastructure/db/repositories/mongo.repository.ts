@@ -1,10 +1,11 @@
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
-import { NotFoundException, ServiceUnavailableException } from '@nestjs/common'
 import { DecisionModel } from '../models/decision.model'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
 import { IDatabaseRepository } from '../database.repository.interface'
+import { DatabaseError } from '../../../domain/errors/databaseError.error'
+import { EntityNotFound } from '../../../domain/errors/entityNotFound.error'
 
 export class MongoRepository implements IDatabaseRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
@@ -18,14 +19,14 @@ export class MongoRepository implements IDatabaseRepository {
       })
       return Promise.resolve(savedDecisions)
     } catch (error) {
-      throw new ServiceUnavailableException('Error from database')
+      throw new DatabaseError(error)
     }
     return null
   }
 
   async create(decision: CreateDecisionDTO): Promise<DecisionModel> {
-    const savedDecision = await this.decisionModel.create(decision).catch(() => {
-      throw new ServiceUnavailableException('Error from database')
+    const savedDecision = await this.decisionModel.create(decision).catch((error) => {
+      throw new DatabaseError(error)
     })
     return Promise.resolve(savedDecision)
   }
@@ -33,12 +34,12 @@ export class MongoRepository implements IDatabaseRepository {
     const decision = await this.decisionModel
       .findOne({ id })
       .lean()
-      .catch(() => {
-        throw new ServiceUnavailableException('Error from database')
+      .catch((error) => {
+        throw new DatabaseError(error)
       })
 
     if (!decision) {
-      throw new NotFoundException('Decision not found')
+      throw new EntityNotFound()
     }
     return decision
   }

@@ -1,6 +1,9 @@
-import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from '@nestjs/common'
+import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
+import { MissingPropertiesException } from '../exceptions/missingProperties.exception'
+import { MissingFieldException } from '../exceptions/missingField.exception'
+import { DateMismatchError } from '../exceptions/dateMismatch.exception'
 
 @Injectable()
 export class ValidateDtoPipe implements PipeTransform {
@@ -9,20 +12,18 @@ export class ValidateDtoPipe implements PipeTransform {
       return value
     }
     if (!value) {
-      throw new BadRequestException("Vous devez fournir le champ 'decision'.")
+      throw new MissingFieldException('decision')
     }
     const object = plainToInstance(metatype, value)
     if (object.startDate && object.endDate && object.startDate > object.endDate) {
-      throw new BadRequestException("'startDate' must be before 'endDate'.")
+      throw new DateMismatchError("'startDate' doit être antérieur à 'endDate'.")
     }
     const errors: ValidationError[] = await validate(object)
     if (errors.length > 0) {
-      const messages = errors.map((err) => this.findPropertyNameInErrorMessage(err.toString(false)))
-      throw new BadRequestException(
-        'Une ou plusieurs erreurs ont été trouvées sur les propriétés suivantes : ' +
-          messages.join(', ') +
-          '.'
+      const missingProperties = errors.map((err) =>
+        this.findPropertyNameInErrorMessage(err.toString(false))
       )
+      throw new MissingPropertiesException(missingProperties.join(', '))
     }
     return value
   }

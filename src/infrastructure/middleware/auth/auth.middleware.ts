@@ -1,5 +1,6 @@
-import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common'
+import { Injectable, NestMiddleware } from '@nestjs/common'
 import * as passport from 'passport'
+import { ClientNotAuthorized } from '../../exceptions/clientNotAuthorized.exception'
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
@@ -20,7 +21,7 @@ export class AuthMiddleware implements NestMiddleware {
         if (value) {
           next()
         } else {
-          throw new UnauthorizedException()
+          throw new ClientNotAuthorized()
         }
       }
     )(req, res, next)
