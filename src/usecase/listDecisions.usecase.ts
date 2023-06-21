@@ -1,7 +1,7 @@
 import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
 import { BadRequestException, Logger, ServiceUnavailableException } from '@nestjs/common'
 import { GetDecisionsListResponse } from 'src/infrastructure/controllers/responses/getDecisionsListResponse'
-import { MapModelToResponseService } from '../service/mapDTOToDomainObject.service'
+import { MapModelToResponseService } from '../service/mapModelToResponse.service'
 import {
   DecisionSearchCriteria,
   mapDecisionSearchCriteriaToDTO
