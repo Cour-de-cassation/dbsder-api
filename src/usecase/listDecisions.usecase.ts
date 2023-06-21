@@ -11,8 +11,10 @@ export class ListDecisionsUsecase {
   private readonly logger = new Logger()
   constructor(private mongoRepository: IDatabaseRepository) {}
 
-  async execute(decision: DecisionSearchCriteria): Promise<GetDecisionsListResponse[]> {
-    const decisionDTO = mapDecisionSearchCriteriaToDTO(decision)
+  async execute(
+    decisionSearchCriteria: DecisionSearchCriteria
+  ): Promise<GetDecisionsListResponse[]> {
+    const decisionDTO = mapDecisionSearchCriteriaToDTO(decisionSearchCriteria)
     const decisionsList = await this.mongoRepository.list(decisionDTO).catch((error) => {
       this.logger.error(error)
       if (error instanceof BadRequestException) {
