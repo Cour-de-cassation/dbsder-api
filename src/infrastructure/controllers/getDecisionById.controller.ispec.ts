@@ -5,6 +5,7 @@ import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import * as request from 'supertest'
+import { mongoDbMemoryServerConf } from '../../.jest/mongoDbMemoryServer.conf'
 
 describe('GetDecisionByIdController', () => {
   let app: INestApplication
@@ -28,7 +29,8 @@ describe('GetDecisionByIdController', () => {
 
   afterAll(async () => {
     if (mongoose) {
-      await mongoRepository.getModel().deleteMany({})
+      await mongoose.connect(`${process.env.MONGO_URI}/${mongoDbMemoryServerConf.Database}`)
+      await mongoose.connection.db.dropDatabase()
       await mongoose.disconnect()
     }
   })
