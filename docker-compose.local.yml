@@ -13,7 +13,7 @@ services:
     ports:
       - 55432:55432
 
-  api:
+  dbsder-api:
     build:
       context: ./
       target: api
@@ -23,10 +23,15 @@ services:
       - 3008
     ports:
       - 3008:3000
+    networks: 
+      - default
+      - dbsder-external-network
 
 networks:
   default:
     name: dbsder-api-network
+  dbsder-external-network:
+    name: dbsder-external-network
 
 volumes:
   dbsder-mongo-storage:
