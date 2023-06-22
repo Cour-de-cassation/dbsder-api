@@ -10,7 +10,7 @@ export class CreateDecisionUsecase {
   async execute(decision: CreateDecisionDTO): Promise<DecisionModel> {
     const savedDecision = await this.mongoRepository.create(decision).catch((error) => {
       this.logger.error(error)
-      throw new ServiceUnavailableException('Error from repository')
+      throw new ServiceUnavailableException('Database unavailable')
     })
     return savedDecision
   }
