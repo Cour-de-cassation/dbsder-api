@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   Get,
   Logger,
+  Param,
   Post,
   Query,
   Request,
@@ -14,7 +15,9 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiHeader,
+  ApiNotFoundResponse,
   ApiOkResponse,
+  ApiParam,
   ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse
@@ -26,9 +29,11 @@ import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
+import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
 import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
 import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
+import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecase'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -104,5 +109,32 @@ export class DecisionsController {
       id: decisionCreated.id,
       message: 'Decision créée'
     }
+  }
+
+  @Get(':id')
+  @ApiHeader({
+    name: 'x-api-key',
+    description: 'Clé API'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Identifiant de la décision'
+  })
+  @ApiOkResponse({ description: 'La décision', type: GetDecisionByIdResponse })
+  @ApiNotFoundResponse({
+    description: "La decision n'a pas été trouvée"
+  })
+  @ApiUnauthorizedResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
+  async getDecisionById(@Param('id') id: string, @Request() req): Promise<GetDecisionByIdResponse> {
+    const authorizedApiKeys = [process.env.LABEL_API_KEY]
+    const apiKey = req.headers['x-api-key']
+    if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
+      throw new ForbiddenException()
+    }
+    const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.mongoRepository)
+    this.logger.log('GET /decisions/:id called with ID ' + id)
+    return await fetchDecisionByIdUsecase.execute(id)
   }
 }
