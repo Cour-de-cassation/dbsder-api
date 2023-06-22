@@ -1,10 +1,10 @@
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
-import { ServiceUnavailableException } from '@nestjs/common'
-import { CreateDecisionDTO } from '../../dto/createDecision.dto'
-import { IDatabaseRepository } from '../database.repository.interface'
+import { NotFoundException, ServiceUnavailableException } from '@nestjs/common'
 import { DecisionModel } from '../models/decision.model'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
+import { CreateDecisionDTO } from '../../dto/createDecision.dto'
+import { IDatabaseRepository } from '../database.repository.interface'
 
 export class MongoRepository implements IDatabaseRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
@@ -28,5 +28,22 @@ export class MongoRepository implements IDatabaseRepository {
       throw new ServiceUnavailableException('Error from database')
     })
     return Promise.resolve(savedDecision)
+  }
+  async getDecisionById(id: string): Promise<DecisionModel> {
+    const decision = await this.decisionModel
+      .findOne({ iddecision: id })
+      .lean()
+      .catch(() => {
+        throw new ServiceUnavailableException('Error from database')
+      })
+
+    if (!decision) {
+      throw new NotFoundException('Decision not found')
+    }
+    return decision
+  }
+
+  getModel(): Model<DecisionModel> {
+    return this.decisionModel
   }
 }

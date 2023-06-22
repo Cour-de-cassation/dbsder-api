@@ -5,4 +5,5 @@ import { GetDecisionsListDto } from '../dto/getDecisionsList.dto'
 export interface IDatabaseRepository {
   create(decision: CreateDecisionDTO): Promise<DecisionModel>
   list(decision: GetDecisionsListDto): Promise<DecisionModel[]>
+  getDecisionById(id: string): Promise<DecisionModel>
 }

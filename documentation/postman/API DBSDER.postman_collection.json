@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "e5f54df9-de82-4e75-8b4c-24d1aae07c85",
+		"_postman_id": "395531a0-7237-41f2-b22a-0c5624a8ec63",
 		"name": "API DBSDER",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14689636"
 	},
 	"item": [
 		{
@@ -253,6 +254,68 @@
 					"path": [
 						"{{VERSION}}",
 						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "200 - Récupère une décision par son ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{LABEL_API_KEY}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"{{VERSION}}",
+						"decisions",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "404 - Récupère une décision avec son ID inexistant",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{LABEL_API_KEY}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id",
+					"host": [
+						"{{HOSTNAME}}"
+					],
+					"path": [
+						"{{VERSION}}",
+						"decisions",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "test"
+						}
 					]
 				}
 			},
