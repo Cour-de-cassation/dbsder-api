@@ -34,7 +34,7 @@ describe('DecisionsController', () => {
 
   describe('GET /decisions', () => {
     describe('Success case', () => {
-      it('returns a 200 with a list of decisions from known source', async () => {
+      it('returns a 200 OK with a list of decisions from known source', async () => {
         // GIVEN
         await mongoRepository.create(mockUtils.decisionModel)
         const expectedDecisions = [mockUtils.decisionTJToBeTreated]
@@ -97,6 +97,20 @@ describe('DecisionsController', () => {
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
       })
+
+      it('when a source is unknown', async () => {
+        // GIVEN
+        const getDecisionsListWithUnknownSourceDTO = mockUtils.decisionQueryWithUnknownSourceDTO
+
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .get('/decisions')
+          .query(getDecisionsListWithUnknownSourceDTO)
+          .set({ 'x-api-key': labelApiKey })
+
+        // THEN
+        expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
+      })
     })
 
     describe('returns 403 Forbidden', () => {
@@ -114,20 +128,6 @@ describe('DecisionsController', () => {
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.FORBIDDEN)
       })
-    })
-
-    it('returns a 400 with a list of decisions with non validated source', async () => {
-      // GIVEN
-      const getDecisionsListWithUnknownSourceDTO = mockUtils.decisionQueryWithUnknownSourceDTO
-
-      // WHEN
-      const result = await request(app.getHttpServer())
-        .get('/decisions')
-        .query(getDecisionsListWithUnknownSourceDTO)
-        .set({ 'x-api-key': labelApiKey })
-
-      // THEN
-      expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
     })
   })
 })

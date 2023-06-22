@@ -44,7 +44,7 @@ describe('DecisionsController', () => {
     })
 
     describe('failing cases', () => {
-      it('returns a 400 when called without a body', async () => {
+      it('returns a 400 Bad Request when called without a body', async () => {
         // GIVEN
         const normalizationApiKey = process.env.NORMALIZATION_API_KEY
 
@@ -57,7 +57,7 @@ describe('DecisionsController', () => {
         expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
       })
 
-      it('returns a 400 when called with an incorrect body', async () => {
+      it('returns a 400 Bad Request when called with an incorrect body', async () => {
         // GIVEN
         const normalizationApiKey = process.env.NORMALIZATION_API_KEY
 
@@ -71,7 +71,7 @@ describe('DecisionsController', () => {
         expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
       })
 
-      it('returns a 401 when apiKey is missing', async () => {
+      it('returns a 401 Unauthorized when apiKey is missing', async () => {
         // WHEN
         const result = await request(app.getHttpServer())
           .post('/decisions')
@@ -81,7 +81,7 @@ describe('DecisionsController', () => {
         expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
       })
 
-      it('returns a 403 when a consumer not authorized (label) calls POST /decisions', async () => {
+      it('returns a 403 Forbidden when a consumer not authorized (label) calls POST /decisions', async () => {
         // GIVEN
         const labelApiKey = process.env.LABEL_API_KEY
 
