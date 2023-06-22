@@ -5,6 +5,7 @@ import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import mongoose from 'mongoose'
 import { MongoRepository } from '../db/repositories/mongo.repository'
+import { mongoDbMemoryServerConf } from '../../.jest/mongoDbMemoryServer.conf'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -27,7 +28,8 @@ describe('DecisionsController', () => {
 
   afterAll(async () => {
     if (mongoose) {
-      await mongoRepository.getModel().deleteMany({})
+      await mongoose.connect(`${process.env.MONGO_URI}/${mongoDbMemoryServerConf.Database}`)
+      await mongoose.connection.db.dropDatabase()
       await mongoose.disconnect()
     }
   })
