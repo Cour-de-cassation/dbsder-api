@@ -1,10 +1,10 @@
-import mongoose from 'mongoose'
 import * as request from 'supertest'
 import { TestingModule, Test } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { MongoRepository } from '../db/repositories/mongo.repository'
+import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
 
 describe('GetDecisionByIdController', () => {
   let app: INestApplication
@@ -18,20 +18,18 @@ describe('GetDecisionByIdController', () => {
     }).compile()
 
     app = moduleFixture.createNestApplication()
-    mongoRepository = app.get<MongoRepository>(MongoRepository)
-
     await app.init()
+
+    mongoRepository = app.get<MongoRepository>(MongoRepository)
+    await connectDatabase()
   })
 
-  // beforeEach(async () => {
-  //   if (mongoose) {
-  //     await mongoose.connect(process.env.MONGO_DB_URL)
-  //     await mongoose.connection.db.dropDatabase()
-  //   }
-  // })
+  afterEach(async () => {
+    await dropCollections()
+  })
 
   afterAll(async () => {
-    if (mongoose) await mongoose.disconnect()
+    await dropDatabase()
   })
 
   describe('Success case', () => {
@@ -48,8 +46,6 @@ describe('GetDecisionByIdController', () => {
 
       // THEN
       expect(result.status).toEqual(HttpStatus.OK)
-      await mongoose.connect(process.env.MONGO_DB_URL)
-      await mongoose.connection.db.dropDatabase()
     })
   })
 

@@ -1,9 +1,9 @@
-import mongoose from 'mongoose'
 import * as request from 'supertest'
 import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
+import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -15,19 +15,17 @@ describe('DecisionsController', () => {
     }).compile()
 
     app = moduleFixture.createNestApplication()
-
     await app.init()
+
+    await connectDatabase()
   })
 
-  // beforeEach(async ()=> {
-  //   if(mongoose) {
-  //     await mongoose.connect(process.env.MONGO_DB_URL)
-  //     await mongoose.connection.db.dropDatabase()
-  //   }
-  // })
+  afterEach(async () => {
+    await dropCollections()
+  })
 
   afterAll(async () => {
-    if (mongoose) await mongoose.disconnect()
+    await dropDatabase()
   })
 
   describe('POST /decisions', () => {
@@ -43,8 +41,6 @@ describe('DecisionsController', () => {
 
       // THEN
       expect(result.status).toEqual(HttpStatus.CREATED)
-      await mongoose.connect(process.env.MONGO_DB_URL)
-      await mongoose.connection.db.dropDatabase()
     })
 
     describe('failing cases', () => {
