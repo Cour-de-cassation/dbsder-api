@@ -19,7 +19,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"decision\": {\n        \"id\": \"someID\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"someSource\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"iddecision\": \"someIddecision\",\n        \"dateCreation\": \"someDateCreation\",\n        \"dateDecision\": \"someDateDecision\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"someSourceName\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\"\n    }\n}",
+					"raw": "{\n    \"decision\": {\n        \"id\": \"idDecisionCC1106\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"CC\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"iddecision\": \"idDecisionCC\",\n        \"dateCreation\": \"2023-06-11\",\n        \"dateDecision\": \"someDateDecision\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"CC\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -122,7 +122,7 @@
 			"response": []
 		},
 		{
-			"name": "200 - Liste les décisions toBeTreated",
+			"name": "200 - Liste les décisions toBeTreated avec source et période",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -133,7 +133,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated",
+					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&source=CC&startDate=2023-06-11&endDate=2023-06-11",
 					"host": [
 						"{{HOSTNAME}}"
 					],
@@ -145,6 +145,18 @@
 						{
 							"key": "status",
 							"value": "toBeTreated"
+						},
+						{
+							"key": "source",
+							"value": "CC"
+						},
+						{
+							"key": "startDate",
+							"value": "2023-06-11"
+						},
+						{
+							"key": "endDate",
+							"value": "2023-06-11"
 						}
 					]
 				}
