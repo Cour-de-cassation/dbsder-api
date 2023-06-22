@@ -1,11 +1,10 @@
+import mongoose from 'mongoose'
 import * as request from 'supertest'
 import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
-import mongoose from 'mongoose'
 import { MongoRepository } from '../db/repositories/mongo.repository'
-import { mongoDbMemoryServerConf } from '../../.jest/mongoDbMemoryServer.conf'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -19,25 +18,27 @@ describe('DecisionsController', () => {
     }).compile()
 
     app = moduleFixture.createNestApplication()
+    mongoRepository = app.get<MongoRepository>(MongoRepository)
 
     await app.init()
-    mongoRepository = moduleFixture.get<MongoRepository>(MongoRepository)
-
-    mongoRepository.create(mockUtils.decisionModel)
   })
 
+  // beforeEach(async()=> {
+  //   if(mongoose) {
+  //     await mongoose.connect(process.env.MONGO_DB_URL)
+  //     await mongoose.connection.db.dropDatabase()
+  //   }
+  // })
+
   afterAll(async () => {
-    if (mongoose) {
-      await mongoose.connect(`${process.env.MONGO_URI}/${mongoDbMemoryServerConf.Database}`)
-      await mongoose.connection.db.dropDatabase()
-      await mongoose.disconnect()
-    }
+    if (mongoose) await mongoose.disconnect()
   })
 
   describe('GET /decisions', () => {
     describe('Success case', () => {
       it('returns a 200 with a list of decisions from known source', async () => {
         // GIVEN
+        await mongoRepository.create(mockUtils.decisionModel)
         const expectedDecisions = [mockUtils.decisionTJToBeTreated]
         const getDecisionsListDTO = mockUtils.decisionQueryDTO
 
@@ -50,6 +51,8 @@ describe('DecisionsController', () => {
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.OK)
         expect(result.body).toEqual(expectedDecisions)
+        await mongoose.connect(process.env.MONGO_DB_URL)
+        await mongoose.connection.db.dropDatabase()
       })
     })
 
