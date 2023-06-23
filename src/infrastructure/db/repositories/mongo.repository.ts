@@ -42,8 +42,4 @@ export class MongoRepository implements IDatabaseRepository {
     }
     return decision
   }
-
-  getModel(): Model<DecisionModel> {
-    return this.decisionModel
-  }
 }

@@ -1,9 +1,9 @@
-import mongoose from 'mongoose'
 import * as request from 'supertest'
 import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
+import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -16,10 +16,16 @@ describe('DecisionsController', () => {
 
     app = moduleFixture.createNestApplication()
     await app.init()
+
+    await connectDatabase()
+  })
+
+  afterEach(async () => {
+    await dropCollections()
   })
 
   afterAll(async () => {
-    if (mongoose) await mongoose.disconnect()
+    await dropDatabase()
   })
 
   describe('POST /decisions', () => {
@@ -37,53 +43,57 @@ describe('DecisionsController', () => {
       expect(result.status).toEqual(HttpStatus.CREATED)
     })
 
-    it('returns a 400 when called without a body', async () => {
-      // GIVEN
-      const normalizationApiKey = process.env.NORMALIZATION_API_KEY
+    describe('failing cases', () => {
+      it('returns a 400 Bad Request when called without a body', async () => {
+        // GIVEN
+        const normalizationApiKey = process.env.NORMALIZATION_API_KEY
 
-      // WHEN
-      const result = await request(app.getHttpServer())
-        .post('/decisions')
-        .set({ 'x-api-key': normalizationApiKey })
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .post('/decisions')
+          .set({ 'x-api-key': normalizationApiKey })
 
-      // THEN
-      expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
-    })
+        // THEN
+        expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
+      })
 
-    it('returns a 400 when called with an incorrect body', async () => {
-      // GIVEN
-      const normalizationApiKey = process.env.NORMALIZATION_API_KEY
+      it('returns a 400 Bad Request when called with an incorrect body', async () => {
+        // GIVEN
+        const normalizationApiKey = process.env.NORMALIZATION_API_KEY
 
-      // WHEN
-      const result = await request(app.getHttpServer())
-        .post('/decisions')
-        .set({ 'x-api-key': normalizationApiKey })
-        .send({ decision: { wrongKey: 'wrongValue' } })
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .post('/decisions')
+          .set({ 'x-api-key': normalizationApiKey })
+          .send({ decision: { wrongKey: 'wrongValue' } })
 
-      // THEN
-      expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
-    })
+        // THEN
+        expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
+      })
 
-    it('returns a 401 when apiKey is missing', async () => {
-      // WHEN
-      const result = await request(app.getHttpServer()).post('/decisions').set({ 'x-api-key': '' })
+      it('returns a 401 Unauthorized when apiKey is missing', async () => {
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .post('/decisions')
+          .set({ 'x-api-key': '' })
 
-      // THEN
-      expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
-    })
+        // THEN
+        expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
+      })
 
-    it('returns a 403 when a consumer not authorized (label) calls POST /decisions', async () => {
-      // GIVEN
-      const labelApiKey = process.env.LABEL_API_KEY
+      it('returns a 403 Forbidden when a consumer not authorized (label) calls POST /decisions', async () => {
+        // GIVEN
+        const labelApiKey = process.env.LABEL_API_KEY
 
-      // WHEN
-      const result = await request(app.getHttpServer())
-        .post('/decisions')
-        .set({ 'x-api-key': labelApiKey })
-        .send({ decision: mockUtils.createDecisionDTO })
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .post('/decisions')
+          .set({ 'x-api-key': labelApiKey })
+          .send({ decision: mockUtils.createDecisionDTO })
 
-      // THEN
-      expect(result.status).toEqual(HttpStatus.FORBIDDEN)
+        // THEN
+        expect(result.status).toEqual(HttpStatus.FORBIDDEN)
+      })
     })
   })
 })
