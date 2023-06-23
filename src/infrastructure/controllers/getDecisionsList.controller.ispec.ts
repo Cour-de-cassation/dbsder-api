@@ -3,9 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
-import mongoose from 'mongoose'
 import { MongoRepository } from '../db/repositories/mongo.repository'
-import { mongoDbMemoryServerConf } from '../../.jest/mongoDbMemoryServer.conf'
+import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -19,25 +18,25 @@ describe('DecisionsController', () => {
     }).compile()
 
     app = moduleFixture.createNestApplication()
-
     await app.init()
-    mongoRepository = moduleFixture.get<MongoRepository>(MongoRepository)
 
-    mongoRepository.create(mockUtils.decisionModel)
+    mongoRepository = app.get<MongoRepository>(MongoRepository)
+    await connectDatabase()
+  })
+
+  afterEach(async () => {
+    await dropCollections()
   })
 
   afterAll(async () => {
-    if (mongoose) {
-      await mongoose.connect(`${process.env.MONGO_URI}/${mongoDbMemoryServerConf.Database}`)
-      await mongoose.connection.db.dropDatabase()
-      await mongoose.disconnect()
-    }
+    await dropDatabase()
   })
 
   describe('GET /decisions', () => {
     describe('Success case', () => {
-      it('returns a 200 with a list of decisions from known source', async () => {
+      it('returns a 200 OK with a list of decisions from known source', async () => {
         // GIVEN
+        await mongoRepository.create(mockUtils.decisionModel)
         const expectedDecisions = [mockUtils.decisionTJToBeTreated]
         const getDecisionsListDTO = mockUtils.decisionQueryDTO
 
@@ -98,6 +97,20 @@ describe('DecisionsController', () => {
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
       })
+
+      it('when a source is unknown', async () => {
+        // GIVEN
+        const getDecisionsListWithUnknownSourceDTO = mockUtils.decisionQueryWithUnknownSourceDTO
+
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .get('/decisions')
+          .query(getDecisionsListWithUnknownSourceDTO)
+          .set({ 'x-api-key': labelApiKey })
+
+        // THEN
+        expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
+      })
     })
 
     describe('returns 403 Forbidden', () => {
@@ -115,20 +128,6 @@ describe('DecisionsController', () => {
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.FORBIDDEN)
       })
-    })
-
-    it('returns a 400 with a list of decisions with non validated source', async () => {
-      // GIVEN
-      const getDecisionsListWithUnknownSourceDTO = mockUtils.decisionQueryWithUnknownSourceDTO
-
-      // WHEN
-      const result = await request(app.getHttpServer())
-        .get('/decisions')
-        .query(getDecisionsListWithUnknownSourceDTO)
-        .set({ 'x-api-key': labelApiKey })
-
-      // THEN
-      expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
     })
   })
 })
