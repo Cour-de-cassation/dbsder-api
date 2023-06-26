@@ -20,9 +20,6 @@ export class DecisionModel {
   chamberName: string
 
   @Prop()
-  iddecision: string
-
-  @Prop()
   dateCreation: string
 
   @Prop()

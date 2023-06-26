@@ -150,9 +150,6 @@ export class CreateDecisionDTO {
     type: String,
     example: mockUtils.createDecisionDTO.chamberName
   })
-  @IsString()
-  iddecision: string
-
   @ApiProperty({
     description: 'Date de la création (après réception) de la décision',
     type: String,

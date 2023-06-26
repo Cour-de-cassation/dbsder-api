@@ -31,7 +31,7 @@ export class MongoRepository implements IDatabaseRepository {
   }
   async getDecisionById(id: string): Promise<DecisionModel> {
     const decision = await this.decisionModel
-      .findOne({ iddecision: id })
+      .findOne({ id })
       .lean()
       .catch(() => {
         throw new ServiceUnavailableException('Error from database')

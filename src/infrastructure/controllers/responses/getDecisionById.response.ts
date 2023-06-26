@@ -15,8 +15,6 @@ export class GetDecisionByIdResponse {
 
   chamberName: string
 
-  iddecision: string
-
   dateCreation: string
 
   dateDecision: string
