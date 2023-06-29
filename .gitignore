@@ -37,3 +37,4 @@ lerna-debug.log*
 
 # Environement 
 .env
+convict-json-env.json

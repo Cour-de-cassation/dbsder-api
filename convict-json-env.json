@@ -1,0 +1,8 @@
+{
+  "labelApiKey": "94568b15-e2c5-4332-abcb-287640847864",
+  "normalizationApiKey": "b34a35f6-7566-48fb-98e6-f055e258af0d",
+  "openSderApiKey": "72e5d9d7-1a15-49db-8bbc-f84768c6ecf2",
+  "docLoginSwagger": "login",
+  "docPasswordSwagger": "pwd",
+  "mongoDBUrl": "mongodb://localhost:27017"
+}
