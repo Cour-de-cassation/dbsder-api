@@ -3,7 +3,7 @@ import { plainToInstance } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
 import { MissingPropertiesException } from '../exceptions/missingProperties.exception'
 import { MissingFieldException } from '../exceptions/missingField.exception'
-import { DateMismatchError } from '../exceptions/dateMismatch.exception'
+import { DateMismatchException } from '../exceptions/dateMismatch.exception'
 
 @Injectable()
 export class ValidateDtoPipe implements PipeTransform {
@@ -16,7 +16,7 @@ export class ValidateDtoPipe implements PipeTransform {
     }
     const object = plainToInstance(metatype, value)
     if (object.startDate && object.endDate && object.startDate > object.endDate) {
-      throw new DateMismatchError("'startDate' doit être antérieur à 'endDate'.")
+      throw new DateMismatchException("'startDate' doit être antérieur à 'endDate'.")
     }
     const errors: ValidationError[] = await validate(object)
     if (errors.length > 0) {

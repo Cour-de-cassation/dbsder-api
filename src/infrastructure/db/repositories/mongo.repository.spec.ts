@@ -1,8 +1,8 @@
 import { mock } from 'jest-mock-extended'
 import { MockUtils } from '../../utils/mock.utils'
-import { NotFoundException, ServiceUnavailableException } from '@nestjs/common'
 import { IDatabaseRepository } from '../database.repository.interface'
 import { DecisionModel } from '../models/decision.model'
+import { DatabaseError } from '../../../domain/errors/database.error'
 
 describe('MongoRepository', () => {
   let mockedRepository: IDatabaseRepository
@@ -34,7 +34,7 @@ describe('MongoRepository', () => {
       // GIVEN
       const decision = mockUtils.createDecisionDTO
       jest.spyOn(mockedRepository, 'create').mockImplementationOnce(() => {
-        throw new ServiceUnavailableException('Error from database')
+        throw new DatabaseError('')
       })
 
       expect(() => {
@@ -42,7 +42,7 @@ describe('MongoRepository', () => {
         mockedRepository.create(decision)
       })
         // THEN
-        .toThrow(new ServiceUnavailableException('Error from database'))
+        .toThrow(DatabaseError)
     })
   })
 
@@ -65,14 +65,12 @@ describe('MongoRepository', () => {
       // GIVEN
       const decisionListDTO = mockUtils.decisionQueryDTO
 
-      jest
-        .spyOn(mockedRepository, 'list')
-        .mockRejectedValueOnce(new ServiceUnavailableException('Error from database'))
+      jest.spyOn(mockedRepository, 'list').mockRejectedValueOnce(new DatabaseError(''))
 
       // WHEN
       await expect(mockedRepository.list(decisionListDTO))
         .rejects // THEN
-        .toThrow(new ServiceUnavailableException('Error from database'))
+        .toThrow(DatabaseError)
     })
   })
 
@@ -81,30 +79,30 @@ describe('MongoRepository', () => {
 
     it('throws an error when the database is unavailable', () => {
       // GIVEN
-      jest
-        .spyOn(mockedRepository, 'getDecisionById')
-        .mockRejectedValueOnce(new ServiceUnavailableException('Error from database'))
+      jest.spyOn(mockedRepository, 'getDecisionById').mockRejectedValueOnce(new DatabaseError(''))
 
       // WHEN
       expect(() => mockedRepository.getDecisionById(id))
         //THEN
-        .rejects.toThrow(new ServiceUnavailableException('Error from database'))
-    })
-
-    it('throws an error when the decision does not exist', () => {
-      // GIVEN
-      jest.spyOn(mockedRepository, 'getDecisionById').mockRejectedValueOnce(new NotFoundException())
-
-      // WHEN
-      expect(() => mockedRepository.getDecisionById(id))
-        //THEN
-        .rejects.toThrow(new NotFoundException())
+        .rejects.toThrow(DatabaseError)
     })
 
     it('return a decision with a valid id provided', async () => {
       // GIVEN
       const expectedDecision = mockUtils.decisionModel
       jest.spyOn(mockedRepository, 'getDecisionById').mockResolvedValueOnce(mockUtils.decisionModel)
+
+      // WHEN
+      const decision = await mockedRepository.getDecisionById(id)
+
+      // THEN
+      expect(decision).toEqual(expectedDecision)
+    })
+
+    it('returns null when no decision with this id was found', async () => {
+      // GIVEN
+      const expectedDecision = null
+      jest.spyOn(mockedRepository, 'getDecisionById').mockResolvedValueOnce(null)
 
       // WHEN
       const decision = await mockedRepository.getDecisionById(id)

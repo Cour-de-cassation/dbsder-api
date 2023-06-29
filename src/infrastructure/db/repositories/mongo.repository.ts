@@ -4,8 +4,7 @@ import { DecisionModel } from '../models/decision.model'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
 import { IDatabaseRepository } from '../database.repository.interface'
-import { DatabaseError } from '../../../domain/errors/databaseError.error'
-import { EntityNotFound } from '../../../domain/errors/entityNotFound.error'
+import { DatabaseError } from '../../../domain/errors/database.error'
 
 export class MongoRepository implements IDatabaseRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
@@ -37,10 +36,6 @@ export class MongoRepository implements IDatabaseRepository {
       .catch((error) => {
         throw new DatabaseError(error)
       })
-
-    if (!decision) {
-      throw new EntityNotFound()
-    }
     return decision
   }
 }

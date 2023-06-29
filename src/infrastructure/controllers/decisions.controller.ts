@@ -28,7 +28,7 @@ import { DecisionNotFoundException } from '../exceptions/decisionNotFound.except
 import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { CreateDecisionDTO } from '../dto/createDecision.dto'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
-import { DatabaseError } from '../../domain/errors/databaseError.error'
+import { DatabaseError } from '../../domain/errors/database.error'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
 import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecase'
 import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
@@ -39,7 +39,7 @@ import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { UnexpectedException } from '../exceptions/unexpected.exception'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
-import { EntityNotFound } from '../../domain/errors/entityNotFound.error'
+import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.error'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -164,7 +164,7 @@ export class DecisionsController {
     this.logger.log('GET /decisions/:id called with ID ' + id)
     return await fetchDecisionByIdUsecase.execute(id).catch((error) => {
       this.logger.error(error.message)
-      if (error instanceof EntityNotFound) {
+      if (error instanceof DecisionNotFoundError) {
         throw new DecisionNotFoundException()
       }
       if (error instanceof DatabaseError) {
