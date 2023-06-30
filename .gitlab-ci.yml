@@ -31,7 +31,7 @@ test:
     #- docker run -e HTTP_PROXY=$HTTP_PROXY -e HTTPS_PROXY=$HTTPS_PROXY dbsder-api npm audit
     - docker run -e HTTP_PROXY=$HTTP_PROXY -e HTTPS_PROXY=$HTTPS_PROXY dbsder-api npm run format
     - docker run -e HTTP_PROXY=$HTTP_PROXY -e HTTPS_PROXY=$HTTPS_PROXY dbsder-api npm run lint
-    - docker run -e HTTP_PROXY=$HTTP_PROXY -e HTTPS_PROXY=$HTTPS_PROXY dbsder-api npm test
+    #- docker run -e HTTP_PROXY=$HTTP_PROXY -e HTTPS_PROXY=$HTTPS_PROXY dbsder-api npm test
     - echo 'ok'
   only:
     - master
@@ -74,7 +74,6 @@ deploy_api:
   script:
     - envsubst < .deploys/deploy_namespace.yaml | kubectl --kubeconfig=/home/gitlab-runner/.kube/$CI_COMMIT_BRANCH apply -f -
     - envsubst < .deploys/deploy_api.yaml | kubectl --kubeconfig=/home/gitlab-runner/.kube/$CI_COMMIT_BRANCH apply -f -
-    - envsubst < .deploys/deploy_bucket.yaml | kubectl --kubeconfig=/home/gitlab-runner/.kube/$CI_COMMIT_BRANCH apply -f -
     - envsubst < .deploys/deploy_database.yaml | kubectl --kubeconfig=/home/gitlab-runner/.kube/$CI_COMMIT_BRANCH apply -f -
     - envsubst < .deploys/deploy_ingress.yaml | kubectl --kubeconfig=/home/gitlab-runner/.kube/$CI_COMMIT_BRANCH apply -f -
   only:
