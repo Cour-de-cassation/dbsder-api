@@ -1,8 +1,8 @@
 import { MockUtils } from '../infrastructure/utils/mock.utils'
 import { CreateDecisionUsecase } from './createDecision.usecase'
-import { ServiceUnavailableException } from '@nestjs/common'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
+import { DatabaseError } from '../domain/errors/database.error'
 
 describe('createDecisionUsecase', () => {
   const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
@@ -37,11 +37,9 @@ describe('createDecisionUsecase', () => {
     usecase = new CreateDecisionUsecase(mockDatabaseRepository)
     const rejectedDecision = mockUtils.createDecisionDTO
     jest.spyOn(mockDatabaseRepository, 'create').mockImplementationOnce(() => {
-      throw new ServiceUnavailableException('Some error message')
+      throw new DatabaseError('')
     })
 
-    await expect(usecase.execute(rejectedDecision)).rejects.toThrow(
-      new ServiceUnavailableException('Some error message')
-    )
+    await expect(usecase.execute(rejectedDecision)).rejects.toThrow(DatabaseError)
   })
 })

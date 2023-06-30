@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  ForbiddenException,
   Get,
   Logger,
   Param,
@@ -14,6 +13,7 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -22,18 +22,24 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { DecisionStatus } from '../../domain/enum'
-import { CreateDecisionDTO } from '../dto/createDecision.dto'
-import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
-import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
-import { MongoRepository } from '../db/repositories/mongo.repository'
-import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
-import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
-import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
-import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
+import { DecisionStatus } from '../../domain/enum'
+import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
+import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
+import { CreateDecisionDTO } from '../dto/createDecision.dto'
+import { CreateDecisionResponse } from './responses/createDecisionResponse'
+import { DatabaseError } from '../../domain/errors/database.error'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
 import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecase'
+import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
+import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
+import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
+import { InfrastructureExpection } from '../exceptions/infrastructure.exception'
+import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
+import { MongoRepository } from '../db/repositories/mongo.repository'
+import { UnexpectedException } from '../exceptions/unexpected.exception'
+import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
+import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.error'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -59,6 +65,9 @@ export class DecisionsController {
   @ApiUnauthorizedResponse({
     description: "Vous n'avez pas accès à cette route"
   })
+  @ApiForbiddenResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
   async getDecisions(
     @Query(new ValidateDtoPipe()) getDecisionListCriteria: DecisionSearchCriteria,
     @Request() req
@@ -66,13 +75,19 @@ export class DecisionsController {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
-      throw new ForbiddenException()
+      throw new ForbiddenRouteException()
     }
     this.logger.log('GET /decisions called with status ' + getDecisionListCriteria.status)
 
     const listDecisionUsecase = new ListDecisionsUsecase(this.mongoRepository)
 
-    return await listDecisionUsecase.execute(getDecisionListCriteria)
+    return await listDecisionUsecase.execute(getDecisionListCriteria).catch((error) => {
+      this.logger.error(error.message)
+      if (error instanceof DatabaseError) {
+        throw new InfrastructureExpection(error.message)
+      }
+      throw new UnexpectedException(error.message)
+    })
   }
 
   @Post()
@@ -91,6 +106,9 @@ export class DecisionsController {
   @ApiUnauthorizedResponse({
     description: "Vous n'avez pas accès à cette route"
   })
+  @ApiForbiddenResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
   @UsePipes()
   async createDecisions(
     @Request() req,
@@ -100,11 +118,17 @@ export class DecisionsController {
     const authorizedApiKeys = [process.env.NORMALIZATION_API_KEY, process.env.OPENSDER_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
-      throw new ForbiddenException()
+      throw new ForbiddenRouteException()
     }
 
     const createDecisionUsecase = new CreateDecisionUsecase(this.mongoRepository)
-    const decisionCreated = await createDecisionUsecase.execute(decision)
+    const decisionCreated = await createDecisionUsecase.execute(decision).catch((error) => {
+      this.logger.error(error.message)
+      if (error instanceof DatabaseError) {
+        throw new InfrastructureExpection(error.message)
+      }
+      throw new UnexpectedException(error)
+    })
     return {
       id: decisionCreated.id,
       message: 'Decision créée'
@@ -127,14 +151,26 @@ export class DecisionsController {
   @ApiUnauthorizedResponse({
     description: "Vous n'avez pas accès à cette route"
   })
+  @ApiForbiddenResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
   async getDecisionById(@Param('id') id: string, @Request() req): Promise<GetDecisionByIdResponse> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
-      throw new ForbiddenException()
+      throw new ForbiddenRouteException()
     }
     const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.mongoRepository)
     this.logger.log('GET /decisions/:id called with ID ' + id)
-    return await fetchDecisionByIdUsecase.execute(id)
+    return await fetchDecisionByIdUsecase.execute(id).catch((error) => {
+      this.logger.error(error.message)
+      if (error instanceof DecisionNotFoundError) {
+        throw new DecisionNotFoundException()
+      }
+      if (error instanceof DatabaseError) {
+        throw new InfrastructureExpection(error.message)
+      }
+      throw new UnexpectedException(error.message)
+    })
   }
 }
