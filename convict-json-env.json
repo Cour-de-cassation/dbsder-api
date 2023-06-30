@@ -1,8 +1,8 @@
 {
-  "labelApiKey": "94568b15-e2c5-4332-abcb-287640847864",
-  "normalizationApiKey": "b34a35f6-7566-48fb-98e6-f055e258af0d",
-  "openSderApiKey": "72e5d9d7-1a15-49db-8bbc-f84768c6ecf2",
-  "docLoginSwagger": "login",
-  "docPasswordSwagger": "pwd",
-  "mongoDBUrl": "mongodb://localhost:27017"
+  "LABEL_API_KEY": "94568b15-e2c5-4332-abcb-287640847864",
+  "NORMALIZATION_API_KEY": "b34a35f6-7566-48fb-98e6-f055e258af0d",
+  "OPENSDER_API_KEY": "72e5d9d7-1a15-49db-8bbc-f84768c6ecf2",
+  "DOC_LOGIN": "login",
+  "DOC_PASSWORD": "pwd",
+  "MONGO_DB_URL": "mongodb://localhost:27017"
 }
