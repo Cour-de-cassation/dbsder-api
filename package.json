@@ -54,6 +54,7 @@
     "@types/jest": "29.5.2",
     "@types/node": "20.3.1",
     "@types/supertest": "2.0.12",
+    "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "5.60.0",
     "@typescript-eslint/parser": "5.60.0",
     "eslint": "8.43.0",
@@ -70,7 +71,8 @@
     "ts-loader": "9.4.3",
     "ts-node": "10.9.1",
     "tsconfig-paths": "4.2.0",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "uuid": "9.0.0"
   },
   "overrides": {
     "fast-xml-parser": "4.2.5", 
