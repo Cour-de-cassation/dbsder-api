@@ -5,18 +5,21 @@ export const convict_config = convict({
     doc: 'Label API Key',
     format: String,
     default: '',
+    sensitive: true,
     env: process.env.LABEL_API_KEY
   },
   NORMALIZATION_API_KEY: {
     doc: 'Normalization API Key',
     format: String,
     default: '',
+    sensitive: true,
     env: process.env.NORMALIZATION_API_KEY
   },
   OPENSDER_API_KEY: {
     doc: 'Open SDER API Key',
     format: String,
     default: '',
+    sensitive: true,
     env: process.env.OPENSDER_API_KEY
   },
   DOC_LOGIN: {
