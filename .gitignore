@@ -37,4 +37,9 @@ lerna-debug.log*
 
 # Environement 
 .env
+<<<<<<< HEAD
 /convict-json-env.json
+=======
+.env.local
+convict-json-env.json
+>>>>>>> Refacto convict pour utiliser directement le fichier .env
