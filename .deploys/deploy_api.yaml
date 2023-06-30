@@ -35,6 +35,8 @@ spec:
               value: "${DBSDER_API_DOC_PASSWORD}"
             - name: MONGO_DB_URL
               value: "${DBSDER_API_MONGO_DB_URL}"
+            - name: NO_COLOR
+              value: "${DBSDER_API_NO_COLOR}"
 
 ---
 apiVersion: v1

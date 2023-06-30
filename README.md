@@ -41,6 +41,9 @@ npm run test
 Créer un fichier `.env` à la racine du dossier avec les variables suivantes :
 
 ```.env
+### Pour désactiver la coloration des logs
+NO_COLOR=true 
+
 ## Clés API des consommateurs de l'API DBSDER
 LABEL_API_KEY=some_uuid
 NORMALIZATION_API_KEY=some_uuid
