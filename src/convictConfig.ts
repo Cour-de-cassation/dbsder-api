@@ -1,6 +1,6 @@
 import * as convict from 'convict'
 
-export const convict_config = convict({
+export const convictConfig = convict({
   LABEL_API_KEY: {
     doc: 'Label API Key',
     format: String,

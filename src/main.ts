@@ -3,7 +3,7 @@ import { AppModule } from './app.module'
 import * as basicAuth from 'express-basic-auth'
 import { CustomLogger } from './infrastructure/utils/customLogger.utils'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { convict_config } from './convict-config'
+import { convictConfig } from './convictConfig'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -40,9 +40,9 @@ async function bootstrap() {
   SwaggerModule.setup('doc', app, document)
 
   // SETUP env to JSON file for Convict
-  convict_config.loadFile('convict-json-env.json')
+  convictConfig.loadFile('convict-json-env.json')
 
-  convict_config.validate({ allowed: 'strict' })
+  convictConfig.validate({ allowed: 'strict' })
 
   // that finalizes the launch of the app
   await app.listen(process.env.PORT || 3000)
