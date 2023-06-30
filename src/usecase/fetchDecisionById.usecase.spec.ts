@@ -1,8 +1,9 @@
 import { MockProxy, mock } from 'jest-mock-extended'
 import { FetchDecisionByIdUsecase } from './fetchDecisionById.usecase'
 import { MockUtils } from '../infrastructure/utils/mock.utils'
-import { NotFoundException, ServiceUnavailableException } from '@nestjs/common'
 import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
+import { DecisionNotFoundError } from '../domain/errors/decisionNotFound.error'
+import { DatabaseError } from '../domain/errors/database.error'
 
 describe('FetchDecisionByIdUsecase', () => {
   const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
@@ -29,26 +30,22 @@ describe('FetchDecisionByIdUsecase', () => {
     const id = 'id'
     it("returns a service unavailable when the respository don't respond", () => {
       // GIVEN
-      jest
-        .spyOn(mockDatabaseRepository, 'getDecisionById')
-        .mockRejectedValue(new ServiceUnavailableException())
+      jest.spyOn(mockDatabaseRepository, 'getDecisionById').mockRejectedValue(new DatabaseError(''))
 
       // WHEN
       expect(() => usecase.execute(id))
         // THEN
-        .rejects.toThrow(ServiceUnavailableException)
+        .rejects.toThrow(DatabaseError)
     })
 
     it('throws a not found exception when the decision does not exist', () => {
       // GIVEN
-      jest
-        .spyOn(mockDatabaseRepository, 'getDecisionById')
-        .mockRejectedValue(new NotFoundException())
+      jest.spyOn(mockDatabaseRepository, 'getDecisionById').mockResolvedValue(null)
 
       // WHEN
       expect(() => usecase.execute(id))
         // THEN
-        .rejects.toThrow(NotFoundException)
+        .rejects.toThrow(DecisionNotFoundError)
     })
   })
 })

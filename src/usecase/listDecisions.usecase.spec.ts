@@ -1,8 +1,8 @@
 import { MockUtils } from '../infrastructure/utils/mock.utils'
 import { ListDecisionsUsecase } from './listDecisions.usecase'
-import { ServiceUnavailableException } from '@nestjs/common'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
+import { DatabaseError } from '../domain/errors/database.error'
 
 describe('listDecisionUsecase', () => {
   const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
@@ -31,11 +31,9 @@ describe('listDecisionUsecase', () => {
     // GIVEN
     usecase = new ListDecisionsUsecase(mockDatabaseRepository)
     jest.spyOn(mockDatabaseRepository, 'list').mockImplementationOnce(() => {
-      throw new ServiceUnavailableException('Error from repository')
+      throw new DatabaseError('')
     })
 
-    await expect(usecase.execute(listCriteria)).rejects.toThrow(
-      new ServiceUnavailableException('Error from repository')
-    )
+    await expect(usecase.execute(listCriteria)).rejects.toThrow(DatabaseError)
   })
 })
