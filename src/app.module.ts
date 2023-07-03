@@ -14,6 +14,7 @@ import * as Joi from 'joi'
 @Module({
   imports: [
     ConfigModule.forRoot({
+      cache: true,
       validationSchema: Joi.object({
         LABEL_API_KEY: Joi.string().guid({
           version: ['uuidv4'],
