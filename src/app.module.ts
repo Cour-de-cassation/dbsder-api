@@ -9,10 +9,29 @@ import { AuthMiddleware } from './infrastructure/middleware/auth/auth.middleware
 import { DecisionsController } from './infrastructure/controllers/decisions.controller'
 import { HealthController } from './infrastructure/controllers/health/health.controller'
 import { MongoRepository } from './infrastructure/db/repositories/mongo.repository'
+import * as Joi from 'joi'
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      validationSchema: Joi.object({
+        LABEL_API_KEY: Joi.string().guid({
+          version: ['uuidv4'],
+          separator: true
+        }),
+        NORMALIZATION_API_KEY: Joi.string().guid({
+          version: ['uuidv4'],
+          separator: true
+        }),
+        OPENSDER_API_KEY: Joi.string().guid({
+          version: ['uuidv4'],
+          separator: true
+        }),
+        DOC_LOGIN: Joi.string().required(),
+        DOC_PASSWORD: Joi.string().required(),
+        MONGO_DB_URL: Joi.string().required()
+      })
+    }),
     AuthModule,
     TerminusModule.forRoot({
       logger: false
