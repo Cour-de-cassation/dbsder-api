@@ -29,6 +29,7 @@ export const convictConfiguration = () =>
     },
     opensderApiKey: {
       env: 'OPENSDER_API_KEY',
+      doc: 'OpenSDER API Key',
       format: 'uuid-api-key',
       default: '',
       sensitive: true
