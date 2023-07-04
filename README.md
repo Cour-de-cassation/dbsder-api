@@ -22,10 +22,23 @@ npx husky install
 
 ### Démarrer l'application
 
-Pour démarrer l'application, écrire dans un terminal : 
+Pour démarrer l'application:
 
+1. Compiler l'image docker mongodb:
  ```bash
-npm run start:dev # for the dev environment
+npm run docker:build
+ ```
+2. Lancer l'image docker mongodb:
+ ```bash
+npm run docker:start:db
+ ```
+3. Créer un .env en copiant le docker.env et modifier la variable MONGO_DB_URL:
+```text
+MONGO_DB_URL=mongodb://localhost:55432
+```
+4. Lancer l'application
+ ```bash
+npm run start:dev
  ```
 
 ### Tests
