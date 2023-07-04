@@ -1,6 +1,6 @@
 {
     "globalSetup": "<rootDir>/src/.jest/globalSetup.ts",
-    "globalTeardown": "<rootDir>/src/.jest/globalTeardown.ts",
+    "globalTeardown": "<rootDir>/src/.jest/globalTearDown.ts",
     "moduleFileExtensions": ["js", "json", "ts"],
     "preset": "ts-jest",
     "rootDir": ".",
