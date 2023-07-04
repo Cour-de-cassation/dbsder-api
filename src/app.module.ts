@@ -9,10 +9,11 @@ import { AuthMiddleware } from './infrastructure/middleware/auth/auth.middleware
 import { DecisionsController } from './infrastructure/controllers/decisions.controller'
 import { HealthController } from './infrastructure/controllers/health/health.controller'
 import { MongoRepository } from './infrastructure/db/repositories/mongo.repository'
+import { envValidationConfig } from '../env.validation'
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot(envValidationConfig),
     AuthModule,
     TerminusModule.forRoot({
       logger: false
