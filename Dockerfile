@@ -17,7 +17,23 @@ COPY --chown=node:node . .
 
 
 # --- Dev dependencies for testing --- #
-FROM builder as test
+# Mongo-memory-server require to use an older image 
+# https://github.com/nodkz/mongodb-memory-server/issues/732 
+# https://nodkz.github.io/mongodb-memory-server/docs/guides/known-issues/#no-build-available-for-alpine-linux 
+FROM node:16 as test
+
+ENV NODE_ENV build
+
+USER node
+WORKDIR /home/node
+
+RUN npm config set proxy $http_proxy
+RUN npm config set https-proxy $https_proxy
+
+COPY package*.json ./
+RUN npm ci
+
+COPY --chown=node:node . .
 
 RUN npm run build
 
