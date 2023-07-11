@@ -10,7 +10,10 @@ import { ApiKeyValidation } from '../../auth/apiKeyValidation'
 
 @Controller('health')
 export class HealthController {
-  constructor(private health: HealthCheckService, private mongoose: MongooseHealthIndicator) {}
+  constructor(
+    private health: HealthCheckService,
+    private mongoose: MongooseHealthIndicator
+  ) {}
 
   @Get()
   @ApiHeader({
