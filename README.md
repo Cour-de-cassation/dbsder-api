@@ -71,6 +71,9 @@ DOC_PASSWORD=pwd
 MONGO_DB_URL=mongodb://<URL>:<PORT>/<DB_NAME>
 ```
 
+Un exemple de fichier `.env` est nommé `.env.example`
+
+
 ### Démarrer l'application via Docker
 
 Démarrer l'application nécessite au préalable d'initaliser les fichiers de variables d'environnement. 
