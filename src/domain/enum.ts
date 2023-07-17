@@ -1,5 +1,9 @@
 export enum DecisionStatus {
-  TOBETREATED = 'toBeTreated'
+  TOBETREATED = 'toBeTreated',
+  LOADED = 'loaded',
+  DONE = 'done',
+  EXPORTED = 'exported',
+  BLOCKED = 'blocked'
 }
 
 export enum Sources {

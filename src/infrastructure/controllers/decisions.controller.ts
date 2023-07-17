@@ -2,9 +2,12 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Logger,
   Param,
+  ParseEnumPipe,
   Post,
+  Put,
   Query,
   Request,
   UsePipes
@@ -15,6 +18,7 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiHeader,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
@@ -24,13 +28,16 @@ import {
 } from '@nestjs/swagger'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { DecisionStatus } from '../../domain/enum'
-import { DatabaseError } from '../../domain/errors/database.error'
+import { DatabaseError, UpdateFailedError } from '../../domain/errors/database.error'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
+import { UnprocessableException } from '../exceptions/unprocessable.exception'
 import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.error'
 import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
 import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecase'
+import { UpdateDecisionStatusUsecase } from '../../usecase/updateDecisionStatus.usecase'
 import { CreateDecisionDTO } from '../dto/createDecision.dto'
+import { UpdateDecisionDTO } from '../dto/updateDecision.dto'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
 import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
@@ -172,5 +179,60 @@ export class DecisionsController {
       id: decisionCreated.id,
       message: 'Decision créée'
     }
+  }
+
+  @Put(':id/statut')
+  @HttpCode(204)
+  @ApiHeader({
+    name: 'x-api-key',
+    description: 'Clé API'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Identifiant de la décision'
+  })
+  @ApiBody({
+    description: 'Statut de la décision',
+    type: UpdateDecisionDTO
+  })
+  @ApiNoContentResponse()
+  @ApiBadRequestResponse({
+    description: 'Statut manquant ou invalide'
+  })
+  @ApiNotFoundResponse({
+    description: "La decision n'a pas été trouvée"
+  })
+  @ApiUnauthorizedResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
+  @ApiForbiddenResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
+  async updateDecisionStatus(
+    @Param('id') id: string,
+    @Body('statut', new ParseEnumPipe(DecisionStatus)) decisionStatus: UpdateDecisionDTO,
+    @Request() req
+  ): Promise<void> {
+    const authorizedApiKeys = [process.env.LABEL_API_KEY, process.env.PUBLICATION_API_KEY]
+    const apiKey = req.headers['x-api-key']
+    if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
+      throw new ForbiddenRouteException()
+    }
+    this.logger.log(`PUT /decisions/id/statut called with ID ${id} and status ${decisionStatus}`)
+
+    const updateDecisionUsecase = new UpdateDecisionStatusUsecase(this.mongoRepository)
+    await updateDecisionUsecase.execute(id, decisionStatus.toString()).catch((error) => {
+      this.logger.error(error.message)
+      if (error instanceof DecisionNotFoundError) {
+        throw new DecisionNotFoundException()
+      }
+      if (error instanceof UpdateFailedError) {
+        throw new UnprocessableException(id, decisionStatus.toString(), error.message)
+      }
+      if (error instanceof DatabaseError) {
+        throw new DependencyException(error.message)
+      }
+      throw new UnexpectedException(error)
+    })
   }
 }

@@ -19,6 +19,10 @@ export const envValidationConfig = {
       version: ['uuidv4'],
       separator: true
     }),
+    PUBLICATION_API_KEY: Joi.string().guid({
+      version: ['uuidv4'],
+      separator: true
+    }),
     DOC_LOGIN: Joi.string().required(),
     DOC_PASSWORD: Joi.string().required(),
     MONGO_DB_URL: Joi.string().required()
