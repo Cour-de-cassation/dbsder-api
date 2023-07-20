@@ -10,6 +10,10 @@ describe('FetchDecisionByIdUsecase', () => {
   const mockUtils = new MockUtils()
   const usecase = new FetchDecisionByIdUsecase(mockDatabaseRepository)
 
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
   describe('Success case', () => {
     it('returns the decision when provided ID exist', async () => {
       //GIVEN
@@ -21,29 +25,30 @@ describe('FetchDecisionByIdUsecase', () => {
       const decision = await usecase.execute(id)
 
       // THEN
-
       expect(decision).toEqual(expectedDecision)
     })
   })
 
   describe('Fail cases', () => {
     const id = 'id'
-    it("returns a service unavailable when the respository don't respond", () => {
+    it("returns a service unavailable when the respository don't respond", async () => {
       // GIVEN
-      jest.spyOn(mockDatabaseRepository, 'getDecisionById').mockRejectedValue(new DatabaseError(''))
+      jest.spyOn(mockDatabaseRepository, 'getDecisionById').mockImplementationOnce(() => {
+        throw new DatabaseError('')
+      })
 
       // WHEN
-      expect(() => usecase.execute(id))
+      await expect(usecase.execute(id))
         // THEN
         .rejects.toThrow(DatabaseError)
     })
 
-    it('throws a not found exception when the decision does not exist', () => {
+    it('throws a not found exception when the decision does not exist', async () => {
       // GIVEN
       jest.spyOn(mockDatabaseRepository, 'getDecisionById').mockResolvedValue(null)
 
       // WHEN
-      expect(() => usecase.execute(id))
+      await expect(usecase.execute(id))
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
     })

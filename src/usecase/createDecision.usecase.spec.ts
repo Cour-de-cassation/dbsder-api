@@ -1,25 +1,23 @@
+import { mock, MockProxy } from 'jest-mock-extended'
 import { MockUtils } from '../infrastructure/utils/mock.utils'
 import { CreateDecisionUsecase } from './createDecision.usecase'
-import { mock, MockProxy } from 'jest-mock-extended'
 import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
-import { DatabaseError } from '../domain/errors/database.error'
 
 describe('createDecisionUsecase', () => {
   const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
   let mockUtils: MockUtils
-  let usecase: CreateDecisionUsecase
+  const usecase: CreateDecisionUsecase = new CreateDecisionUsecase(mockDatabaseRepository)
 
   beforeAll(async () => {
     mockUtils = new MockUtils()
   })
 
-  afterAll(async () => {
-    jest.clearAllMocks()
+  beforeEach(() => {
+    jest.resetAllMocks()
   })
 
   it('creates decision successfully when database is available', async () => {
     // GIVEN
-    usecase = new CreateDecisionUsecase(mockDatabaseRepository)
     const expectedDecision = mockUtils.createDecisionDTO
     jest
       .spyOn(mockDatabaseRepository, 'create')
@@ -32,14 +30,13 @@ describe('createDecisionUsecase', () => {
     expect(result).toEqual(expectedDecision)
   })
 
-  it('throws a 503 Service Unavailable when database is unavailable', async () => {
+  it('propagates an Error when repository returns an error', async () => {
     // GIVEN
-    usecase = new CreateDecisionUsecase(mockDatabaseRepository)
     const rejectedDecision = mockUtils.createDecisionDTO
     jest.spyOn(mockDatabaseRepository, 'create').mockImplementationOnce(() => {
-      throw new DatabaseError('')
+      throw new Error()
     })
 
-    await expect(usecase.execute(rejectedDecision)).rejects.toThrow(DatabaseError)
+    await expect(usecase.execute(rejectedDecision)).rejects.toThrow(Error)
   })
 })
