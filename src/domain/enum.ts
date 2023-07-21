@@ -1,5 +1,5 @@
 export enum DecisionStatus {
-  TOBETREATED = 'toBeTreated',
+  TO_BE_TREATED = 'toBeTreated',
   LOADED = 'loaded',
   DONE = 'done',
   EXPORTED = 'exported',

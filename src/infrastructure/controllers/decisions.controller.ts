@@ -81,7 +81,7 @@ export class DecisionsController {
   ): Promise<GetDecisionsListResponse[]> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
-    if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
+    if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
     this.logger.log('GET /decisions called with status ' + getDecisionListCriteria.status)
@@ -119,7 +119,7 @@ export class DecisionsController {
   async getDecisionById(@Param('id') id: string, @Request() req): Promise<GetDecisionByIdResponse> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
-    if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
+    if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
     const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.mongoRepository)
@@ -163,7 +163,7 @@ export class DecisionsController {
     this.logger.log('POST /decisions called with ' + JSON.stringify(decision))
     const authorizedApiKeys = [process.env.NORMALIZATION_API_KEY, process.env.OPENSDER_API_KEY]
     const apiKey = req.headers['x-api-key']
-    if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
+    if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
 
@@ -215,7 +215,7 @@ export class DecisionsController {
   ): Promise<void> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY, process.env.PUBLICATION_API_KEY]
     const apiKey = req.headers['x-api-key']
-    if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
+    if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
     this.logger.log(`PUT /decisions/id/statut called with ID ${id} and status ${decisionStatus}`)
