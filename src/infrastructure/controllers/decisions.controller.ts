@@ -24,22 +24,22 @@ import {
 } from '@nestjs/swagger'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { DecisionStatus } from '../../domain/enum'
-import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
-import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
-import { CreateDecisionDTO } from '../dto/createDecision.dto'
-import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { DatabaseError } from '../../domain/errors/database.error'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
+import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.error'
+import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
+import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecase'
-import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
+import { CreateDecisionDTO } from '../dto/createDecision.dto'
+import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
 import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
-import { InfrastructureExpection } from '../exceptions/infrastructure.exception'
-import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
-import { MongoRepository } from '../db/repositories/mongo.repository'
 import { UnexpectedException } from '../exceptions/unexpected.exception'
+import { DependencyException } from '../exceptions/dependency.exception'
+import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
+import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
+import { MongoRepository } from '../db/repositories/mongo.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
-import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.error'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -84,7 +84,46 @@ export class DecisionsController {
     return await listDecisionUsecase.execute(getDecisionListCriteria).catch((error) => {
       this.logger.error(error.message)
       if (error instanceof DatabaseError) {
-        throw new InfrastructureExpection(error.message)
+        throw new DependencyException(error.message)
+      }
+      throw new UnexpectedException(error.message)
+    })
+  }
+
+  @Get(':id')
+  @ApiHeader({
+    name: 'x-api-key',
+    description: 'Clé API'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Identifiant de la décision'
+  })
+  @ApiOkResponse({ description: 'La décision', type: GetDecisionByIdResponse })
+  @ApiNotFoundResponse({
+    description: "La decision n'a pas été trouvée"
+  })
+  @ApiUnauthorizedResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
+  @ApiForbiddenResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
+  async getDecisionById(@Param('id') id: string, @Request() req): Promise<GetDecisionByIdResponse> {
+    const authorizedApiKeys = [process.env.LABEL_API_KEY]
+    const apiKey = req.headers['x-api-key']
+    if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
+      throw new ForbiddenRouteException()
+    }
+    const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.mongoRepository)
+    this.logger.log('GET /decisions/:id called with ID ' + id)
+    return await fetchDecisionByIdUsecase.execute(id).catch((error) => {
+      this.logger.error(error.message)
+      if (error instanceof DecisionNotFoundError) {
+        throw new DecisionNotFoundException()
+      }
+      if (error instanceof DatabaseError) {
+        throw new DependencyException(error.message)
       }
       throw new UnexpectedException(error.message)
     })
@@ -125,7 +164,7 @@ export class DecisionsController {
     const decisionCreated = await createDecisionUsecase.execute(decision).catch((error) => {
       this.logger.error(error.message)
       if (error instanceof DatabaseError) {
-        throw new InfrastructureExpection(error.message)
+        throw new DependencyException(error.message)
       }
       throw new UnexpectedException(error)
     })
@@ -133,44 +172,5 @@ export class DecisionsController {
       id: decisionCreated.id,
       message: 'Decision créée'
     }
-  }
-
-  @Get(':id')
-  @ApiHeader({
-    name: 'x-api-key',
-    description: 'Clé API'
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'Identifiant de la décision'
-  })
-  @ApiOkResponse({ description: 'La décision', type: GetDecisionByIdResponse })
-  @ApiNotFoundResponse({
-    description: "La decision n'a pas été trouvée"
-  })
-  @ApiUnauthorizedResponse({
-    description: "Vous n'avez pas accès à cette route"
-  })
-  @ApiForbiddenResponse({
-    description: "Vous n'avez pas accès à cette route"
-  })
-  async getDecisionById(@Param('id') id: string, @Request() req): Promise<GetDecisionByIdResponse> {
-    const authorizedApiKeys = [process.env.LABEL_API_KEY]
-    const apiKey = req.headers['x-api-key']
-    if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
-      throw new ForbiddenRouteException()
-    }
-    const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.mongoRepository)
-    this.logger.log('GET /decisions/:id called with ID ' + id)
-    return await fetchDecisionByIdUsecase.execute(id).catch((error) => {
-      this.logger.error(error.message)
-      if (error instanceof DecisionNotFoundError) {
-        throw new DecisionNotFoundException()
-      }
-      if (error instanceof DatabaseError) {
-        throw new InfrastructureExpection(error.message)
-      }
-      throw new UnexpectedException(error.message)
-    })
   }
 }

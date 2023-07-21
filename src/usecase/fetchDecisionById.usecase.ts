@@ -1,7 +1,7 @@
+import { DecisionNotFoundError } from '../domain/errors/decisionNotFound.error'
+import { MapModelToResponseService } from '../service/mapModelToResponse.service'
 import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
 import { GetDecisionByIdResponse } from '../infrastructure/controllers/responses/getDecisionById.response'
-import { MapModelToResponseService } from '../service/mapModelToResponse.service'
-import { DecisionNotFoundError } from '../domain/errors/decisionNotFound.error'
 
 export class FetchDecisionByIdUsecase {
   constructor(private mongoRepository: IDatabaseRepository) {}

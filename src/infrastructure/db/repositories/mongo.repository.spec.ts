@@ -1,114 +1,148 @@
-import { mock } from 'jest-mock-extended'
+import { getModelToken } from '@nestjs/mongoose'
+import { Test, TestingModule } from '@nestjs/testing'
+import { Model } from 'mongoose'
 import { MockUtils } from '../../utils/mock.utils'
-import { IDatabaseRepository } from '../database.repository.interface'
+import { MongoRepository } from './mongo.repository'
 import { DecisionModel } from '../models/decision.model'
 import { DatabaseError } from '../../../domain/errors/database.error'
 
-describe('MongoRepository', () => {
-  let mockedRepository: IDatabaseRepository
-  const mockUtils = new MockUtils()
+const mockDecisionModel = () => ({
+  find: jest.fn(),
+  create: jest.fn(),
+  findOne: jest.fn(),
+  updateOne: jest.fn()
+})
 
-  beforeAll(async () => {
-    mockedRepository = mock<IDatabaseRepository>()
+describe('MongoRepository', () => {
+  const mockUtils = new MockUtils()
+  let mongoRepository: MongoRepository
+  let decisionModel: Model<DecisionModel>
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        MongoRepository,
+        {
+          provide: getModelToken(DecisionModel.name),
+          useFactory: mockDecisionModel
+        }
+      ]
+    }).compile()
+
+    mongoRepository = module.get<MongoRepository>(MongoRepository)
+    decisionModel = module.get<Model<DecisionModel>>(getModelToken(DecisionModel.name))
   })
 
-  afterAll(async () => {
-    jest.clearAllMocks()
+  beforeEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('create', () => {
-    it('I receive an id and message that confirms a decision is inserted in the db', async () => {
+    it('returns created decision when decision is successfully created in DB', async () => {
       // GIVEN
       const decision = mockUtils.createDecisionDTO
       const expectedDecision: DecisionModel = mockUtils.decisionModel
-      jest.spyOn(mockedRepository, 'create').mockResolvedValue(Promise.resolve(expectedDecision))
+      jest
+        .spyOn(decisionModel, 'create')
+        .mockImplementationOnce(() => Promise.resolve(expectedDecision as any))
 
       // WHEN
-      const result = await mockedRepository.create(decision)
+      const result = await mongoRepository.create(decision)
 
       // THEN
       expect(result).toMatchObject(expectedDecision)
     })
 
-    it('I receive an error message when the insertion in the db has failed', () => {
+    it('throws a DatabaseError when the insertion in the DB has failed', async () => {
       // GIVEN
       const decision = mockUtils.createDecisionDTO
-      jest.spyOn(mockedRepository, 'create').mockImplementationOnce(() => {
-        throw new DatabaseError('')
-      })
+      jest.spyOn(decisionModel, 'create').mockRejectedValueOnce(new Error())
 
-      expect(() => {
-        // WHEN
-        mockedRepository.create(decision)
-      })
+      // WHEN
+      await expect(mongoRepository.create(decision))
         // THEN
-        .toThrow(DatabaseError)
+        .rejects.toThrow(DatabaseError)
     })
   })
 
   describe('list', () => {
-    it('I receive a list of decisions matching my decision criteria', async () => {
+    it('returns a list of decisions matching provided decision criteria', async () => {
       // GIVEN
       const decisionListDTO = mockUtils.decisionQueryDTO
       const expectedDecisionsModelList = [mockUtils.decisionModel]
       jest
-        .spyOn(mockedRepository, 'list')
-        .mockResolvedValue(Promise.resolve(expectedDecisionsModelList))
+        .spyOn(decisionModel, 'find')
+        .mockImplementationOnce(jest.fn().mockResolvedValueOnce(expectedDecisionsModelList) as any)
 
-      const result = await mockedRepository.list(decisionListDTO)
+      const result = await mongoRepository.list(decisionListDTO)
 
       // THEN
       expect(result).toMatchObject(expectedDecisionsModelList)
     })
 
-    it('I receive an error message when the list recuperation in the db has failed', async () => {
+    it('throws a DatabaseError when listing decisions in the DB has failed', async () => {
       // GIVEN
       const decisionListDTO = mockUtils.decisionQueryDTO
 
-      jest.spyOn(mockedRepository, 'list').mockRejectedValueOnce(new DatabaseError(''))
+      jest.spyOn(decisionModel, 'find').mockRejectedValueOnce(new Error())
 
       // WHEN
-      await expect(mockedRepository.list(decisionListDTO))
-        .rejects // THEN
-        .toThrow(DatabaseError)
+      await expect(mongoRepository.list(decisionListDTO))
+        // THEN
+        .rejects.toThrow(DatabaseError)
     })
   })
 
   describe('getDecisionById', () => {
     const id = '1'
 
-    it('throws an error when the database is unavailable', () => {
-      // GIVEN
-      jest.spyOn(mockedRepository, 'getDecisionById').mockRejectedValueOnce(new DatabaseError(''))
-
-      // WHEN
-      expect(() => mockedRepository.getDecisionById(id))
-        //THEN
-        .rejects.toThrow(DatabaseError)
-    })
-
-    it('return a decision with a valid id provided', async () => {
+    it('return a decision when a valid ID is provided', async () => {
       // GIVEN
       const expectedDecision = mockUtils.decisionModel
-      jest.spyOn(mockedRepository, 'getDecisionById').mockResolvedValueOnce(mockUtils.decisionModel)
+      jest.spyOn(decisionModel, 'findOne').mockImplementation(
+        () =>
+          ({
+            lean: jest.fn().mockResolvedValue(expectedDecision)
+          }) as any
+      )
 
       // WHEN
-      const decision = await mockedRepository.getDecisionById(id)
+      const decision = await mongoRepository.getDecisionById(id)
 
       // THEN
       expect(decision).toEqual(expectedDecision)
     })
 
-    it('returns null when no decision with this id was found', async () => {
+    it('returns null when no decision was found with provided ID', async () => {
       // GIVEN
       const expectedDecision = null
-      jest.spyOn(mockedRepository, 'getDecisionById').mockResolvedValueOnce(null)
+      jest.spyOn(decisionModel, 'findOne').mockImplementation(
+        () =>
+          ({
+            lean: jest.fn().mockResolvedValue(null)
+          }) as any
+      )
 
       // WHEN
-      const decision = await mockedRepository.getDecisionById(id)
+      const decision = await mongoRepository.getDecisionById(id)
 
       // THEN
       expect(decision).toEqual(expectedDecision)
+    })
+
+    it('throws a DatabaseError when the database is unavailable', async () => {
+      // GIVEN
+      jest.spyOn(decisionModel, 'findOne').mockImplementation(
+        () =>
+          ({
+            lean: jest.fn().mockRejectedValueOnce(new Error())
+          }) as any
+      )
+
+      // WHEN
+      await expect(mongoRepository.getDecisionById(id))
+        // THEN
+        .rejects.toThrow(DatabaseError)
     })
   })
 })
