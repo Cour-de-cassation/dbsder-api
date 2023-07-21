@@ -24,7 +24,7 @@ export class HealthController {
   async check(@Request() req): Promise<HealthCheckResult> {
     const authorizedApiKeys = [process.env.OPS_API_KEY]
     const apiKey = req.headers['x-api-key']
-    if (!new ApiKeyValidation().isValidApiKey(authorizedApiKeys, apiKey)) {
+    if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenException()
     }
 
