@@ -1,10 +1,11 @@
 import { getModelToken } from '@nestjs/mongoose'
 import { Test, TestingModule } from '@nestjs/testing'
-import { Model } from 'mongoose'
+import { Model, UpdateWriteOpResult } from 'mongoose'
 import { MockUtils } from '../../utils/mock.utils'
 import { MongoRepository } from './mongo.repository'
 import { DecisionModel } from '../models/decision.model'
-import { DatabaseError } from '../../../domain/errors/database.error'
+import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
+import { DecisionNotFoundError } from '../../..//domain/errors/decisionNotFound.error'
 
 const mockDecisionModel = () => ({
   find: jest.fn(),
@@ -141,6 +142,102 @@ describe('MongoRepository', () => {
 
       // WHEN
       await expect(mongoRepository.getDecisionById(id))
+        // THEN
+        .rejects.toThrow(DatabaseError)
+    })
+  })
+
+  describe('updateDecisionStatus', () => {
+    it('returns updated decision ID when status is successfully updated', async () => {
+      // GIVEN
+      const decisionId = 'some-id'
+      const decisionStatus = 'some-status'
+
+      const mongoSuccessfullResponse: UpdateWriteOpResult = {
+        acknowledged: true,
+        matchedCount: 1,
+        modifiedCount: 1,
+        upsertedCount: 0,
+        upsertedId: null
+      }
+      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoSuccessfullResponse)
+
+      // WHEN
+      const result = await mongoRepository.updateDecisionStatus(decisionId, decisionStatus)
+
+      // THEN
+      expect(result).toEqual(decisionId)
+    })
+
+    it('returns decision ID when decision was found but update failed because it already has the provided status', async () => {
+      // GIVEN
+      const decisionId = 'some-id'
+      const decisionStatus = 'some-already-existing-status'
+
+      const mongoResponseWithoutUpdate: UpdateWriteOpResult = {
+        acknowledged: true,
+        matchedCount: 1,
+        modifiedCount: 0,
+        upsertedCount: 0,
+        upsertedId: null
+      }
+      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithoutUpdate)
+
+      // WHEN
+      const result = await mongoRepository.updateDecisionStatus(decisionId, decisionStatus)
+
+      // THEN
+      expect(result).toEqual(decisionId)
+    })
+
+    it('throws a DecisionNotFoundError when decision is not found', async () => {
+      // GIVEN
+      const decisionId = 'some-id'
+      const decisionStatus = 'some-already-existing-status'
+
+      const mongoResponseNotFound: UpdateWriteOpResult = {
+        acknowledged: true,
+        matchedCount: 0,
+        modifiedCount: 0,
+        upsertedCount: 0,
+        upsertedId: null
+      }
+      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseNotFound)
+
+      // WHEN
+      await expect(mongoRepository.updateDecisionStatus(decisionId, decisionStatus))
+        // THEN
+        .rejects.toThrow(DecisionNotFoundError)
+    })
+
+    it('throws a UpdateFailedError when updating with mongoose fails', async () => {
+      // GIVEN
+      const decisionId = 'some-id'
+      const decisionStatus = 'some-already-existing-status'
+
+      const mongoResponseWithError: UpdateWriteOpResult = {
+        acknowledged: false,
+        matchedCount: 0,
+        modifiedCount: 0,
+        upsertedCount: 0,
+        upsertedId: null
+      }
+      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithError)
+
+      // WHEN
+      await expect(mongoRepository.updateDecisionStatus(decisionId, decisionStatus))
+        // THEN
+        .rejects.toThrow(UpdateFailedError)
+    })
+
+    it('throws a DatabaseError when database is unavailable', async () => {
+      // GIVEN
+      const decisionId = 'some-id'
+      const decisionStatus = 'some-status'
+      jest.spyOn(decisionModel, 'updateOne').mockRejectedValueOnce(new Error())
+
+      // WHEN
+      await expect(mongoRepository.updateDecisionStatus(decisionId, decisionStatus))
         // THEN
         .rejects.toThrow(DatabaseError)
     })

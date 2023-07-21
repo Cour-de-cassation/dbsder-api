@@ -3,3 +3,9 @@ export class DatabaseError extends Error {
     super('Erreur dans la base de données : ' + reason)
   }
 }
+
+export class UpdateFailedError extends Error {
+  constructor(reason: string) {
+    super('Erreur lors de la mise à jour en base de données : ' + reason)
+  }
+}
