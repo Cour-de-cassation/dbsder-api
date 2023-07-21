@@ -20,7 +20,7 @@ export class DecisionSearchCriteria {
     example: mockUtils.decisionCAToBeTreated.status
   })
   @IsEnum(DecisionStatus)
-  status: DecisionStatus.TOBETREATED
+  status: DecisionStatus
 
   @ApiProperty({
     description: 'Date de début de la décision',

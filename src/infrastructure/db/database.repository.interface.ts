@@ -6,4 +6,5 @@ export interface IDatabaseRepository {
   create(decision: CreateDecisionDTO): Promise<DecisionModel>
   list(decision: GetDecisionsListDto): Promise<DecisionModel[]>
   getDecisionById(id: string): Promise<DecisionModel>
+  updateDecisionStatus(id: string, status: string): Promise<string>
 }

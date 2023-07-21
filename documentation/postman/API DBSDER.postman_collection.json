@@ -1,251 +1,579 @@
 {
 	"info": {
-		"_postman_id": "395531a0-7237-41f2-b22a-0c5624a8ec63",
+		"_postman_id": "ce3e3d63-66c7-443b-8950-c19b617d3b08",
 		"name": "API DBSDER",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "14689636"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "201 - Enregistre une décision",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "{{NORMALIZATION_API_KEY}}",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"decision\": {\n        \"id\": \"idDecisionCC1106\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"CC\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"2023-06-11\",\n        \"dateDecision\": \"someDateDecision\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"CC\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\"\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "POST /decisions",
+			"item": [
+				{
+					"name": "201 - Enregistre une décision",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{NORMALIZATION_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"decision\": {\n        \"id\": \"idDecisionCC1106\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"CC\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"2023-06-11\",\n        \"dateDecision\": \"someDateDecision\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"CC\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"path": [
-						"{{VERSION}}",
-						"decisions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "400 - Enregistre une décision sans contenu",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "{{LABEL_API_KEY}}",
-						"type": "default"
-					}
-				],
-				"url": {
-					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"path": [
-						"{{VERSION}}",
-						"decisions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "400 - Enregistre une décision avec un contenu invalide",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "{{NORMALIZATION_API_KEY}}",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"decision\": {\n        //\"id\": \"someID\", pour le test\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"someSource\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"someDateCreation\",\n        \"dateDecision\": \"someDateDecision\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"someSourceName\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\"\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "400 - Enregistre une décision sans contenu",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"path": [
-						"{{VERSION}}",
-						"decisions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "401 - Enregistre une décision sans apiKey",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "",
-						"type": "default",
-						"disabled": true
-					}
-				],
-				"url": {
-					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"path": [
-						"{{VERSION}}",
-						"decisions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "200 - Liste les décisions toBeTreated avec source et période",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "{{LABEL_API_KEY}}",
-						"type": "default"
-					}
-				],
-				"url": {
-					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&source=CC&startDate=2023-06-11&endDate=2023-06-11",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"path": [
-						"{{VERSION}}",
-						"decisions"
-					],
-					"query": [
-						{
-							"key": "status",
-							"value": "toBeTreated"
+				{
+					"name": "400 - Enregistre une décision avec un contenu invalide",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{NORMALIZATION_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"decision\": {\n        //\"id\": \"someID\", pour le test\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"someSource\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"someDateCreation\",\n        \"dateDecision\": \"someDateDecision\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"someSourceName\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
-						{
-							"key": "source",
-							"value": "CC"
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "401 - Enregistre une décision sans apiKey",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET /decisions",
+			"item": [
+				{
+					"name": "200 - Liste les décisions toBeTreated avec source et période",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&source=CC&startDate=2023-06-11&endDate=2023-06-11",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "toBeTreated"
+								},
+								{
+									"key": "source",
+									"value": "CC"
+								},
+								{
+									"key": "startDate",
+									"value": "2023-06-11"
+								},
+								{
+									"key": "endDate",
+									"value": "2023-06-11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400 - Liste decisions avec mauvais status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=wrongStatus",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "wrongStatus"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "401 - Liste les décisions sans API Key",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "toBeTreated"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "401 - Liste les décisions avec mauvaise API Key",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "wrongApiKey",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "toBeTreated"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET /decisions/:id",
+			"item": [
+				{
+					"name": "200 - Récupère une décision par son ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "404 - Récupère une décision avec son ID inexistant",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PUT /decisions/:id/statut",
+			"item": [
+				{
+					"name": "204 - Met à jour le statut d'une décision",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"statut\": \"loaded\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
-						{
-							"key": "startDate",
-							"value": "2023-06-11"
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/statut",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"statut"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400 - Met à jour le statut d'une décision avec un statut inexact",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"statut\": \"wrongStatus\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
-						{
-							"key": "endDate",
-							"value": "2023-06-11"
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/statut",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"statut"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "400 - Liste decisions avec mauvais status",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "{{LABEL_API_KEY}}",
-						"type": "default"
-					}
-				],
-				"url": {
-					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=wrongStatus",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"path": [
-						"{{VERSION}}",
-						"decisions"
-					],
-					"query": [
-						{
-							"key": "status",
-							"value": "wrongStatus"
+					},
+					"response": []
+				},
+				{
+					"name": "401 - Met à jour avec une API Key inexistante",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "wrongAPIKey",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"statut\": \"loaded\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/statut",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"statut"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "401 - Liste les décisions sans API Key",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"path": [
-						"{{VERSION}}",
-						"decisions"
-					],
-					"query": [
-						{
-							"key": "status",
-							"value": "toBeTreated"
+					},
+					"response": []
+				},
+				{
+					"name": "401 - Met à jour sans API Key",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"statut\": \"loaded\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/statut",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"statut"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "401 - Liste les décisions avec mauvaise API Key",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "wrongApiKey",
-						"type": "default"
-					}
-				],
-				"url": {
-					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"path": [
-						"{{VERSION}}",
-						"decisions"
-					],
-					"query": [
-						{
-							"key": "status",
-							"value": "toBeTreated"
+					},
+					"response": []
+				},
+				{
+					"name": "403 - Met à jour avec une API Key non autorisée",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{OPS_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"statut\": \"loaded\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/statut",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"statut"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "404 - Met à jour le statut d'une décision avec ID inexistant",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"statut\": \"loaded\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/statut",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"statut"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
 			"name": "200 - Consulte l'état de l'API",
@@ -266,68 +594,6 @@
 					"path": [
 						"{{VERSION}}",
 						"health"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "200 - Récupère une décision par son ID",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "{{LABEL_API_KEY}}",
-						"type": "default"
-					}
-				],
-				"url": {
-					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"path": [
-						"{{VERSION}}",
-						"decisions",
-						":id"
-					],
-					"variable": [
-						{
-							"key": "id",
-							"value": "1"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "404 - Récupère une décision avec son ID inexistant",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "{{LABEL_API_KEY}}",
-						"type": "default"
-					}
-				],
-				"url": {
-					"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"path": [
-						"{{VERSION}}",
-						"decisions",
-						":id"
-					],
-					"variable": [
-						{
-							"key": "id",
-							"value": "test"
-						}
 					]
 				}
 			},
