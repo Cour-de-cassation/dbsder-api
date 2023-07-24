@@ -1,11 +1,11 @@
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { DecisionModel } from '../models/decision.model'
-import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
+import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { IDatabaseRepository } from '../database.repository.interface'
-import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
+import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
 
 export class MongoRepository implements IDatabaseRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}

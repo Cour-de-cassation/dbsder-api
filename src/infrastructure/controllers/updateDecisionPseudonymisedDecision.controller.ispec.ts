@@ -1,10 +1,10 @@
 import * as request from 'supertest'
 import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
-import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { MongoRepository } from '../db/repositories/mongo.repository'
+import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
 
 describe('DecisionsController', () => {
   let app: INestApplication

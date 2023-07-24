@@ -37,6 +37,7 @@ import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
 import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecase'
 import { UpdateDecisionStatusUsecase } from '../../usecase/updateDecisionStatus.usecase'
+import { UpdateDecisionPseudonymisedDecisionUsecase } from '../../usecase/updateDecisionPseudonymisedDecision.usecase'
 import { CreateDecisionDTO } from '../dto/createDecision.dto'
 import {
   UpdateDecisionPseudonymisedDecisionDTO,
@@ -267,10 +268,10 @@ export class DecisionsController {
   @ApiForbiddenResponse({
     description: "Vous n'avez pas accès à cette route"
   })
-  @UsePipes(new ValidationPipe({ transform: true }))
+  @UsePipes(new ValidationPipe())
   async updateDecisionPseudonymisedDecision(
     @Param('id') id: string,
-    @Body() decisionPseudonymisee: UpdateDecisionPseudonymisedDecisionDTO,
+    @Body() body: UpdateDecisionPseudonymisedDecisionDTO,
     @Request() req
   ): Promise<void> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
@@ -279,23 +280,24 @@ export class DecisionsController {
       throw new ForbiddenRouteException()
     }
     this.logger.log(
-      `PUT /decisions/id/decision-pseudonymisee called with ID ${id} and decisionPseudonymisee ${decisionPseudonymisee}`
+      `PUT /decisions/id/decision-pseudonymisee called with ID ${id} and decisionPseudonymisee ${body.decisionPseudonymisee}`
     )
 
-    // const updateDecisionUsecase = new UpdateDecisionStatusUsecase(this.mongoRepository)
-    // await updateDecisionUsecase.execute(id, decisionStatus.toString()).catch((error) => {
-    //   this.logger.error(error.message)
-    //   if (error instanceof DecisionNotFoundError) {
-    //     throw new DecisionNotFoundException()
-    //   }
-    //   if (error instanceof UpdateFailedError) {
-    //     throw new UnprocessableException(id, decisionStatus.toString(), error.message)
-    //   }
-    //   if (error instanceof DatabaseError) {
-    //     throw new DependencyException(error.message)
-    //   }
-    // throw new UnexpectedException(error)
-    throw new UnexpectedException('')
-    // })
+    const updateDecisionUsecase = new UpdateDecisionPseudonymisedDecisionUsecase(
+      this.mongoRepository
+    )
+    await updateDecisionUsecase.execute(id, body.decisionPseudonymisee).catch((error) => {
+      this.logger.error(error.message)
+      if (error instanceof DecisionNotFoundError) {
+        throw new DecisionNotFoundException()
+      }
+      if (error instanceof UpdateFailedError) {
+        throw new UnprocessableException(id, body.decisionPseudonymisee, error.message)
+      }
+      if (error instanceof DatabaseError) {
+        throw new DependencyException(error.message)
+      }
+      throw new UnexpectedException(error)
+    })
   }
 }

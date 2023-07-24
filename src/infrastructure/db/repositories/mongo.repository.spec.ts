@@ -4,8 +4,8 @@ import { Model, UpdateWriteOpResult } from 'mongoose'
 import { MockUtils } from '../../utils/mock.utils'
 import { MongoRepository } from './mongo.repository'
 import { DecisionModel } from '../models/decision.model'
-import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../..//domain/errors/decisionNotFound.error'
+import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
 
 const mockDecisionModel = () => ({
   find: jest.fn(),
