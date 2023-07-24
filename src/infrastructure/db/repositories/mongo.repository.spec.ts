@@ -19,7 +19,7 @@ describe('MongoRepository', () => {
   let mongoRepository: MongoRepository
   let decisionModel: Model<DecisionModel>
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MongoRepository,
@@ -39,9 +39,10 @@ describe('MongoRepository', () => {
   })
 
   describe('create', () => {
+    const decision = mockUtils.createDecisionDTO
+
     it('returns created decision when decision is successfully created in DB', async () => {
       // GIVEN
-      const decision = mockUtils.createDecisionDTO
       const expectedDecision: DecisionModel = mockUtils.decisionModel
       jest
         .spyOn(decisionModel, 'create')
@@ -56,7 +57,6 @@ describe('MongoRepository', () => {
 
     it('throws a DatabaseError when the insertion in the DB has failed', async () => {
       // GIVEN
-      const decision = mockUtils.createDecisionDTO
       jest.spyOn(decisionModel, 'create').mockRejectedValueOnce(new Error())
 
       // WHEN
@@ -67,9 +67,10 @@ describe('MongoRepository', () => {
   })
 
   describe('list', () => {
+    const decisionListDTO = mockUtils.decisionQueryDTO
+
     it('returns a list of decisions matching provided decision criteria', async () => {
       // GIVEN
-      const decisionListDTO = mockUtils.decisionQueryDTO
       const expectedDecisionsModelList = [mockUtils.decisionModel]
       jest
         .spyOn(decisionModel, 'find')
@@ -83,8 +84,6 @@ describe('MongoRepository', () => {
 
     it('throws a DatabaseError when listing decisions in the DB has failed', async () => {
       // GIVEN
-      const decisionListDTO = mockUtils.decisionQueryDTO
-
       jest.spyOn(decisionModel, 'find').mockRejectedValueOnce(new Error())
 
       // WHEN
@@ -148,11 +147,11 @@ describe('MongoRepository', () => {
   })
 
   describe('updateDecisionStatus', () => {
+    const decisionId = 'some-id'
+    const decisionStatus = 'some-status'
+
     it('returns updated decision ID when status is successfully updated', async () => {
       // GIVEN
-      const decisionId = 'some-id'
-      const decisionStatus = 'some-status'
-
       const mongoSuccessfullResponse: UpdateWriteOpResult = {
         acknowledged: true,
         matchedCount: 1,
@@ -171,7 +170,6 @@ describe('MongoRepository', () => {
 
     it('returns decision ID when decision was found but update failed because it already has the provided status', async () => {
       // GIVEN
-      const decisionId = 'some-id'
       const decisionStatus = 'some-already-existing-status'
 
       const mongoResponseWithoutUpdate: UpdateWriteOpResult = {
@@ -192,9 +190,6 @@ describe('MongoRepository', () => {
 
     it('throws a DecisionNotFoundError when decision is not found', async () => {
       // GIVEN
-      const decisionId = 'some-id'
-      const decisionStatus = 'some-already-existing-status'
-
       const mongoResponseNotFound: UpdateWriteOpResult = {
         acknowledged: true,
         matchedCount: 0,
@@ -212,9 +207,6 @@ describe('MongoRepository', () => {
 
     it('throws a UpdateFailedError when updating with mongoose fails', async () => {
       // GIVEN
-      const decisionId = 'some-id'
-      const decisionStatus = 'some-already-existing-status'
-
       const mongoResponseWithError: UpdateWriteOpResult = {
         acknowledged: false,
         matchedCount: 0,
@@ -232,12 +224,118 @@ describe('MongoRepository', () => {
 
     it('throws a DatabaseError when database is unavailable', async () => {
       // GIVEN
-      const decisionId = 'some-id'
-      const decisionStatus = 'some-status'
       jest.spyOn(decisionModel, 'updateOne').mockRejectedValueOnce(new Error())
 
       // WHEN
       await expect(mongoRepository.updateDecisionStatus(decisionId, decisionStatus))
+        // THEN
+        .rejects.toThrow(DatabaseError)
+    })
+  })
+
+  describe('updateDecisionPseudonymisedDecision', () => {
+    const decisionId = 'some-id'
+    const decisionPseudonymisedDecision = 'some pseudonymised decision'
+
+    it('returns updated decision ID when pseudonymised-decision is successfully updated', async () => {
+      // GIVEN
+      const mongoSuccessfullResponse: UpdateWriteOpResult = {
+        acknowledged: true,
+        matchedCount: 1,
+        modifiedCount: 1,
+        upsertedCount: 0,
+        upsertedId: null
+      }
+      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoSuccessfullResponse)
+
+      // WHEN
+      const result = await mongoRepository.updateDecisionPseudonymisedDecision(
+        decisionId,
+        decisionPseudonymisedDecision
+      )
+
+      // THEN
+      expect(result).toEqual(decisionId)
+    })
+
+    it('returns decision ID when decision was found but update failed because it already has the provided pseudonymised-decision', async () => {
+      // GIVEN
+      const decisionPseudonymisedDecision = 'some already existing pseudonymised decision'
+
+      const mongoResponseWithoutUpdate: UpdateWriteOpResult = {
+        acknowledged: true,
+        matchedCount: 1,
+        modifiedCount: 0,
+        upsertedCount: 0,
+        upsertedId: null
+      }
+      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithoutUpdate)
+
+      // WHEN
+      const result = await mongoRepository.updateDecisionStatus(
+        decisionId,
+        decisionPseudonymisedDecision
+      )
+
+      // THEN
+      expect(result).toEqual(decisionId)
+    })
+
+    it('throws a DecisionNotFoundError when decision is not found', async () => {
+      // GIVEN
+      const mongoResponseNotFound: UpdateWriteOpResult = {
+        acknowledged: true,
+        matchedCount: 0,
+        modifiedCount: 0,
+        upsertedCount: 0,
+        upsertedId: null
+      }
+      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseNotFound)
+
+      // WHEN
+      await expect(
+        mongoRepository.updateDecisionPseudonymisedDecision(
+          decisionId,
+          decisionPseudonymisedDecision
+        )
+      )
+        // THEN
+        .rejects.toThrow(DecisionNotFoundError)
+    })
+
+    it('throws a UpdateFailedError when updating with mongoose fails', async () => {
+      // GIVEN
+      const mongoResponseWithError: UpdateWriteOpResult = {
+        acknowledged: false,
+        matchedCount: 0,
+        modifiedCount: 0,
+        upsertedCount: 0,
+        upsertedId: null
+      }
+      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithError)
+
+      // WHEN
+      await expect(
+        mongoRepository.updateDecisionPseudonymisedDecision(
+          decisionId,
+          decisionPseudonymisedDecision
+        )
+      )
+        // THEN
+        .rejects.toThrow(UpdateFailedError)
+    })
+
+    it('throws a DatabaseError when database is unavailable', async () => {
+      // GIVEN
+      jest.spyOn(decisionModel, 'updateOne').mockRejectedValueOnce(new Error())
+
+      // WHEN
+      await expect(
+        mongoRepository.updateDecisionPseudonymisedDecision(
+          decisionId,
+          decisionPseudonymisedDecision
+        )
+      )
         // THEN
         .rejects.toThrow(DatabaseError)
     })

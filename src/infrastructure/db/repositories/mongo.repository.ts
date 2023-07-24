@@ -57,4 +57,26 @@ export class MongoRepository implements IDatabaseRepository {
 
     return id
   }
+
+  async updateDecisionPseudonymisedDecision(
+    id: string,
+    decisionPseudonymisee: string
+  ): Promise<string> {
+    const result = await this.decisionModel
+      .updateOne({ id: id }, { $set: { decisionPseudonymisee: decisionPseudonymisee } })
+      .catch((error) => {
+        throw new DatabaseError(error)
+      })
+
+    if (result.matchedCount === 0 && result.acknowledged) {
+      throw new DecisionNotFoundError()
+    }
+
+    // Acknowledged peut être à false si Mongoose est incapable d'exécuter la requête
+    if (!result.acknowledged) {
+      throw new UpdateFailedError('Mongoose error while updating decision status')
+    }
+
+    return id
+  }
 }

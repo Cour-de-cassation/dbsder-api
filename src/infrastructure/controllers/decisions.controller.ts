@@ -294,7 +294,8 @@ export class DecisionsController {
     //   if (error instanceof DatabaseError) {
     //     throw new DependencyException(error.message)
     //   }
-    //   throw new UnexpectedException(error)
+    // throw new UnexpectedException(error)
+    throw new UnexpectedException('')
     // })
   }
 }
