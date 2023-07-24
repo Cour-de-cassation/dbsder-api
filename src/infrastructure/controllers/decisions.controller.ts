@@ -10,7 +10,8 @@ import {
   Put,
   Query,
   Request,
-  UsePipes
+  UsePipes,
+  ValidationPipe
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -37,7 +38,10 @@ import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecase'
 import { UpdateDecisionStatusUsecase } from '../../usecase/updateDecisionStatus.usecase'
 import { CreateDecisionDTO } from '../dto/createDecision.dto'
-import { UpdateDecisionDTO } from '../dto/updateDecision.dto'
+import {
+  UpdateDecisionPseudonymisedDecisionDTO,
+  UpdateDecisionStatusDTO
+} from '../dto/updateDecision.dto'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
 import { GetDecisionsListResponse } from './responses/getDecisionsListResponse'
@@ -193,7 +197,7 @@ export class DecisionsController {
   })
   @ApiBody({
     description: 'Statut de la décision',
-    type: UpdateDecisionDTO
+    type: UpdateDecisionStatusDTO
   })
   @ApiNoContentResponse()
   @ApiBadRequestResponse({
@@ -210,7 +214,7 @@ export class DecisionsController {
   })
   async updateDecisionStatus(
     @Param('id') id: string,
-    @Body('statut', new ParseEnumPipe(DecisionStatus)) decisionStatus: UpdateDecisionDTO,
+    @Body('statut', new ParseEnumPipe(DecisionStatus)) decisionStatus: UpdateDecisionStatusDTO,
     @Request() req
   ): Promise<void> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY, process.env.PUBLICATION_API_KEY]
@@ -234,5 +238,63 @@ export class DecisionsController {
       }
       throw new UnexpectedException(error)
     })
+  }
+
+  @Put(':id/decision-pseudonymisee')
+  @HttpCode(204)
+  @ApiHeader({
+    name: 'x-api-key',
+    description: 'Clé API'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Identifiant de la décision'
+  })
+  @ApiBody({
+    description: 'Décision pseudonymisée de la décision',
+    type: UpdateDecisionPseudonymisedDecisionDTO
+  })
+  @ApiNoContentResponse()
+  @ApiBadRequestResponse({
+    description: 'Statut manquant ou invalide'
+  })
+  @ApiNotFoundResponse({
+    description: "La decision n'a pas été trouvée"
+  })
+  @ApiUnauthorizedResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
+  @ApiForbiddenResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async updateDecisionPseudonymisedDecision(
+    @Param('id') id: string,
+    @Body() decisionPseudonymisee: UpdateDecisionPseudonymisedDecisionDTO,
+    @Request() req
+  ): Promise<void> {
+    const authorizedApiKeys = [process.env.LABEL_API_KEY]
+    const apiKey = req.headers['x-api-key']
+    if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
+      throw new ForbiddenRouteException()
+    }
+    this.logger.log(
+      `PUT /decisions/id/decision-pseudonymisee called with ID ${id} and decisionPseudonymisee ${decisionPseudonymisee}`
+    )
+
+    // const updateDecisionUsecase = new UpdateDecisionStatusUsecase(this.mongoRepository)
+    // await updateDecisionUsecase.execute(id, decisionStatus.toString()).catch((error) => {
+    //   this.logger.error(error.message)
+    //   if (error instanceof DecisionNotFoundError) {
+    //     throw new DecisionNotFoundException()
+    //   }
+    //   if (error instanceof UpdateFailedError) {
+    //     throw new UnprocessableException(id, decisionStatus.toString(), error.message)
+    //   }
+    //   if (error instanceof DatabaseError) {
+    //     throw new DependencyException(error.message)
+    //   }
+    //   throw new UnexpectedException(error)
+    // })
   }
 }
