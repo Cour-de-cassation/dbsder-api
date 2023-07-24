@@ -1,7 +1,7 @@
-import { IsEnum, IsString } from 'class-validator'
-import { DecisionStatus } from '../../domain/enum'
 import { ApiProperty } from '@nestjs/swagger'
+import { IsEnum, IsString } from 'class-validator'
 import { MockUtils } from '../utils/mock.utils'
+import { DecisionStatus } from '../../domain/enum'
 
 const mockUtils = new MockUtils()
 
