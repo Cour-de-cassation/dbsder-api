@@ -96,7 +96,7 @@ export class DecisionModel {
   codeMatiereCivil: string
 
   @Prop()
-  decisionPseudonymisee: string
+  decisionPseudonymisee?: string
 }
 
 export const DecisionSchema = SchemaFactory.createForClass(DecisionModel)
