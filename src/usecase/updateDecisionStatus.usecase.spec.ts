@@ -2,7 +2,7 @@ import { mock, MockProxy } from 'jest-mock-extended'
 import { UpdateDecisionStatusUsecase } from './updateDecisionStatus.usecase'
 import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
 
-describe('updateDecisioStatusUsecase', () => {
+describe('updateDecisionStatusUsecase', () => {
   const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
   const usecase: UpdateDecisionStatusUsecase = new UpdateDecisionStatusUsecase(
     mockDatabaseRepository

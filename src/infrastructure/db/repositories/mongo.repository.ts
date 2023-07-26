@@ -1,11 +1,11 @@
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { DecisionModel } from '../models/decision.model'
-import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
+import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { IDatabaseRepository } from '../database.repository.interface'
-import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
+import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
 
 export class MongoRepository implements IDatabaseRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
@@ -42,6 +42,28 @@ export class MongoRepository implements IDatabaseRepository {
   async updateDecisionStatus(id: string, status: string): Promise<string> {
     const result = await this.decisionModel
       .updateOne({ id: id }, { $set: { labelStatus: status } })
+      .catch((error) => {
+        throw new DatabaseError(error)
+      })
+
+    if (result.matchedCount === 0 && result.acknowledged) {
+      throw new DecisionNotFoundError()
+    }
+
+    // Acknowledged peut être à false si Mongoose est incapable d'exécuter la requête
+    if (!result.acknowledged) {
+      throw new UpdateFailedError('Mongoose error while updating decision status')
+    }
+
+    return id
+  }
+
+  async updateDecisionPseudonymisedDecision(
+    id: string,
+    decisionPseudonymisee: string
+  ): Promise<string> {
+    const result = await this.decisionModel
+      .updateOne({ id: id }, { $set: { decisionPseudonymisee: decisionPseudonymisee } })
       .catch((error) => {
         throw new DatabaseError(error)
       })
