@@ -4,21 +4,21 @@ import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsL
 export class MockUtils {
   decisionCCToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-04-11',
-    id: 'id2023',
+    _id: 'id2023',
     source: Sources.CC,
     status: DecisionStatus.TO_BE_TREATED
   }
 
   decisionCAToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-04-11',
-    id: 'id2023',
+    _id: 'id2023',
     source: Sources.CA,
     status: DecisionStatus.TO_BE_TREATED
   }
 
   decisionTJToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-10-10T23:00Z',
-    id: 'id2023',
+    _id: 'id2023',
     source: Sources.TJ,
     status: DecisionStatus.TO_BE_TREATED
   }
@@ -44,7 +44,7 @@ export class MockUtils {
   }
 
   createDecisionDTO = {
-    id: 'someID',
+    _id: 'someID',
     analysis: {
       analyse: ['someAnalyse'],
       doctrine: 'someDoctrine',
@@ -104,7 +104,7 @@ export class MockUtils {
     dateDecision: 'someDateDecision',
     decatt: [1, 2],
     formation: 'someFormation',
-    id: 'id2023',
+    _id: 'id2023',
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',

@@ -103,10 +103,10 @@ export class CreateDecisionDTO {
   @ApiProperty({
     description: 'Identifiant de la decision',
     type: String,
-    example: mockUtils.createDecisionDTO.id
+    example: mockUtils.createDecisionDTO._id
   })
   @IsString()
-  id: string
+  _id: string
 
   @ApiProperty({
     description: 'Analyse de la décision',

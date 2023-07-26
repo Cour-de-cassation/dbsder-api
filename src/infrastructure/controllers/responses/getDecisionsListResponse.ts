@@ -1,7 +1,6 @@
 import { DecisionStatus, Sources } from '../../../domain/enum'
-
 export interface GetDecisionsListResponse {
-  id: string
+  _id: string
   status: DecisionStatus
   source: Sources
   dateCreation: string
