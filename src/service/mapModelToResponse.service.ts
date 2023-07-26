@@ -8,7 +8,7 @@ export class MapModelToResponseService {
   ): Promise<GetDecisionsListResponse[]> {
     return Promise.all(
       decisionsListModel.map((decision) => ({
-        id: decision.id,
+        _id: decision._id,
         status: decision.labelStatus,
         source: decision.sourceName,
         dateCreation: decision.dateCreation

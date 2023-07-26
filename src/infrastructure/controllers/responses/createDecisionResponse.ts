@@ -1,4 +1,4 @@
 export interface CreateDecisionResponse {
-  id: string
+  _id: string
   message: string
 }
