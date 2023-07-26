@@ -5,7 +5,7 @@ import { DecisionAnalyse, DecisionOccultation } from '../../dto/createDecision.d
 @Schema()
 export class DecisionModel {
   @Prop()
-  id: string
+  _id: string
 
   @Prop()
   analysis: DecisionAnalyse

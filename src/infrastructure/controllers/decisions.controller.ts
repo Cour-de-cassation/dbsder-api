@@ -29,7 +29,11 @@ import {
 } from '@nestjs/swagger'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { DecisionStatus } from '../../domain/enum'
-import { DatabaseError, UpdateFailedError } from '../../domain/errors/database.error'
+import {
+  DatabaseError,
+  DuplicateKeyError,
+  UpdateFailedError
+} from '../../domain/errors/database.error'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
 import { UnprocessableException } from '../exceptions/unprocessable.exception'
 import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.error'
@@ -52,6 +56,7 @@ import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
+import { DecisionIdAlreadyUsedException } from '../exceptions/decisionIdAlreadyUsedException'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -178,10 +183,13 @@ export class DecisionsController {
       if (error instanceof DatabaseError) {
         throw new DependencyException(error.message)
       }
+      if (error instanceof DuplicateKeyError) {
+        throw new DecisionIdAlreadyUsedException(decision._id)
+      }
       throw new UnexpectedException(error)
     })
     return {
-      id: decisionCreated.id,
+      _id: decisionCreated._id,
       message: 'Decision créée'
     }
   }

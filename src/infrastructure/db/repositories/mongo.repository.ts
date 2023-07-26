@@ -4,8 +4,13 @@ import { DecisionModel } from '../models/decision.model'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { IDatabaseRepository } from '../database.repository.interface'
+import {
+  DatabaseError,
+  DuplicateKeyError,
+  mongoDuplicateKeyErrorCode,
+  UpdateFailedError
+} from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
-import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
 
 export class MongoRepository implements IDatabaseRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
@@ -25,13 +30,17 @@ export class MongoRepository implements IDatabaseRepository {
 
   async create(decision: CreateDecisionDTO): Promise<DecisionModel> {
     const savedDecision = await this.decisionModel.create(decision).catch((error) => {
-      throw new DatabaseError(error)
+      if (error.code == mongoDuplicateKeyErrorCode) {
+        throw new DuplicateKeyError(decision._id)
+      } else {
+        throw new DatabaseError(error)
+      }
     })
     return Promise.resolve(savedDecision)
   }
   async getDecisionById(id: string): Promise<DecisionModel> {
     const decision = await this.decisionModel
-      .findOne({ id })
+      .findOne({ _id: id })
       .lean()
       .catch((error) => {
         throw new DatabaseError(error)
@@ -41,7 +50,7 @@ export class MongoRepository implements IDatabaseRepository {
 
   async updateDecisionStatus(id: string, status: string): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ id: id }, { $set: { labelStatus: status } })
+      .updateOne({ _id: id }, { $set: { labelStatus: status } })
       .catch((error) => {
         throw new DatabaseError(error)
       })
@@ -63,7 +72,7 @@ export class MongoRepository implements IDatabaseRepository {
     decisionPseudonymisee: string
   ): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ id: id }, { $set: { decisionPseudonymisee: decisionPseudonymisee } })
+      .updateOne({ _id: id }, { $set: { decisionPseudonymisee: decisionPseudonymisee } })
       .catch((error) => {
         throw new DatabaseError(error)
       })

@@ -35,7 +35,7 @@ describe('GetDecisionByIdController', () => {
   describe('Success case', () => {
     it('returns a 200 OK with found decision when given a valid ID', async () => {
       // GIVEN
-      const decisionToSave = { ...mockUtils.decisionModel, id: decisionId }
+      const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
       await mongoRepository.create(decisionToSave)
       const labelApiKey = process.env.LABEL_API_KEY
 

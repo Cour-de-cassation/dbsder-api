@@ -4,10 +4,12 @@ import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
+import { MongoRepository } from '../db/repositories/mongo.repository'
 
 describe('DecisionsController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
+  const normalizationApiKey = process.env.NORMALIZATION_API_KEY
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -15,24 +17,18 @@ describe('DecisionsController', () => {
     }).compile()
 
     app = moduleFixture.createNestApplication()
-    await app.init()
 
+    await app.init()
     await connectDatabase()
   })
-
   afterEach(async () => {
     await dropCollections()
   })
-
   afterAll(async () => {
     await dropDatabase()
   })
-
   describe('POST /decisions', () => {
     it('returns a 201 CREATED when provided body is valid', async () => {
-      // GIVEN
-      const normalizationApiKey = process.env.NORMALIZATION_API_KEY
-
       // WHEN
       const result = await request(app.getHttpServer())
         .post('/decisions')
@@ -45,9 +41,6 @@ describe('DecisionsController', () => {
 
     describe('failing cases', () => {
       it('returns a 400 Bad Request when called without a body', async () => {
-        // GIVEN
-        const normalizationApiKey = process.env.NORMALIZATION_API_KEY
-
         // WHEN
         const result = await request(app.getHttpServer())
           .post('/decisions')
@@ -58,9 +51,6 @@ describe('DecisionsController', () => {
       })
 
       it('returns a 400 Bad Request when called with an incorrect body', async () => {
-        // GIVEN
-        const normalizationApiKey = process.env.NORMALIZATION_API_KEY
-
         // WHEN
         const result = await request(app.getHttpServer())
           .post('/decisions')
@@ -93,6 +83,21 @@ describe('DecisionsController', () => {
 
         // THEN
         expect(result.status).toEqual(HttpStatus.FORBIDDEN)
+      })
+
+      it('returns a 409 Conflict when the decision id is already used', async () => {
+        // GIVEN
+        const mongoRepository = app.get<MongoRepository>(MongoRepository)
+        await mongoRepository.create(mockUtils.createDecisionDTO)
+
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .post('/decisions')
+          .set({ 'x-api-key': normalizationApiKey })
+          .send({ decision: mockUtils.createDecisionDTO })
+
+        // THEN
+        expect(result.status).toEqual(HttpStatus.CONFLICT)
       })
     })
   })

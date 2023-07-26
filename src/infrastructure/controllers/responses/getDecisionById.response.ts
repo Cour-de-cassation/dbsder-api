@@ -5,7 +5,7 @@ import {
 import { DecisionStatus } from '../../../domain/enum'
 
 export class GetDecisionByIdResponse {
-  id: string
+  _id: string
 
   analysis: DecisionAnalyse
 

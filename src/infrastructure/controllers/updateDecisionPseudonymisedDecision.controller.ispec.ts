@@ -41,7 +41,7 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
-          id: decisionId
+          _id: decisionId
         }
         await mongoRepository.create(decisionToSave)
 
@@ -59,7 +59,7 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
-          id: decisionId,
+          _id: decisionId,
           decisionPseudonymisee
         }
         await mongoRepository.create(decisionToSave)
