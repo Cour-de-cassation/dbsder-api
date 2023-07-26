@@ -9,12 +9,13 @@ import { MongoRepository } from '../db/repositories/mongo.repository'
 describe('DecisionsController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
-
   const normalizationApiKey = process.env.NORMALIZATION_API_KEY
+
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule]
     }).compile()
+
     app = moduleFixture.createNestApplication()
 
     await app.init()
@@ -84,7 +85,7 @@ describe('DecisionsController', () => {
         expect(result.status).toEqual(HttpStatus.FORBIDDEN)
       })
 
-      it('returns a 409 error code when the decision id is already used', async () => {
+      it('returns a 409 Conflict when the decision id is already used', async () => {
         // GIVEN
         const mongoRepository = app.get<MongoRepository>(MongoRepository)
         await mongoRepository.create(mockUtils.createDecisionDTO)

@@ -56,7 +56,7 @@ import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
-import { IdDecisionAlreadyUsedException } from '../exceptions/idDecisionAlreadyUsedException'
+import { DecisionIdAlreadyUsedException } from '../exceptions/decisionIdAlreadyUsedException'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -184,7 +184,7 @@ export class DecisionsController {
         throw new DependencyException(error.message)
       }
       if (error instanceof DuplicateKeyError) {
-        throw new IdDecisionAlreadyUsedException(decision._id)
+        throw new DecisionIdAlreadyUsedException(decision._id)
       }
       throw new UnexpectedException(error)
     })
