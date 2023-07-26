@@ -576,6 +576,258 @@
 			]
 		},
 		{
+			"name": "PUT /decisions/:id/decision-pseudonymisee",
+			"item": [
+				{
+					"name": "204 - Met à jour la décision pseudonymisée d'une décision",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"decisionPseudonymisee\": \"contenu de la décision pseudonymisée\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/decision-pseudonymisee",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"decision-pseudonymisee"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400 - Met à jour la décision pseudonymisée d'une décision avec un format incorrect",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"decisionPseudonymisee\": 1234\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/decision-pseudonymisee",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"decision-pseudonymisee"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "401 - Met à jour avec une API Key inexistante",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "wrongAPIKey",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"decisionPseudonymisee\": \"contenu de la décision pseudonymisée\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/decision-pseudonymisee",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"decision-pseudonymisee"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "401 - Met à jour sans API Key",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"decisionPseudonymisee\": \"contenu de la décision pseudonymisée\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/decision-pseudonymisee",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"decision-pseudonymisee"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "403 - Met à jour avec une API Key non autorisée",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{OPS_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"decisionPseudonymisee\": \"contenu de la décision pseudonymisée\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/decision-pseudonymisee",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"decision-pseudonymisee"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "404 - Met à jour la décision pseudonymisée d'une décision avec ID inexistant",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"decisionPseudonymisee\": \"contenu de la décision pseudonymisée\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/decision-pseudonymisee",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"decision-pseudonymisee"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "200 - Consulte l'état de l'API",
 			"request": {
 				"method": "GET",

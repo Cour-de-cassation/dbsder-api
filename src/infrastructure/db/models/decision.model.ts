@@ -94,6 +94,9 @@ export class DecisionModel {
 
   @Prop()
   codeMatiereCivil: string
+
+  @Prop()
+  decisionPseudonymisee?: string
 }
 
 export const DecisionSchema = SchemaFactory.createForClass(DecisionModel)

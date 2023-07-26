@@ -7,4 +7,5 @@ export interface IDatabaseRepository {
   list(decision: GetDecisionsListDto): Promise<DecisionModel[]>
   getDecisionById(id: string): Promise<DecisionModel>
   updateDecisionStatus(id: string, status: string): Promise<string>
+  updateDecisionPseudonymisedDecision(id: string, decisionPseudonymisee: string): Promise<string>
 }
