@@ -3,7 +3,10 @@ export enum DecisionStatus {
   LOADED = 'loaded',
   DONE = 'done',
   EXPORTED = 'exported',
-  BLOCKED = 'blocked'
+  BLOCKED = 'blocked',
+  TOIGNORE = 'toIgnore',
+  IGNORED_DECISIONNONPUBLIQUE = 'ignored_decisionNonPublique',
+  IGNORED_DATEDECISIONINCOHERENTE = 'ignored_dateDecisionIncoherente'
 }
 
 export enum Sources {
