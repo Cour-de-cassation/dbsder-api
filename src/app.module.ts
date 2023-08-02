@@ -11,7 +11,7 @@ import { HealthController } from './infrastructure/controllers/health/health.con
 import { MongoRepository } from './infrastructure/db/repositories/mongo.repository'
 import { envValidationConfig } from './infrastructure/dto/env.validation'
 import { LoggerModule } from 'nestjs-pino'
-import { pinoConfig } from '../pino-config'
+import { pinoConfig } from './infrastructure/utils/pinoConfig.utils'
 
 @Module({
   imports: [

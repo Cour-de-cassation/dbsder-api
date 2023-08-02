@@ -1,4 +1,6 @@
 import { ConsoleLogger } from '@nestjs/common'
+import pino from 'pino'
+import { pinoConfig } from './pinoConfig.utils'
 
 export class CustomLogger extends ConsoleLogger {
   private readonly date = '[' + new Date().toISOString() + ']'
@@ -27,4 +29,48 @@ export class CustomLogger extends ConsoleLogger {
 
 function formatDecisionIdInLog(id?: string): string {
   return id ? '[' + id + ']' : ''
+}
+
+export class CustomLoggerV2 {
+  private logger: pino.Logger
+  constructor() {
+    this.logger = pino(pinoConfig.pinoHttp)
+  }
+
+  log(data?: any, message?: string) {
+    this.logger.info(data, message)
+  }
+
+  logApi(data: any, req, statusCode: number, message?: string) {
+    this.logger.info(
+      {
+        data,
+        httpMethod: req.method,
+        path: req.url,
+        statusCode: statusCode
+      },
+      message
+    )
+  }
+
+  error(data?: any, message?: string) {
+    this.logger.error(
+      {
+        data
+      },
+      message
+    )
+  }
+
+  errorApi(data: any, req, statusCode: number, message?: string) {
+    this.logger.error(
+      {
+        data,
+        httpMethod: req.method,
+        path: req.url,
+        statusCode: statusCode
+      },
+      message
+    )
+  }
 }

@@ -3,13 +3,13 @@ import {
   Controller,
   Get,
   HttpCode,
-  Logger,
   Param,
   ParseEnumPipe,
   Post,
   Put,
   Query,
   Request,
+  Response,
   UsePipes,
   ValidationPipe
 } from '@nestjs/common'
@@ -57,13 +57,14 @@ import { DecisionNotFoundException } from '../exceptions/decisionNotFound.except
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { DecisionIdAlreadyUsedException } from '../exceptions/decisionIdAlreadyUsedException'
+import { CustomLoggerV2 } from '../utils/customLogger.utils'
 
 @ApiTags('DbSder')
 @Controller('decisions')
 export class DecisionsController {
   constructor(private readonly mongoRepository: MongoRepository) {}
 
-  private readonly logger = new Logger()
+  private readonly logger = new CustomLoggerV2()
 
   @Get()
   @ApiHeader({
@@ -87,30 +88,30 @@ export class DecisionsController {
   })
   async getDecisions(
     @Query(new ValidateDtoPipe()) getDecisionListCriteria: DecisionSearchCriteria,
-    @Request() req
+    @Request() req,
+    @Response() res
   ): Promise<GetDecisionsListResponse[]> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
-    this.logger.log(
-      {
-        testParam: 'TEST PARAM'
-      },
-      DecisionsController.name
-    )
-    this.logger.log('GET /decisions called with status ' + getDecisionListCriteria.status)
+
+    this.logger.log({
+      message: 'GET /decisions called with status ' + getDecisionListCriteria.status
+    })
 
     const listDecisionUsecase = new ListDecisionsUsecase(this.mongoRepository)
 
-    return await listDecisionUsecase.execute(getDecisionListCriteria).catch((error) => {
-      this.logger.error(error.message)
-      if (error instanceof DatabaseError) {
-        throw new DependencyException(error.message)
-      }
-      throw new UnexpectedException(error.message)
-    })
+    return res.send(
+      await listDecisionUsecase.execute(getDecisionListCriteria).catch((error) => {
+        this.logger.error(error.message)
+        if (error instanceof DatabaseError) {
+          throw new DependencyException(error.message)
+        }
+        throw new UnexpectedException(error.message)
+      })
+    )
   }
 
   @Get(':id')
@@ -132,24 +133,30 @@ export class DecisionsController {
   @ApiForbiddenResponse({
     description: "Vous n'avez pas accès à cette route"
   })
-  async getDecisionById(@Param('id') id: string, @Request() req): Promise<GetDecisionByIdResponse> {
+  async getDecisionById(
+    @Param('id') id: string,
+    @Request() req,
+    @Response() res
+  ): Promise<GetDecisionByIdResponse> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
     const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.mongoRepository)
-    this.logger.log('GET /decisions/:id called with ID ' + id)
-    return await fetchDecisionByIdUsecase.execute(id).catch((error) => {
-      this.logger.error(error.message)
-      if (error instanceof DecisionNotFoundError) {
-        throw new DecisionNotFoundException()
-      }
-      if (error instanceof DatabaseError) {
-        throw new DependencyException(error.message)
-      }
-      throw new UnexpectedException(error.message)
-    })
+    this.logger.log({ message: 'GET /decisions/:id called with id ' + id })
+    return res.send(
+      await fetchDecisionByIdUsecase.execute(id).catch((error) => {
+        this.logger.errorApi({ message: error.message }, req, error.statusCode)
+        if (error instanceof DecisionNotFoundError) {
+          throw new DecisionNotFoundException()
+        }
+        if (error instanceof DatabaseError) {
+          throw new DependencyException(error.message)
+        }
+        throw new UnexpectedException(error.message)
+      })
+    )
   }
 
   @Post()
@@ -176,7 +183,7 @@ export class DecisionsController {
     @Request() req,
     @Body('decision', new ValidateDtoPipe()) decision: CreateDecisionDTO
   ): Promise<CreateDecisionResponse> {
-    this.logger.log('POST /decisions called with ' + JSON.stringify(decision))
+    this.logger.log({ message: 'POST /decisions called with ' + JSON.stringify(decision) })
     const authorizedApiKeys = [process.env.NORMALIZATION_API_KEY, process.env.OPENSDER_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
@@ -237,7 +244,9 @@ export class DecisionsController {
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
-    this.logger.log(`PUT /decisions/id/statut called with ID ${id} and status ${decisionStatus}`)
+    this.logger.log({
+      message: `PUT /decisions/id/statut called with ID ${id} and status ${decisionStatus}`
+    })
 
     const updateDecisionUsecase = new UpdateDecisionStatusUsecase(this.mongoRepository)
     await updateDecisionUsecase.execute(id, decisionStatus.toString()).catch((error) => {
@@ -293,9 +302,9 @@ export class DecisionsController {
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
-    this.logger.log(
-      `PUT /decisions/id/decision-pseudonymisee called with ID ${id} and decisionPseudonymisee ${body.decisionPseudonymisee}`
-    )
+    this.logger.log({
+      message: `PUT /decisions/id/decision-pseudonymisee called with ID ${id} and decisionPseudonymisee ${body.decisionPseudonymisee}`
+    })
 
     const updateDecisionUsecase = new UpdateDecisionPseudonymisedDecisionUsecase(
       this.mongoRepository
