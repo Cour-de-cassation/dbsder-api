@@ -94,6 +94,12 @@ export class DecisionsController {
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
+    this.logger.log(
+      {
+        testParam: 'TEST PARAM'
+      },
+      DecisionsController.name
+    )
     this.logger.log('GET /decisions called with status ' + getDecisionListCriteria.status)
 
     const listDecisionUsecase = new ListDecisionsUsecase(this.mongoRepository)

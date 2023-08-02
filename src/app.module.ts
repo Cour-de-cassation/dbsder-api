@@ -10,6 +10,8 @@ import { DecisionsController } from './infrastructure/controllers/decisions.cont
 import { HealthController } from './infrastructure/controllers/health/health.controller'
 import { MongoRepository } from './infrastructure/db/repositories/mongo.repository'
 import { envValidationConfig } from './infrastructure/dto/env.validation'
+import { LoggerModule } from 'nestjs-pino'
+import { pinoConfig } from '../pino-config'
 
 @Module({
   imports: [
@@ -19,7 +21,8 @@ import { envValidationConfig } from './infrastructure/dto/env.validation'
       logger: false
     }),
     MongooseModule.forRoot(process.env.MONGO_DB_URL),
-    MongooseModule.forFeature([{ name: 'DecisionModel', schema: DecisionSchema }])
+    MongooseModule.forFeature([{ name: 'DecisionModel', schema: DecisionSchema }]),
+    LoggerModule.forRoot(pinoConfig)
   ],
   controllers: [RedirectController, DecisionsController, HealthController],
   providers: [MongoRepository]
