@@ -36,7 +36,7 @@ describe('DecisionsController', () => {
   })
 
   describe('PUT /decisions/:id/statut', () => {
-    const validStatus = DecisionStatus.TO_BE_TREATED
+    const validStatus = DecisionStatus.TOBETREATED
 
     describe('Success case', () => {
       it('returns 204 No Content when decision status is updated with valid API Key and status', async () => {
@@ -44,7 +44,7 @@ describe('DecisionsController', () => {
         const decisionToSave = {
           ...mockUtils.decisionModel,
           id: decisionId,
-          labelStatus: DecisionStatus.TO_BE_TREATED
+          labelStatus: DecisionStatus.TOBETREATED
         }
         await mongoRepository.create(decisionToSave)
 
@@ -63,7 +63,7 @@ describe('DecisionsController', () => {
         const decisionToSave = {
           ...mockUtils.decisionModel,
           _id: decisionId,
-          labelStatus: DecisionStatus.TO_BE_TREATED
+          labelStatus: DecisionStatus.TOBETREATED
         }
         await mongoRepository.create(decisionToSave)
 
@@ -71,7 +71,7 @@ describe('DecisionsController', () => {
         const result = await request(app.getHttpServer())
           .put(`/decisions/${decisionId}/statut`)
           .set({ 'x-api-key': validApiKey })
-          .send({ statut: DecisionStatus.TO_BE_TREATED })
+          .send({ statut: DecisionStatus.TOBETREATED })
 
         // THEN
         expect(result.status).toEqual(HttpStatus.NO_CONTENT)
