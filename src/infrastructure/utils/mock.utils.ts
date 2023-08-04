@@ -6,21 +6,21 @@ export class MockUtils {
     dateCreation: '2023-04-11',
     _id: 'id2023',
     source: Sources.CC,
-    status: DecisionStatus.TO_BE_TREATED
+    status: DecisionStatus.TOBETREATED
   }
 
   decisionCAToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-04-11',
     _id: 'id2023',
     source: Sources.CA,
-    status: DecisionStatus.TO_BE_TREATED
+    status: DecisionStatus.TOBETREATED
   }
 
   decisionTJToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-10-10T23:00Z',
     _id: 'id2023',
     source: Sources.TJ,
-    status: DecisionStatus.TO_BE_TREATED
+    status: DecisionStatus.TOBETREATED
   }
 
   allDecisionsToBeTreated = [
@@ -30,14 +30,14 @@ export class MockUtils {
   ]
 
   decisionQueryDTO = {
-    status: DecisionStatus.TO_BE_TREATED,
+    status: DecisionStatus.TOBETREATED,
     source: Sources.TJ,
     startDate: '2023-10-09',
     endDate: '2023-10-11'
   }
 
   decisionQueryWithUnknownSourceDTO = {
-    status: DecisionStatus.TO_BE_TREATED,
+    status: DecisionStatus.TOBETREATED,
     source: 'unknownSource',
     startDate: '2023-10-10',
     endDate: '2023-10-11'
@@ -64,7 +64,7 @@ export class MockUtils {
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',
-    labelStatus: DecisionStatus.TO_BE_TREATED,
+    labelStatus: DecisionStatus.TOBETREATED,
     occultation: {
       additionalTerms: 'someAdditionalTerms',
       categoriesToOmit: ['someCategoriesToOmit']
@@ -108,7 +108,7 @@ export class MockUtils {
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',
-    labelStatus: DecisionStatus.TO_BE_TREATED,
+    labelStatus: DecisionStatus.TOBETREATED,
     natureAffaireCivil: 'someNatureAffaireCivil',
     natureAffairePenal: 'someNatureAffairePenal',
     occultation: {
