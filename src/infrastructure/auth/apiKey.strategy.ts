@@ -22,7 +22,7 @@ export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy) {
       process.env.PUBLICATION_API_KEY
     ]
     if (!validApiKeys.includes(apikey)) {
-      this.logger.error({ message: '[AUTH] Invalid API Key', operationName: 'isApiKeyValid' })
+      this.logger.error({ operationName: 'isApiKeyValid' }, '[AUTH] Invalid API Key')
       return false
     }
     return true

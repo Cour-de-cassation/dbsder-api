@@ -97,15 +97,15 @@ export class DecisionsController {
 
     this.logger.logHttp(
       {
-        message: 'GET /decisions called with status ' + getDecisionListCriteria.status,
         operationName: 'getDecisions'
       },
-      req
+      req,
+      'GET /decisions called with status ' + getDecisionListCriteria.status
     )
     const listDecisionUsecase = new ListDecisionsUsecase(this.mongoRepository)
 
     return await listDecisionUsecase.execute(getDecisionListCriteria).catch((error) => {
-      this.logger.errorHttp(error.message, req)
+      this.logger.errorHttp({ operationName: 'getDecisions' }, req, error.message)
       if (error instanceof DatabaseError) {
         throw new DependencyException(error.message)
       }
@@ -141,13 +141,13 @@ export class DecisionsController {
     const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.mongoRepository)
     this.logger.logHttp(
       {
-        message: 'GET /decisions/:id called with id ' + id,
         operationName: 'getDecisionById'
       },
-      req
+      req,
+      'GET /decisions/:id called with id ' + id
     )
     return await fetchDecisionByIdUsecase.execute(id).catch((error) => {
-      this.logger.errorHttp({ message: error.message, operationName: 'getDecisionByIds' }, req)
+      this.logger.errorHttp({ operationName: 'getDecisionByIds' }, req, error.message)
       if (error instanceof DecisionNotFoundError) {
         throw new DecisionNotFoundException()
       }
@@ -182,10 +182,12 @@ export class DecisionsController {
     @Request() req,
     @Body('decision', new ValidateDtoPipe()) decision: CreateDecisionDTO
   ): Promise<CreateDecisionResponse> {
-    this.logger.log({
-      message: 'POST /decisions called with ' + JSON.stringify(decision),
-      operationName: 'createDecisions'
-    })
+    this.logger.log(
+      {
+        operationName: 'createDecisions'
+      },
+      'POST /decisions called with ' + JSON.stringify(decision)
+    )
     const authorizedApiKeys = [process.env.NORMALIZATION_API_KEY, process.env.OPENSDER_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
@@ -194,7 +196,7 @@ export class DecisionsController {
 
     const createDecisionUsecase = new CreateDecisionUsecase(this.mongoRepository)
     const decisionCreated = await createDecisionUsecase.execute(decision).catch((error) => {
-      this.logger.errorHttp({ message: error.message, operationName: 'createDecisions' }, req)
+      this.logger.errorHttp({ operationName: 'createDecisions' }, req, error.message)
       if (error instanceof DatabaseError) {
         throw new DependencyException(error.message)
       }
@@ -246,14 +248,17 @@ export class DecisionsController {
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
-    this.logger.log({
-      message: `PUT /decisions/id/statut called with ID ${id} and status ${decisionStatus}`,
-      operationName: 'updateDecisionStatus'
-    })
+    this.logger.logHttp(
+      {
+        operationName: 'updateDecisionStatus'
+      },
+      req,
+      `PUT /decisions/id/statut called with ID ${id} and status ${decisionStatus}`
+    )
 
     const updateDecisionUsecase = new UpdateDecisionStatusUsecase(this.mongoRepository)
     await updateDecisionUsecase.execute(id, decisionStatus.toString()).catch((error) => {
-      this.logger.errorHttp({ message: error.message, operationName: 'updateDecisionStatus' }, req)
+      this.logger.errorHttp({ operationName: 'updateDecisionStatus' }, req, error.message)
       if (error instanceof DecisionNotFoundError) {
         throw new DecisionNotFoundException()
       }
@@ -307,10 +312,10 @@ export class DecisionsController {
     }
     this.logger.logHttp(
       {
-        message: `PUT /decisions/id/decision-pseudonymisee called with ID ${id} and decisionPseudonymisee ${body.decisionPseudonymisee}`,
         operationName: 'updateDecisionPseudonymisedDecision'
       },
-      req
+      req,
+      `PUT /decisions/id/decision-pseudonymisee called with ID ${id} and decisionPseudonymisee ${body.decisionPseudonymisee}`
     )
 
     const updateDecisionUsecase = new UpdateDecisionPseudonymisedDecisionUsecase(
@@ -318,8 +323,9 @@ export class DecisionsController {
     )
     await updateDecisionUsecase.execute(id, body.decisionPseudonymisee).catch((error) => {
       this.logger.errorHttp(
-        { message: error.message, operationName: 'updateDecisionPseudonymisedDecision' },
-        req
+        { operationName: 'updateDecisionPseudonymisedDecision' },
+        req,
+        error.message
       )
       if (error instanceof DecisionNotFoundError) {
         throw new DecisionNotFoundException()

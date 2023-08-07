@@ -23,14 +23,15 @@ export class AuthMiddleware implements NestMiddleware {
         if (value) {
           next()
         } else {
+          const error = new ClientNotAuthorizedException()
           this.logger.errorHttp(
             {
-              message: 'ClientNotAuthorizedException',
               operationName: 'callPassportAuthentication'
             },
-            req
+            req,
+            error.message
           )
-          throw new ClientNotAuthorizedException()
+          throw error
         }
       }
     )(req, res, next)
