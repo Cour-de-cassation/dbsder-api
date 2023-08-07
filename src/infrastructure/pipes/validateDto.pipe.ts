@@ -4,26 +4,28 @@ import { validate, ValidationError } from 'class-validator'
 import { MissingPropertiesException } from '../exceptions/missingProperties.exception'
 import { MissingFieldException } from '../exceptions/missingField.exception'
 import { DateMismatchException } from '../exceptions/dateMismatch.exception'
-import { CustomLoggerV2 } from '../utils/customLogger.utils'
+import { CustomLogger } from '../utils/customLogger.utils'
 
 @Injectable()
 export class ValidateDtoPipe implements PipeTransform {
-  // add logger
-  private readonly logger: CustomLoggerV2
+  private readonly logger: CustomLogger
   constructor() {
-    this.logger = new CustomLoggerV2()
+    this.logger = new CustomLogger()
   }
   async transform(value: any, { metatype }: ArgumentMetadata) {
     if (!metatype || !this.toValidate(metatype)) {
       return value
     }
     if (!value) {
-      this.logger.error('MissingFieldException', MissingFieldException.name)
+      this.logger.error({ message: 'MissingFieldException', operationName: 'transform' })
       throw new MissingFieldException('decision')
     }
     const object = plainToInstance(metatype, value)
     if (object.startDate && object.endDate && object.startDate > object.endDate) {
-      this.logger.error({ message: 'DateMismatch' }, DateMismatchException.name)
+      this.logger.error(
+        { message: 'DateMismatch', operationName: 'transform' },
+        DateMismatchException.name
+      )
 
       throw new DateMismatchException("'startDate' doit être antérieur à 'endDate'.")
     }
@@ -33,7 +35,10 @@ export class ValidateDtoPipe implements PipeTransform {
         this.findPropertyNameInErrorMessage(err.toString(false))
       )
       const error = new MissingPropertiesException(missingProperties.join(', '))
-      this.logger.error({ data: error.message }, MissingPropertiesException.name)
+      this.logger.error(
+        { message: error.message, operationName: 'transform' },
+        MissingPropertiesException.name
+      )
 
       throw error
     }

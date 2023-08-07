@@ -1,10 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { HeaderAPIKeyStrategy } from 'passport-headerapikey'
+import { CustomLogger } from '../utils/customLogger.utils'
 
 @Injectable()
 export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy) {
-  private readonly logger = new Logger()
+  private readonly logger = new CustomLogger()
 
   constructor() {
     super({ header: 'x-api-key', prefix: '' }, true, (apikey, done) => {
@@ -21,7 +22,7 @@ export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy) {
       process.env.PUBLICATION_API_KEY
     ]
     if (!validApiKeys.includes(apikey)) {
-      this.logger.error('[AUTH] Invalid API Key')
+      this.logger.error({ message: '[AUTH] Invalid API Key', operationName: 'isApiKeyValid' })
       return false
     }
     return true

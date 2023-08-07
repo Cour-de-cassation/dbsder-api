@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import * as basicAuth from 'express-basic-auth'
-// import { CustomLogger } from './infrastructure/utils/customLogger.utils'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { Logger } from 'nestjs-pino'
 
