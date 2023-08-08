@@ -13,7 +13,6 @@ async function bootstrap() {
   app.setGlobalPrefix('v1')
 
   // setup custom logs
-  //const customLogger = new CustomLogger()
   app.useLogger(app.get(Logger))
 
   // setup Swagger
