@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import * as basicAuth from 'express-basic-auth'
-import { CustomLogger } from './infrastructure/utils/customLogger.utils'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { Logger } from 'nestjs-pino'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -13,8 +13,7 @@ async function bootstrap() {
   app.setGlobalPrefix('v1')
 
   // setup custom logs
-  const customLogger = new CustomLogger()
-  app.useLogger(customLogger)
+  app.useLogger(app.get(Logger))
 
   // setup Swagger
 
