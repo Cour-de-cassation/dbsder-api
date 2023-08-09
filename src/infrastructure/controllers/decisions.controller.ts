@@ -43,6 +43,8 @@ import { UpdateDecisionStatusUsecase } from '../../usecase/updateDecisionStatus.
 import { UpdateDecisionPseudonymisedDecisionUsecase } from '../../usecase/updateDecisionPseudonymisedDecision.usecase'
 import { CreateDecisionDTO } from '../dto/createDecision.dto'
 import {
+  // RapportOccultationDTO,
+  UpdateDecisionConcealmentReportsDTO,
   UpdateDecisionPseudonymisedDecisionDTO,
   UpdateDecisionStatusDTO
 } from '../dto/updateDecision.dto'
@@ -338,5 +340,74 @@ export class DecisionsController {
       }
       throw new UnexpectedException(error)
     })
+  }
+
+  @Put(':id/rapports-occultations')
+  @HttpCode(204)
+  @ApiHeader({
+    name: 'x-api-key',
+    description: 'Clé API'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Identifiant de la décision'
+  })
+  @ApiBody({
+    description: `Rapport d'occultations de la décision`,
+    type: UpdateDecisionConcealmentReportsDTO
+  })
+  @ApiNoContentResponse()
+  @ApiBadRequestResponse({
+    description: 'Statut manquant ou invalide'
+  })
+  @ApiNotFoundResponse({
+    description: "La decision n'a pas été trouvée"
+  })
+  @ApiUnauthorizedResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
+  @ApiForbiddenResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
+  @UsePipes(new ValidationPipe())
+  async updateDecisionConcealmentReports(
+    @Param('id') id: string,
+    @Body() body: UpdateDecisionConcealmentReportsDTO,
+    @Request() req
+  ): Promise<void> {
+    const authorizedApiKeys = [process.env.LABEL_API_KEY]
+    const apiKey = req.headers['x-api-key']
+    if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
+      throw new ForbiddenRouteException()
+    }
+
+    this.logger.logHttp(
+      {
+        operationName: 'updateDecisionConcealmentReports'
+      },
+      req,
+      `PUT /decisions/id/rapport-occultations called with ID ${id} and concealmentReports`
+    )
+
+    // const updateDecisionUsecase = new UpdateDecisionPseudonymisedDecisionUsecase(
+    //   this.mongoRepository
+    // )
+    // await updateDecisionUsecase.execute(id, body.decisionPseudonymisee).catch((error) => {
+    //   this.logger.errorHttp(
+    //     { operationName: 'updateDecisionPseudonymisedDecision' },
+    //     req,
+    //     error.message
+    //   )
+    //   if (error instanceof DecisionNotFoundError) {
+    //     throw new DecisionNotFoundException()
+    //   }
+    //   if (error instanceof UpdateFailedError) {
+    //     throw new UnprocessableException(id, body.decisionPseudonymisee, error.message)
+    //   }
+    //   if (error instanceof DatabaseError) {
+    //     throw new DependencyException(error.message)
+    //   }
+    throw new UnexpectedException('error')
+    // })
   }
 }

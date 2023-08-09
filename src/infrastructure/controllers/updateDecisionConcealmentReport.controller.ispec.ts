@@ -13,7 +13,7 @@ describe('DecisionsController', () => {
   const mockUtils = new MockUtils()
   const validApiKey = process.env.LABEL_API_KEY
   const decisionId = 'some-valid-id'
-  const rapportOccultations = [
+  const rapportsOccultations = [
     {
       annotations: [
         {
@@ -34,7 +34,7 @@ describe('DecisionsController', () => {
       imports: [AppModule]
     }).compile()
 
-    app = moduleFixture.createNestApplication()
+    app = moduleFixture.createNestApplication({ logger: false })
     await app.init()
 
     mongoRepository = app.get<MongoRepository>(MongoRepository)
@@ -49,9 +49,9 @@ describe('DecisionsController', () => {
     await dropDatabase()
   })
 
-  describe('PUT /decisions/:id/rapport-occultations', () => {
+  describe('PUT /decisions/:id/rapports-occultations', () => {
     describe('Success case', () => {
-      it('returns 204 No Content when decision is updated with valid API Key and concealment report', async () => {
+      it('returns 204 No Content when decision is updated with valid API Key and concealment reports', async () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
@@ -61,28 +61,28 @@ describe('DecisionsController', () => {
 
         // WHEN
         const result = await request(app.getHttpServer())
-          .put(`/decisions/${decisionId}/rapport-occultations`)
+          .put(`/decisions/${decisionId}/rapports-occultations`)
           .set({ 'x-api-key': validApiKey })
-          .send({ rapportOccultations })
+          .send({ rapportsOccultations })
 
         // THEN
         expect(result.status).toEqual(HttpStatus.NO_CONTENT)
       })
 
-      it('returns 204 No Content when decision is updated with a concealment report already in database', async () => {
+      it('returns 204 No Content when decision is updated with concealment reports already in database', async () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
           _id: decisionId,
-          rapportOccultations
+          rapportsOccultations
         }
         await mongoRepository.create(decisionToSave)
 
         // WHEN
         const result = await request(app.getHttpServer())
-          .put(`/decisions/${decisionId}/rapport-occultations`)
+          .put(`/decisions/${decisionId}/rapports-occultations`)
           .set({ 'x-api-key': validApiKey })
-          .send({ rapportOccultations })
+          .send({ rapportsOccultations })
 
         // THEN
         expect(result.status).toEqual(HttpStatus.NO_CONTENT)
@@ -94,8 +94,8 @@ describe('DecisionsController', () => {
         it('when apiKey is not provided', async () => {
           // WHEN
           const result = await request(app.getHttpServer())
-            .put(`/decisions/${decisionId}/rapport-occultations`)
-            .send({ rapportOccultations })
+            .put(`/decisions/${decisionId}/rapports-occultations`)
+            .send({ rapportsOccultations })
 
           // THEN
           expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
@@ -107,9 +107,9 @@ describe('DecisionsController', () => {
 
           // WHEN
           const result = await request(app.getHttpServer())
-            .put(`/decisions/${decisionId}/rapport-occultations`)
+            .put(`/decisions/${decisionId}/rapports-occultations`)
             .set({ 'x-api-key': unknownApiKey })
-            .send({ rapportOccultations })
+            .send({ rapportsOccultations })
 
           // THEN
           expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
@@ -122,34 +122,34 @@ describe('DecisionsController', () => {
 
         // WHEN
         const result = await request(app.getHttpServer())
-          .put(`/decisions/${decisionId}/rapport-occultations`)
+          .put(`/decisions/${decisionId}/rapports-occultations`)
           .set({ 'x-api-key': unauthorizedApiKey })
-          .send({ rapportOccultations })
+          .send({ rapportsOccultations })
 
         // THEN
         expect(result.status).toEqual(HttpStatus.FORBIDDEN)
       })
 
       describe('returns 400 Bad Request', () => {
-        it('when concealment report is not provided', async () => {
+        it('when concealment reports are not provided', async () => {
           // WHEN
           const result = await request(app.getHttpServer())
-            .put(`/decisions/${decisionId}/rapport-occultations`)
+            .put(`/decisions/${decisionId}/rapports-occultations`)
             .set({ 'x-api-key': validApiKey })
 
           // THEN
           expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
         })
 
-        it('when provided concealment report has a wrong format', async () => {
+        it('when provided concealment reports has a wrong format', async () => {
           // GIVEN
-          const wrongConcealmentReportFormat = 'some report'
+          const wrongConcealmentReportsFormat = 'some report'
 
           // WHEN
           const result = await request(app.getHttpServer())
-            .put(`/decisions/${decisionId}/rapport-occultations`)
+            .put(`/decisions/${decisionId}/rapports-occultations`)
             .set({ 'x-api-key': validApiKey })
-            .send({ rapportOccultations: wrongConcealmentReportFormat })
+            .send({ rapportsOccultations: wrongConcealmentReportsFormat })
 
           // THEN
           expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
@@ -162,9 +162,9 @@ describe('DecisionsController', () => {
 
         // WHEN
         const result = await request(app.getHttpServer())
-          .put(`/decisions/${unknownDecisionId}/rapport-occultations`)
+          .put(`/decisions/${unknownDecisionId}/rapports-occultations`)
           .set({ 'x-api-key': validApiKey })
-          .send({ rapportOccultations })
+          .send({ rapportsOccultations })
 
         // THEN
         expect(result.status).toEqual(HttpStatus.NOT_FOUND)

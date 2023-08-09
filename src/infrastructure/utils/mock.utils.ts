@@ -1,5 +1,6 @@
 import { DecisionStatus, Sources } from '../../domain/enum'
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsListResponse'
+import { UpdateDecisionConcealmentReportsDTO } from '../dto/updateDecision.dto'
 
 export class MockUtils {
   decisionCCToBeTreated: GetDecisionsListResponse = {
@@ -121,5 +122,23 @@ export class MockUtils {
     solution: 'someSolution',
     sourceId: 1,
     sourceName: Sources.TJ
+  }
+
+  decisionConcealmentReports: UpdateDecisionConcealmentReportsDTO = {
+    rapportsOccultations: [
+      {
+        annotations: [
+          {
+            category: 'some-category',
+            entityId: 'some-entity-id',
+            start: 1,
+            text: 'some-text',
+            certaintyScore: 80
+          }
+        ],
+        source: 'some-source',
+        order: 1
+      }
+    ]
   }
 }
