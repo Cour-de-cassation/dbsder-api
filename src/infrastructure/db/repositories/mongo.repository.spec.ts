@@ -276,8 +276,6 @@ describe('MongoRepository', () => {
 
     it('returns decision ID when decision was found but update failed because it already has the provided pseudonymised-decision', async () => {
       // GIVEN
-      const decisionPseudonymisedDecision = 'some already existing pseudonymised decision'
-
       const mongoResponseWithoutUpdate: UpdateWriteOpResult = {
         acknowledged: true,
         matchedCount: 1,
@@ -288,7 +286,7 @@ describe('MongoRepository', () => {
       jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithoutUpdate)
 
       // WHEN
-      const result = await mongoRepository.updateDecisionStatus(
+      const result = await mongoRepository.updateDecisionPseudonymisedDecision(
         decisionId,
         decisionPseudonymisedDecision
       )
@@ -351,6 +349,103 @@ describe('MongoRepository', () => {
           decisionId,
           decisionPseudonymisedDecision
         )
+      )
+        // THEN
+        .rejects.toThrow(DatabaseError)
+    })
+  })
+
+  describe('updateDecisionConcealmentReports', () => {
+    const decisionId = 'some-id'
+    const decisionConcealmentReports = mockUtils.decisionConcealmentReports.rapportsOccultations
+
+    it('returns updated decision ID when concealment reports are successfully updated', async () => {
+      // GIVEN
+      const mongoSuccessfullResponse: UpdateWriteOpResult = {
+        acknowledged: true,
+        matchedCount: 1,
+        modifiedCount: 1,
+        upsertedCount: 0,
+        upsertedId: null
+      }
+      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoSuccessfullResponse)
+
+      // WHEN
+      const result = await mongoRepository.updateDecisionConcealmentReports(
+        decisionId,
+        decisionConcealmentReports
+      )
+
+      // THEN
+      expect(result).toEqual(decisionId)
+    })
+
+    it('returns decision ID when decision was found but update failed because it already has the provided concealment reports', async () => {
+      // GIVEN
+      const mongoResponseWithoutUpdate: UpdateWriteOpResult = {
+        acknowledged: true,
+        matchedCount: 1,
+        modifiedCount: 0,
+        upsertedCount: 0,
+        upsertedId: null
+      }
+      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithoutUpdate)
+
+      // WHEN
+      const result = await mongoRepository.updateDecisionConcealmentReports(
+        decisionId,
+        decisionConcealmentReports
+      )
+
+      // THEN
+      expect(result).toEqual(decisionId)
+    })
+
+    it('throws a DecisionNotFoundError when decision is not found', async () => {
+      // GIVEN
+      const mongoResponseNotFound: UpdateWriteOpResult = {
+        acknowledged: true,
+        matchedCount: 0,
+        modifiedCount: 0,
+        upsertedCount: 0,
+        upsertedId: null
+      }
+      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseNotFound)
+
+      // WHEN
+      await expect(
+        mongoRepository.updateDecisionConcealmentReports(decisionId, decisionConcealmentReports)
+      )
+        // THEN
+        .rejects.toThrow(DecisionNotFoundError)
+    })
+
+    it('throws a UpdateFailedError when updating with mongoose fails', async () => {
+      // GIVEN
+      const mongoResponseWithError: UpdateWriteOpResult = {
+        acknowledged: false,
+        matchedCount: 0,
+        modifiedCount: 0,
+        upsertedCount: 0,
+        upsertedId: null
+      }
+      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithError)
+
+      // WHEN
+      await expect(
+        mongoRepository.updateDecisionConcealmentReports(decisionId, decisionConcealmentReports)
+      )
+        // THEN
+        .rejects.toThrow(UpdateFailedError)
+    })
+
+    it('throws a DatabaseError when database is unavailable', async () => {
+      // GIVEN
+      jest.spyOn(decisionModel, 'updateOne').mockRejectedValueOnce(new Error())
+
+      // WHEN
+      await expect(
+        mongoRepository.updateDecisionConcealmentReports(decisionId, decisionConcealmentReports)
       )
         // THEN
         .rejects.toThrow(DatabaseError)

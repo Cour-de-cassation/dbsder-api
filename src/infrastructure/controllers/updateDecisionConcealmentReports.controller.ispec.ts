@@ -34,7 +34,7 @@ describe('DecisionsController', () => {
       imports: [AppModule]
     }).compile()
 
-    app = moduleFixture.createNestApplication({ logger: false })
+    app = moduleFixture.createNestApplication()
     await app.init()
 
     mongoRepository = app.get<MongoRepository>(MongoRepository)

@@ -41,12 +41,12 @@ import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecase'
 import { UpdateDecisionStatusUsecase } from '../../usecase/updateDecisionStatus.usecase'
 import { UpdateDecisionPseudonymisedDecisionUsecase } from '../../usecase/updateDecisionPseudonymisedDecision.usecase'
+import { UpdateDecisionConcealmentReportsUsecase } from '../../usecase/updateDecisionConcealmentReports.usecase'
 import { CreateDecisionDTO } from '../dto/createDecision.dto'
 import {
-  // RapportOccultationDTO,
+  UpdateDecisionStatusDTO,
   UpdateDecisionConcealmentReportsDTO,
-  UpdateDecisionPseudonymisedDecisionDTO,
-  UpdateDecisionStatusDTO
+  UpdateDecisionPseudonymisedDecisionDTO
 } from '../dto/updateDecision.dto'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
@@ -55,9 +55,9 @@ import { UnexpectedException } from '../exceptions/unexpected.exception'
 import { DependencyException } from '../exceptions/dependency.exception'
 import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
+import { DecisionIdAlreadyUsedException } from '../exceptions/decisionIdAlreadyUsedException'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
-import { DecisionIdAlreadyUsedException } from '../exceptions/decisionIdAlreadyUsedException'
 import { CustomLogger } from '../utils/customLogger.utils'
 
 @ApiTags('DbSder')
@@ -389,25 +389,27 @@ export class DecisionsController {
       `PUT /decisions/id/rapport-occultations called with ID ${id} and concealmentReports`
     )
 
-    // const updateDecisionUsecase = new UpdateDecisionPseudonymisedDecisionUsecase(
-    //   this.mongoRepository
-    // )
-    // await updateDecisionUsecase.execute(id, body.decisionPseudonymisee).catch((error) => {
-    //   this.logger.errorHttp(
-    //     { operationName: 'updateDecisionPseudonymisedDecision' },
-    //     req,
-    //     error.message
-    //   )
-    //   if (error instanceof DecisionNotFoundError) {
-    //     throw new DecisionNotFoundException()
-    //   }
-    //   if (error instanceof UpdateFailedError) {
-    //     throw new UnprocessableException(id, body.decisionPseudonymisee, error.message)
-    //   }
-    //   if (error instanceof DatabaseError) {
-    //     throw new DependencyException(error.message)
-    //   }
-    throw new UnexpectedException('error')
-    // })
+    const updateDecisionUsecase = new UpdateDecisionConcealmentReportsUsecase(this.mongoRepository)
+    await updateDecisionUsecase.execute(id, body.rapportsOccultations).catch((error) => {
+      this.logger.errorHttp(
+        { operationName: 'updateDecisionConcealmentReports' },
+        req,
+        error.message
+      )
+      if (error instanceof DecisionNotFoundError) {
+        throw new DecisionNotFoundException()
+      }
+      if (error instanceof UpdateFailedError) {
+        throw new UnprocessableException(
+          id,
+          JSON.stringify(body.rapportsOccultations),
+          error.message
+        )
+      }
+      if (error instanceof DatabaseError) {
+        throw new DependencyException(error.message)
+      }
+      throw new UnexpectedException(error)
+    })
   }
 }
