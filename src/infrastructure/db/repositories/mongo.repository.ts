@@ -2,6 +2,7 @@ import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { DecisionModel } from '../models/decision.model'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
+import { RapportOccultation } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { IDatabaseRepository } from '../database.repository.interface'
 import {
@@ -83,7 +84,29 @@ export class MongoRepository implements IDatabaseRepository {
 
     // Acknowledged peut être à false si Mongoose est incapable d'exécuter la requête
     if (!result.acknowledged) {
-      throw new UpdateFailedError('Mongoose error while updating decision status')
+      throw new UpdateFailedError('Mongoose error while updating decision pseudonymised decision')
+    }
+
+    return id
+  }
+
+  async updateDecisionConcealmentReports(
+    id: string,
+    rapportsOccultations: RapportOccultation[]
+  ): Promise<string> {
+    const result = await this.decisionModel
+      .updateOne({ _id: id }, { $set: { rapportsOccultations: rapportsOccultations } })
+      .catch((error) => {
+        throw new DatabaseError(error)
+      })
+
+    if (result.matchedCount === 0 && result.acknowledged) {
+      throw new DecisionNotFoundError()
+    }
+
+    // Acknowledged peut être à false si Mongoose est incapable d'exécuter la requête
+    if (!result.acknowledged) {
+      throw new UpdateFailedError('Mongoose error while updating decision concealment reports')
     }
 
     return id
