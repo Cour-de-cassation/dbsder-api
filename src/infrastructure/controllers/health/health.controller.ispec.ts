@@ -12,7 +12,7 @@ describe('HealthController', () => {
       imports: [AppModule]
     }).compile()
 
-    app = moduleFixture.createNestApplication()
+    app = moduleFixture.createNestApplication({ logger: false })
     await app.init()
   })
 

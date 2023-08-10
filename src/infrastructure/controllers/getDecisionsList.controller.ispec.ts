@@ -17,7 +17,7 @@ describe('DecisionsController', () => {
       imports: [AppModule]
     }).compile()
 
-    app = moduleFixture.createNestApplication()
+    app = moduleFixture.createNestApplication({ logger: false })
     await app.init()
 
     decisionsRepository = app.get<DecisionsRepository>(DecisionsRepository)
