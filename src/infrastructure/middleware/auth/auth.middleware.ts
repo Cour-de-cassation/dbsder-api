@@ -1,12 +1,13 @@
-import { Injectable, NestMiddleware } from '@nestjs/common'
 import * as passport from 'passport'
+import { Injectable, Logger, NestMiddleware } from '@nestjs/common'
 import { ClientNotAuthorizedException } from '../../exceptions/clientNotAuthorized.exception'
-import { CustomLogger } from '../../utils/customLogger.utils'
+import { LogsFormat } from 'src/infrastructure/utils/logsFormat.utils'
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  private readonly logger = new CustomLogger()
+  private readonly logger = new Logger()
   EXCEPTION_PATHS = ['/doc', '/', '/doc-json']
+
   use(req: any, res: any, next: () => void) {
     if (this.EXCEPTION_PATHS.includes(req.path)) {
       next()
@@ -24,13 +25,14 @@ export class AuthMiddleware implements NestMiddleware {
           next()
         } else {
           const error = new ClientNotAuthorizedException()
-          this.logger.errorHttp(
-            {
-              operationName: 'callPassportAuthentication'
-            },
-            req,
-            error.message
-          )
+          const logsFormat: LogsFormat = {
+            operationName: 'callPassportAuthentication',
+            httpMethod: req.method,
+            path: req.path,
+            msg: error.message
+          }
+          this.logger.error(logsFormat)
+
           throw error
         }
       }
