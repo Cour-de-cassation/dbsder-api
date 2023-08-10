@@ -73,7 +73,7 @@ export class MongoRepository implements IDatabaseRepository {
     decisionPseudonymisee: string
   ): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ _id: id }, { $set: { decisionPseudonymisee: decisionPseudonymisee } })
+      .updateOne({ _id: id }, { $set: { pseudoText: decisionPseudonymisee } })
       .catch((error) => {
         throw new DatabaseError(error)
       })
@@ -95,7 +95,7 @@ export class MongoRepository implements IDatabaseRepository {
     rapportsOccultations: RapportOccultation[]
   ): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ _id: id }, { $set: { rapportsOccultations: rapportsOccultations } })
+      .updateOne({ _id: id }, { $set: { labelTreatments: rapportsOccultations } })
       .catch((error) => {
         throw new DatabaseError(error)
       })

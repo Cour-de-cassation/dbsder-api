@@ -97,10 +97,7 @@ export class DecisionModel {
   codeMatiereCivil: string
 
   @Prop()
-  decisionPseudonymisee?: string
-
-  @Prop()
-  rapportsOccultations?: RapportOccultation[]
+  labelTreatments?: RapportOccultation[]
 }
 
 export const DecisionSchema = SchemaFactory.createForClass(DecisionModel)
