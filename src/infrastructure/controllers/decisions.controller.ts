@@ -41,10 +41,12 @@ import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecase'
 import { UpdateDecisionStatusUsecase } from '../../usecase/updateDecisionStatus.usecase'
 import { UpdateDecisionPseudonymisedDecisionUsecase } from '../../usecase/updateDecisionPseudonymisedDecision.usecase'
+import { UpdateDecisionConcealmentReportsUsecase } from '../../usecase/updateDecisionConcealmentReports.usecase'
 import { CreateDecisionDTO } from '../dto/createDecision.dto'
 import {
-  UpdateDecisionPseudonymisedDecisionDTO,
-  UpdateDecisionStatusDTO
+  UpdateDecisionStatusDTO,
+  UpdateDecisionConcealmentReportsDTO,
+  UpdateDecisionPseudonymisedDecisionDTO
 } from '../dto/updateDecision.dto'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
@@ -53,9 +55,9 @@ import { UnexpectedException } from '../exceptions/unexpected.exception'
 import { DependencyException } from '../exceptions/dependency.exception'
 import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
+import { DecisionIdAlreadyUsedException } from '../exceptions/decisionIdAlreadyUsedException'
 import { MongoRepository } from '../db/repositories/mongo.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
-import { DecisionIdAlreadyUsedException } from '../exceptions/decisionIdAlreadyUsedException'
 import { CustomLogger } from '../utils/customLogger.utils'
 
 @ApiTags('DbSder')
@@ -332,6 +334,77 @@ export class DecisionsController {
       }
       if (error instanceof UpdateFailedError) {
         throw new UnprocessableException(id, body.decisionPseudonymisee, error.message)
+      }
+      if (error instanceof DatabaseError) {
+        throw new DependencyException(error.message)
+      }
+      throw new UnexpectedException(error)
+    })
+  }
+
+  @Put(':id/rapports-occultations')
+  @HttpCode(204)
+  @ApiHeader({
+    name: 'x-api-key',
+    description: 'Clé API'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Identifiant de la décision'
+  })
+  @ApiBody({
+    description: `Rapport d'occultations de la décision`,
+    type: UpdateDecisionConcealmentReportsDTO
+  })
+  @ApiNoContentResponse()
+  @ApiBadRequestResponse({
+    description: 'Statut manquant ou invalide'
+  })
+  @ApiNotFoundResponse({
+    description: "La decision n'a pas été trouvée"
+  })
+  @ApiUnauthorizedResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
+  @ApiForbiddenResponse({
+    description: "Vous n'avez pas accès à cette route"
+  })
+  @UsePipes(new ValidationPipe())
+  async updateDecisionConcealmentReports(
+    @Param('id') id: string,
+    @Body() body: UpdateDecisionConcealmentReportsDTO,
+    @Request() req
+  ): Promise<void> {
+    const authorizedApiKeys = [process.env.LABEL_API_KEY]
+    const apiKey = req.headers['x-api-key']
+    if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
+      throw new ForbiddenRouteException()
+    }
+
+    this.logger.logHttp(
+      {
+        operationName: 'updateDecisionConcealmentReports'
+      },
+      req,
+      `PUT /decisions/id/rapport-occultations called with ID ${id} and concealmentReports`
+    )
+
+    const updateDecisionUsecase = new UpdateDecisionConcealmentReportsUsecase(this.mongoRepository)
+    await updateDecisionUsecase.execute(id, body.rapportsOccultations).catch((error) => {
+      this.logger.errorHttp(
+        { operationName: 'updateDecisionConcealmentReports' },
+        req,
+        error.message
+      )
+      if (error instanceof DecisionNotFoundError) {
+        throw new DecisionNotFoundException()
+      }
+      if (error instanceof UpdateFailedError) {
+        throw new UnprocessableException(
+          id,
+          JSON.stringify(body.rapportsOccultations),
+          error.message
+        )
       }
       if (error instanceof DatabaseError) {
         throw new DependencyException(error.message)

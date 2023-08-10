@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ce3e3d63-66c7-443b-8950-c19b617d3b08",
+		"_postman_id": "eb433b00-13f0-48be-b4c0-6683c1b7faf5",
 		"name": "API DBSDER",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -21,7 +21,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"decision\": {\n        \"id\": \"idDecisionCC1106\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"CC\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"2023-06-11\",\n        \"dateDecision\": \"someDateDecision\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"CC\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\"\n    }\n}",
+							"raw": "{\n    \"decision\": {\n        \"_id\": \"idDecisionCC1106\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"TJ\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"2023-06-11\",\n        \"dateDecision\": \"2023-06-10\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"TJ\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\",\n        \"public\": true\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -283,7 +283,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "idDecisionCC1106"
 								}
 							]
 						}
@@ -814,6 +814,258 @@
 								"decisions",
 								":id",
 								"decision-pseudonymisee"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PUT /decisions/:id/rapports-occultations",
+			"item": [
+				{
+					"name": "204 - Met à jour les rapports d'occultations d'une décision",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 80\n          }\n        ],\n        \"source\": \"some-source\",\n        \"order\": 1\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"rapports-occultations"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400 - Met à jour les rapports d'occultations d'une décision avec un format incorrect",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": \"80\"\n          }\n        ],\n        \"order\": 1\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"rapports-occultations"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "401 - Met à jour avec une API Key inexistante",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "wrongAPIKey",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 80\n          }\n        ],\n        \"source\": \"some-source\",\n        \"order\": 1\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"rapports-occultations"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "401 - Met à jour sans API Key",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 80\n          }\n        ],\n        \"source\": \"some-source\",\n        \"order\": 1\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"rapports-occultations"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "403 - Met à jour avec une API Key non autorisée",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{OPS_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 80\n          }\n        ],\n        \"source\": \"some-source\",\n        \"order\": 1\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"rapports-occultations"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "idDecisionCC1106"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "404 - Met à jour les rapports d'occultations d'une décision avec ID inexistant",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 80\n          }\n        ],\n        \"source\": \"some-source\",\n        \"order\": 1\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"rapports-occultations"
 							],
 							"variable": [
 								{
