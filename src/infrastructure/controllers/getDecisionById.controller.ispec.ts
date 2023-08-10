@@ -3,13 +3,13 @@ import { TestingModule, Test } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
-import { MongoRepository } from '../db/repositories/mongo.repository'
+import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
 
 describe('GetDecisionByIdController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
-  let mongoRepository: MongoRepository
+  let decisionsRepository: DecisionsRepository
   const decisionId = 'validId'
 
   beforeAll(async () => {
@@ -20,7 +20,7 @@ describe('GetDecisionByIdController', () => {
     app = moduleFixture.createNestApplication()
     await app.init()
 
-    mongoRepository = app.get<MongoRepository>(MongoRepository)
+    decisionsRepository = app.get<DecisionsRepository>(DecisionsRepository)
     await connectDatabase()
   })
 
@@ -36,7 +36,7 @@ describe('GetDecisionByIdController', () => {
     it('returns a 200 OK with found decision when given a valid ID', async () => {
       // GIVEN
       const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
-      await mongoRepository.create(decisionToSave)
+      await decisionsRepository.create(decisionToSave)
       const labelApiKey = process.env.LABEL_API_KEY
 
       // WHEN

@@ -1,13 +1,14 @@
 import { mock, MockProxy } from 'jest-mock-extended'
 import { MockUtils } from '../infrastructure/utils/mock.utils'
 import { ListDecisionsUsecase } from './listDecisions.usecase'
-import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
+import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
 
 describe('listDecisionUsecase', () => {
-  const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
+  const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
+    mock<InterfaceDecisionsRepository>()
   const mockUtils = new MockUtils()
   const listCriteria = mockUtils.decisionQueryDTO
-  const usecase: ListDecisionsUsecase = new ListDecisionsUsecase(mockDatabaseRepository)
+  const usecase: ListDecisionsUsecase = new ListDecisionsUsecase(mockDecisionsRepository)
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -16,7 +17,7 @@ describe('listDecisionUsecase', () => {
   it('retrieves a list of decisions from the repository', async () => {
     // GIVEN
     const expectedListDecisions = [mockUtils.decisionTJToBeTreated]
-    jest.spyOn(mockDatabaseRepository, 'list').mockResolvedValue([mockUtils.decisionModel])
+    jest.spyOn(mockDecisionsRepository, 'list').mockResolvedValue([mockUtils.decisionModel])
 
     // WHEN
     const result = await usecase.execute(listCriteria)
@@ -27,7 +28,7 @@ describe('listDecisionUsecase', () => {
 
   it('propagates an Error when repository returns an error', async () => {
     // GIVEN
-    jest.spyOn(mockDatabaseRepository, 'list').mockImplementationOnce(() => {
+    jest.spyOn(mockDecisionsRepository, 'list').mockImplementationOnce(() => {
       throw new Error()
     })
 

@@ -4,7 +4,7 @@ import { DecisionModel } from '../models/decision.model'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
 import { RapportOccultation } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
-import { IDatabaseRepository } from '../database.repository.interface'
+import { InterfaceDecisionsRepository } from '../decisions.repository.interface'
 import {
   DatabaseError,
   DuplicateKeyError,
@@ -13,7 +13,7 @@ import {
 } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
 
-export class MongoRepository implements IDatabaseRepository {
+export class DecisionsRepository implements InterfaceDecisionsRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
 
   async list(decision: GetDecisionsListDto): Promise<DecisionModel[]> {
@@ -39,7 +39,7 @@ export class MongoRepository implements IDatabaseRepository {
     })
     return Promise.resolve(savedDecision)
   }
-  async getDecisionById(id: string): Promise<DecisionModel> {
+  async getById(id: string): Promise<DecisionModel> {
     const decision = await this.decisionModel
       .findOne({ _id: id })
       .lean()
@@ -49,7 +49,7 @@ export class MongoRepository implements IDatabaseRepository {
     return decision
   }
 
-  async updateDecisionStatus(id: string, status: string): Promise<string> {
+  async updateStatut(id: string, status: string): Promise<string> {
     const result = await this.decisionModel
       .updateOne({ _id: id }, { $set: { labelStatus: status } })
       .catch((error) => {
@@ -68,10 +68,7 @@ export class MongoRepository implements IDatabaseRepository {
     return id
   }
 
-  async updateDecisionPseudonymisedDecision(
-    id: string,
-    decisionPseudonymisee: string
-  ): Promise<string> {
+  async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<string> {
     const result = await this.decisionModel
       .updateOne({ _id: id }, { $set: { pseudoText: decisionPseudonymisee } })
       .catch((error) => {
@@ -90,7 +87,7 @@ export class MongoRepository implements IDatabaseRepository {
     return id
   }
 
-  async updateDecisionConcealmentReports(
+  async updateRapportsOccultations(
     id: string,
     rapportsOccultations: RapportOccultation[]
   ): Promise<string> {
