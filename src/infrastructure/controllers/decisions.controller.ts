@@ -39,14 +39,14 @@ import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.erro
 import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
 import { CreateDecisionUsecase } from '../../usecase/createDecision.usecase'
 import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecase'
-import { UpdateDecisionStatusUsecase } from '../../usecase/updateDecisionStatus.usecase'
-import { UpdateDecisionPseudonymisedDecisionUsecase } from '../../usecase/updateDecisionPseudonymisedDecision.usecase'
-import { UpdateDecisionConcealmentReportsUsecase } from '../../usecase/updateDecisionConcealmentReports.usecase'
+import { UpdateStatutUsecase } from '../../usecase/updateStatut.usecase'
+import { UpdateDecisionPseudonymiseeUsecase } from '../../usecase/updateDecisionPseudonymisee.usecase'
+import { UpdateRapportsOccultationsUsecase } from '../../usecase/updateRapportsOccultations.usecase'
 import { CreateDecisionDTO } from '../dto/createDecision.dto'
 import {
-  UpdateDecisionStatusDTO,
-  UpdateDecisionConcealmentReportsDTO,
-  UpdateDecisionPseudonymisedDecisionDTO
+  UpdateDecisionStatutDTO,
+  UpdateDecisionRapportsOccultationsDTO,
+  UpdateDecisionPseudonymiseeDTO
 } from '../dto/updateDecision.dto'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
@@ -56,14 +56,14 @@ import { DependencyException } from '../exceptions/dependency.exception'
 import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
 import { DecisionIdAlreadyUsedException } from '../exceptions/decisionIdAlreadyUsedException'
-import { MongoRepository } from '../db/repositories/mongo.repository'
+import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { CustomLogger } from '../utils/customLogger.utils'
 
 @ApiTags('DbSder')
 @Controller('decisions')
 export class DecisionsController {
-  constructor(private readonly mongoRepository: MongoRepository) {}
+  constructor(private readonly decisionsRepository: DecisionsRepository) {}
 
   private readonly logger = new CustomLogger()
 
@@ -104,7 +104,7 @@ export class DecisionsController {
       req,
       'GET /decisions called with status ' + getDecisionListCriteria.status
     )
-    const listDecisionUsecase = new ListDecisionsUsecase(this.mongoRepository)
+    const listDecisionUsecase = new ListDecisionsUsecase(this.decisionsRepository)
 
     return await listDecisionUsecase.execute(getDecisionListCriteria).catch((error) => {
       this.logger.errorHttp({ operationName: 'getDecisions' }, req, error.message)
@@ -140,7 +140,7 @@ export class DecisionsController {
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
-    const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.mongoRepository)
+    const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.decisionsRepository)
     this.logger.logHttp(
       {
         operationName: 'getDecisionById'
@@ -196,7 +196,7 @@ export class DecisionsController {
       throw new ForbiddenRouteException()
     }
 
-    const createDecisionUsecase = new CreateDecisionUsecase(this.mongoRepository)
+    const createDecisionUsecase = new CreateDecisionUsecase(this.decisionsRepository)
     const decisionCreated = await createDecisionUsecase.execute(decision).catch((error) => {
       this.logger.errorHttp({ operationName: 'createDecisions' }, req, error.message)
       if (error instanceof DatabaseError) {
@@ -225,7 +225,7 @@ export class DecisionsController {
   })
   @ApiBody({
     description: 'Statut de la décision',
-    type: UpdateDecisionStatusDTO
+    type: UpdateDecisionStatutDTO
   })
   @ApiNoContentResponse()
   @ApiBadRequestResponse({
@@ -240,9 +240,9 @@ export class DecisionsController {
   @ApiForbiddenResponse({
     description: "Vous n'avez pas accès à cette route"
   })
-  async updateDecisionStatus(
+  async updateDecisionStatut(
     @Param('id') id: string,
-    @Body('statut', new ParseEnumPipe(DecisionStatus)) decisionStatus: UpdateDecisionStatusDTO,
+    @Body('statut', new ParseEnumPipe(DecisionStatus)) decisionStatus: UpdateDecisionStatutDTO,
     @Request() req
   ): Promise<void> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY, process.env.PUBLICATION_API_KEY]
@@ -252,15 +252,15 @@ export class DecisionsController {
     }
     this.logger.logHttp(
       {
-        operationName: 'updateDecisionStatus'
+        operationName: 'updateDecisionStatut'
       },
       req,
       `PUT /decisions/id/statut called with ID ${id} and status ${decisionStatus}`
     )
 
-    const updateDecisionUsecase = new UpdateDecisionStatusUsecase(this.mongoRepository)
+    const updateDecisionUsecase = new UpdateStatutUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, decisionStatus.toString()).catch((error) => {
-      this.logger.errorHttp({ operationName: 'updateDecisionStatus' }, req, error.message)
+      this.logger.errorHttp({ operationName: 'updateDecisionStatut' }, req, error.message)
       if (error instanceof DecisionNotFoundError) {
         throw new DecisionNotFoundException()
       }
@@ -286,7 +286,7 @@ export class DecisionsController {
   })
   @ApiBody({
     description: 'Décision pseudonymisée de la décision',
-    type: UpdateDecisionPseudonymisedDecisionDTO
+    type: UpdateDecisionPseudonymiseeDTO
   })
   @ApiNoContentResponse()
   @ApiBadRequestResponse({
@@ -302,9 +302,9 @@ export class DecisionsController {
     description: "Vous n'avez pas accès à cette route"
   })
   @UsePipes(new ValidationPipe())
-  async updateDecisionPseudonymisedDecision(
+  async updateDecisionPseudonymisee(
     @Param('id') id: string,
-    @Body() body: UpdateDecisionPseudonymisedDecisionDTO,
+    @Body() body: UpdateDecisionPseudonymiseeDTO,
     @Request() req
   ): Promise<void> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
@@ -314,21 +314,15 @@ export class DecisionsController {
     }
     this.logger.logHttp(
       {
-        operationName: 'updateDecisionPseudonymisedDecision'
+        operationName: 'updateDecisionPseudonymisee'
       },
       req,
       `PUT /decisions/id/decision-pseudonymisee called with ID ${id} and decisionPseudonymisee ${body.decisionPseudonymisee}`
     )
 
-    const updateDecisionUsecase = new UpdateDecisionPseudonymisedDecisionUsecase(
-      this.mongoRepository
-    )
+    const updateDecisionUsecase = new UpdateDecisionPseudonymiseeUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, body.decisionPseudonymisee).catch((error) => {
-      this.logger.errorHttp(
-        { operationName: 'updateDecisionPseudonymisedDecision' },
-        req,
-        error.message
-      )
+      this.logger.errorHttp({ operationName: 'updateDecisionPseudonymisee' }, req, error.message)
       if (error instanceof DecisionNotFoundError) {
         throw new DecisionNotFoundException()
       }
@@ -354,7 +348,7 @@ export class DecisionsController {
   })
   @ApiBody({
     description: `Rapport d'occultations de la décision`,
-    type: UpdateDecisionConcealmentReportsDTO
+    type: UpdateDecisionRapportsOccultationsDTO
   })
   @ApiNoContentResponse()
   @ApiBadRequestResponse({
@@ -370,9 +364,9 @@ export class DecisionsController {
     description: "Vous n'avez pas accès à cette route"
   })
   @UsePipes(new ValidationPipe())
-  async updateDecisionConcealmentReports(
+  async updateDecisionRapportsOccultations(
     @Param('id') id: string,
-    @Body() body: UpdateDecisionConcealmentReportsDTO,
+    @Body() body: UpdateDecisionRapportsOccultationsDTO,
     @Request() req
   ): Promise<void> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
@@ -383,16 +377,16 @@ export class DecisionsController {
 
     this.logger.logHttp(
       {
-        operationName: 'updateDecisionConcealmentReports'
+        operationName: 'updateDecisionRapportsOccultations'
       },
       req,
-      `PUT /decisions/id/rapport-occultations called with ID ${id} and concealmentReports`
+      `PUT /decisions/id/rapport-occultations called with ID ${id} and rapportsOccultations`
     )
 
-    const updateDecisionUsecase = new UpdateDecisionConcealmentReportsUsecase(this.mongoRepository)
+    const updateDecisionUsecase = new UpdateRapportsOccultationsUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, body.rapportsOccultations).catch((error) => {
       this.logger.errorHttp(
-        { operationName: 'updateDecisionConcealmentReports' },
+        { operationName: 'updateDecisionRapportsOccultations' },
         req,
         error.message
       )

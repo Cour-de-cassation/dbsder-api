@@ -1,12 +1,14 @@
 import { mock, MockProxy } from 'jest-mock-extended'
 import { RapportOccultation } from '../infrastructure/dto/updateDecision.dto'
-import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
-import { UpdateDecisionConcealmentReportsUsecase } from './updateDecisionConcealmentReports.usecase'
+import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
+import { UpdateRapportsOccultationsUsecase } from './updateRapportsOccultations.usecase'
 
-describe('UpdateDecisionConcealmentReportsUsecase', () => {
-  const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
-  const usecase: UpdateDecisionConcealmentReportsUsecase =
-    new UpdateDecisionConcealmentReportsUsecase(mockDatabaseRepository)
+describe('UpdateRapportsOccultationsUsecase', () => {
+  const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
+    mock<InterfaceDecisionsRepository>()
+  const usecase: UpdateRapportsOccultationsUsecase = new UpdateRapportsOccultationsUsecase(
+    mockDecisionsRepository
+  )
   const decisionId = 'some-id'
   const decisionConcealmentReports: RapportOccultation[] = mock<RapportOccultation[]>()
 
@@ -18,7 +20,7 @@ describe('UpdateDecisionConcealmentReportsUsecase', () => {
     // GIVEN
     const decisionId = 'some-id'
     jest
-      .spyOn(mockDatabaseRepository, 'updateDecisionConcealmentReports')
+      .spyOn(mockDecisionsRepository, 'updateRapportsOccultations')
       .mockImplementationOnce(() => Promise.resolve(decisionId))
 
     // WHEN
@@ -30,11 +32,9 @@ describe('UpdateDecisionConcealmentReportsUsecase', () => {
 
   it('propagates an Error when repository returns an error', async () => {
     // GIVEN
-    jest
-      .spyOn(mockDatabaseRepository, 'updateDecisionConcealmentReports')
-      .mockImplementationOnce(() => {
-        throw new Error()
-      })
+    jest.spyOn(mockDecisionsRepository, 'updateRapportsOccultations').mockImplementationOnce(() => {
+      throw new Error()
+    })
 
     // WHEN
     await expect(usecase.execute(decisionId, decisionConcealmentReports))

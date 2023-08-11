@@ -1,12 +1,11 @@
 import { mock, MockProxy } from 'jest-mock-extended'
-import { UpdateDecisionStatusUsecase } from './updateDecisionStatus.usecase'
-import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
+import { UpdateStatutUsecase } from './updateStatut.usecase'
+import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
 
-describe('updateDecisionStatusUsecase', () => {
-  const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
-  const usecase: UpdateDecisionStatusUsecase = new UpdateDecisionStatusUsecase(
-    mockDatabaseRepository
-  )
+describe('UpdateStatutUsecase', () => {
+  const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
+    mock<InterfaceDecisionsRepository>()
+  const usecase: UpdateStatutUsecase = new UpdateStatutUsecase(mockDecisionsRepository)
   const decisionId = 'some-id'
   const decisionStatus = 'some-status'
 
@@ -18,7 +17,7 @@ describe('updateDecisionStatusUsecase', () => {
     // GIVEN
     const decisionId = 'some-id'
     jest
-      .spyOn(mockDatabaseRepository, 'updateDecisionStatus')
+      .spyOn(mockDecisionsRepository, 'updateStatut')
       .mockImplementationOnce(() => Promise.resolve(decisionId))
 
     // WHEN
@@ -30,7 +29,7 @@ describe('updateDecisionStatusUsecase', () => {
 
   it('propagates an Error when repository returns an error', async () => {
     // GIVEN
-    jest.spyOn(mockDatabaseRepository, 'updateDecisionStatus').mockImplementationOnce(() => {
+    jest.spyOn(mockDecisionsRepository, 'updateStatut').mockImplementationOnce(() => {
       throw new Error()
     })
 

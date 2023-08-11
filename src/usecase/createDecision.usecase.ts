@@ -1,11 +1,11 @@
 import { DecisionModel } from '../infrastructure/db/models/decision.model'
 import { CreateDecisionDTO } from '../infrastructure/dto/createDecision.dto'
-import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
+import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
 
 export class CreateDecisionUsecase {
-  constructor(private mongoRepository: IDatabaseRepository) {}
+  constructor(private decisionsRepository: InterfaceDecisionsRepository) {}
 
   async execute(decision: CreateDecisionDTO): Promise<DecisionModel> {
-    return this.mongoRepository.create(decision)
+    return this.decisionsRepository.create(decision)
   }
 }

@@ -3,14 +3,14 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
-import { MongoRepository } from '../db/repositories/mongo.repository'
+import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
 
 describe('DecisionsController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
   const labelApiKey = process.env.LABEL_API_KEY
-  let mongoRepository: MongoRepository
+  let decisionsRepository: DecisionsRepository
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -20,7 +20,7 @@ describe('DecisionsController', () => {
     app = moduleFixture.createNestApplication()
     await app.init()
 
-    mongoRepository = app.get<MongoRepository>(MongoRepository)
+    decisionsRepository = app.get<DecisionsRepository>(DecisionsRepository)
     await connectDatabase()
   })
 
@@ -36,7 +36,7 @@ describe('DecisionsController', () => {
     describe('Success case', () => {
       it('returns a 200 OK with a list of decisions from known source', async () => {
         // GIVEN
-        await mongoRepository.create(mockUtils.decisionModel)
+        await decisionsRepository.create(mockUtils.decisionModel)
         const expectedDecisions = [mockUtils.decisionTJToBeTreated]
         const getDecisionsListDTO = mockUtils.decisionQueryDTO
 
