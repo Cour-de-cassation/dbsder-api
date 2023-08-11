@@ -108,7 +108,7 @@ export class DecisionsController {
     const listDecisionUsecase = new ListDecisionsUsecase(this.decisionsRepository)
 
     return await listDecisionUsecase.execute(getDecisionListCriteria).catch((error) => {
-      this.logger.error(error.message, formatLogs)
+      this.logger.error({ ...formatLogs, msg: error.message })
       if (error instanceof DatabaseError) {
         throw new DependencyException(error.message)
       }
@@ -152,7 +152,7 @@ export class DecisionsController {
     this.logger.log(formatLogs)
 
     return await fetchDecisionByIdUsecase.execute(id).catch((error) => {
-      this.logger.error(error.message, formatLogs)
+      this.logger.error({ ...formatLogs, msg: error.message })
       if (error instanceof DecisionNotFoundError) {
         throw new DecisionNotFoundException()
       }
@@ -203,7 +203,7 @@ export class DecisionsController {
 
     const createDecisionUsecase = new CreateDecisionUsecase(this.decisionsRepository)
     const decisionCreated = await createDecisionUsecase.execute(decision).catch((error) => {
-      this.logger.error(error.message, formatLogs)
+      this.logger.error({ ...formatLogs, msg: error.message })
       if (error instanceof DatabaseError) {
         throw new DependencyException(error.message)
       }
@@ -266,7 +266,7 @@ export class DecisionsController {
 
     const updateDecisionUsecase = new UpdateStatutUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, decisionStatus.toString()).catch((error) => {
-      this.logger.error(error.message, formatLogs)
+      this.logger.error({ ...formatLogs, msg: error.message })
       if (error instanceof DecisionNotFoundError) {
         throw new DecisionNotFoundException()
       }
@@ -329,7 +329,7 @@ export class DecisionsController {
 
     const updateDecisionUsecase = new UpdateDecisionPseudonymiseeUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, body.decisionPseudonymisee).catch((error) => {
-      this.logger.error(error.message, formatLogs)
+      this.logger.error({ ...formatLogs, msg: error.message })
       if (error instanceof DecisionNotFoundError) {
         throw new DecisionNotFoundException()
       }
@@ -392,7 +392,7 @@ export class DecisionsController {
 
     const updateDecisionUsecase = new UpdateRapportsOccultationsUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, body.rapportsOccultations).catch((error) => {
-      this.logger.error(error.message, formatLogs)
+      this.logger.error({ ...formatLogs, msg: error.message })
       if (error instanceof DecisionNotFoundError) {
         throw new DecisionNotFoundException()
       }

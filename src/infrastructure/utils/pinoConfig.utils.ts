@@ -23,6 +23,6 @@ export const pinoConfig = {
       censor: '',
       remove: true
     },
-    transport: process.env.NODE_ENV !== 'production' ? pinoPrettyConf : undefined
+    transport: process.env.NODE_ENV === 'local' ? pinoPrettyConf : undefined
   }
 }
