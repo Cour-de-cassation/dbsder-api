@@ -6,7 +6,7 @@ import { Type } from 'class-transformer'
 
 const mockUtils = new MockUtils()
 
-export class UpdateDecisionStatusDTO {
+export class UpdateDecisionStatutDTO {
   @ApiProperty({
     description: 'Statut de la décision dans Judilibre',
     enum: DecisionStatus,
@@ -16,7 +16,7 @@ export class UpdateDecisionStatusDTO {
   statut: DecisionStatus
 }
 
-export class UpdateDecisionPseudonymisedDecisionDTO {
+export class UpdateDecisionPseudonymiseeDTO {
   @ApiProperty({
     description: 'Décision pseudonymisée de la décision',
     example: `Texte pseudonymisé d'une décision`
@@ -25,11 +25,11 @@ export class UpdateDecisionPseudonymisedDecisionDTO {
   decisionPseudonymisee: string
 }
 
-export class UpdateDecisionConcealmentReportsDTO {
+export class UpdateDecisionRapportsOccultationsDTO {
   @ApiProperty({
     description: `Rapport d'occultations de la décision`,
     type: () => [RapportOccultation],
-    example: mockUtils.decisionConcealmentReports.rapportsOccultations
+    example: mockUtils.decisionRapportsOccultations.rapportsOccultations
   })
   @IsArray()
   @ValidateNested({ each: true })
@@ -41,7 +41,7 @@ export class RapportOccultation {
   @ApiProperty({
     description: 'Annotations',
     type: () => [Annotation],
-    example: mockUtils.decisionConcealmentReports.rapportsOccultations[0].annotations
+    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations
   })
   @IsArray()
   @ValidateNested({ each: true })
@@ -51,7 +51,7 @@ export class RapportOccultation {
   @ApiProperty({
     description: 'Source',
     type: String,
-    example: mockUtils.decisionConcealmentReports.rapportsOccultations[0].source
+    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].source
   })
   @IsString()
   source: string
@@ -59,7 +59,7 @@ export class RapportOccultation {
   @ApiProperty({
     description: 'Ordre',
     type: Number,
-    example: mockUtils.decisionConcealmentReports.rapportsOccultations[0].order
+    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].order
   })
   @IsNumber()
   order: number
@@ -69,7 +69,7 @@ export class Annotation {
   @ApiProperty({
     description: "Categorie de l'annotation",
     type: String,
-    example: mockUtils.decisionConcealmentReports.rapportsOccultations[0].annotations[0].category
+    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].category
   })
   @IsString()
   category: string
@@ -77,7 +77,7 @@ export class Annotation {
   @ApiProperty({
     description: `ID de l'entité`,
     type: String,
-    example: mockUtils.decisionConcealmentReports.rapportsOccultations[0].annotations[0].entityId
+    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].entityId
   })
   @IsString()
   entityId: string
@@ -85,7 +85,7 @@ export class Annotation {
   @ApiProperty({
     description: 'Démarre à la position',
     type: Number,
-    example: mockUtils.decisionConcealmentReports.rapportsOccultations[0].annotations[0].start
+    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].start
   })
   @IsNumber()
   start: number
@@ -93,7 +93,7 @@ export class Annotation {
   @ApiProperty({
     description: "Texte de l'annotation",
     type: String,
-    example: mockUtils.decisionConcealmentReports.rapportsOccultations[0].annotations[0].text
+    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].text
   })
   @IsString()
   text: string
@@ -102,7 +102,7 @@ export class Annotation {
     description: 'Score de certitude',
     type: Number,
     example:
-      mockUtils.decisionConcealmentReports.rapportsOccultations[0].annotations[0].certaintyScore
+      mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].certaintyScore
   })
   @IsNumber()
   certaintyScore: number

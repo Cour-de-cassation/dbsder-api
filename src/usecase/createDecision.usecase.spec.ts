@@ -1,12 +1,13 @@
 import { mock, MockProxy } from 'jest-mock-extended'
 import { MockUtils } from '../infrastructure/utils/mock.utils'
 import { CreateDecisionUsecase } from './createDecision.usecase'
-import { IDatabaseRepository } from '../infrastructure/db/database.repository.interface'
+import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
 
 describe('createDecisionUsecase', () => {
-  const mockDatabaseRepository: MockProxy<IDatabaseRepository> = mock<IDatabaseRepository>()
+  const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
+    mock<InterfaceDecisionsRepository>()
   let mockUtils: MockUtils
-  const usecase: CreateDecisionUsecase = new CreateDecisionUsecase(mockDatabaseRepository)
+  const usecase: CreateDecisionUsecase = new CreateDecisionUsecase(mockDecisionsRepository)
 
   beforeAll(async () => {
     mockUtils = new MockUtils()
@@ -20,7 +21,7 @@ describe('createDecisionUsecase', () => {
     // GIVEN
     const expectedDecision = mockUtils.createDecisionDTO
     jest
-      .spyOn(mockDatabaseRepository, 'create')
+      .spyOn(mockDecisionsRepository, 'create')
       .mockImplementationOnce(async () => expectedDecision)
 
     // WHEN
@@ -33,7 +34,7 @@ describe('createDecisionUsecase', () => {
   it('propagates an Error when repository returns an error', async () => {
     // GIVEN
     const rejectedDecision = mockUtils.createDecisionDTO
-    jest.spyOn(mockDatabaseRepository, 'create').mockImplementationOnce(() => {
+    jest.spyOn(mockDecisionsRepository, 'create').mockImplementationOnce(() => {
       throw new Error()
     })
 

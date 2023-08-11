@@ -8,7 +8,7 @@ import { DecisionSchema } from './infrastructure/db/models/decision.model'
 import { AuthMiddleware } from './infrastructure/middleware/auth/auth.middleware'
 import { DecisionsController } from './infrastructure/controllers/decisions.controller'
 import { HealthController } from './infrastructure/controllers/health/health.controller'
-import { MongoRepository } from './infrastructure/db/repositories/mongo.repository'
+import { DecisionsRepository } from './infrastructure/db/repositories/decisions.repository'
 import { envValidationConfig } from './infrastructure/dto/env.validation'
 import { LoggerModule } from 'nestjs-pino'
 import { pinoConfig } from './infrastructure/utils/pinoConfig.utils'
@@ -25,7 +25,7 @@ import { pinoConfig } from './infrastructure/utils/pinoConfig.utils'
     LoggerModule.forRoot(pinoConfig)
   ],
   controllers: [RedirectController, DecisionsController, HealthController],
-  providers: [MongoRepository]
+  providers: [DecisionsRepository]
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

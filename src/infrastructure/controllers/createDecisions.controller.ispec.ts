@@ -4,7 +4,7 @@ import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
-import { MongoRepository } from '../db/repositories/mongo.repository'
+import { DecisionsRepository } from '../db/repositories/decisions.repository'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -87,8 +87,8 @@ describe('DecisionsController', () => {
 
       it('returns a 409 Conflict when the decision id is already used', async () => {
         // GIVEN
-        const mongoRepository = app.get<MongoRepository>(MongoRepository)
-        await mongoRepository.create(mockUtils.createDecisionDTO)
+        const decisionsRepository = app.get<DecisionsRepository>(DecisionsRepository)
+        await decisionsRepository.create(mockUtils.createDecisionDTO)
 
         // WHEN
         const result = await request(app.getHttpServer())
