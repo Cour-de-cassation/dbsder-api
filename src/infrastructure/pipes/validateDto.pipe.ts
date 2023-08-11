@@ -1,16 +1,15 @@
-import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
+import { ArgumentMetadata, Injectable, Logger, PipeTransform } from '@nestjs/common'
 import { MissingPropertiesException } from '../exceptions/missingProperties.exception'
 import { MissingFieldException } from '../exceptions/missingField.exception'
 import { DateMismatchException } from '../exceptions/dateMismatch.exception'
-import { CustomLogger } from '../utils/customLogger.utils'
 
 @Injectable()
 export class ValidateDtoPipe implements PipeTransform {
-  private readonly logger: CustomLogger
+  private readonly logger: Logger
   constructor() {
-    this.logger = new CustomLogger()
+    this.logger = new Logger()
   }
   async transform(value: any, { metatype }: ArgumentMetadata) {
     if (!metatype || !this.toValidate(metatype)) {
@@ -18,13 +17,13 @@ export class ValidateDtoPipe implements PipeTransform {
     }
     if (!value) {
       const error = new MissingFieldException('decision')
-      this.logger.error({ operationName: 'transform' }, error.message)
+      this.logger.error({ operationName: 'transform', msg: error.message })
       throw error
     }
     const object = plainToInstance(metatype, value)
     if (object.startDate && object.endDate && object.startDate > object.endDate) {
       const error = new DateMismatchException("'startDate' doit être antérieur à 'endDate'.")
-      this.logger.error({ operationName: 'transform' }, error.message)
+      this.logger.error({ operationName: 'transform', msg: error.message })
 
       throw error
     }
@@ -34,7 +33,7 @@ export class ValidateDtoPipe implements PipeTransform {
         this.findPropertyNameInErrorMessage(err.toString(false))
       )
       const error = new MissingPropertiesException(missingProperties.join(', '))
-      this.logger.error({ operationName: 'transform' }, error.message)
+      this.logger.error({ operationName: 'transform', msg: error.message })
 
       throw error
     }
