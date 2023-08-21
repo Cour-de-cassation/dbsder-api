@@ -29,7 +29,8 @@ export class AuthMiddleware implements NestMiddleware {
             operationName: 'callPassportAuthentication',
             httpMethod: req.method,
             path: req.path,
-            msg: error.message
+            msg: error.message,
+            statusCode: error.getStatus()
           }
           this.logger.error(logsFormat)
 

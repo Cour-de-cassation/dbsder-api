@@ -4,4 +4,5 @@ export class LogsFormat {
   data?: any
   httpMethod?: string
   path?: string
+  statusCode?: number
 }
