@@ -17,13 +17,21 @@ export class ValidateDtoPipe implements PipeTransform {
     }
     if (!value) {
       const error = new MissingFieldException('decision')
-      this.logger.error({ operationName: 'transform', msg: error.message })
+      this.logger.error({
+        operationName: 'transform',
+        msg: error.message,
+        statusCode: error.getStatus()
+      })
       throw error
     }
     const object = plainToInstance(metatype, value)
     if (object.startDate && object.endDate && object.startDate > object.endDate) {
       const error = new DateMismatchException("'startDate' doit être antérieur à 'endDate'.")
-      this.logger.error({ operationName: 'transform', msg: error.message })
+      this.logger.error({
+        operationName: 'transform',
+        msg: error.message,
+        statusCode: error.getStatus()
+      })
 
       throw error
     }
@@ -33,7 +41,11 @@ export class ValidateDtoPipe implements PipeTransform {
         this.findPropertyNameInErrorMessage(err.toString(false))
       )
       const error = new MissingPropertiesException(missingProperties.join(', '))
-      this.logger.error({ operationName: 'transform', msg: error.message })
+      this.logger.error({
+        operationName: 'transform',
+        msg: error.message,
+        statusCode: error.getStatus()
+      })
 
       throw error
     }

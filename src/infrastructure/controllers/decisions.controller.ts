@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
   Logger,
   Param,
   ParseEnumPipe,
@@ -108,10 +109,19 @@ export class DecisionsController {
     const listDecisionUsecase = new ListDecisionsUsecase(this.decisionsRepository)
 
     return await listDecisionUsecase.execute(getDecisionListCriteria).catch((error) => {
-      this.logger.error({ ...formatLogs, msg: error.message })
       if (error instanceof DatabaseError) {
+        this.logger.error({
+          ...formatLogs,
+          msg: error.message,
+          statusCode: HttpStatus.SERVICE_UNAVAILABLE
+        })
         throw new DependencyException(error.message)
       }
+      this.logger.error({
+        ...formatLogs,
+        msg: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+      })
       throw new UnexpectedException(error.message)
     })
   }
@@ -152,13 +162,23 @@ export class DecisionsController {
     this.logger.log(formatLogs)
 
     return await fetchDecisionByIdUsecase.execute(id).catch((error) => {
-      this.logger.error({ ...formatLogs, msg: error.message })
       if (error instanceof DecisionNotFoundError) {
+        this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
         throw new DecisionNotFoundException()
       }
       if (error instanceof DatabaseError) {
+        this.logger.error({
+          ...formatLogs,
+          msg: error.message,
+          statusCode: HttpStatus.SERVICE_UNAVAILABLE
+        })
         throw new DependencyException(error.message)
       }
+      this.logger.error({
+        ...formatLogs,
+        msg: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+      })
       throw new UnexpectedException(error.message)
     })
   }
@@ -203,13 +223,23 @@ export class DecisionsController {
 
     const createDecisionUsecase = new CreateDecisionUsecase(this.decisionsRepository)
     const decisionCreated = await createDecisionUsecase.execute(decision).catch((error) => {
-      this.logger.error({ ...formatLogs, msg: error.message })
       if (error instanceof DatabaseError) {
+        this.logger.error({
+          ...formatLogs,
+          msg: error.message,
+          statusCode: HttpStatus.SERVICE_UNAVAILABLE
+        })
         throw new DependencyException(error.message)
       }
       if (error instanceof DuplicateKeyError) {
+        this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.CONFLICT })
         throw new DecisionIdAlreadyUsedException(decision._id)
       }
+      this.logger.error({
+        ...formatLogs,
+        msg: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+      })
       throw new UnexpectedException(error)
     })
     return {
@@ -266,16 +296,31 @@ export class DecisionsController {
 
     const updateDecisionUsecase = new UpdateStatutUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, decisionStatus.toString()).catch((error) => {
-      this.logger.error({ ...formatLogs, msg: error.message })
       if (error instanceof DecisionNotFoundError) {
+        this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
         throw new DecisionNotFoundException()
       }
       if (error instanceof UpdateFailedError) {
+        this.logger.error({
+          ...formatLogs,
+          msg: error.message,
+          statusCode: HttpStatus.UNPROCESSABLE_ENTITY
+        })
         throw new UnprocessableException(id, decisionStatus.toString(), error.message)
       }
       if (error instanceof DatabaseError) {
+        this.logger.error({
+          ...formatLogs,
+          msg: error.message,
+          statusCode: HttpStatus.SERVICE_UNAVAILABLE
+        })
         throw new DependencyException(error.message)
       }
+      this.logger.error({
+        ...formatLogs,
+        msg: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+      })
       throw new UnexpectedException(error)
     })
   }
@@ -329,16 +374,31 @@ export class DecisionsController {
 
     const updateDecisionUsecase = new UpdateDecisionPseudonymiseeUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, body.decisionPseudonymisee).catch((error) => {
-      this.logger.error({ ...formatLogs, msg: error.message })
       if (error instanceof DecisionNotFoundError) {
+        this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
         throw new DecisionNotFoundException()
       }
       if (error instanceof UpdateFailedError) {
+        this.logger.error({
+          ...formatLogs,
+          msg: error.message,
+          statusCode: HttpStatus.UNPROCESSABLE_ENTITY
+        })
         throw new UnprocessableException(id, body.decisionPseudonymisee, error.message)
       }
       if (error instanceof DatabaseError) {
+        this.logger.error({
+          ...formatLogs,
+          msg: error.message,
+          statusCode: HttpStatus.SERVICE_UNAVAILABLE
+        })
         throw new DependencyException(error.message)
       }
+      this.logger.error({
+        ...formatLogs,
+        msg: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+      })
       throw new UnexpectedException(error)
     })
   }
@@ -392,11 +452,16 @@ export class DecisionsController {
 
     const updateDecisionUsecase = new UpdateRapportsOccultationsUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, body.rapportsOccultations).catch((error) => {
-      this.logger.error({ ...formatLogs, msg: error.message })
       if (error instanceof DecisionNotFoundError) {
+        this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
         throw new DecisionNotFoundException()
       }
       if (error instanceof UpdateFailedError) {
+        this.logger.error({
+          ...formatLogs,
+          msg: error.message,
+          statusCode: HttpStatus.UNPROCESSABLE_ENTITY
+        })
         throw new UnprocessableException(
           id,
           JSON.stringify(body.rapportsOccultations),
@@ -404,8 +469,18 @@ export class DecisionsController {
         )
       }
       if (error instanceof DatabaseError) {
+        this.logger.error({
+          ...formatLogs,
+          msg: error.message,
+          statusCode: HttpStatus.SERVICE_UNAVAILABLE
+        })
         throw new DependencyException(error.message)
       }
+      this.logger.error({
+        ...formatLogs,
+        msg: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+      })
       throw new UnexpectedException(error)
     })
   }
