@@ -6,12 +6,12 @@
 	},
 	"item": [
 		{
-			"name": "POST /decisions",
+			"name": "PUT /decisions",
 			"item": [
 				{
-					"name": "201 - Enregistre une décision",
+					"name": "200 - Enregistre une décision",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [
 							{
 								"key": "x-api-key",
@@ -44,7 +44,7 @@
 				{
 					"name": "400 - Enregistre une décision sans contenu",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [
 							{
 								"key": "x-api-key",
@@ -68,7 +68,7 @@
 				{
 					"name": "400 - Enregistre une décision avec un contenu invalide",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [
 							{
 								"key": "x-api-key",
@@ -101,7 +101,7 @@
 				{
 					"name": "401 - Enregistre une décision sans apiKey",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [
 							{
 								"key": "x-api-key",
