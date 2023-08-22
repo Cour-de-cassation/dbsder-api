@@ -43,9 +43,10 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
-          id: decisionId,
+          _id: decisionId,
           labelStatus: DecisionStatus.TOBETREATED
         }
+
         await decisionsRepository.create(decisionToSave)
 
         // WHEN

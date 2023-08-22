@@ -11,7 +11,8 @@ const mockDecisionModel = () => ({
   find: jest.fn(),
   create: jest.fn(),
   findOne: jest.fn(),
-  updateOne: jest.fn()
+  updateOne: jest.fn(),
+  findOneAndUpdate: jest.fn()
 })
 
 describe('DecisionsRepository', () => {
@@ -44,9 +45,7 @@ describe('DecisionsRepository', () => {
     it('returns created decision when decision is successfully created in DB', async () => {
       // GIVEN
       const expectedDecision: DecisionModel = mockUtils.decisionModel
-      jest
-        .spyOn(decisionModel, 'create')
-        .mockImplementationOnce(() => Promise.resolve(expectedDecision as any))
+      jest.spyOn(decisionModel, 'findOneAndUpdate').mockResolvedValueOnce(expectedDecision)
 
       // WHEN
       const result = await decisionsRepository.create(decision)
@@ -57,7 +56,7 @@ describe('DecisionsRepository', () => {
 
     it('throws a DatabaseError when the insertion in the DB has failed', async () => {
       // GIVEN
-      jest.spyOn(decisionModel, 'create').mockRejectedValueOnce(new Error())
+      jest.spyOn(decisionModel, 'findOneAndUpdate').mockRejectedValueOnce(new Error())
 
       // WHEN
       await expect(decisionsRepository.create(decision))

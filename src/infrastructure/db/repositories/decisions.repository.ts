@@ -25,9 +25,11 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
   }
 
   async create(decision: CreateDecisionDTO): Promise<DecisionModel> {
-    const savedDecision = await this.decisionModel.create(decision).catch((error) => {
-      throw new DatabaseError(error)
-    })
+    const savedDecision: DecisionModel = await this.decisionModel
+      .findOneAndUpdate({ _id: decision._id }, decision, { upsert: true, new: true })
+      .catch((error) => {
+        throw new DatabaseError(error)
+      })
     return Promise.resolve(savedDecision)
   }
 
