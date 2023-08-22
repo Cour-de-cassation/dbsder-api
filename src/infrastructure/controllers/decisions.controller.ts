@@ -7,7 +7,6 @@ import {
   Logger,
   Param,
   ParseEnumPipe,
-  Post,
   Put,
   Query,
   Request,
@@ -30,11 +29,7 @@ import {
 } from '@nestjs/swagger'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { DecisionStatus } from '../../domain/enum'
-import {
-  DatabaseError,
-  DuplicateKeyError,
-  UpdateFailedError
-} from '../../domain/errors/database.error'
+import { DatabaseError, UpdateFailedError } from '../../domain/errors/database.error'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
 import { UnprocessableException } from '../exceptions/unprocessable.exception'
 import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.error'
@@ -57,7 +52,6 @@ import { UnexpectedException } from '../exceptions/unexpected.exception'
 import { DependencyException } from '../exceptions/dependency.exception'
 import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
-import { DecisionIdAlreadyUsedException } from '../exceptions/decisionIdAlreadyUsedException'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { LogsFormat } from '../utils/logsFormat.utils'
@@ -183,7 +177,7 @@ export class DecisionsController {
     })
   }
 
-  @Post()
+  @Put()
   @ApiHeader({
     name: 'x-api-key',
     description: 'Clé API'
@@ -192,7 +186,7 @@ export class DecisionsController {
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
     type: CreateDecisionDTO
   })
-  @ApiCreatedResponse({ description: 'Décision créée' })
+  @ApiCreatedResponse({ description: 'Décision créée', status: HttpStatus.OK })
   @ApiBadRequestResponse({
     description: 'Il manque un ou plusieurs champs obligatoires dans la décision'
   })
@@ -211,7 +205,7 @@ export class DecisionsController {
       operationName: 'createDecisions',
       httpMethod: req.method,
       path: req.path,
-      msg: `POST /decisions called with ${JSON.stringify(decision)}`
+      msg: `PUT /decisions called with ${JSON.stringify(decision)}`
     }
     this.logger.log(formatLogs)
 
@@ -230,10 +224,6 @@ export class DecisionsController {
           statusCode: HttpStatus.SERVICE_UNAVAILABLE
         })
         throw new DependencyException(error.message)
-      }
-      if (error instanceof DuplicateKeyError) {
-        this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.CONFLICT })
-        throw new DecisionIdAlreadyUsedException(decision._id)
       }
       this.logger.error({
         ...formatLogs,

@@ -4,7 +4,6 @@ import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
-import { DecisionsRepository } from '../db/repositories/decisions.repository'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -27,23 +26,23 @@ describe('DecisionsController', () => {
   afterAll(async () => {
     await dropDatabase()
   })
-  describe('POST /decisions', () => {
-    it('returns a 201 CREATED when provided body is valid', async () => {
+  describe('PUT /decisions', () => {
+    it('returns a 200 OK when provided body is valid', async () => {
       // WHEN
       const result = await request(app.getHttpServer())
-        .post('/decisions')
+        .put('/decisions')
         .set({ 'x-api-key': normalizationApiKey })
         .send({ decision: mockUtils.createDecisionDTO })
 
       // THEN
-      expect(result.status).toEqual(HttpStatus.CREATED)
+      expect(result.status).toEqual(HttpStatus.OK)
     })
 
     describe('failing cases', () => {
       it('returns a 400 Bad Request when called without a body', async () => {
         // WHEN
         const result = await request(app.getHttpServer())
-          .post('/decisions')
+          .put('/decisions')
           .set({ 'x-api-key': normalizationApiKey })
 
         // THEN
@@ -53,7 +52,7 @@ describe('DecisionsController', () => {
       it('returns a 400 Bad Request when called with an incorrect body', async () => {
         // WHEN
         const result = await request(app.getHttpServer())
-          .post('/decisions')
+          .put('/decisions')
           .set({ 'x-api-key': normalizationApiKey })
           .send({ decision: { wrongKey: 'wrongValue' } })
 
@@ -63,41 +62,24 @@ describe('DecisionsController', () => {
 
       it('returns a 401 Unauthorized when apiKey is missing', async () => {
         // WHEN
-        const result = await request(app.getHttpServer())
-          .post('/decisions')
-          .set({ 'x-api-key': '' })
+        const result = await request(app.getHttpServer()).put('/decisions').set({ 'x-api-key': '' })
 
         // THEN
         expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
       })
 
-      it('returns a 403 Forbidden when a consumer not authorized (label) calls POST /decisions', async () => {
+      it('returns a 403 Forbidden when a consumer not authorized (label) calls PUT /decisions', async () => {
         // GIVEN
         const labelApiKey = process.env.LABEL_API_KEY
 
         // WHEN
         const result = await request(app.getHttpServer())
-          .post('/decisions')
+          .put('/decisions')
           .set({ 'x-api-key': labelApiKey })
           .send({ decision: mockUtils.createDecisionDTO })
 
         // THEN
         expect(result.status).toEqual(HttpStatus.FORBIDDEN)
-      })
-
-      it('returns a 409 Conflict when the decision id is already used', async () => {
-        // GIVEN
-        const decisionsRepository = app.get<DecisionsRepository>(DecisionsRepository)
-        await decisionsRepository.create(mockUtils.createDecisionDTO)
-
-        // WHEN
-        const result = await request(app.getHttpServer())
-          .post('/decisions')
-          .set({ 'x-api-key': normalizationApiKey })
-          .send({ decision: mockUtils.createDecisionDTO })
-
-        // THEN
-        expect(result.status).toEqual(HttpStatus.CONFLICT)
       })
     })
   })
