@@ -5,12 +5,7 @@ import { CreateDecisionDTO } from '../../dto/createDecision.dto'
 import { RapportOccultation } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { InterfaceDecisionsRepository } from '../decisions.repository.interface'
-import {
-  DatabaseError,
-  DuplicateKeyError,
-  mongoDuplicateKeyErrorCode,
-  UpdateFailedError
-} from '../../../domain/errors/database.error'
+import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
 
 export class DecisionsRepository implements InterfaceDecisionsRepository {
@@ -31,14 +26,11 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async create(decision: CreateDecisionDTO): Promise<DecisionModel> {
     const savedDecision = await this.decisionModel.create(decision).catch((error) => {
-      if (error.code == mongoDuplicateKeyErrorCode) {
-        throw new DuplicateKeyError(decision._id)
-      } else {
-        throw new DatabaseError(error)
-      }
+      throw new DatabaseError(error)
     })
     return Promise.resolve(savedDecision)
   }
+
   async getById(id: string): Promise<DecisionModel> {
     const decision = await this.decisionModel
       .findOne({ _id: id })

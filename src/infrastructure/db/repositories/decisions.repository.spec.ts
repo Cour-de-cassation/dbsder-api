@@ -4,12 +4,7 @@ import { Model, UpdateWriteOpResult } from 'mongoose'
 import { MockUtils } from '../../utils/mock.utils'
 import { DecisionsRepository } from './decisions.repository'
 import { DecisionModel } from '../models/decision.model'
-import {
-  DatabaseError,
-  DuplicateKeyError,
-  mongoDuplicateKeyErrorCode,
-  UpdateFailedError
-} from '../../../domain/errors/database.error'
+import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
 
 const mockDecisionModel = () => ({
@@ -68,17 +63,6 @@ describe('DecisionsRepository', () => {
       await expect(decisionsRepository.create(decision))
         // THEN
         .rejects.toThrow(DatabaseError)
-    })
-    it('throws a DuplicateKeyError when the insertion in the DB has failed because the _id is already used', async () => {
-      // GIVEN
-      jest
-        .spyOn(decisionModel, 'create')
-        .mockRejectedValueOnce({ code: mongoDuplicateKeyErrorCode })
-
-      // WHEN
-      await expect(decisionsRepository.create(decision))
-        // THEN
-        .rejects.toThrow(DuplicateKeyError)
     })
   })
 
