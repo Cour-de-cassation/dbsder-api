@@ -24,7 +24,7 @@ describe('FetchDecisionByIdUsecase', () => {
       jest.spyOn(mockDecisionsRepository, 'getById').mockResolvedValue(mockUtils.decisionModel)
 
       // WHEN
-      const decision = await usecase.execute(id)
+      const decision = await usecase.execute(id, true)
 
       // THEN
       expect(decision).toEqual(expectedDecision)
@@ -40,7 +40,7 @@ describe('FetchDecisionByIdUsecase', () => {
       })
 
       // WHEN
-      await expect(usecase.execute(id))
+      await expect(usecase.execute(id, true))
         // THEN
         .rejects.toThrow(DatabaseError)
     })
@@ -50,7 +50,7 @@ describe('FetchDecisionByIdUsecase', () => {
       jest.spyOn(mockDecisionsRepository, 'getById').mockResolvedValue(null)
 
       // WHEN
-      await expect(usecase.execute(id))
+      await expect(usecase.execute(id, true))
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
     })

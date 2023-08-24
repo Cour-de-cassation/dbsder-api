@@ -1,4 +1,13 @@
-import { Controller, Get, HttpStatus, Logger, Param, Request } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Logger,
+  Param,
+  ParseBoolPipe,
+  Query,
+  Request
+} from '@nestjs/common'
 import {
   ApiForbiddenResponse,
   ApiHeader,
@@ -11,7 +20,6 @@ import {
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { DatabaseError } from '../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.error'
-import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecase'
 
 import { UnexpectedException } from '../exceptions/unexpected.exception'
 import { DependencyException } from '../exceptions/dependency.exception'
@@ -20,6 +28,7 @@ import { DecisionNotFoundException } from '../exceptions/decisionNotFound.except
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { LogsFormat } from '../utils/logsFormat.utils'
 import { GetPseudonymizedDecisionByIdResponse } from './responses/getPseudonymizedDecisionById.response'
+import { FetchPseudonymizedDecisionByIdUsecase } from '../../usecase/fetchPseudonymizedDecisionById.usecase'
 
 @ApiTags('DbSder')
 @Controller('decisions-pseudonymisees')
@@ -49,6 +58,7 @@ export class DecisionsPseudonymizedController {
   })
   async getDecisionById(
     @Param('id') id: string,
+    @Query('avecMetadonneesPersonnelles', new ParseBoolPipe()) avecMetadonneesPersonnelles: boolean,
     @Request() req
   ): Promise<GetPseudonymizedDecisionByIdResponse> {
     const authorizedApiKeys = [
@@ -60,7 +70,9 @@ export class DecisionsPseudonymizedController {
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
-    const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.decisionsRepository)
+    const fetchPseudonymizedDecisionByIdUsecase = new FetchPseudonymizedDecisionByIdUsecase(
+      this.decisionsRepository
+    )
 
     const formatLogs: LogsFormat = {
       operationName: 'getDecisionById',
@@ -70,25 +82,27 @@ export class DecisionsPseudonymizedController {
     }
     this.logger.log(formatLogs)
 
-    return await fetchDecisionByIdUsecase.execute(id).catch((error) => {
-      if (error instanceof DecisionNotFoundError) {
-        this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
-        throw new DecisionNotFoundException()
-      }
-      if (error instanceof DatabaseError) {
+    return await fetchPseudonymizedDecisionByIdUsecase
+      .execute(id, avecMetadonneesPersonnelles)
+      .catch((error) => {
+        if (error instanceof DecisionNotFoundError) {
+          this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
+          throw new DecisionNotFoundException()
+        }
+        if (error instanceof DatabaseError) {
+          this.logger.error({
+            ...formatLogs,
+            msg: error.message,
+            statusCode: HttpStatus.SERVICE_UNAVAILABLE
+          })
+          throw new DependencyException(error.message)
+        }
         this.logger.error({
           ...formatLogs,
           msg: error.message,
-          statusCode: HttpStatus.SERVICE_UNAVAILABLE
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR
         })
-        throw new DependencyException(error.message)
-      }
-      this.logger.error({
-        ...formatLogs,
-        msg: error.message,
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+        throw new UnexpectedException(error.message)
       })
-      throw new UnexpectedException(error.message)
-    })
   }
 }

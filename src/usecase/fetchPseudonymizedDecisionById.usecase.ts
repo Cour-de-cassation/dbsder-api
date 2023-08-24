@@ -6,11 +6,20 @@ import { GetPseudonymizedDecisionByIdResponse } from '../infrastructure/controll
 export class FetchPseudonymizedDecisionByIdUsecase {
   constructor(private decisionsRepository: InterfaceDecisionsRepository) {}
 
-  async execute(id: string): Promise<GetPseudonymizedDecisionByIdResponse> {
+  async execute(
+    id: string,
+    withPersonalData: boolean
+  ): Promise<GetPseudonymizedDecisionByIdResponse> {
     const decision = await this.decisionsRepository.getById(id)
     if (!decision) {
       throw new DecisionNotFoundError()
     }
-    return new MapModelToResponseService().mapGetPseudonymizedDecisionByIdToResponse(decision)
+    const decisionPseudonymized =
+      await new MapModelToResponseService().mapGetPseudonymizedDecisionByIdToResponse(decision)
+    if (withPersonalData) {
+      return decisionPseudonymized
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return (({ analysis, occultation, pseudoText, ...decision }) => decision)(decisionPseudonymized)
   }
 }

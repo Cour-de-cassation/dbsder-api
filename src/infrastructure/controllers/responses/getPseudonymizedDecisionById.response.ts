@@ -7,7 +7,7 @@ import { DecisionStatus } from '../../../domain/enum'
 export class GetPseudonymizedDecisionByIdResponse {
   _id: string
 
-  analysis: DecisionAnalyse
+  analysis?: DecisionAnalyse
 
   appeals: string[]
 
@@ -29,7 +29,7 @@ export class GetPseudonymizedDecisionByIdResponse {
 
   labelStatus: DecisionStatus
 
-  occultation: DecisionOccultation
+  occultation?: DecisionOccultation
 
   pseudoStatus?: string
 

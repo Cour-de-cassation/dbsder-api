@@ -22,10 +22,11 @@ export class MapModelToResponseService {
   ): Promise<GetDecisionByIdResponse> {
     return Promise.resolve({ ...getDecisionByIdModel })
   }
+
   mapGetPseudonymizedDecisionByIdToResponse(
     getDecisionByIdModel: DecisionModel
   ): Promise<GetPseudonymizedDecisionByIdResponse> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return Promise.resolve((({ originalText, ...o }) => o)(getDecisionByIdModel))
+    return Promise.resolve((({ originalText, ...decision }) => decision)(getDecisionByIdModel))
   }
 }
