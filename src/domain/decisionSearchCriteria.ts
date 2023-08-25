@@ -1,8 +1,8 @@
-import { DecisionStatus, Sources } from './enum'
 import { GetDecisionsListDto } from '../infrastructure/dto/getDecisionsList.dto'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsDateString, IsEnum, IsString, Matches } from 'class-validator'
 import { MockUtils } from '../infrastructure/utils/mock.utils'
+import { LabelStatus, Sources } from 'dbsder-api-types'
 
 const mockUtils = new MockUtils()
 export class DecisionSearchCriteria {
@@ -16,11 +16,11 @@ export class DecisionSearchCriteria {
 
   @ApiProperty({
     description: 'Statut de la décision',
-    enum: DecisionStatus,
+    enum: LabelStatus,
     example: mockUtils.decisionCAToBeTreated.status
   })
-  @IsEnum(DecisionStatus)
-  status: DecisionStatus
+  @IsEnum(LabelStatus)
+  status: LabelStatus
 
   @ApiProperty({
     description: 'Date de début de la décision',

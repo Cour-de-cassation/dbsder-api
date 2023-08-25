@@ -1,7 +1,7 @@
-import { DecisionStatus, Sources } from '../../../domain/enum'
+import { LabelStatus, Sources } from 'dbsder-api-types'
 export interface GetDecisionsListResponse {
   _id: string
-  status: DecisionStatus
+  status: LabelStatus
   source: Sources
   dateCreation: string
 }

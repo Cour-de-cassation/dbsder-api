@@ -1,27 +1,27 @@
-import { DecisionStatus, Sources } from '../../domain/enum'
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsListResponse'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
+import { LabelStatus, Sources } from 'dbsder-api-types'
 
 export class MockUtils {
   decisionCCToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-04-11',
     _id: 'id2023',
     source: Sources.CC,
-    status: DecisionStatus.TOBETREATED
+    status: LabelStatus.TOBETREATED
   }
 
   decisionCAToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-04-11',
     _id: 'id2023',
     source: Sources.CA,
-    status: DecisionStatus.TOBETREATED
+    status: LabelStatus.TOBETREATED
   }
 
   decisionTJToBeTreated: GetDecisionsListResponse = {
     dateCreation: '2023-10-10T23:00Z',
     _id: 'id2023',
     source: Sources.TJ,
-    status: DecisionStatus.TOBETREATED
+    status: LabelStatus.TOBETREATED
   }
 
   allDecisionsToBeTreated = [
@@ -31,14 +31,14 @@ export class MockUtils {
   ]
 
   decisionQueryDTO = {
-    status: DecisionStatus.TOBETREATED,
+    status: LabelStatus.TOBETREATED,
     source: Sources.TJ,
     startDate: '2023-10-09',
     endDate: '2023-10-11'
   }
 
   decisionQueryWithUnknownSourceDTO = {
-    status: DecisionStatus.TOBETREATED,
+    status: LabelStatus.TOBETREATED,
     source: 'unknownSource',
     startDate: '2023-10-10',
     endDate: '2023-10-11'
@@ -65,7 +65,7 @@ export class MockUtils {
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',
-    labelStatus: DecisionStatus.TOBETREATED,
+    labelStatus: LabelStatus.TOBETREATED,
     occultation: {
       additionalTerms: 'someAdditionalTerms',
       categoriesToOmit: ['someCategoriesToOmit']
@@ -109,7 +109,7 @@ export class MockUtils {
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',
-    labelStatus: DecisionStatus.TOBETREATED,
+    labelStatus: LabelStatus.TOBETREATED,
     natureAffaireCivil: 'someNatureAffaireCivil',
     natureAffairePenal: 'someNatureAffairePenal',
     occultation: {

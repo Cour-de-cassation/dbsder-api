@@ -4,8 +4,8 @@ import { HttpStatus, INestApplication } from '@nestjs/common'
 import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
-import { DecisionStatus } from '../../domain/enum'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
+import { LabelStatus } from 'dbsder-api-types'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -36,7 +36,7 @@ describe('DecisionsController', () => {
   })
 
   describe('PUT /decisions/:id/statut', () => {
-    const validStatus = DecisionStatus.TOBETREATED
+    const validStatus = LabelStatus.TOBETREATED
 
     describe('Success case', () => {
       it('returns 204 No Content when decision status is updated with valid API Key and status', async () => {
@@ -44,7 +44,7 @@ describe('DecisionsController', () => {
         const decisionToSave = {
           ...mockUtils.decisionModel,
           _id: decisionId,
-          labelStatus: DecisionStatus.TOBETREATED
+          labelStatus: LabelStatus.TOBETREATED
         }
 
         await decisionsRepository.create(decisionToSave)
@@ -53,7 +53,7 @@ describe('DecisionsController', () => {
         const result = await request(app.getHttpServer())
           .put(`/decisions/${decisionId}/statut`)
           .set({ 'x-api-key': validApiKey })
-          .send({ statut: DecisionStatus.LOADED })
+          .send({ statut: LabelStatus.LOADED })
 
         // THEN
         expect(result.status).toEqual(HttpStatus.NO_CONTENT)
@@ -64,7 +64,7 @@ describe('DecisionsController', () => {
         const decisionToSave = {
           ...mockUtils.decisionModel,
           _id: decisionId,
-          labelStatus: DecisionStatus.TOBETREATED
+          labelStatus: LabelStatus.TOBETREATED
         }
         await decisionsRepository.create(decisionToSave)
 
@@ -72,7 +72,7 @@ describe('DecisionsController', () => {
         const result = await request(app.getHttpServer())
           .put(`/decisions/${decisionId}/statut`)
           .set({ 'x-api-key': validApiKey })
-          .send({ statut: DecisionStatus.TOBETREATED })
+          .send({ statut: LabelStatus.TOBETREATED })
 
         // THEN
         expect(result.status).toEqual(HttpStatus.NO_CONTENT)

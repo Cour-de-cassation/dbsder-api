@@ -7,7 +7,7 @@ describe('UpdateStatutUsecase', () => {
     mock<InterfaceDecisionsRepository>()
   const usecase: UpdateStatutUsecase = new UpdateStatutUsecase(mockDecisionsRepository)
   const decisionId = 'some-id'
-  const decisionStatus = 'some-status'
+  const labelStatus = 'some-status'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -21,7 +21,7 @@ describe('UpdateStatutUsecase', () => {
       .mockImplementationOnce(() => Promise.resolve(decisionId))
 
     // WHEN
-    const result = await usecase.execute(decisionId, decisionStatus)
+    const result = await usecase.execute(decisionId, labelStatus)
 
     // THEN
     expect(result).toEqual(decisionId)
@@ -34,7 +34,7 @@ describe('UpdateStatutUsecase', () => {
     })
 
     // WHEN
-    await expect(usecase.execute(decisionId, decisionStatus))
+    await expect(usecase.execute(decisionId, labelStatus))
       // THEN
       .rejects.toThrowError(Error)
   })
