@@ -12,7 +12,7 @@ import { AuthMiddleware } from './infrastructure/middleware/auth/auth.middleware
 import { DecisionsRepository } from './infrastructure/db/repositories/decisions.repository'
 import { DecisionsController } from './infrastructure/controllers/decisions.controller'
 import { HealthController } from './infrastructure/controllers/health/health.controller'
-import { DecisionsPseudonymizedController } from './infrastructure/controllers/decisionsPseudonymized.controller'
+import { DecisionsPseudonymiseesController } from './infrastructure/controllers/decisionsPseudonymiseesController'
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { DecisionsPseudonymizedController } from './infrastructure/controllers/d
     RedirectController,
     DecisionsController,
     HealthController,
-    DecisionsPseudonymizedController
+    DecisionsPseudonymiseesController
   ],
   providers: [DecisionsRepository]
 })

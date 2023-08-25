@@ -3,13 +3,13 @@ import { MockUtils } from '../infrastructure/utils/mock.utils'
 import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
 import { DecisionNotFoundError } from '../domain/errors/decisionNotFound.error'
 import { DatabaseError } from '../domain/errors/database.error'
-import { FetchPseudonymizedDecisionByIdUsecase } from './fetchPseudonymizedDecisionById.usecase'
+import { FetchDecisionPseudonymiseeByIdUsecase } from './fetchDecisionPseudonymiseeByIdUsecase'
 
-describe('FetchDecisionByIdUsecase', () => {
+describe('FetchDecisionPseudomymiseeByIdUsecase', () => {
   const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
     mock<InterfaceDecisionsRepository>()
   const mockUtils = new MockUtils()
-  const usecase = new FetchPseudonymizedDecisionByIdUsecase(mockDecisionsRepository)
+  const usecase = new FetchDecisionPseudonymiseeByIdUsecase(mockDecisionsRepository)
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -19,8 +19,7 @@ describe('FetchDecisionByIdUsecase', () => {
     it('returns the decision when provided ID exist', async () => {
       //GIVEN
       const id = '1'
-      //TODO change expectedDecision to a pseudonymizedModel
-      const expectedDecision = mockUtils.pseudonymizedDecision
+      const expectedDecision = mockUtils.decisionPseudonymisee
       jest.spyOn(mockDecisionsRepository, 'getById').mockResolvedValue(mockUtils.decisionModel)
 
       // WHEN

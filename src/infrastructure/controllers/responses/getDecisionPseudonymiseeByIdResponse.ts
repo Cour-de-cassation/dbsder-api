@@ -4,7 +4,7 @@ import {
 } from '../../../infrastructure/dto/createDecision.dto'
 import { DecisionStatus } from '../../../domain/enum'
 
-export class GetPseudonymizedDecisionByIdResponse {
+export class GetDecisionPseudonymiseeByIdResponse {
   _id: string
 
   analysis?: DecisionAnalyse

@@ -27,12 +27,12 @@ import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { LogsFormat } from '../utils/logsFormat.utils'
-import { GetPseudonymizedDecisionByIdResponse } from './responses/getPseudonymizedDecisionById.response'
-import { FetchPseudonymizedDecisionByIdUsecase } from '../../usecase/fetchPseudonymizedDecisionById.usecase'
+import { GetDecisionPseudonymiseeByIdResponse } from './responses/getDecisionPseudonymiseeByIdResponse'
+import { FetchDecisionPseudonymiseeByIdUsecase } from '../../usecase/fetchDecisionPseudonymiseeByIdUsecase'
 
 @ApiTags('DbSder')
 @Controller('decisions-pseudonymisees')
-export class DecisionsPseudonymizedController {
+export class DecisionsPseudonymiseesController {
   constructor(private readonly decisionsRepository: DecisionsRepository) {}
 
   private readonly logger = new Logger()
@@ -46,7 +46,7 @@ export class DecisionsPseudonymizedController {
     name: 'id',
     description: 'Identifiant de la décision'
   })
-  @ApiOkResponse({ description: 'La décision', type: GetPseudonymizedDecisionByIdResponse })
+  @ApiOkResponse({ description: 'La décision', type: GetDecisionPseudonymiseeByIdResponse })
   @ApiNotFoundResponse({
     description: "La decision n'a pas été trouvée"
   })
@@ -60,7 +60,7 @@ export class DecisionsPseudonymizedController {
     @Param('id') id: string,
     @Query('avecMetadonneesPersonnelles', new ParseBoolPipe()) avecMetadonneesPersonnelles: boolean,
     @Request() req
-  ): Promise<GetPseudonymizedDecisionByIdResponse> {
+  ): Promise<GetDecisionPseudonymiseeByIdResponse> {
     const authorizedApiKeys = [
       process.env.OPENSDER_API_KEY,
       process.env.ATTACHMENTS_API_KEY,
@@ -70,7 +70,12 @@ export class DecisionsPseudonymizedController {
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
-    const fetchPseudonymizedDecisionByIdUsecase = new FetchPseudonymizedDecisionByIdUsecase(
+    if (avecMetadonneesPersonnelles) {
+      if (apiKey !== process.env.OPENSDER_API_KEY) {
+        throw new ForbiddenRouteException()
+      }
+    }
+    const fetchDecisionPseudonymiseeByIdUsecase = new FetchDecisionPseudonymiseeByIdUsecase(
       this.decisionsRepository
     )
 
@@ -82,7 +87,7 @@ export class DecisionsPseudonymizedController {
     }
     this.logger.log(formatLogs)
 
-    return await fetchPseudonymizedDecisionByIdUsecase
+    return await fetchDecisionPseudonymiseeByIdUsecase
       .execute(id, avecMetadonneesPersonnelles)
       .catch((error) => {
         if (error instanceof DecisionNotFoundError) {

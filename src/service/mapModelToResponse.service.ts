@@ -1,7 +1,7 @@
 import { GetDecisionByIdResponse } from '../infrastructure/controllers/responses/getDecisionById.response'
 import { GetDecisionsListResponse } from '../infrastructure/controllers/responses/getDecisionsListResponse'
 import { DecisionModel } from '../infrastructure/db/models/decision.model'
-import { GetPseudonymizedDecisionByIdResponse } from '../infrastructure/controllers/responses/getPseudonymizedDecisionById.response'
+import { GetDecisionPseudonymiseeByIdResponse } from '../infrastructure/controllers/responses/getDecisionPseudonymiseeByIdResponse'
 
 export class MapModelToResponseService {
   mapGetDecisionsListModelToResponse(
@@ -23,9 +23,9 @@ export class MapModelToResponseService {
     return Promise.resolve({ ...getDecisionByIdModel })
   }
 
-  mapGetPseudonymizedDecisionByIdToResponse(
+  mapGetDecisionPseudonymiseeByIdToResponse(
     getDecisionByIdModel: DecisionModel
-  ): Promise<GetPseudonymizedDecisionByIdResponse> {
+  ): Promise<GetDecisionPseudonymiseeByIdResponse> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return Promise.resolve((({ originalText, ...decision }) => decision)(getDecisionByIdModel))
   }

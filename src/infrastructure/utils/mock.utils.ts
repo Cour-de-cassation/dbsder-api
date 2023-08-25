@@ -142,7 +142,7 @@ export class MockUtils {
     ]
   }
 
-  pseudonymizedDecision = {
+  decisionPseudonymisee = {
     NAOCode: 'someNAOCode',
     analysis: {
       analyse: ['someAnalyse'],

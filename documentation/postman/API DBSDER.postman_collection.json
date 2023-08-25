@@ -1387,6 +1387,62 @@
 							"variable": [
 								{
 									"key": "id",
+									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET /decisions-pseudonymisee/:id",
+			"item": [
+				{
+					"name": "200 - Récupère une décision pseudonymisée par son ID (avec metadonnees personnelles)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{OPENSDER_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions-pseudonymisees/:id?avecMetadonneesPersonnelles=true",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions-pseudonymisees",
+								":id"
+							],
+							"query": [
+								{
+									"key": "avecMetadonneesPersonnelles",
+									"value": "true"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
 									"value": "idDecisionCC1106"
 								}
 							]
@@ -1446,6 +1502,114 @@
 								{
 									"key": "id",
 									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "403 - Récupère une decision pseudonymisee par son id avec metadonnées personnelles  avec une  API Key invalide",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'avez pas accès à cette route\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{INDEX_API_KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions-pseudonymisees/:id?avecMetadonneesPersonnelles=true",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions-pseudonymisees",
+								":id"
+							],
+							"query": [
+								{
+									"key": "avecMetadonneesPersonnelles",
+									"value": "true"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "403 - Récupère une decision pseudonymisee par son id avec une  API Key invalide",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'avez pas accès à cette route\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions-pseudonymisees/:id?avecMetadonneesPersonnelles=false",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions-pseudonymisees",
+								":id"
+							],
+							"query": [
+								{
+									"key": "avecMetadonneesPersonnelles",
+									"value": "false"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
 								}
 							]
 						}

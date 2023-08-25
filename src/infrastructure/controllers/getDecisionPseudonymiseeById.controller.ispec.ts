@@ -6,7 +6,7 @@ import { MockUtils } from '../utils/mock.utils'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
 
-describe('GetPseudonymizedDecisionByIdController', () => {
+describe('GetDecisionPseudonymiseeByIdController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
   let decisionsRepository: DecisionsRepository
@@ -37,12 +37,12 @@ describe('GetPseudonymizedDecisionByIdController', () => {
       // GIVEN
       const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
       await decisionsRepository.create(decisionToSave)
-      const indexApiKey = process.env.INDEX_API_KEY
+      const opensderApiKey = process.env.OPENSDER_API_KEY
 
       // WHEN
       const result = await request(app.getHttpServer())
         .get(`/decisions-pseudonymisees/${decisionId}?avecMetadonneesPersonnelles=true`)
-        .set({ 'x-api-key': indexApiKey })
+        .set({ 'x-api-key': opensderApiKey })
 
       // THEN
       expect(result.status).toEqual(HttpStatus.OK)
@@ -66,22 +66,37 @@ describe('GetPseudonymizedDecisionByIdController', () => {
   describe('Error cases', () => {
     it('throws a 404 Not Found error if the ID does not exist', async () => {
       // GIVEN
-      const indexApiKey = process.env.INDEX_API_KEY
+      const opensderApiKey = process.env.OPENSDER_API_KEY
       const unknownDecisionId = 'unknownDecisionId'
 
       // WHEN
       const result = await request(app.getHttpServer())
         .get(`/decisions-pseudonymisees/${unknownDecisionId}?avecMetadonneesPersonnelles=true`)
-        .set({ 'x-api-key': indexApiKey })
+        .set({ 'x-api-key': opensderApiKey })
 
       // THEN
       expect(result.status).toEqual(HttpStatus.NOT_FOUND)
     })
 
+    it('throws a 403 Forbidden error if the Api Key is not allowed to use this filter', async () => {
+      // GIVEN
+      const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
+      await decisionsRepository.create(decisionToSave)
+      const indexApiKey = process.env.INDEX_API_KEY
+
+      // WHEN
+      const result = await request(app.getHttpServer())
+        .get(`/decisions-pseudonymisees/${decisionId}?avecMetadonneesPersonnelles=true`)
+        .set({ 'x-api-key': indexApiKey })
+
+      // THEN
+      expect(result.status).toEqual(HttpStatus.FORBIDDEN)
+    })
+
     it('throws a 401 Unauthorized error when the apiKey is not valid', async () => {
       // WHEN
       const result = await request(app.getHttpServer())
-        .get(`/decisions-pseudonymisees/${decisionId}`)
+        .get(`/decisions-pseudonymisees/${decisionId}?avecMetadonneesPersonnelles=true`)
         .set({ 'x-api-key': 'notValidApiKey' })
 
       // THEN
