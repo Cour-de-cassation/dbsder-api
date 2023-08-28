@@ -21,6 +21,8 @@ spec:
           ports:
             - containerPort: 3000
           env:
+            - name: INDEX_API_KEY
+              value: "${DBSDER_API_INDEX_API_KEY}"
             - name: LABEL_API_KEY
               value: "${DBSDER_API_LABEL_API_KEY}"
             - name: NORMALIZATION_API_KEY
