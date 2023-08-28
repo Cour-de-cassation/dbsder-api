@@ -47,20 +47,20 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
       // THEN
       expect(result.status).toEqual(HttpStatus.OK)
     })
-  })
-  it('returns a 200 OK with found decision when given a valid ID without personal data', async () => {
-    // GIVEN
-    const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
-    await decisionsRepository.create(decisionToSave)
-    const indexApiKey = process.env.INDEX_API_KEY
+    it('returns a 200 OK with found decision when given a valid ID without personal data', async () => {
+      // GIVEN
+      const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
+      await decisionsRepository.create(decisionToSave)
+      const indexApiKey = process.env.INDEX_API_KEY
 
-    // WHEN
-    const result = await request(app.getHttpServer())
-      .get(`/decisions-pseudonymisees/${decisionId}?avecMetadonneesPersonnelles=false`)
-      .set({ 'x-api-key': indexApiKey })
+      // WHEN
+      const result = await request(app.getHttpServer())
+        .get(`/decisions-pseudonymisees/${decisionId}?avecMetadonneesPersonnelles=false`)
+        .set({ 'x-api-key': indexApiKey })
 
-    // THEN
-    expect(result.status).toEqual(HttpStatus.OK)
+      // THEN
+      expect(result.status).toEqual(HttpStatus.OK)
+    })
   })
 
   describe('Error cases', () => {

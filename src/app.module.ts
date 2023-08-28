@@ -12,7 +12,7 @@ import { AuthMiddleware } from './infrastructure/middleware/auth/auth.middleware
 import { DecisionsRepository } from './infrastructure/db/repositories/decisions.repository'
 import { DecisionsController } from './infrastructure/controllers/decisions.controller'
 import { HealthController } from './infrastructure/controllers/health/health.controller'
-import { DecisionsPseudonymiseesController } from './infrastructure/controllers/decisionsPseudonymiseesController'
+import { DecisionsPseudonymiseesController } from './infrastructure/controllers/decisionsPseudonymisees.controller'
 
 @Module({
   imports: [
