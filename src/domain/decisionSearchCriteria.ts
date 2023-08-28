@@ -24,7 +24,6 @@ export class DecisionSearchCriteria {
 
   @ApiProperty({
     description: 'Date de début de la décision',
-    enum: DecisionStatus,
     example: mockUtils.decisionCAToBeTreated.dateCreation
   })
   @IsString()
@@ -34,7 +33,6 @@ export class DecisionSearchCriteria {
 
   @ApiProperty({
     description: 'Date de fin de la décision',
-    enum: DecisionStatus,
     example: mockUtils.decisionCAToBeTreated.dateCreation
   })
   @IsString()

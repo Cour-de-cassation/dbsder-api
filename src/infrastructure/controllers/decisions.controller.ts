@@ -73,6 +73,14 @@ export class DecisionsController {
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
     enum: DecisionStatus
   })
+  @ApiQuery({
+    name: 'startDate',
+    description: 'date de début de la période de recherche'
+  })
+  @ApiQuery({
+    name: 'endDate',
+    description: 'date de fin de la période de recherche'
+  })
   @ApiOkResponse({ description: 'Une liste de décisions' })
   @ApiBadRequestResponse({
     description: "Le paramètre écrit n'est présent dans la liste des valeurs acceptées"
