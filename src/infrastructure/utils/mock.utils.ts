@@ -141,4 +141,43 @@ export class MockUtils {
       }
     ]
   }
+
+  decisionPseudonymisee = {
+    NAOCode: 'someNAOCode',
+    analysis: {
+      analyse: ['someAnalyse'],
+      doctrine: 'someDoctrine',
+      link: 'someLink',
+      reference: ['someReference'],
+      source: 'someSource',
+      summary: 'someSummary',
+      target: 'someTarget',
+      title: ['someTitle']
+    },
+    appeals: ['someAppeal'],
+    blocOccultation: 1,
+    chamberId: 'someChamberId',
+    chamberName: 'someChamberName',
+    codeMatiereCivil: 'someCodeMatiereCivil',
+    dateCreation: '2023-10-10T23:00Z',
+    dateDecision: 'someDateDecision',
+    decatt: [1, 2],
+    formation: 'someFormation',
+    _id: 'id2023',
+    jurisdictionCode: 'someJurisdictionCode',
+    jurisdictionId: 'someJurisdictionId',
+    jurisdictionName: 'someJurisdictionName',
+    labelStatus: DecisionStatus.TOBETREATED,
+    natureAffaireCivil: 'someNatureAffaireCivil',
+    natureAffairePenal: 'someNatureAffairePenal',
+    occultation: {
+      additionalTerms: 'someAdditionalTerms',
+      categoriesToOmit: ['someCategoriesToOmit']
+    },
+    publication: ['somePublication'],
+    registerNumber: 'someRegisterNumber',
+    solution: 'someSolution',
+    sourceId: 1,
+    sourceName: Sources.TJ
+  }
 }
