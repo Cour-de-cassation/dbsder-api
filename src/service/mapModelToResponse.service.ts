@@ -1,7 +1,7 @@
 import { GetDecisionByIdResponse } from '../infrastructure/controllers/responses/getDecisionById.response'
 import { GetDecisionsListResponse } from '../infrastructure/controllers/responses/getDecisionsListResponse'
 import { DecisionModel } from '../infrastructure/db/models/decision.model'
-import { GetDecisionPseudonymiseeByIdResponse } from '../infrastructure/controllers/responses/getDecisionPseudonymiseeByIdResponse'
+import { GetDecisionPseudonymiseeByIdResponse } from '../infrastructure/controllers/responses/getDecisionPseudonymiseeById.response'
 
 export class MapModelToResponseService {
   mapGetDecisionsListModelToResponse(

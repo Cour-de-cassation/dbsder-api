@@ -1,8 +1,5 @@
-import {
-  DecisionAnalyse,
-  DecisionOccultation
-} from '../../../infrastructure/dto/createDecision.dto'
-import { DecisionStatus } from '../../../domain/enum'
+import { LabelStatus } from 'dbsder-api-types/dist'
+import { DecisionAnalyse, DecisionOccultation } from 'dbsder-api-types'
 
 export class GetDecisionByIdResponse {
   _id: string
@@ -27,7 +24,7 @@ export class GetDecisionByIdResponse {
 
   jurisdictionName: string
 
-  labelStatus: DecisionStatus
+  labelStatus: LabelStatus
 
   occultation: DecisionOccultation
 
