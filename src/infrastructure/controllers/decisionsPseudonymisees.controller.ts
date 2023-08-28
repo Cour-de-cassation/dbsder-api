@@ -27,7 +27,7 @@ import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { LogsFormat } from '../utils/logsFormat.utils'
-import { GetDecisionPseudonymiseeByIdResponse } from './responses/getDecisionPseudonymiseeByIdResponse'
+import { GetDecisionPseudonymiseeByIdResponse } from './responses/getDecisionPseudonymiseeById.response'
 import { FetchDecisionPseudonymiseeByIdUsecase } from '../../usecase/fetchDecisionPseudonymiseeByIdUsecase'
 
 @ApiTags('DbSder')

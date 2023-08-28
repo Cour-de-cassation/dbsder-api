@@ -167,7 +167,7 @@ export class MockUtils {
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',
-    labelStatus: DecisionStatus.TOBETREATED,
+    labelStatus: LabelStatus.TOBETREATED,
     natureAffaireCivil: 'someNatureAffaireCivil',
     natureAffairePenal: 'someNatureAffairePenal',
     occultation: {
