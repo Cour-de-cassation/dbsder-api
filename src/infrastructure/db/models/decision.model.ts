@@ -1,14 +1,18 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
-import { DecisionStatus, Sources } from '../../../domain/enum'
-import { RapportOccultation } from '../../dto/updateDecision.dto'
-import { DecisionAnalyse, DecisionOccultation } from '../../dto/createDecision.dto'
+import {
+  DecisionAnalyse,
+  LabelStatus,
+  DecisionOccultation,
+  labelTreatmentsType,
+  Sources
+} from 'dbsder-api-types'
 
 @Schema()
 export class DecisionModel {
   @Prop()
   _id: string
 
-  @Prop()
+  @Prop({ type: Object })
   analysis: DecisionAnalyse
 
   @Prop()
@@ -39,9 +43,9 @@ export class DecisionModel {
   jurisdictionName: string
 
   @Prop()
-  labelStatus: DecisionStatus
+  labelStatus: LabelStatus
 
-  @Prop()
+  @Prop({ type: Object })
   occultation: DecisionOccultation
 
   @Prop()
@@ -96,8 +100,8 @@ export class DecisionModel {
   @Prop()
   codeMatiereCivil: string
 
-  @Prop()
-  labelTreatments?: RapportOccultation[]
+  @Prop({ type: Object })
+  labelTreatments?: labelTreatmentsType[]
 }
 
 export const DecisionSchema = SchemaFactory.createForClass(DecisionModel)

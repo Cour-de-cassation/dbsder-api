@@ -28,7 +28,6 @@ import {
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
-import { DecisionStatus } from '../../domain/enum'
 import { DatabaseError, UpdateFailedError } from '../../domain/errors/database.error'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
 import { UnprocessableException } from '../exceptions/unprocessable.exception'
@@ -55,6 +54,7 @@ import { DecisionNotFoundException } from '../exceptions/decisionNotFound.except
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { LogsFormat } from '../utils/logsFormat.utils'
+import { LabelStatus } from 'dbsder-api-types'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -71,7 +71,7 @@ export class DecisionsController {
   @ApiQuery({
     name: 'status',
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
-    enum: DecisionStatus
+    enum: LabelStatus
   })
   @ApiQuery({
     name: 'startDate',
@@ -275,7 +275,7 @@ export class DecisionsController {
   })
   async updateDecisionStatut(
     @Param('id') id: string,
-    @Body('statut', new ParseEnumPipe(DecisionStatus)) decisionStatus: UpdateDecisionStatutDTO,
+    @Body('statut', new ParseEnumPipe(LabelStatus)) labelStatus: UpdateDecisionStatutDTO,
     @Request() req
   ): Promise<void> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY, process.env.PUBLICATION_API_KEY]
@@ -288,12 +288,12 @@ export class DecisionsController {
       operationName: 'updateDecisionStatut',
       httpMethod: req.method,
       path: req.path,
-      msg: `PUT /decisions/id/statut called with ID ${id} and status ${decisionStatus}`
+      msg: `PUT /decisions/id/statut called with ID ${id} and status ${labelStatus}`
     }
     this.logger.log(formatLogs)
 
     const updateDecisionUsecase = new UpdateStatutUsecase(this.decisionsRepository)
-    await updateDecisionUsecase.execute(id, decisionStatus.toString()).catch((error) => {
+    await updateDecisionUsecase.execute(id, labelStatus.toString()).catch((error) => {
       if (error instanceof DecisionNotFoundError) {
         this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
         throw new DecisionNotFoundException()
@@ -304,7 +304,7 @@ export class DecisionsController {
           msg: error.message,
           statusCode: HttpStatus.UNPROCESSABLE_ENTITY
         })
-        throw new UnprocessableException(id, decisionStatus.toString(), error.message)
+        throw new UnprocessableException(id, labelStatus.toString(), error.message)
       }
       if (error instanceof DatabaseError) {
         this.logger.error({

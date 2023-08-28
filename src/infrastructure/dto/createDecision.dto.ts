@@ -9,10 +9,10 @@ import {
   IsString,
   ValidateNested
 } from 'class-validator'
-import { DecisionStatus } from '../../domain/enum'
 import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { MockUtils } from '../utils/mock.utils'
+import { LabelStatus } from 'dbsder-api-types'
 
 const mockUtils = new MockUtils()
 export class DecisionOccultation {
@@ -201,11 +201,11 @@ export class CreateDecisionDTO {
 
   @ApiProperty({
     description: 'Statut de la décision dans Judilibre',
-    enum: DecisionStatus,
+    enum: LabelStatus,
     example: mockUtils.createDecisionDTO.labelStatus
   })
-  @IsEnum(DecisionStatus)
-  labelStatus: DecisionStatus
+  @IsEnum(LabelStatus)
+  labelStatus: LabelStatus
 
   @ApiProperty({
     description: 'Statut de la décision dans Judilibre',
