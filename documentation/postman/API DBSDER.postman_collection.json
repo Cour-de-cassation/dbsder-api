@@ -1,8 +1,10 @@
 {
 	"info": {
-		"_postman_id": "eb433b00-13f0-48be-b4c0-6683c1b7faf5",
+		"_postman_id": "7e998c65-76eb-4917-9da6-9166c85bdb48",
 		"name": "API DBSDER",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "13592912",
+		"_collection_link": "https://grey-spaceship-298416.postman.co/workspace/Judilibre~828b28c6-eaba-44c4-b963-f6155ff2c3e8/collection/13592912-7e998c65-76eb-4917-9da6-9166c85bdb48?action=share&creator=13592912&source=collection_link"
 	},
 	"item": [
 		{
@@ -10,6 +12,23 @@
 			"item": [
 				{
 					"name": "200 - Enregistre une décision",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Decision créée\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -28,45 +47,61 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
-							"host": [
-								"{{HOSTNAME}}"
-							],
-							"path": [
-								"{{VERSION}}",
-								"decisions"
-							]
-						}
+						"url": "{{HOSTNAME}}/{{VERSION}}/decisions"
 					},
 					"response": []
 				},
 				{
 					"name": "400 - Enregistre une décision sans contenu",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous devez fournir le champ: decision\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
 							{
 								"key": "x-api-key",
-								"value": "{{LABEL_API_KEY}}",
+								"value": "{{NORMALIZATION_API_KEY}}",
 								"type": "default"
 							}
 						],
-						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
-							"host": [
-								"{{HOSTNAME}}"
-							],
-							"path": [
-								"{{VERSION}}",
-								"decisions"
-							]
-						}
+						"url": "{{HOSTNAME}}/{{VERSION}}/decisions"
 					},
 					"response": []
 				},
 				{
 					"name": "400 - Enregistre une décision avec un contenu invalide",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Une ou plusieurs erreurs ont été trouvées sur les propriétés suivantes : _id\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -78,28 +113,36 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"decision\": {\n        //\"id\": \"someID\", pour le test\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"someSource\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"someDateCreation\",\n        \"dateDecision\": \"someDateDecision\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"someSourceName\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\"\n    }\n}",
+							"raw": "{\n    \"decision\": {\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"someSource\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"someDateCreation\",\n        \"dateDecision\": \"someDateDecision\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"someSourceName\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
-							"host": [
-								"{{HOSTNAME}}"
-							],
-							"path": [
-								"{{VERSION}}",
-								"decisions"
-							]
-						}
+						"url": "{{HOSTNAME}}/{{VERSION}}/decisions"
 					},
 					"response": []
 				},
 				{
 					"name": "401 - Enregistre une décision sans apiKey",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -110,16 +153,16 @@
 								"disabled": true
 							}
 						],
-						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions",
-							"host": [
-								"{{HOSTNAME}}"
-							],
-							"path": [
-								"{{VERSION}}",
-								"decisions"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"decision\": {\n        \"_id\": \"idDecisionCC1106\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"TJ\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"2023-06-11\",\n        \"dateDecision\": \"2023-06-10\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"TJ\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\",\n        \"public\": true\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{HOSTNAME}}/{{VERSION}}/decisions"
 					},
 					"response": []
 				}
@@ -130,6 +173,19 @@
 			"item": [
 				{
 					"name": "200 - Liste les décisions toBeTreated avec source et période",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -172,6 +228,23 @@
 				},
 				{
 					"name": "400 - Liste decisions avec mauvais status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Une ou plusieurs erreurs ont été trouvées sur les propriétés suivantes : source, status, startDate, endDate\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -202,6 +275,23 @@
 				},
 				{
 					"name": "401 - Liste les décisions sans API Key",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -226,6 +316,23 @@
 				},
 				{
 					"name": "401 - Liste les décisions avec mauvaise API Key",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -261,6 +368,19 @@
 			"item": [
 				{
 					"name": "200 - Récupère une décision par son ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -292,6 +412,23 @@
 				},
 				{
 					"name": "404 - Récupère une décision avec son ID inexistant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"La decision n'a pas été trouvée\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -328,6 +465,19 @@
 			"item": [
 				{
 					"name": "204 - Met à jour le statut d'une décision",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -369,6 +519,23 @@
 				},
 				{
 					"name": "400 - Met à jour le statut d'une décision avec un statut inexact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Validation failed (enum string is expected)\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -410,6 +577,23 @@
 				},
 				{
 					"name": "401 - Met à jour avec une API Key inexistante",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -451,6 +635,23 @@
 				},
 				{
 					"name": "401 - Met à jour sans API Key",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -492,7 +693,24 @@
 					"response": []
 				},
 				{
-					"name": "403 - Met à jour avec une API Key non autorisée",
+					"name": "401 - Met à jour avec une API Key non autorisée",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -534,6 +752,23 @@
 				},
 				{
 					"name": "404 - Met à jour le statut d'une décision avec ID inexistant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"La decision n'a pas été trouvée\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -580,6 +815,19 @@
 			"item": [
 				{
 					"name": "204 - Met à jour la décision pseudonymisée d'une décision",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -621,6 +869,23 @@
 				},
 				{
 					"name": "400 - Met à jour la décision pseudonymisée d'une décision avec un format incorrect",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"decisionPseudonymisee must be a string\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -662,6 +927,23 @@
 				},
 				{
 					"name": "401 - Met à jour avec une API Key inexistante",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -703,6 +985,23 @@
 				},
 				{
 					"name": "401 - Met à jour sans API Key",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -744,7 +1043,24 @@
 					"response": []
 				},
 				{
-					"name": "403 - Met à jour avec une API Key non autorisée",
+					"name": "401 - Met à jour avec une API Key non autorisée",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -786,6 +1102,23 @@
 				},
 				{
 					"name": "404 - Met à jour la décision pseudonymisée d'une décision avec ID inexistant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"La decision n'a pas été trouvée\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -832,6 +1165,19 @@
 			"item": [
 				{
 					"name": "204 - Met à jour les rapports d'occultations d'une décision",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -996,7 +1342,20 @@
 					"response": []
 				},
 				{
-					"name": "403 - Met à jour avec une API Key non autorisée",
+					"name": "401 - Met à jour avec une API Key non autorisée",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -1038,6 +1397,23 @@
 				},
 				{
 					"name": "404 - Met à jour les rapports d'occultations d'une décision avec ID inexistant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"message\", function(){",
+									"    pm.expect(pm.response.json().message).to.eql(\"La decision n'a pas été trouvée\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -1090,16 +1466,7 @@
 						"type": "default"
 					}
 				],
-				"url": {
-					"raw": "{{HOSTNAME}}/{{VERSION}}/health",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"path": [
-						"{{VERSION}}",
-						"health"
-					]
-				}
+				"url": "{{HOSTNAME}}/{{VERSION}}/health"
 			},
 			"response": []
 		},
@@ -1108,18 +1475,10 @@
 			"request": {
 				"auth": {
 					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "{{DOC_PASSWORD}}",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "{{DOC_LOGIN}}",
-							"type": "string"
-						}
-					]
+					"basic": {
+						"password": "{{DOC_PASSWORD}}",
+						"username": "{{DOC_LOGIN}}"
+					}
 				},
 				"method": "GET",
 				"header": [
@@ -1130,15 +1489,7 @@
 						"disabled": true
 					}
 				],
-				"url": {
-					"raw": "{{HOSTNAME}}/doc-json",
-					"host": [
-						"{{HOSTNAME}}"
-					],
-					"path": [
-						"doc-json"
-					]
-				}
+				"url": "{{HOSTNAME}}/doc-json"
 			},
 			"response": []
 		}
