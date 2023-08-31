@@ -1,6 +1,7 @@
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsListResponse'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
 import { LabelStatus, Sources } from 'dbsder-api-types'
+import { DecisionModel } from '../db/models/decision.model'
 
 export class MockUtils {
   decisionCCToBeTreated: GetDecisionsListResponse = {
@@ -84,7 +85,22 @@ export class MockUtils {
     codeMatiereCivil: 'someCodeMatiereCivil'
   }
 
-  decisionModel = {
+  decisionModel: DecisionModel = {
+    codeDecision: '',
+    codeNature: '',
+    codeService: '',
+    debatPublic: false,
+    decisionAssociee: undefined,
+    libelleCodeDecision: '',
+    libelleNAC: '',
+    libelleNature: '',
+    libelleService: '',
+    matiereDeterminee: false,
+    numeroRoleGeneral: '',
+    pourvoiCourDeCassation: false,
+    pourvoiLocal: false,
+    recommandationOccultation: undefined,
+    selection: false,
     NAOCode: 'someNAOCode',
     analysis: {
       analyse: ['someAnalyse'],
@@ -179,5 +195,37 @@ export class MockUtils {
     solution: 'someSolution',
     sourceId: 1,
     sourceName: Sources.TJ
+  }
+
+  createDecisionTJDto = {
+    ...this.createDecisionDTO,
+    codeService: '0A',
+    libelleNAC: 'Demande en dommages-intérêts contre un organisme',
+    numeroRoleGeneral: '01/12345',
+    libelleService: 'Libelle de service',
+    codeDecision: '0aA',
+    libelleCodeDecision: 'some libelle code decision',
+    codeNature: '6C',
+    libelleNature: 'Autres demandes en matière de frais et dépens',
+    recommandationOccultation: 'aucune',
+    selection: false,
+    matiereDeterminee: true,
+    pourvoiLocal: false,
+    pourvoiCourDeCassation: false,
+    debatPublic: true
+  }
+
+  decisionAssociee: {
+    numeroRegistre: 'A'
+    numeroRoleGeneral: '01/12345'
+    idJuridiction: 'TJ00000'
+    date: '20221121'
+  }
+
+  presidentDtoMock = {
+    fonction: 'president',
+    nom: 'Nom Presidente',
+    prenom: 'Prenom Presidente',
+    civilite: 'Mme.'
   }
 }

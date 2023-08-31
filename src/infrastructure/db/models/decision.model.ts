@@ -4,7 +4,10 @@ import {
   LabelStatus,
   DecisionOccultation,
   labelTreatmentsType,
-  Sources
+  Sources,
+  DecisionAssociee,
+  President,
+  Occultation
 } from 'dbsder-api-types'
 
 @Schema()
@@ -102,6 +105,58 @@ export class DecisionModel {
 
   @Prop({ type: Object })
   labelTreatments?: labelTreatmentsType[]
+
+  // TJ Addition
+  @Prop()
+  codeDecision: string
+
+  @Prop()
+  codeNature: string
+
+  @Prop()
+  codeService: string
+
+  @Prop()
+  debatPublic: boolean
+
+  @Prop({ type: Object })
+  decisionAssociee: DecisionAssociee
+
+  @Prop()
+  libelleCodeDecision: string
+
+  @Prop()
+  libelleNAC: string
+
+  @Prop()
+  libelleNature: string
+
+  @Prop()
+  libelleService: string
+
+  @Prop()
+  matiereDeterminee: boolean
+
+  @Prop()
+  numeroRoleGeneral: string
+
+  @Prop()
+  pourvoiCourDeCassation: boolean
+
+  @Prop()
+  pourvoiLocal: boolean
+
+  @Prop({ type: Object })
+  president?: President
+
+  @Prop({ type: Object })
+  recommandationOccultation: Occultation
+
+  @Prop()
+  sommaire?: string
+
+  @Prop()
+  selection: boolean
 }
 
 export const DecisionSchema = SchemaFactory.createForClass(DecisionModel)
