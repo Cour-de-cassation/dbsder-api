@@ -159,6 +159,21 @@ export class MockUtils {
   }
 
   decisionPseudonymisee = {
+    codeDecision: '',
+    codeNature: '',
+    codeService: '',
+    debatPublic: false,
+    decisionAssociee: undefined,
+    libelleCodeDecision: '',
+    libelleNAC: '',
+    libelleNature: '',
+    libelleService: '',
+    matiereDeterminee: false,
+    numeroRoleGeneral: '',
+    pourvoiCourDeCassation: false,
+    pourvoiLocal: false,
+    recommandationOccultation: undefined,
+    selection: false,
     NAOCode: 'someNAOCode',
     analysis: {
       analyse: ['someAnalyse'],
