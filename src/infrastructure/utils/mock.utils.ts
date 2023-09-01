@@ -230,10 +230,10 @@ export class MockUtils {
     debatPublic: true
   }
 
-  decisionAssociee: {
-    numeroRegistre: 'A'
-    numeroRoleGeneral: '01/12345'
-    idJuridiction: 'TJ00000'
+  decisionAssociee = {
+    numeroRegistre: 'A',
+    numeroRoleGeneral: '01/12345',
+    idJuridiction: 'TJ00000',
     date: '20221121'
   }
 

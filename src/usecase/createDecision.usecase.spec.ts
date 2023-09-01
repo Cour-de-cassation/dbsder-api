@@ -37,7 +37,9 @@ describe('createDecisionUsecase', () => {
     jest.spyOn(mockDecisionsRepository, 'create').mockImplementationOnce(() => {
       throw new Error()
     })
-
-    await expect(usecase.execute(rejectedDecision)).rejects.toThrow(Error)
+    // WHEN
+    await expect(usecase.execute(rejectedDecision))
+      // THEN
+      .rejects.toThrow(Error)
   })
 })
