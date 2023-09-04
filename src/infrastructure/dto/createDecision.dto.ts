@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsDateString,
   IsDefined,
   IsEnum,
   IsNotEmptyObject,
@@ -7,19 +8,98 @@ import {
   IsObject,
   IsOptional,
   IsString,
+  Length,
+  Matches,
   ValidateNested
 } from 'class-validator'
 import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { MockUtils } from '../utils/mock.utils'
-import { LabelStatus } from 'dbsder-api-types'
+import { LabelStatus, Occultation } from 'dbsder-api-types'
 
 const mockUtils = new MockUtils()
+
+class DecisionDto {
+  @ApiProperty({
+    description: 'Numéro de registre de la décision associée',
+    type: String,
+    example: mockUtils.decisionAssociee.numeroRegistre
+  })
+  @IsString()
+  @Length(1, 1)
+  numeroRegistre: string
+
+  @ApiProperty({
+    description:
+      'Numéro RG (Rôle Général) du dossier. Année sur deux chiffres séparé par un «/» d’un numéro à cinq chiffres (0 non significatifs présents). Au format : ^[0-9]{2}/[0-9]{5}$',
+    type: String,
+    example: mockUtils.decisionAssociee.numeroRoleGeneral
+  })
+  @IsString()
+  @Matches('^[0-9]{2}/[0-9]{5}$')
+  numeroRoleGeneral: string
+
+  @ApiProperty({
+    description:
+      'Identifiant de la juridiction émettrice propre au système d’information originel pour la décision associée. Au format ^TJ[0-9]{5}$',
+    type: String,
+    example: mockUtils.decisionAssociee.idJuridiction
+  })
+  @IsString()
+  @Matches('^TJ[0-9]{5}$')
+  idJuridiction: string
+
+  @ApiProperty({
+    description: 'Date de la décision associée. Au format AAAAMMJJ',
+    type: String,
+    example: mockUtils.decisionAssociee.date
+  })
+  @IsString()
+  @Matches('^[0-9]{8}$')
+  @IsDateString()
+  date: string
+}
+
+class PresidentDto {
+  @ApiProperty({
+    description: 'Fonction du président de jugement',
+    type: String,
+    example: mockUtils.presidentDtoMock.fonction
+  })
+  @IsString()
+  fonction: string
+
+  @ApiProperty({
+    description: 'Nom du président de jugement',
+    type: String,
+    example: mockUtils.presidentDtoMock.nom
+  })
+  @IsString()
+  nom: string
+
+  @ApiPropertyOptional({
+    description: 'Prénom du président de jugement',
+    type: String,
+    example: mockUtils.presidentDtoMock.prenom
+  })
+  @IsString()
+  @IsOptional()
+  prenom?: string
+
+  @ApiPropertyOptional({
+    description: 'Civilité du président de jugement',
+    type: String,
+    example: mockUtils.presidentDtoMock.civilite
+  })
+  @IsString()
+  @IsOptional()
+  civilite?: string
+}
 export class DecisionOccultation {
   @ApiProperty({
     description: "Termes additionnels à ajouter lors de l'occultation",
     type: String,
-    example: new MockUtils().createDecisionDTO.occultation.additionalTerms
+    example: mockUtils.createDecisionDTO.occultation.additionalTerms
   })
   @IsString()
   additionalTerms: string
@@ -27,7 +107,7 @@ export class DecisionOccultation {
   @ApiProperty({
     description: "Catégories additionnels à omettre lors de l'occultation",
     type: [String],
-    example: new MockUtils().createDecisionDTO.occultation.categoriesToOmit
+    example: mockUtils.createDecisionDTO.occultation.categoriesToOmit
   })
   @IsString({ each: true })
   categoriesToOmit: string[]
@@ -370,4 +450,168 @@ export class CreateDecisionDTO {
   @IsOptional()
   @IsString()
   endCaseCode?: string
+
+  // TJ VVV
+
+  @ApiPropertyOptional({
+    description: 'Code du type de décision. Au format : ^[0-9a-zA-Z]{3}$',
+    type: String,
+    example: mockUtils.createDecisionTJDto.codeDecision
+  })
+  @IsOptional()
+  @IsString()
+  @Matches('^[0-9a-zA-Z]{3}$')
+  codeDecision?: string
+
+  @ApiPropertyOptional({
+    description: "Complément d'information du code NAC. Au format : ^[0-9a-zA-Z]{1-2}$",
+    type: String,
+    example: mockUtils.createDecisionTJDto.codeNature
+  })
+  @IsOptional()
+  @IsString()
+  @Matches('^[0-9a-zA-Z]{1,2}$')
+  codeNature?: string
+
+  @ApiPropertyOptional({
+    description: 'Identifiant du service de la juridiction. Au format: ^[0-9a-zA-Z]{2}$',
+    type: String,
+    example: mockUtils.createDecisionTJDto.codeService
+  })
+  @IsOptional()
+  @IsString()
+  @Matches('^[0-9a-zA-Z]{2}$')
+  codeService?: string
+
+  @ApiPropertyOptional({
+    description: "Débat public d'une décision",
+    type: Boolean,
+    example: mockUtils.createDecisionTJDto.debatPublic
+  })
+  @IsOptional()
+  @IsBoolean()
+  debatPublic?: boolean
+
+  @ApiPropertyOptional({
+    description: 'Décision intègre chainée à la décision',
+    type: DecisionDto,
+    example: mockUtils.decisionAssociee
+  })
+  @IsOptional()
+  @IsDefined()
+  @IsObject()
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => DecisionDto)
+  decisionAssociee?: DecisionDto
+
+  @ApiPropertyOptional({
+    description: 'Libellé du type de décision',
+    type: String,
+    example: mockUtils.createDecisionTJDto.libelleCodeDecision
+  })
+  @IsOptional()
+  @IsString()
+  @Length(0, 200)
+  libelleCodeDecision?: string
+
+  @ApiPropertyOptional({
+    description: 'Libellé du code NAC de la décision',
+    type: String,
+    example: mockUtils.createDecisionTJDto.libelleNAC
+  })
+  @IsOptional()
+  @IsString()
+  libelleNAC?: string
+
+  @ApiPropertyOptional({
+    description: 'Libellé du service de la juridiction',
+    type: String,
+    example: mockUtils.createDecisionTJDto.libelleService
+  })
+  @IsOptional()
+  @IsString()
+  @Length(0, 25)
+  libelleService?: string
+
+  @ApiPropertyOptional({
+    description: "Matière déterminée d'une décision",
+    type: Boolean,
+    example: mockUtils.createDecisionTJDto.matiereDeterminee
+  })
+  @IsOptional()
+  @IsBoolean()
+  matiereDeterminee?: boolean
+
+  @ApiPropertyOptional({
+    description:
+      'Numéro RG (Rôle Général) du dossier. Année sur deux chiffres séparé par un «/» d’un numéro à cinq chiffres (0 non significatifs présents). Au format : ^[0-9]{2}/[0-9]{5}$',
+    type: String,
+    example: mockUtils.decisionAssociee.numeroRoleGeneral
+  })
+  @IsOptional()
+  @IsString()
+  @Matches('^[0-9]{2}/[0-9]{5}$')
+  numeroRoleGeneral?: string
+
+  @ApiPropertyOptional({
+    description: "Pourvoi de Cour de Cassation d'une décision",
+    type: Boolean,
+    example: mockUtils.createDecisionTJDto.pourvoiCourDeCassation
+  })
+  @IsOptional()
+  @IsBoolean()
+  pourvoiCourDeCassation?: boolean
+
+  @ApiPropertyOptional({
+    description: "Pourvoi local d'une décision",
+    type: Boolean,
+    example: mockUtils.createDecisionTJDto.pourvoiLocal
+  })
+  @IsOptional()
+  @IsBoolean()
+  pourvoiLocal?: boolean
+
+  @ApiPropertyOptional({
+    description: 'Information sur le président de la formation du jugement',
+    type: () => PresidentDto,
+    example: mockUtils.presidentDtoMock
+  })
+  @IsDefined()
+  @IsOptional()
+  @IsObject()
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => PresidentDto)
+  president?: PresidentDto
+
+  /* FIXME: L'enum n'est pas reconnu */
+  recommandationOccultation?: Occultation
+
+  @ApiPropertyOptional({
+    description: 'Résumé de la décision intègre',
+    type: String,
+    example: 'Exemple de sommaire'
+  })
+  @IsString()
+  @IsOptional()
+  sommaire?: string
+
+  @ApiPropertyOptional({
+    description: "Selection d'une décision",
+    type: Boolean,
+    example: mockUtils.createDecisionTJDto.selection
+  })
+  @IsOptional()
+  @IsBoolean()
+  selection?: boolean
+
+  @ApiPropertyOptional({
+    description: 'Libellé du code de nature particulière',
+    type: String,
+    example: mockUtils.createDecisionTJDto.libelleNature
+  })
+  @IsOptional()
+  @IsString()
+  libelleNature?: string
 }

@@ -19,7 +19,7 @@ describe('createDecisionUsecase', () => {
 
   it('creates decision successfully when database is available', async () => {
     // GIVEN
-    const expectedDecision = mockUtils.createDecisionDTO
+    const expectedDecision = mockUtils.decisionModel
     jest
       .spyOn(mockDecisionsRepository, 'create')
       .mockImplementationOnce(async () => expectedDecision)
@@ -37,7 +37,9 @@ describe('createDecisionUsecase', () => {
     jest.spyOn(mockDecisionsRepository, 'create').mockImplementationOnce(() => {
       throw new Error()
     })
-
-    await expect(usecase.execute(rejectedDecision)).rejects.toThrow(Error)
+    // WHEN
+    await expect(usecase.execute(rejectedDecision))
+      // THEN
+      .rejects.toThrow(Error)
   })
 })
