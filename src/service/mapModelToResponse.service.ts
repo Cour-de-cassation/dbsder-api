@@ -26,7 +26,9 @@ export class MapModelToResponseService {
   mapGetDecisionPseudonymiseeByIdToResponse(
     getDecisionByIdModel: DecisionModel
   ): Promise<GetDecisionPseudonymiseeByIdResponse> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return Promise.resolve((({ originalText, ...decision }) => decision)(getDecisionByIdModel))
+    return Promise.resolve(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (({ originalText, sommaire, ...decision }) => decision)(getDecisionByIdModel)
+    )
   }
 }
