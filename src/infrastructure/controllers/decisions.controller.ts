@@ -27,6 +27,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
+import { LabelStatus } from 'dbsder-api-types'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { DatabaseError, UpdateFailedError } from '../../domain/errors/database.error'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
@@ -54,8 +55,6 @@ import { DecisionNotFoundException } from '../exceptions/decisionNotFound.except
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { LogsFormat } from '../utils/logsFormat.utils'
-import { LabelStatus } from 'dbsder-api-types'
-//import { CreateDecisionTJDTO } from '../dto/createDecisionTJ.dto'
 
 @ApiTags('DbSder')
 @Controller('decisions')

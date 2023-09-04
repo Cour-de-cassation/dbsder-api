@@ -106,7 +106,6 @@ export class DecisionModel {
   @Prop({ type: Object })
   labelTreatments?: labelTreatmentsType[]
 
-  // TJ Addition
   @Prop()
   codeDecision: string
 
