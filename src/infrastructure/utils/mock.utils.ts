@@ -37,12 +37,19 @@ export class MockUtils {
     startDate: '2023-10-09',
     endDate: '2023-10-11'
   }
+  decisionQueryByNumberDTO = {
+    number: '42'
+  }
 
   decisionQueryWithUnknownSourceDTO = {
     status: LabelStatus.TOBETREATED,
     source: 'unknownSource',
     startDate: '2023-10-10',
     endDate: '2023-10-11'
+  }
+
+  decisionQueryWithUnknownNumberDTO = {
+    number: 'unknownNumber'
   }
 
   createDecisionDTO = {
@@ -96,7 +103,7 @@ export class MockUtils {
     libelleNature: '',
     libelleService: '',
     matiereDeterminee: false,
-    numeroRoleGeneral: '',
+    numeroRoleGeneral: '42',
     pourvoiCourDeCassation: false,
     pourvoiLocal: false,
     recommandationOccultation: undefined,
@@ -169,7 +176,7 @@ export class MockUtils {
     libelleNature: '',
     libelleService: '',
     matiereDeterminee: false,
-    numeroRoleGeneral: '',
+    numeroRoleGeneral: '42',
     pourvoiCourDeCassation: false,
     pourvoiLocal: false,
     recommandationOccultation: undefined,

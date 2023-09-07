@@ -13,11 +13,32 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async list(decision: GetDecisionsListDto): Promise<DecisionModel[]> {
     try {
-      const savedDecisions = await this.decisionModel.find({
+      let findCriterias: object = {
         labelStatus: decision.status,
         sourceName: decision.source,
         dateCreation: { $gte: decision.startDate, $lte: decision.endDate }
-      })
+      }
+
+      if (decision.number) {
+        const numberToNumeroRGFormat = decision.number.slice(0, 2) + '/' + decision.number.slice(2)
+        const numberToAppealFormat =
+          decision.number.slice(0, 2) +
+          '-' +
+          decision.number.slice(2, 4) +
+          '.' +
+          decision.number.slice(4)
+
+        findCriterias = {
+          ...findCriterias,
+          $or: [
+            {
+              numeroRoleGeneral: numberToNumeroRGFormat,
+              appeals: numberToAppealFormat
+            }
+          ]
+        }
+      }
+      const savedDecisions = await this.decisionModel.find(findCriterias)
       return Promise.resolve(savedDecisions)
     } catch (error) {
       throw new DatabaseError(error)

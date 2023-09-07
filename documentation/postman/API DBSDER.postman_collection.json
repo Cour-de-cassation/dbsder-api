@@ -335,6 +335,49 @@
 					"response": []
 				},
 				{
+					"name": "200 - Liste les décisions à partir du numéro (RG ou pourvoi)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{INDEX_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?numero=42",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "numero",
+									"value": "42"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "400 - Liste decisions avec mauvais status",
 					"event": [
 						{

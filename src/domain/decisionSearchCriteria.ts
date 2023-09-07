@@ -45,12 +45,13 @@ export class DecisionSearchCriteria {
   endDate?: string
 
   @ApiPropertyOptional({
-    description: 'Date de fin de la décision',
-    example: mockUtils.decisionCAToBeTreated.dateCreation
+    description: "NumeroRoleGeneral ou d'appel de la décision",
+    example: mockUtils.decisionModel.numeroRoleGeneral
   })
   @IsOptional()
   @IsString()
-  number?: string
+  @Matches('^[0-9]{7}$')
+  numero?: string
 }
 
 export function mapDecisionSearchCriteriaToDTO(
@@ -60,6 +61,7 @@ export function mapDecisionSearchCriteriaToDTO(
     source: decisionSearchCriteria.source ?? Sources.CA,
     status: decisionSearchCriteria.status ?? LabelStatus.TOBETREATED,
     startDate: decisionSearchCriteria.startDate ?? '1900-01-01',
-    endDate: decisionSearchCriteria.endDate ?? '2100-01-01'
+    endDate: decisionSearchCriteria.endDate ?? '2100-01-01',
+    number: decisionSearchCriteria.numero
   }
 }

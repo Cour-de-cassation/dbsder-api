@@ -8,4 +8,6 @@ export class GetDecisionsListDto {
   startDate: string
 
   endDate: string
+
+  number?: string
 }
