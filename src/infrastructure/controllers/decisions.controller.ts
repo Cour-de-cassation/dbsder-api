@@ -10,8 +10,7 @@ import {
   Put,
   Query,
   Request,
-  UsePipes,
-  ValidationPipe
+  UsePipes
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -350,10 +349,10 @@ export class DecisionsController {
   @ApiForbiddenResponse({
     description: "Vous n'avez pas accès à cette route"
   })
-  @UsePipes(new ValidationPipe())
+  @UsePipes()
   async updateDecisionPseudonymisee(
     @Param('id') id: string,
-    @Body() body: UpdateDecisionPseudonymiseeDTO,
+    @Body(new ValidateDtoPipe()) body: UpdateDecisionPseudonymiseeDTO,
     @Request() req
   ): Promise<void> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
@@ -428,10 +427,10 @@ export class DecisionsController {
   @ApiForbiddenResponse({
     description: "Vous n'avez pas accès à cette route"
   })
-  @UsePipes(new ValidationPipe())
+  @UsePipes()
   async updateDecisionRapportsOccultations(
     @Param('id') id: string,
-    @Body() body: UpdateDecisionRapportsOccultationsDTO,
+    @Body(new ValidateDtoPipe()) body: UpdateDecisionRapportsOccultationsDTO,
     @Request() req
   ): Promise<void> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
