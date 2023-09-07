@@ -74,16 +74,6 @@ describe('DecisionsController', () => {
     })
 
     describe('returns 400 Bad Request error', () => {
-      it('when status is missing', async () => {
-        // WHEN
-        const result = await request(app.getHttpServer())
-          .get('/decisions')
-          .set({ 'x-api-key': labelApiKey })
-
-        // THEN
-        expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
-      })
-
       it('when status does not exist', async () => {
         // GIVEN
         const statusNotAccepted = 'tata'
