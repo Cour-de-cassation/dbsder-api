@@ -3,6 +3,10 @@ import * as Joi from 'joi'
 export const envValidationConfig = {
   cache: true,
   validationSchema: Joi.object({
+    INDEX_API_KEY: Joi.string().guid({
+      version: ['uuidv4'],
+      separator: true
+    }),
     LABEL_API_KEY: Joi.string().guid({
       version: ['uuidv4'],
       separator: true
