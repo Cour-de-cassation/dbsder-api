@@ -38,7 +38,7 @@ export class MockUtils {
     endDate: '2023-10-11'
   }
   decisionQueryByNumberDTO = {
-    number: '42'
+    numero: '42'
   }
 
   decisionQueryWithUnknownSourceDTO = {

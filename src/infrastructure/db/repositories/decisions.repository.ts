@@ -20,21 +20,12 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       }
 
       if (decision.number) {
-        const numberToNumeroRGFormat = decision.number.slice(0, 2) + '/' + decision.number.slice(2)
-        const numberToAppealFormat =
-          decision.number.slice(0, 2) +
-          '-' +
-          decision.number.slice(2, 4) +
-          '.' +
-          decision.number.slice(4)
-
         findCriterias = {
-          ...findCriterias,
           $or: [
             {
-              numeroRoleGeneral: numberToNumeroRGFormat,
-              appeals: numberToAppealFormat
-            }
+              numeroRoleGeneral: decision.number
+            },
+            { appeals: decision.number }
           ]
         }
       }

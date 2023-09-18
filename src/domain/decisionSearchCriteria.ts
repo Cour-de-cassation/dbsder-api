@@ -50,7 +50,6 @@ export class DecisionSearchCriteria {
   })
   @IsOptional()
   @IsString()
-  @Matches('^[0-9]{7}$')
   numero?: string
 }
 
@@ -58,10 +57,10 @@ export function mapDecisionSearchCriteriaToDTO(
   decisionSearchCriteria: DecisionSearchCriteria
 ): GetDecisionsListDto {
   return {
-    source: decisionSearchCriteria.source ?? Sources.CA,
-    status: decisionSearchCriteria.status ?? LabelStatus.TOBETREATED,
-    startDate: decisionSearchCriteria.startDate ?? '1900-01-01',
-    endDate: decisionSearchCriteria.endDate ?? '2100-01-01',
+    source: decisionSearchCriteria.source,
+    status: decisionSearchCriteria.status,
+    startDate: decisionSearchCriteria.startDate,
+    endDate: decisionSearchCriteria.endDate,
     number: decisionSearchCriteria.numero
   }
 }
