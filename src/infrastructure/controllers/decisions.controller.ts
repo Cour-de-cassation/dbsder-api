@@ -94,15 +94,13 @@ export class DecisionsController {
     @Query(new ValidateDtoPipe()) getDecisionListCriteria: DecisionSearchCriteria,
     @Request() req
   ): Promise<GetDecisionsListResponse[]> {
-    let authorizedApiKeys = [process.env.LABEL_API_KEY]
-    const isNumberParamPresent = getDecisionListCriteria.numero !== undefined
-    if (isNumberParamPresent) {
-      authorizedApiKeys = [
-        process.env.PUBLICATION_API_KEY,
-        process.env.INDEX_API_KEY,
-        process.env.ATTACHMENTS_API_KEY
-      ]
-    }
+    const authorizedApiKeys = [
+      process.env.LABEL_API_KEY,
+      process.env.PUBLICATION_API_KEY,
+      process.env.INDEX_API_KEY,
+      process.env.ATTACHMENTS_API_KEY
+    ]
+
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
@@ -111,14 +109,9 @@ export class DecisionsController {
       operationName: 'getDecisions',
       httpMethod: req.method,
       path: req.path,
-      msg: `GET /decisions called with status ${
-        getDecisionListCriteria.status ?? 'undefined : (default : ' + LabelStatus.TOBETREATED + ')'
-      }`
+      msg: `GET /decisions called with ${JSON.stringify(getDecisionListCriteria)}`
     }
 
-    if (isNumberParamPresent) {
-      formatLogs.msg = `GET /decisions called with number ${getDecisionListCriteria.numero}`
-    }
     this.logger.log(formatLogs)
 
     const listDecisionUsecase = new ListDecisionsUsecase(this.decisionsRepository)

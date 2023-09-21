@@ -7,28 +7,15 @@ import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { InterfaceDecisionsRepository } from '../decisions.repository.interface'
 import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
+import { mapDecisionSearchParametersToFindCriterias } from '../../../domain/decisionSearchCriteria'
 
 export class DecisionsRepository implements InterfaceDecisionsRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
 
-  async list(decision: GetDecisionsListDto): Promise<DecisionModel[]> {
+  async list(decisionSearchParams: GetDecisionsListDto): Promise<DecisionModel[]> {
     try {
-      let findCriterias: object = {
-        labelStatus: decision.status,
-        sourceName: decision.source,
-        dateCreation: { $gte: decision.startDate, $lte: decision.endDate }
-      }
+      const findCriterias = mapDecisionSearchParametersToFindCriterias(decisionSearchParams)
 
-      if (decision.number) {
-        findCriterias = {
-          $or: [
-            {
-              numeroRoleGeneral: decision.number
-            },
-            { appeals: decision.number }
-          ]
-        }
-      }
       const savedDecisions = await this.decisionModel.find(findCriterias)
       return Promise.resolve(savedDecisions)
     } catch (error) {

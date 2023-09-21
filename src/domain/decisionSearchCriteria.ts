@@ -64,3 +64,33 @@ export function mapDecisionSearchCriteriaToDTO(
     number: decisionSearchCriteria.numero
   }
 }
+
+export function mapDecisionSearchParametersToFindCriterias(
+  decisionSearchParams: GetDecisionsListDto
+): any {
+  return {
+    ...(decisionSearchParams.status && { labelStatus: decisionSearchParams.status }),
+    ...(decisionSearchParams.source && { sourceName: decisionSearchParams.source }),
+    ...(decisionSearchParams.startDate && {
+      dateCreation: { $gte: decisionSearchParams.startDate }
+    }),
+    ...(decisionSearchParams.endDate && {
+      dateCreation: { $lte: decisionSearchParams.endDate }
+    }),
+    ...(decisionSearchParams.startDate &&
+      decisionSearchParams.endDate && {
+        dateCreation: {
+          $gte: decisionSearchParams.startDate,
+          $lte: decisionSearchParams.endDate
+        }
+      }),
+    ...(decisionSearchParams.number && {
+      $or: [
+        {
+          numeroRoleGeneral: decisionSearchParams.number
+        },
+        { appeals: decisionSearchParams.number }
+      ]
+    })
+  }
+}
