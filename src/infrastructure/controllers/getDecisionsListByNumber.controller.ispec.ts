@@ -9,7 +9,7 @@ import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test
 describe('DecisionsController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
-  const labelApiKey = process.env.LABEL_API_KEY
+  const normalizationApiKey = process.env.NORMALIZATION_API_KEY
   const indexApiKey = process.env.INDEX_API_KEY
   let decisionsRepository: DecisionsRepository
 
@@ -83,7 +83,7 @@ describe('DecisionsController', () => {
         const result = await request(app.getHttpServer())
           .get('/decisions')
           .query(mockGetDecisionListQuery)
-          .set({ 'x-api-key': labelApiKey })
+          .set({ 'x-api-key': normalizationApiKey })
 
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.FORBIDDEN)

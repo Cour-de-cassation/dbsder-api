@@ -38,7 +38,7 @@ export class MockUtils {
     endDate: '2023-10-11'
   }
   decisionQueryByNumberDTO = {
-    numero: '42'
+    numero: '01/12345'
   }
 
   decisionQueryWithUnknownSourceDTO = {
@@ -103,7 +103,7 @@ export class MockUtils {
     libelleNature: '',
     libelleService: '',
     matiereDeterminee: false,
-    numeroRoleGeneral: '42',
+    numeroRoleGeneral: '01/12345',
     pourvoiCourDeCassation: false,
     pourvoiLocal: false,
     recommandationOccultation: undefined,
@@ -176,7 +176,7 @@ export class MockUtils {
     libelleNature: '',
     libelleService: '',
     matiereDeterminee: false,
-    numeroRoleGeneral: '42',
+    numeroRoleGeneral: '01/12345',
     pourvoiCourDeCassation: false,
     pourvoiLocal: false,
     recommandationOccultation: undefined,

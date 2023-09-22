@@ -4,7 +4,9 @@ import { mapDecisionSearchParametersToFindCriterias } from './decisionSearchCrit
 
 describe('decisionSearchCriteria', () => {
   describe('mapDecisionSearchParametersToFindCriterias', () => {
-    it('should map decision search params to findCriterias', () => {
+    const todayDate = new Date().toISOString().slice(0, 10)
+
+    it('should map decision search params to findCriterias with correct parameters', () => {
       // GIVEN
       const decisionSearchParams: GetDecisionsListDto = {
         source: Sources.CA,
@@ -17,7 +19,8 @@ describe('decisionSearchCriteria', () => {
         sourceName: Sources.CA,
         labelStatus: LabelStatus.TOBETREATED,
         dateCreation: {
-          $gte: '2020-01-01'
+          $gte: '2020-01-01',
+          $lte: todayDate
         },
         $or: [
           {
@@ -34,7 +37,7 @@ describe('decisionSearchCriteria', () => {
       expect(findCriterias).toEqual(expectedFindCriterias)
     })
 
-    it('should map decision search params to findCriterias even with missing parameters', () => {
+    it('should map decision search params to findCriterias without all parameters', () => {
       // GIVEN
       const decisionSearchParams: GetDecisionsListDto = {
         source: Sources.CA,
