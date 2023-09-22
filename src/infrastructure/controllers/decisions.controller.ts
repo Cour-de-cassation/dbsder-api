@@ -96,7 +96,6 @@ export class DecisionsController {
   ): Promise<GetDecisionsListResponse[]> {
     const authorizedApiKeys = [
       process.env.LABEL_API_KEY,
-      process.env.PUBLICATION_API_KEY,
       process.env.INDEX_API_KEY,
       process.env.ATTACHMENTS_API_KEY
     ]

@@ -33,6 +33,8 @@ describe('DecisionsController', () => {
   })
 
   describe('GET /decisions', () => {
+    const indexApiKey = process.env.INDEX_API_KEY
+
     describe('Success case', () => {
       it('returns a 200 OK with a list of decisions from known source', async () => {
         // GIVEN
@@ -45,6 +47,23 @@ describe('DecisionsController', () => {
           .get('/decisions')
           .query(getDecisionsListDTO)
           .set({ 'x-api-key': labelApiKey })
+
+        // THEN
+        expect(result.statusCode).toEqual(HttpStatus.OK)
+        expect(result.body).toEqual(expectedDecisions)
+      })
+
+      it('returns a 200 OK with a list of decisions with given number', async () => {
+        // GIVEN
+        await decisionsRepository.create(mockUtils.decisionModel)
+        const expectedDecisions = [mockUtils.decisionTJToBeTreated]
+        const getDecisionsListDTO = mockUtils.decisionQueryByNumberDTO
+
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .get('/decisions')
+          .query(getDecisionsListDTO)
+          .set({ 'x-api-key': indexApiKey })
 
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.OK)

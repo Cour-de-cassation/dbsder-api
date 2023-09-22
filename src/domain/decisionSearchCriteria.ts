@@ -64,35 +64,3 @@ export function mapDecisionSearchCriteriaToDTO(
     number: decisionSearchCriteria.numero
   }
 }
-
-export function mapDecisionSearchParametersToFindCriterias(
-  decisionSearchParams: GetDecisionsListDto
-) {
-  const todayDate = new Date().toISOString().slice(0, 10)
-  // syntax :  https://medium.com/@slamflipstrom/conditional-object-properties-using-spread-in-javascript-714e0a12f496
-  return {
-    ...(decisionSearchParams.status && { labelStatus: decisionSearchParams.status }),
-    ...(decisionSearchParams.source && { sourceName: decisionSearchParams.source }),
-    ...(decisionSearchParams.startDate && {
-      dateCreation: { $gte: decisionSearchParams.startDate, $lte: todayDate }
-    }),
-    ...(decisionSearchParams.endDate && {
-      dateCreation: { $lte: decisionSearchParams.endDate, $gte: todayDate }
-    }),
-    ...(decisionSearchParams.startDate &&
-      decisionSearchParams.endDate && {
-        dateCreation: {
-          $gte: decisionSearchParams.startDate,
-          $lte: decisionSearchParams.endDate
-        }
-      }),
-    ...(decisionSearchParams.number && {
-      $or: [
-        {
-          numeroRoleGeneral: decisionSearchParams.number
-        },
-        { appeals: decisionSearchParams.number }
-      ]
-    })
-  }
-}
