@@ -39,7 +39,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"decision\": {\n        \"_id\": \"idDecisionCC1106\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"TJ\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"2023-06-11\",\n        \"dateDecision\": \"2023-06-10\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"TJ\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\",\n        \"public\": true\n    }\n}",
+							"raw": "{\n    \"decision\": {\n        \"_id\": \"idDecisionCC1106\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"TJ\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"01.02-2020\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"2023-06-11\",\n        \"dateDecision\": \"2023-06-10\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"TJ\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\",\n        \"public\": true\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -71,7 +71,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"decision\": {\n        \"_id\": \"idDecisionCC1106\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"TJ\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"2023-06-11\",\n        \"dateDecision\": \"2023-06-10\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"TJ\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\",\n        \"public\": true\n    }\n}",
+									"raw": "{\n    \"decision\": {\n        \"_id\": \"idDecisionCC1106\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"TJ\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"01.02-2020\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"2023-06-11\",\n        \"dateDecision\": \"2023-06-10\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"TJ\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\",\n        \"public\": true\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -107,7 +107,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"decision\": {\n        \n        \"_id\": \"idDecisionCC1106\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"TJ\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"2023-06-11\",\n        \"dateDecision\": \"2023-06-10\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"TJ\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\",\n        \"public\": true,\n        \"numeroRoleGeneral\": \"01/12345\",\n        \"codeService\": \"0A\",\n        \"libelleService\": \"Libelle de service\",\n        \"codeDecision\": \"0aA\",\n        \"libelleCodeDecision\": \"some libelle code decision\",\n        \"codeNAC\": \"11F\",\n        \"libelleNAC\": \"Demande en dommages-intérêts contre un organisme\",\n        \"codeNature\": \"6C\",\n        \"libelleNature\": \"Autres demandes en matière de frais et dépens\",\n        \"selection\": false,\n        \"matiereDeterminee\": true,\n        \"pourvoiLocal\": false,\n        \"pourvoiCourDeCassation\": false,\n        \"debatPublic\": true\n    }   \n}",
+									"raw": "{\n    \"decision\": {\n        \n        \"_id\": \"idDecisionTJ1106\",\n        \"analysis\": {\n            \"analyse\": [\n                \"someAnalyse\"\n            ],\n            \"doctrine\": \"someDoctrine\",\n            \"link\": \"someLink\",\n            \"reference\": [\n                \"someReference\"\n            ],\n            \"source\": \"TJ\",\n            \"summary\": \"someSummary\",\n            \"target\": \"someTarget\",\n            \"title\": [\n                \"someTitle\"\n            ]\n        },\n        \"appeals\": [\n            \"someAppeal\"\n        ],\n        \"chamberId\": \"someChamberId\",\n        \"chamberName\": \"someChamberName\",\n        \"dateCreation\": \"2023-06-11\",\n        \"dateDecision\": \"2023-06-10\",\n        \"decatt\": [\n            1,\n            2\n        ],\n        \"jurisdictionCode\": \"someJurisdictionCode\",\n        \"jurisdictionId\": \"someJurisdictionId\",\n        \"jurisdictionName\": \"someJurisdictionName\",\n        \"labelStatus\": \"toBeTreated\",\n        \"occultation\": {\n            \"additionalTerms\": \"someAdditionalTerms\",\n            \"categoriesToOmit\": [\n                \"someCategoriesToOmit\"\n            ]\n        },\n        \"originalText\": \"someOriginalText\",\n        \"registerNumber\": \"someRegisterNumber\",\n        \"solution\": \"someSolution\",\n        \"sourceId\": 1,\n        \"sourceName\": \"TJ\",\n        \"publication\": [\n            \"somePublication\"\n        ],\n        \"formation\": \"someFormation\",\n        \"blocOccultation\": 1,\n        \"NAOCode\": \"someNAOCode\",\n        \"natureAffaireCivil\": \"someNatureAffaireCivil\",\n        \"natureAffairePenal\": \"someNatureAffairePenal\",\n        \"codeMatiereCivil\": \"someCodeMatiereCivil\",\n        \"public\": true,\n        \"numeroRoleGeneral\": \"01/12345\",\n        \"codeService\": \"0A\",\n        \"libelleService\": \"Libelle de service\",\n        \"codeDecision\": \"0aA\",\n        \"libelleCodeDecision\": \"some libelle code decision\",\n        \"codeNAC\": \"11F\",\n        \"libelleNAC\": \"Demande en dommages-intérêts contre un organisme\",\n        \"codeNature\": \"6C\",\n        \"libelleNature\": \"Autres demandes en matière de frais et dépens\",\n        \"selection\": false,\n        \"matiereDeterminee\": true,\n        \"pourvoiLocal\": false,\n        \"pourvoiCourDeCassation\": false,\n        \"debatPublic\": true\n    }   \n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -335,6 +335,49 @@
 					"response": []
 				},
 				{
+					"name": "200 - Liste les décisions toBeTreated avec numero",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{INDEX_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?numero=01.02-2020",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "numero",
+									"value": "01.02-2020"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "200 - Liste les décisions à partir du numéro (RG ou pourvoi)",
 					"event": [
 						{
@@ -389,7 +432,7 @@
 									"});",
 									"",
 									"pm.test(\"message\", function(){",
-									"    pm.expect(pm.response.json().message).to.eql(\"Une ou plusieurs erreurs ont été trouvées sur les propriétés suivantes : source, status, startDate, endDate\");",
+									"    pm.expect(pm.response.json().message).to.eql(\"Une ou plusieurs erreurs ont été trouvées sur les propriétés suivantes : status\");",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1347,7 +1390,7 @@
 									"});",
 									"",
 									"pm.test(\"message\", function(){",
-									"    pm.expect(pm.response.json().message[0]).to.eql(\"decisionPseudonymisee must be a string\");",
+									"    pm.expect(pm.response.json().message).to.eql(\"Une ou plusieurs erreurs ont été trouvées sur les propriétés suivantes : decisionPseudonymisee\");",
 									"});"
 								],
 								"type": "text/javascript"
