@@ -6,6 +6,8 @@ import { DecisionsRepository } from './decisions.repository'
 import { DecisionModel } from '../models/decision.model'
 import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
+import { Sources, LabelStatus } from 'dbsder-api-types'
+import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 
 const mockDecisionModel = () => ({
   find: jest.fn(),
@@ -423,6 +425,69 @@ describe('DecisionsRepository', () => {
       )
         // THEN
         .rejects.toThrow(DatabaseError)
+    })
+  })
+
+  describe('mapDecisionSearchParametersToFindCriterias', () => {
+    const todayDate = new Date().toISOString().slice(0, 10)
+
+    it('should map decision search params to findCriterias with correct parameters', () => {
+      // GIVEN
+      const decisionSearchParams: GetDecisionsListDto = {
+        source: Sources.CA,
+        status: LabelStatus.TOBETREATED,
+        startDate: '2020-01-01',
+        number: '123'
+      }
+
+      const expectedFindCriterias = {
+        sourceName: Sources.CA,
+        labelStatus: LabelStatus.TOBETREATED,
+        dateCreation: {
+          $gte: '2020-01-01',
+          $lte: todayDate
+        },
+        $or: [
+          {
+            numeroRoleGeneral: '123'
+          },
+          { appeals: '123' }
+        ]
+      }
+
+      // WHEN
+      const findCriterias =
+        decisionsRepository.mapDecisionSearchParametersToFindCriterias(decisionSearchParams)
+
+      // THEN
+      expect(findCriterias).toEqual(expectedFindCriterias)
+    })
+
+    it('should map decision search params to findCriterias without all parameters', () => {
+      // GIVEN
+      const decisionSearchParams: GetDecisionsListDto = {
+        source: Sources.CA,
+        status: LabelStatus.TOBETREATED,
+        number: '123'
+      }
+
+      const expectedFindCriterias = {
+        sourceName: Sources.CA,
+        labelStatus: LabelStatus.TOBETREATED,
+        $or: [
+          {
+            numeroRoleGeneral: '123'
+          },
+          { appeals: '123' }
+        ]
+      }
+
+      // WHEN
+      const findCriterias =
+        decisionsRepository.mapDecisionSearchParametersToFindCriterias(decisionSearchParams)
+
+      // THEN
+      expect(findCriterias).toEqual(expectedFindCriterias)
     })
   })
 })
