@@ -40,9 +40,9 @@ import { UpdateDecisionPseudonymiseeUsecase } from '../../usecase/updateDecision
 import { UpdateRapportsOccultationsUsecase } from '../../usecase/updateRapportsOccultations.usecase'
 import { CreateDecisionDTO } from '../dto/createDecision.dto'
 import {
-  UpdateDecisionStatutDTO,
+  UpdateDecisionPseudonymiseeDTO,
   UpdateDecisionRapportsOccultationsDTO,
-  UpdateDecisionPseudonymiseeDTO
+  UpdateDecisionStatutDTO
 } from '../dto/updateDecision.dto'
 import { CreateDecisionResponse } from './responses/createDecisionResponse'
 import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
@@ -94,19 +94,25 @@ export class DecisionsController {
     @Query(new ValidateDtoPipe()) getDecisionListCriteria: DecisionSearchCriteria,
     @Request() req
   ): Promise<GetDecisionsListResponse[]> {
-    const authorizedApiKeys = [process.env.LABEL_API_KEY]
+    const authorizedApiKeys = [
+      process.env.LABEL_API_KEY,
+      process.env.INDEX_API_KEY,
+      process.env.ATTACHMENTS_API_KEY
+    ]
+
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ForbiddenRouteException()
     }
-
     const formatLogs: LogsFormat = {
       operationName: 'getDecisions',
       httpMethod: req.method,
       path: req.path,
-      msg: `GET /decisions called with status ${getDecisionListCriteria.status}`
+      msg: `GET /decisions called with ${JSON.stringify(getDecisionListCriteria)}`
     }
+
     this.logger.log(formatLogs)
+
     const listDecisionUsecase = new ListDecisionsUsecase(this.decisionsRepository)
 
     return await listDecisionUsecase.execute(getDecisionListCriteria).catch((error) => {

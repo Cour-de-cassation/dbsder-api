@@ -11,13 +11,11 @@ import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.e
 export class DecisionsRepository implements InterfaceDecisionsRepository {
   constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
 
-  async list(decision: GetDecisionsListDto): Promise<DecisionModel[]> {
+  async list(decisionSearchParams: GetDecisionsListDto): Promise<DecisionModel[]> {
     try {
-      const savedDecisions = await this.decisionModel.find({
-        labelStatus: decision.status,
-        sourceName: decision.source,
-        dateCreation: { $gte: decision.startDate, $lte: decision.endDate }
-      })
+      const findCriterias = this.mapDecisionSearchParametersToFindCriterias(decisionSearchParams)
+
+      const savedDecisions = await this.decisionModel.find(findCriterias)
       return Promise.resolve(savedDecisions)
     } catch (error) {
       throw new DatabaseError(error)
@@ -101,5 +99,35 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     }
 
     return id
+  }
+
+  mapDecisionSearchParametersToFindCriterias(decisionSearchParams: GetDecisionsListDto) {
+    const todayDate = new Date().toISOString().slice(0, 10)
+    // syntax :  https://medium.com/@slamflipstrom/conditional-object-properties-using-spread-in-javascript-714e0a12f496
+    return {
+      ...(decisionSearchParams.status && { labelStatus: decisionSearchParams.status }),
+      ...(decisionSearchParams.source && { sourceName: decisionSearchParams.source }),
+      ...(decisionSearchParams.startDate && {
+        dateCreation: { $gte: decisionSearchParams.startDate, $lte: todayDate }
+      }),
+      ...(decisionSearchParams.endDate && {
+        dateCreation: { $lte: decisionSearchParams.endDate, $gte: todayDate }
+      }),
+      ...(decisionSearchParams.startDate &&
+        decisionSearchParams.endDate && {
+          dateCreation: {
+            $gte: decisionSearchParams.startDate,
+            $lte: decisionSearchParams.endDate
+          }
+        }),
+      ...(decisionSearchParams.number && {
+        $or: [
+          {
+            numeroRoleGeneral: decisionSearchParams.number
+          },
+          { appeals: decisionSearchParams.number }
+        ]
+      })
+    }
   }
 }
