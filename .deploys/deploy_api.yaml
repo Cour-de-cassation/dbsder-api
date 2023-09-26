@@ -33,6 +33,8 @@ spec:
               value: "${DBSDER_API_OPS_API_KEY}"
             - name: PUBLICATION_API_KEY
               value: "${DBSDER_API_PUBLICATION_API_KEY}"
+            - name: ATTACHMENTS_API_KEY
+              value: "${DBSDER_API_ATTACHMENTS_API_KEY}"
             - name: DOC_LOGIN
               value: "${DBSDER_API_DOC_LOGIN}"
             - name: DOC_PASSWORD
