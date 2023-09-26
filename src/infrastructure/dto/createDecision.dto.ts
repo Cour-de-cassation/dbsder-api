@@ -614,4 +614,13 @@ export class CreateDecisionDTO {
   @IsOptional()
   @IsString()
   libelleNature?: string
+
+  @ApiPropertyOptional({
+    description: 'Indicateur QPC',
+    type: Boolean,
+    example: mockUtils.createDecisionTJDto.indicateurQPC
+  })
+  @IsOptional()
+  @IsBoolean()
+  indicateurQPC?: boolean
 }

@@ -156,6 +156,9 @@ export class DecisionModel {
 
   @Prop()
   selection: boolean
+
+  @Prop()
+  indicateurQPC?: boolean
 }
 
 export const DecisionSchema = SchemaFactory.createForClass(DecisionModel)

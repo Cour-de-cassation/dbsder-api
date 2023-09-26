@@ -234,7 +234,8 @@ export class MockUtils {
     matiereDeterminee: true,
     pourvoiLocal: false,
     pourvoiCourDeCassation: false,
-    debatPublic: true
+    debatPublic: true,
+    indicateurQPC: true
   }
 
   decisionAssociee = {
