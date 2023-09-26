@@ -63,6 +63,7 @@ NORMALIZATION_API_KEY=some_uuid
 OPENSDER_API_KEY=some_uuid
 OPS_API_KEY=some_uuid
 PUBLICATION_API_KEY=some_uuid
+ATTACHMENTS_API_KEY=some_uuid
 INDEX_API_KEY=some_uuid
 
 ## Identifiants Swagger
