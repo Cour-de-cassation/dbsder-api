@@ -4,7 +4,7 @@ import { DecisionAnalyse, DecisionOccultation } from 'dbsder-api-types'
 export class GetDecisionByIdResponse {
   _id: string
 
-  analysis: DecisionAnalyse
+  analysis?: DecisionAnalyse
 
   appeals: string[]
 
@@ -16,7 +16,7 @@ export class GetDecisionByIdResponse {
 
   dateDecision: string
 
-  decatt: number[]
+  decatt?: number[]
 
   jurisdictionCode: string
 
@@ -48,7 +48,7 @@ export class GetDecisionByIdResponse {
 
   publication: string[]
 
-  formation: string
+  formation?: string
 
   blocOccultation: number
 
@@ -58,5 +58,5 @@ export class GetDecisionByIdResponse {
 
   natureAffairePenal: string
 
-  codeMatiereCivil: string
+  codeMatiereCivil?: string
 }

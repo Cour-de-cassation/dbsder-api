@@ -16,7 +16,7 @@ export class DecisionModel {
   _id: string
 
   @Prop({ type: Object })
-  analysis: DecisionAnalyse
+  analysis?: DecisionAnalyse
 
   @Prop()
   appeals: string[]
@@ -34,7 +34,7 @@ export class DecisionModel {
   dateDecision: string
 
   @Prop()
-  decatt: number[]
+  decatt?: number[]
 
   @Prop()
   jurisdictionCode: string
@@ -86,7 +86,7 @@ export class DecisionModel {
   publication: string[]
 
   @Prop()
-  formation: string
+  formation?: string
 
   @Prop()
   blocOccultation: number
@@ -101,7 +101,22 @@ export class DecisionModel {
   natureAffairePenal: string
 
   @Prop()
-  codeMatiereCivil: string
+  codeMatiereCivil?: string
+
+  @Prop()
+  NACCode?: string
+
+  @Prop()
+  NPCode?: string
+
+  @Prop()
+  endCaseCode?: string
+
+  @Prop()
+  filenameSource?: string
+
+  @Prop()
+  pubCategory?: string
 
   @Prop({ type: Object })
   labelTreatments?: labelTreatmentsType[]
@@ -128,7 +143,7 @@ export class DecisionModel {
   libelleNAC: string
 
   @Prop()
-  libelleNature: string
+  libelleNatureParticuliere: string
 
   @Prop()
   libelleService: string
