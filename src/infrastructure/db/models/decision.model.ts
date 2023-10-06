@@ -3,7 +3,7 @@ import {
   DecisionAnalyse,
   LabelStatus,
   DecisionOccultation,
-  labelTreatmentsType,
+  LabelTreatment,
   Sources,
   DecisionAssociee,
   President,
@@ -16,7 +16,7 @@ export class DecisionModel {
   _id: string
 
   @Prop({ type: Object })
-  analysis: DecisionAnalyse
+  analysis?: DecisionAnalyse
 
   @Prop()
   appeals: string[]
@@ -34,7 +34,7 @@ export class DecisionModel {
   dateDecision: string
 
   @Prop()
-  decatt: number[]
+  decatt?: number[]
 
   @Prop()
   jurisdictionCode: string
@@ -67,7 +67,7 @@ export class DecisionModel {
   registerNumber: string
 
   @Prop()
-  solution: string
+  solution?: string
 
   @Prop()
   sourceId: number
@@ -83,28 +83,43 @@ export class DecisionModel {
   zoning?: object
 
   @Prop()
-  publication: string[]
+  publication?: string[]
 
   @Prop()
-  formation: string
+  formation?: string
 
   @Prop()
   blocOccultation: number
 
   @Prop()
-  NAOCode: string
+  NAOCode?: string
 
   @Prop()
-  natureAffaireCivil: string
+  natureAffaireCivil?: string
 
   @Prop()
-  natureAffairePenal: string
+  natureAffairePenal?: string
 
   @Prop()
-  codeMatiereCivil: string
+  codeMatiereCivil?: string
+
+  @Prop()
+  NACCode?: string
+
+  @Prop()
+  NPCode?: string
+
+  @Prop()
+  endCaseCode?: string
+
+  @Prop()
+  filenameSource?: string
+
+  @Prop()
+  pubCategory?: string
 
   @Prop({ type: Object })
-  labelTreatments?: labelTreatmentsType[]
+  labelTreatments?: LabelTreatment[]
 
   @Prop()
   codeDecision: string
@@ -128,7 +143,7 @@ export class DecisionModel {
   libelleNAC: string
 
   @Prop()
-  libelleNature: string
+  libelleNatureParticuliere?: string
 
   @Prop()
   libelleService: string
@@ -159,6 +174,9 @@ export class DecisionModel {
 
   @Prop()
   indicateurQPC?: boolean
+
+  @Prop()
+  idDecisionWinci?: string
 }
 
 export const DecisionSchema = SchemaFactory.createForClass(DecisionModel)

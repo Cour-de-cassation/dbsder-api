@@ -16,7 +16,7 @@ export class GetDecisionPseudonymiseeByIdResponse {
 
   dateDecision: string
 
-  decatt: number[]
+  decatt?: number[]
 
   jurisdictionCode: string
 
@@ -36,7 +36,7 @@ export class GetDecisionPseudonymiseeByIdResponse {
 
   registerNumber: string
 
-  solution: string
+  solution?: string
 
   sourceId: number
 
@@ -44,17 +44,17 @@ export class GetDecisionPseudonymiseeByIdResponse {
 
   zoning?: object
 
-  publication: string[]
+  publication?: string[]
 
-  formation: string
+  formation?: string
 
   blocOccultation: number
 
-  NAOCode: string
+  NAOCode?: string
 
-  natureAffaireCivil: string
+  natureAffaireCivil?: string
 
-  natureAffairePenal: string
+  natureAffairePenal?: string
 
-  codeMatiereCivil: string
+  codeMatiereCivil?: string
 }
