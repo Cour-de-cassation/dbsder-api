@@ -60,6 +60,15 @@ class DecisionDto {
   @Matches('^[0-9]{8}$')
   @IsDateString()
   date: string
+
+  @ApiPropertyOptional({
+    description: 'ID de la décision provenant de Winci TGI',
+    type: String,
+    example: 'some-id'
+  })
+  @IsOptional()
+  @IsString()
+  idDecisionWinci?: string
 }
 
 class PresidentDto {
@@ -695,4 +704,13 @@ export class CreateDecisionDTO {
   @IsOptional()
   @IsBoolean()
   indicateurQPC?: boolean
+
+  @ApiPropertyOptional({
+    description: 'ID de la décision provenant de Winci TGI',
+    type: String,
+    example: 'some-id'
+  })
+  @IsOptional()
+  @IsString()
+  idDecisionWinci?: string
 }
