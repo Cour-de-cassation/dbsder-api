@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsArray, IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator'
 import { MockUtils } from '../utils/mock.utils'
 import { Type } from 'class-transformer'
-import { LabelStatus } from 'dbsder-api-types'
+import { Annotation, LabelStatus } from 'dbsder-api-types'
 
 const mockUtils = new MockUtils()
 
@@ -40,12 +40,12 @@ export class UpdateDecisionRapportsOccultationsDTO {
 export class RapportOccultation {
   @ApiProperty({
     description: 'Annotations',
-    type: () => [Annotation],
+    type: () => [AnnotationDto],
     example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations
   })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => Annotation)
+  @Type(() => AnnotationDto)
   annotations: Annotation[]
 
   @ApiProperty({
@@ -65,7 +65,7 @@ export class RapportOccultation {
   order: number
 }
 
-export class Annotation {
+export class AnnotationDto {
   @ApiProperty({
     description: "Categorie de l'annotation",
     type: String,
