@@ -3,7 +3,7 @@ import {
   DecisionAnalyse,
   LabelStatus,
   DecisionOccultation,
-  labelTreatmentsType,
+  LabelTreatment,
   Sources,
   DecisionAssociee,
   President,
@@ -67,7 +67,7 @@ export class DecisionModel {
   registerNumber: string
 
   @Prop()
-  solution: string
+  solution?: string
 
   @Prop()
   sourceId: number
@@ -83,7 +83,7 @@ export class DecisionModel {
   zoning?: object
 
   @Prop()
-  publication: string[]
+  publication?: string[]
 
   @Prop()
   formation?: string
@@ -92,13 +92,13 @@ export class DecisionModel {
   blocOccultation: number
 
   @Prop()
-  NAOCode: string
+  NAOCode?: string
 
   @Prop()
-  natureAffaireCivil: string
+  natureAffaireCivil?: string
 
   @Prop()
-  natureAffairePenal: string
+  natureAffairePenal?: string
 
   @Prop()
   codeMatiereCivil?: string
@@ -119,7 +119,7 @@ export class DecisionModel {
   pubCategory?: string
 
   @Prop({ type: Object })
-  labelTreatments?: labelTreatmentsType[]
+  labelTreatments?: LabelTreatment[]
 
   @Prop()
   codeDecision: string
@@ -143,7 +143,7 @@ export class DecisionModel {
   libelleNAC: string
 
   @Prop()
-  libelleNatureParticuliere: string
+  libelleNatureParticuliere?: string
 
   @Prop()
   libelleService: string

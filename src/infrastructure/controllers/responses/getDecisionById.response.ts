@@ -1,5 +1,4 @@
-import { LabelStatus } from 'dbsder-api-types/dist'
-import { DecisionAnalyse, DecisionOccultation } from 'dbsder-api-types'
+import { LabelStatus, DecisionAnalyse, DecisionOccultation } from 'dbsder-api-types'
 
 export class GetDecisionByIdResponse {
   _id: string
@@ -38,7 +37,7 @@ export class GetDecisionByIdResponse {
 
   registerNumber: string
 
-  solution: string
+  solution?: string
 
   sourceId: number
 
@@ -46,17 +45,17 @@ export class GetDecisionByIdResponse {
 
   zoning?: object
 
-  publication: string[]
+  publication?: string[]
 
   formation?: string
 
   blocOccultation: number
 
-  NAOCode: string
+  NAOCode?: string
 
-  natureAffaireCivil: string
+  natureAffaireCivil?: string
 
-  natureAffairePenal: string
+  natureAffairePenal?: string
 
   codeMatiereCivil?: string
 }

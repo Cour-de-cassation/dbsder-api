@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsBoolean,
   IsDateString,
   IsDefined,
@@ -15,7 +16,8 @@ import {
 import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { MockUtils } from '../utils/mock.utils'
-import { LabelStatus, Occultation, labelTreatmentsType } from 'dbsder-api-types'
+import { LabelStatus, Occultation, LabelTreatment, Annotation } from 'dbsder-api-types'
+import { AnnotationDto } from './updateDecision.dto'
 
 const mockUtils = new MockUtils()
 
@@ -95,6 +97,35 @@ class PresidentDto {
   @IsOptional()
   civilite?: string
 }
+
+class LabelTreatmentDto {
+  @ApiPropertyOptional({
+    description: "Liste d'annotations",
+    type: [AnnotationDto],
+    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AnnotationDto)
+  annotations: Annotation[]
+
+  @ApiProperty({
+    description: 'Source',
+    type: String,
+    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].source
+  })
+  @IsString()
+  source: string
+
+  @ApiProperty({
+    description: 'Ordre',
+    type: Number,
+    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].order
+  })
+  @IsNumber()
+  order: number
+}
+
 export class DecisionOccultation {
   @ApiProperty({
     description: "Termes additionnels à ajouter lors de l'occultation",
@@ -309,11 +340,13 @@ export class CreateDecisionDTO {
 
   @ApiProperty({
     description: 'Traitements appliqués par Label',
-    type: labelTreatmentsType
+    type: [LabelTreatmentDto]
   })
   @IsOptional()
-  @Type(() => labelTreatmentsType)
-  labelTreatments?: labelTreatmentsType
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => LabelTreatmentDto)
+  labelTreatments?: LabelTreatment[]
 
   @ApiProperty({
     description: 'Le texte original de la décision',
@@ -361,8 +394,9 @@ export class CreateDecisionDTO {
     type: String,
     example: mockUtils.createDecisionDTO.solution
   })
+  @IsOptional()
   @IsString()
-  solution: string
+  solution?: string
 
   @ApiProperty({
     description: 'ID de la décision (ID Oracle)',
@@ -395,8 +429,9 @@ export class CreateDecisionDTO {
     type: [String],
     example: mockUtils.createDecisionDTO.publication
   })
+  @IsOptional()
   @IsString({ each: true })
-  publication: string[]
+  publication?: string[]
 
   @ApiProperty({
     description:
@@ -420,22 +455,25 @@ export class CreateDecisionDTO {
     description: 'Cour de cassation : circuit de relecture',
     type: String
   })
+  @IsOptional()
   @IsString()
-  NAOCode: string
+  NAOCode?: string
 
   @ApiProperty({
     description: 'Cour de cassation : circuit de relecture',
     type: String
   })
+  @IsOptional()
   @IsString()
-  natureAffaireCivil: string
+  natureAffaireCivil?: string
 
   @ApiProperty({
     description: 'Cour de cassation : circuit de relecture',
     type: String
   })
+  @IsOptional()
   @IsString()
-  natureAffairePenal: string
+  natureAffairePenal?: string
 
   @ApiProperty({
     description: 'Cour de cassation : circuit de relecture',
