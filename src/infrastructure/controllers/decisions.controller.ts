@@ -142,7 +142,7 @@ export class DecisionsController {
     name: 'id',
     description: 'Identifiant de la décision'
   })
-  @ApiOkResponse({ description: 'La décision', type: GetDecisionByIdResponse })
+  @ApiOkResponse({ description: 'Décision trouvée', type: GetDecisionByIdResponse })
   @ApiNotFoundResponse({
     description: "La decision n'a pas été trouvée"
   })
