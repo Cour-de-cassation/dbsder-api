@@ -27,8 +27,8 @@ import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { LogsFormat } from '../utils/logsFormat.utils'
-import { GetDecisionPseudonymiseeByIdResponse } from './responses/getDecisionPseudonymiseeById.response'
 import { FetchDecisionPseudonymiseeByIdUsecase } from '../../usecase/fetchDecisionPseudonymiseeByIdUsecase'
+import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
 
 @ApiTags('DbSder')
 @Controller('decisions-pseudonymisees')
@@ -46,7 +46,7 @@ export class DecisionsPseudonymiseesController {
     name: 'id',
     description: 'Identifiant de la décision'
   })
-  @ApiOkResponse({ description: 'La décision', type: GetDecisionPseudonymiseeByIdResponse })
+  @ApiOkResponse({ description: 'La décision', type: GetDecisionByIdResponse })
   @ApiNotFoundResponse({
     description: "La decision n'a pas été trouvée"
   })
@@ -60,7 +60,7 @@ export class DecisionsPseudonymiseesController {
     @Param('id') id: string,
     @Query('avecMetadonneesPersonnelles', new ParseBoolPipe()) avecMetadonneesPersonnelles: boolean,
     @Request() req
-  ): Promise<GetDecisionPseudonymiseeByIdResponse> {
+  ): Promise<GetDecisionByIdResponse> {
     const authorizedApiKeys = [
       process.env.OPENSDER_API_KEY,
       process.env.ATTACHMENTS_API_KEY,
