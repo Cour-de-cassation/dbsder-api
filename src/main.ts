@@ -3,6 +3,9 @@ import { AppModule } from './app.module'
 import * as basicAuth from 'express-basic-auth'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { Logger } from 'nestjs-pino'
+import { json } from 'express'
+
+const JSON_SIZE_LIMIT = '10mb'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -14,6 +17,9 @@ async function bootstrap() {
 
   // setup custom logs
   app.useLogger(app.get(Logger))
+
+  // add size limit on json body
+  app.use(json({ limit: JSON_SIZE_LIMIT }))
 
   // setup Swagger
 
