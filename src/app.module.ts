@@ -10,9 +10,14 @@ import { envValidationConfig } from './infrastructure/dto/env.validation'
 import { DecisionSchema } from './infrastructure/db/models/decision.model'
 import { AuthMiddleware } from './infrastructure/middleware/auth/auth.middleware'
 import { DecisionsRepository } from './infrastructure/db/repositories/decisions.repository'
-import { DecisionsController } from './infrastructure/controllers/decisions.controller'
 import { HealthController } from './infrastructure/controllers/health/health.controller'
-import { DecisionsPseudonymiseesController } from './infrastructure/controllers/decisionsPseudonymisees.controller'
+import { GetDecisionByIdController } from './infrastructure/controllers/getDecisionById.controller'
+import { ListDecisionsController } from './infrastructure/controllers/getDecisionsList.controller'
+import { CreateDecisionsController } from './infrastructure/controllers/createDecisions.controller'
+import { UpdateDecisionStatutController } from './infrastructure/controllers/updateDecisionStatut.controller'
+import { GetDecisionPseudonymiseesController } from './infrastructure/controllers/getDecisionPseudonymiseeById.controller'
+import { UpdateDecisionPseudonymiseeController } from './infrastructure/controllers/updateDecisionPseudonymisee.controller'
+import { UpdateDecisionRapportsOccultationsController } from './infrastructure/controllers/updateDecisionRapportsOccultations.controller'
 
 @Module({
   imports: [
@@ -27,9 +32,14 @@ import { DecisionsPseudonymiseesController } from './infrastructure/controllers/
   ],
   controllers: [
     RedirectController,
-    DecisionsController,
     HealthController,
-    DecisionsPseudonymiseesController
+    GetDecisionByIdController,
+    GetDecisionPseudonymiseesController,
+    ListDecisionsController,
+    CreateDecisionsController,
+    UpdateDecisionPseudonymiseeController,
+    UpdateDecisionRapportsOccultationsController,
+    UpdateDecisionStatutController
   ],
   providers: [DecisionsRepository]
 })
