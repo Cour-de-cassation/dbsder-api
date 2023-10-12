@@ -32,7 +32,7 @@ import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
 
 @ApiTags('DbSder')
 @Controller('decisions-pseudonymisees')
-export class DecisionsPseudonymiseesController {
+export class GetDecisionPseudonymiseesController {
   constructor(private readonly decisionsRepository: DecisionsRepository) {}
 
   private readonly logger = new Logger()
