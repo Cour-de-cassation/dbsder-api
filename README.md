@@ -49,7 +49,7 @@ Pour lancer les tests, écrire dans un terminal :
 npm run test
  ```
 
-### Variables d'environnement : 
+### Variables d'environnement en local 
 
 Créer un fichier `.env` à la racine du dossier avec les variables suivantes :
 
