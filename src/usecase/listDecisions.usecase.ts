@@ -4,7 +4,7 @@ import {
 } from '../domain/decisionSearchCriteria'
 import { MapModelToResponseService } from '../service/mapModelToResponse.service'
 import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
-import { GetDecisionsListResponse } from '../infrastructure/controllers/responses/getDecisionsListResponse'
+import { GetDecisionsListResponse } from '../infrastructure/controllers/responses/getDecisionsList.response'
 
 export class ListDecisionsUsecase {
   constructor(private decisionsRepository: InterfaceDecisionsRepository) {}

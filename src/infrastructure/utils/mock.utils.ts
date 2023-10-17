@@ -1,4 +1,4 @@
-import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsListResponse'
+import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsList.response'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
 import { LabelStatus, Sources } from 'dbsder-api-types'
 import { DecisionModel } from '../db/models/decision.model'

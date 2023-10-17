@@ -1,4 +1,4 @@
-import { GetDecisionsListResponse } from '../infrastructure/controllers/responses/getDecisionsListResponse'
+import { GetDecisionsListResponse } from '../infrastructure/controllers/responses/getDecisionsList.response'
 import { DecisionModel } from '../infrastructure/db/models/decision.model'
 import { GetDecisionByIdResponse } from '../infrastructure/controllers/responses/getDecisionById.response'
 
