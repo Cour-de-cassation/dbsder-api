@@ -1,6 +1,5 @@
 import { Controller, Get, HttpStatus, Logger, Param, Request } from '@nestjs/common'
 import {
-  ApiForbiddenResponse,
   ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -15,8 +14,8 @@ import { FetchDecisionByIdUsecase } from '../../usecase/fetchDecisionById.usecas
 import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
 import { UnexpectedException } from '../exceptions/unexpected.exception'
 import { DependencyException } from '../exceptions/dependency.exception'
-import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
+import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.exception'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { LogsFormat } from '../utils/logsFormat.utils'
 
@@ -41,16 +40,13 @@ export class GetDecisionByIdController {
     description: "La decision n'a pas été trouvée"
   })
   @ApiUnauthorizedResponse({
-    description: "Vous n'avez pas accès à cette route"
-  })
-  @ApiForbiddenResponse({
-    description: "Vous n'avez pas accès à cette route"
+    description: "Vous n'êtes pas autorisé à appeler cette route"
   })
   async getDecisionById(@Param('id') id: string, @Request() req): Promise<GetDecisionByIdResponse> {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
-      throw new ForbiddenRouteException()
+      throw new ClientNotAuthorizedException()
     }
     const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.decisionsRepository)
 

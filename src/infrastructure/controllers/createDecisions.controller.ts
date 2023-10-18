@@ -3,7 +3,6 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiCreatedResponse,
-  ApiForbiddenResponse,
   ApiHeader,
   ApiTags,
   ApiUnauthorizedResponse
@@ -15,7 +14,7 @@ import { CreateDecisionDTO } from '../dto/createDecision.dto'
 import { CreateDecisionResponse } from './responses/createDecision.response'
 import { UnexpectedException } from '../exceptions/unexpected.exception'
 import { DependencyException } from '../exceptions/dependency.exception'
-import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
+import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.exception'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { LogsFormat } from '../utils/logsFormat.utils'
@@ -41,10 +40,7 @@ export class CreateDecisionsController {
     description: 'Il manque un ou plusieurs champs obligatoires dans la décision'
   })
   @ApiUnauthorizedResponse({
-    description: "Vous n'avez pas accès à cette route"
-  })
-  @ApiForbiddenResponse({
-    description: "Vous n'avez pas accès à cette route"
+    description: "Vous n'êtes pas autorisé à appeler cette route"
   })
   @UsePipes()
   async createDecisions(
@@ -62,7 +58,7 @@ export class CreateDecisionsController {
     const authorizedApiKeys = [process.env.NORMALIZATION_API_KEY, process.env.OPENSDER_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
-      throw new ForbiddenRouteException()
+      throw new ClientNotAuthorizedException()
     }
 
     const createDecisionUsecase = new CreateDecisionUsecase(this.decisionsRepository)

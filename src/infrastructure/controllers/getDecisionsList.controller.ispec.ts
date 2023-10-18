@@ -90,6 +90,21 @@ describe('DecisionsController', () => {
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.UNAUTHORIZED)
       })
+
+      it('when the apiKey is not authorized to call this endpoint', async () => {
+        // GIVEN
+        const mockGetDecisionListQuery = mockUtils.decisionQueryDTO
+        const normalisationApiKey = process.env.NORMALIZATION_API_KEY
+
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .get('/decisions')
+          .query(mockGetDecisionListQuery)
+          .set({ 'x-api-key': normalisationApiKey })
+
+        // THEN
+        expect(result.statusCode).toEqual(HttpStatus.UNAUTHORIZED)
+      })
     })
 
     describe('returns 400 Bad Request error', () => {
@@ -119,23 +134,6 @@ describe('DecisionsController', () => {
 
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
-      })
-    })
-
-    describe('returns 403 Forbidden', () => {
-      it('when the apiKey is not authorized to call this endpoint', async () => {
-        // GIVEN
-        const mockGetDecisionListQuery = mockUtils.decisionQueryDTO
-        const normalisationApiKey = process.env.NORMALIZATION_API_KEY
-
-        // WHEN
-        const result = await request(app.getHttpServer())
-          .get('/decisions')
-          .query(mockGetDecisionListQuery)
-          .set({ 'x-api-key': normalisationApiKey })
-
-        // THEN
-        expect(result.statusCode).toEqual(HttpStatus.FORBIDDEN)
       })
     })
   })
