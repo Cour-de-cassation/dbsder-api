@@ -7,7 +7,8 @@ import {
   Sources,
   DecisionAssociee,
   President,
-  Occultation
+  Occultation,
+  PartieTJ
 } from 'dbsder-api-types'
 
 @Schema()
@@ -53,6 +54,9 @@ export class DecisionModel {
 
   @Prop()
   originalText: string
+
+  @Prop()
+  parties: PartieTJ[] | object[]
 
   @Prop()
   pseudoStatus?: string

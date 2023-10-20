@@ -9,7 +9,7 @@ export class DecisionSearchCriteria {
   @ApiPropertyOptional({
     description: 'Source de la décision',
     type: String,
-    example: mockUtils.decisionCAToBeTreated.source
+    example: mockUtils.decisionTJToBeTreated.source
   })
   @IsOptional()
   @IsEnum(Sources)
@@ -18,7 +18,7 @@ export class DecisionSearchCriteria {
   @ApiPropertyOptional({
     description: 'Statut de la décision',
     enum: LabelStatus,
-    example: mockUtils.decisionCAToBeTreated.status
+    example: mockUtils.decisionTJToBeTreated.status
   })
   @IsOptional()
   @IsEnum(LabelStatus)
@@ -26,7 +26,7 @@ export class DecisionSearchCriteria {
 
   @ApiPropertyOptional({
     description: 'Date de début de la décision',
-    example: mockUtils.decisionCAToBeTreated.dateCreation
+    example: mockUtils.decisionTJToBeTreated.dateCreation
   })
   @IsOptional()
   @IsString()
@@ -36,7 +36,7 @@ export class DecisionSearchCriteria {
 
   @ApiPropertyOptional({
     description: 'Date de fin de la décision',
-    example: mockUtils.decisionCAToBeTreated.dateCreation
+    example: mockUtils.decisionTJToBeTreated.dateCreation
   })
   @IsOptional()
   @IsString()

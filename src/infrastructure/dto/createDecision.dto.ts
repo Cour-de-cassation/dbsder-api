@@ -16,7 +16,7 @@ import {
 import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { MockUtils } from '../utils/mock.utils'
-import { LabelStatus, Occultation, LabelTreatment, Annotation } from 'dbsder-api-types'
+import { LabelStatus, Occultation, LabelTreatment, Annotation, PartieTJ } from 'dbsder-api-types'
 import { AnnotationDto } from './updateDecision.dto'
 
 const mockUtils = new MockUtils()
@@ -273,11 +273,6 @@ export class CreateDecisionDTO {
   chamberName: string
 
   @ApiProperty({
-    description: 'Identifiant technique de la décision',
-    type: String,
-    example: mockUtils.createDecisionDTO.chamberName
-  })
-  @ApiProperty({
     description: 'Date de la création (après réception) de la décision',
     type: String,
     example: mockUtils.createDecisionDTO.dateCreation
@@ -364,6 +359,13 @@ export class CreateDecisionDTO {
   })
   @IsString()
   originalText: string
+
+  @ApiProperty({
+    description: 'Parties',
+    type: [Object],
+    example: mockUtils.createDecisionDTO.parties
+  })
+  parties: PartieTJ[] | object[]
 
   @ApiPropertyOptional({
     description: "(interne) L'état de la pseudonymisation",

@@ -1,41 +1,30 @@
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsList.response'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
-import { LabelStatus, Sources } from 'dbsder-api-types'
+import { LabelStatus, QualitePartie, Sources, TypePartie } from 'dbsder-api-types'
 import { DecisionModel } from '../db/models/decision.model'
 
+const TODAY = new Date().toISOString()
+const YESTERDAY = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString()
+const YESTERDAY_YYYY_MM_DD = new Date(new Date().setDate(new Date().getDate() - 1))
+  .toISOString()
+  .split('T')[0]
+const TOMORROW_YYYY_MM_DD = new Date(new Date().setDate(new Date().getDate() + 1))
+  .toISOString()
+  .split('T')[0]
+
 export class MockUtils {
-  decisionCCToBeTreated: GetDecisionsListResponse = {
-    dateCreation: '2023-04-11',
-    _id: 'id2023',
-    source: Sources.CC,
-    status: LabelStatus.TOBETREATED
-  }
-
-  decisionCAToBeTreated: GetDecisionsListResponse = {
-    dateCreation: '2023-04-11',
-    _id: 'id2023',
-    source: Sources.CA,
-    status: LabelStatus.TOBETREATED
-  }
-
   decisionTJToBeTreated: GetDecisionsListResponse = {
-    dateCreation: '2023-10-10T23:00Z',
+    dateCreation: TODAY,
     _id: 'id2023',
     source: Sources.TJ,
     status: LabelStatus.TOBETREATED
   }
-
-  allDecisionsToBeTreated = [
-    this.decisionCCToBeTreated,
-    this.decisionTJToBeTreated,
-    this.decisionCAToBeTreated
-  ]
 
   decisionQueryDTO = {
     status: LabelStatus.TOBETREATED,
     source: Sources.TJ,
-    startDate: '2023-10-09',
-    endDate: '2023-10-11'
+    startDate: YESTERDAY_YYYY_MM_DD,
+    endDate: TOMORROW_YYYY_MM_DD
   }
   decisionQueryByNumberDTO = {
     numero: '01/12345'
@@ -44,8 +33,8 @@ export class MockUtils {
   decisionQueryWithUnknownSourceDTO = {
     status: LabelStatus.TOBETREATED,
     source: 'unknownSource',
-    startDate: '2023-10-10',
-    endDate: '2023-10-11'
+    startDate: YESTERDAY_YYYY_MM_DD,
+    endDate: TOMORROW_YYYY_MM_DD
   }
 
   decisionQueryWithUnknownNumberDTO = {
@@ -67,8 +56,8 @@ export class MockUtils {
     appeals: ['someAppeal'],
     chamberId: 'someChamberId',
     chamberName: 'someChamberName',
-    dateCreation: 'someDateCreation',
-    dateDecision: 'someDateDecision',
+    dateCreation: TODAY,
+    dateDecision: YESTERDAY,
     decatt: [1, 2],
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
@@ -79,6 +68,22 @@ export class MockUtils {
       categoriesToOmit: ['someCategoriesToOmit']
     },
     originalText: 'someOriginalText',
+    parties: [
+      {
+        type: TypePartie.PP,
+        nom: 'nom',
+        prenom: 'prenom',
+        civilite: 'M.',
+        qualite: QualitePartie.I
+      },
+      {
+        type: TypePartie.PP,
+        nom: 'nom',
+        prenom: 'prenom',
+        civilite: 'Mme.',
+        qualite: QualitePartie.K
+      }
+    ],
     registerNumber: 'someRegisterNumber',
     solution: 'someSolution',
     sourceId: 1,
@@ -124,8 +129,8 @@ export class MockUtils {
     chamberId: 'someChamberId',
     chamberName: 'someChamberName',
     codeMatiereCivil: 'someCodeMatiereCivil',
-    dateCreation: '2023-10-10T23:00Z',
-    dateDecision: 'someDateDecision',
+    dateCreation: TODAY,
+    dateDecision: YESTERDAY_YYYY_MM_DD,
     decatt: [1, 2],
     formation: 'someFormation',
     _id: 'id2023',
@@ -140,6 +145,7 @@ export class MockUtils {
       categoriesToOmit: ['someCategoriesToOmit']
     },
     originalText: 'someOriginalText',
+    parties: [{}],
     publication: ['somePublication'],
     registerNumber: 'someRegisterNumber',
     solution: 'someSolution',
@@ -197,8 +203,8 @@ export class MockUtils {
     chamberId: 'someChamberId',
     chamberName: 'someChamberName',
     codeMatiereCivil: 'someCodeMatiereCivil',
-    dateCreation: '2023-10-10T23:00Z',
-    dateDecision: 'someDateDecision',
+    dateCreation: TODAY,
+    dateDecision: YESTERDAY_YYYY_MM_DD,
     decatt: [1, 2],
     formation: 'someFormation',
     _id: 'id2023',
