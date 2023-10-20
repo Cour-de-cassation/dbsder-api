@@ -68,7 +68,7 @@ describe('DecisionsController', () => {
         expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
       })
 
-      it('returns a 403 Forbidden when a consumer not authorized (label) calls PUT /decisions', async () => {
+      it('returns a 401 Unauthorized when a consumer not authorized (label) calls PUT /decisions', async () => {
         // GIVEN
         const labelApiKey = process.env.LABEL_API_KEY
 
@@ -79,7 +79,7 @@ describe('DecisionsController', () => {
           .send({ decision: mockUtils.createDecisionDTO })
 
         // THEN
-        expect(result.status).toEqual(HttpStatus.FORBIDDEN)
+        expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
       })
     })
   })

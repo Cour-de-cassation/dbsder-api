@@ -64,6 +64,19 @@ describe('GetDecisionByIdController', () => {
       expect(result.status).toEqual(HttpStatus.NOT_FOUND)
     })
 
+    it('throws a 401 Unauthorized error when the apiKey is not authorized to call this endpoint', async () => {
+      // GIVEN
+      const normalisationApiKey = process.env.NORMALIZATION_API_KEY
+
+      // WHEN
+      const result = await request(app.getHttpServer())
+        .get(`/decisions/${decisionId}`)
+        .set({ 'x-api-key': normalisationApiKey })
+
+      // THEN
+      expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
+    })
+
     it('throws a 401 Unauthorized error when the apiKey is not valid', async () => {
       // WHEN
       const result = await request(app.getHttpServer())

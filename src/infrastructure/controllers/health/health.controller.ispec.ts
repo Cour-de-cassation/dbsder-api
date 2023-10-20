@@ -21,7 +21,7 @@ describe('HealthController', () => {
   })
 
   describe('GET /health', () => {
-    it('returns a 403 FORBIDDEN when provided API Key is not valid', async () => {
+    it('returns a 401 UNAUTHORIZED when provided API Key is not valid', async () => {
       // GIVEN
       const invalidApiKey = process.env.LABEL_API_KEY
 
@@ -31,7 +31,7 @@ describe('HealthController', () => {
         .set({ 'x-api-key': invalidApiKey })
 
       // THEN
-      expect(result.statusCode).toEqual(HttpStatus.FORBIDDEN)
+      expect(result.statusCode).toEqual(HttpStatus.UNAUTHORIZED)
     })
 
     it('returns a 200 OK with DB status UP when DB is available', async () => {

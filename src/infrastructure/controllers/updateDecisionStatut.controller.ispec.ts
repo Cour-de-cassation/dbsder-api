@@ -104,20 +104,20 @@ describe('DecisionsController', () => {
           // THEN
           expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
         })
-      })
 
-      it('returns 403 Forbidden when the apiKey is not authorized to call this endpoint', async () => {
-        // GIVEN
-        const unauthorizedApiKey = process.env.NORMALIZATION_API_KEY
+        it('when the apiKey is not authorized to call this endpoint', async () => {
+          // GIVEN
+          const unauthorizedApiKey = process.env.NORMALIZATION_API_KEY
 
-        // WHEN
-        const result = await request(app.getHttpServer())
-          .put(`/decisions/${decisionId}/statut`)
-          .set({ 'x-api-key': unauthorizedApiKey })
-          .send({ statut: validStatus })
+          // WHEN
+          const result = await request(app.getHttpServer())
+            .put(`/decisions/${decisionId}/statut`)
+            .set({ 'x-api-key': unauthorizedApiKey })
+            .send({ statut: validStatus })
 
-        // THEN
-        expect(result.status).toEqual(HttpStatus.FORBIDDEN)
+          // THEN
+          expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
+        })
       })
 
       describe('returns 400 Bad Request', () => {

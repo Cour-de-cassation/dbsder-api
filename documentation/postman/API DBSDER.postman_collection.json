@@ -862,18 +862,18 @@
 					"response": []
 				},
 				{
-					"name": "403 - Récupère une decision pseudonymisee par son id avec metadonnées personnelles  avec une  API Key invalide",
+					"name": "401 - Récupère une decision pseudonymisee par son id avec metadonnées personnelles  avec une  API Key invalide",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"pm.test(\"statusCode\", function(){",
-									"    pm.response.to.have.status(403);",
+									"    pm.response.to.have.status(401);",
 									"});",
 									"",
 									"pm.test(\"message\", function(){",
-									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'avez pas accès à cette route\");",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
 									"});"
 								],
 								"type": "text/javascript"
@@ -916,18 +916,18 @@
 					"response": []
 				},
 				{
-					"name": "403 - Récupère une decision pseudonymisee par son id avec une  API Key invalide",
+					"name": "401 - Récupère une decision pseudonymisee par son id avec une  API Key invalide",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"pm.test(\"statusCode\", function(){",
-									"    pm.response.to.have.status(403);",
+									"    pm.response.to.have.status(401);",
 									"});",
 									"",
 									"pm.test(\"message\", function(){",
-									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'avez pas accès à cette route\");",
+									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1853,7 +1853,7 @@
 					"response": []
 				},
 				{
-					"name": "403 - Met à jour avec une API Key non autorisée",
+					"name": "401 - Met à jour avec une API Key non autorisée",
 					"event": [
 						{
 							"listen": "test",

@@ -78,7 +78,7 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
       expect(result.status).toEqual(HttpStatus.NOT_FOUND)
     })
 
-    it('throws a 403 Forbidden error if the Api Key is not allowed to use this filter', async () => {
+    it('throws a 401 Unauthorized error if the Api Key is not allowed to use this filter', async () => {
       // GIVEN
       const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
       await decisionsRepository.create(decisionToSave)
@@ -90,7 +90,7 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
         .set({ 'x-api-key': indexApiKey })
 
       // THEN
-      expect(result.status).toEqual(HttpStatus.FORBIDDEN)
+      expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
     })
 
     it('throws a 401 Unauthorized error when the apiKey is not valid', async () => {

@@ -12,7 +12,6 @@ import {
 import {
   ApiBadRequestResponse,
   ApiBody,
-  ApiForbiddenResponse,
   ApiHeader,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -28,8 +27,8 @@ import { UpdateDecisionPseudonymiseeUsecase } from '../../usecase/updateDecision
 import { UpdateDecisionPseudonymiseeDTO } from '../dto/updateDecision.dto'
 import { UnexpectedException } from '../exceptions/unexpected.exception'
 import { DependencyException } from '../exceptions/dependency.exception'
-import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
+import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.exception'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { LogsFormat } from '../utils/logsFormat.utils'
@@ -63,10 +62,7 @@ export class UpdateDecisionPseudonymiseeController {
     description: "La decision n'a pas été trouvée"
   })
   @ApiUnauthorizedResponse({
-    description: "Vous n'avez pas accès à cette route"
-  })
-  @ApiForbiddenResponse({
-    description: "Vous n'avez pas accès à cette route"
+    description: "Vous n'êtes pas autorisé à appeler cette route"
   })
   @UsePipes()
   async updateDecisionPseudonymisee(
@@ -77,7 +73,7 @@ export class UpdateDecisionPseudonymiseeController {
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
-      throw new ForbiddenRouteException()
+      throw new ClientNotAuthorizedException()
     }
 
     const formatLogs: LogsFormat = {

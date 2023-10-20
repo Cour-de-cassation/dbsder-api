@@ -1,7 +1,6 @@
 import { Controller, Get, HttpStatus, Logger, Query, Request } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiHeader,
   ApiOkResponse,
   ApiQuery,
@@ -16,7 +15,7 @@ import { ListDecisionsUsecase } from '../../usecase/listDecisions.usecase'
 import { GetDecisionsListResponse } from './responses/getDecisionsList.response'
 import { UnexpectedException } from '../exceptions/unexpected.exception'
 import { DependencyException } from '../exceptions/dependency.exception'
-import { ForbiddenRouteException } from '../exceptions/forbiddenRoute.exception'
+import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.exception'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { LogsFormat } from '../utils/logsFormat.utils'
@@ -51,10 +50,7 @@ export class ListDecisionsController {
     description: "Le paramètre écrit n'est présent dans la liste des valeurs acceptées"
   })
   @ApiUnauthorizedResponse({
-    description: "Vous n'avez pas accès à cette route"
-  })
-  @ApiForbiddenResponse({
-    description: "Vous n'avez pas accès à cette route"
+    description: "Vous n'êtes pas autorisé à appeler cette route"
   })
   async getDecisions(
     @Query(new ValidateDtoPipe()) getDecisionListCriteria: DecisionSearchCriteria,
@@ -68,7 +64,7 @@ export class ListDecisionsController {
 
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
-      throw new ForbiddenRouteException()
+      throw new ClientNotAuthorizedException()
     }
     const formatLogs: LogsFormat = {
       operationName: 'getDecisions',
