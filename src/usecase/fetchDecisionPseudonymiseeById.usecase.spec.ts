@@ -1,6 +1,6 @@
 import { MockProxy, mock } from 'jest-mock-extended'
 import { MockUtils } from '../infrastructure/utils/mock.utils'
-import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
+import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { DecisionNotFoundError } from '../domain/errors/decisionNotFound.error'
 import { DatabaseError } from '../domain/errors/database.error'
 import { FetchDecisionPseudonymiseeByIdUsecase } from './fetchDecisionPseudonymiseeByIdUsecase'

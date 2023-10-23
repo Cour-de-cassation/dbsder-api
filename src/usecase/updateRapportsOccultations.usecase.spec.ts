@@ -1,6 +1,6 @@
 import { mock, MockProxy } from 'jest-mock-extended'
 import { RapportOccultation } from '../infrastructure/dto/updateDecision.dto'
-import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
+import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { UpdateRapportsOccultationsUsecase } from './updateRapportsOccultations.usecase'
 
 describe('UpdateRapportsOccultationsUsecase', () => {

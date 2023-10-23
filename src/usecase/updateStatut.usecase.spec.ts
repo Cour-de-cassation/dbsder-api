@@ -1,6 +1,6 @@
 import { mock, MockProxy } from 'jest-mock-extended'
 import { UpdateStatutUsecase } from './updateStatut.usecase'
-import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
+import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 
 describe('UpdateStatutUsecase', () => {
   const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =

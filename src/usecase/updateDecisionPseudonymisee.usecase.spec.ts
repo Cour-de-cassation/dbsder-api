@@ -1,5 +1,5 @@
 import { mock, MockProxy } from 'jest-mock-extended'
-import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
+import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { UpdateDecisionPseudonymiseeUsecase } from './updateDecisionPseudonymisee.usecase'
 
 describe('UpdateDecisionPseudonymiseeUsecase', () => {
