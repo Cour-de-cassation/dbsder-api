@@ -27,7 +27,7 @@ export class MapModelToResponseService {
   ): Promise<GetDecisionByIdResponse> {
     return Promise.resolve(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      (({ originalText, sommaire, ...decision }) => decision)(getDecisionByIdModel)
+      (({ originalText, sommaire, parties, ...decision }) => decision)(getDecisionByIdModel)
     )
   }
 }

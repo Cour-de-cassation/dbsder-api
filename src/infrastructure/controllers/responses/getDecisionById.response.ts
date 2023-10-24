@@ -5,7 +5,7 @@ import {
   LabelStatus,
   LabelTreatment,
   Occultation,
-  Partie,
+  PartieTJ,
   President,
   Sources
 } from 'dbsder-api-types'
@@ -45,7 +45,7 @@ export class GetDecisionByIdResponse {
   endCaseCode?: string
   filenameSource?: string
   labelTreatments?: LabelTreatment[]
-  parties?: Partie[]
+  parties?: PartieTJ[] | object
   pubCategory?: string
   codeDecision?: string
   codeNature?: string
