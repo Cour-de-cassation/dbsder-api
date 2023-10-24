@@ -6,7 +6,7 @@ Nous disposons d'une API qui interagit exclusivement avec une base de données. 
 
 ## Problématique
 
-Comment concevoir l'API de manière à ce qu'elle communique efficacement avec la base de données tout en suivant les principes de la Clean Architecture ?
+Comment concevoir l'API de manière à ce qu'elle communique efficacement avec la base de données tout en suivant les bonnes pratiques de développement ?
 
 ## Options envisagées
 
@@ -16,11 +16,11 @@ L'API interagit directement avec la base de données en utilisant des requêtes 
 
 b. Utilisation du Modèle de Base de Données comme Interface :
 
-L'API utilise le modèle de base de données comme interface pour communiquer avec la base de données, en alignant cette approche avec les principes de la Clean Architecture.
+L'API utilise le modèle de base de données comme interface pour communiquer avec la base de données, en alignant cette approche avec le modèle de Clean Architecture.
 
 ## Décision prise
 
-Nous choisissons l'option d'utiliser le modèle de base de données comme interface dans l'API, en alignant cette décision avec les principes de la Clean Architecture.
+Nous choisissons l'option d'utiliser le modèle de base de données comme interface dans l'API.
 
 ## Justification
 
@@ -38,8 +38,8 @@ Nous choisissons l'option d'utiliser le modèle de base de données comme interf
 
 ## Défis potentiels et mesures d'atténuation
 
-- **Complexité accrue** : Pour éviter une complexité excessive, il est primordial de maintenir une distinction claire entre le domaine et l'infrastructure, en suivant rigoureusement les principes de la Clean Architecture. Cela permet de garantir que le modèle de base de données reste une interface vers la couche d'infrastructure et ne s'entremêle pas avec la logique métier.
+- **Complexité accrue** : Pour éviter une complexité excessive, il est primordial de maintenir une distinction claire entre le domaine et l'infrastructure. Cela permet de garantir que le modèle de base de données reste une interface vers la couche d'infrastructure et ne s'entremêle pas avec la logique métier.
 
-- **Considérations de performance** : Pour optimiser les performances, une optimisation appropriée des requêtes et la mise en place de stratégies de mise en cache doivent être envisagées. Cela garantira des interactions efficaces avec la base de données, tout en respectant les principes de la Clean Architecture.
+- **Considérations de performance** : Pour optimiser les performances, une optimisation appropriée des requêtes et la mise en place de stratégies de mise en cache doivent être envisagées. Cela garantira des interactions efficaces avec la base de données.
 
-En conclusion, en alignant la décision d'utiliser le modèle de base de données comme interface avec les principes de la Clean Architecture, notre API qui communique exclusivement avec une base de données bénéficie de divers avantages, notamment une meilleure maintenabilité, flexibilité, testabilité et évolutivité. Bien qu'il existe des défis potentiels, une conception soignée et des techniques d'optimisation adaptées peuvent atténuer ces problèmes, nous permettant ainsi de maintenir une architecture robuste et conforme aux meilleures pratiques de développement logiciel.
+En conclusion, en alignant la décision d'utiliser le modèle de base de données comme interface avec les principes de la Clean Architecture, notre API qui communique exclusivement avec une base de données, bénéficie de divers avantages, notamment une meilleure maintenabilité, flexibilité, testabilité et évolutivité. Bien qu'il existe des défis potentiels, une conception soignée et des techniques d'optimisation adaptées peuvent atténuer ces problèmes, nous permettant ainsi de maintenir une architecture robuste et conforme aux meilleures pratiques de développement logiciel.
