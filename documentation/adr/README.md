@@ -1,8 +1,8 @@
-# Rapport de Décision Architecturale : Utilisation du Modèle de Base de Données comme Interface dans une Architecture Orientée Domaine (Clean Architecture)
+# Journal de Décision Architecturale : Utilisation du Modèle de Base de Données comme Interface dans une Architecture Orientée Domaine (Clean Architecture)
 
 ## Contexte
 
-Nous disposons d'une API qui interagit exclusivement avec une base de données. L'objectif principal de l'API est d'effectuer des opérations CRUD (Create, Read, Update, Delete) sur la base de données. Nous devons déterminer l'approche architecturale la plus appropriée pour concevoir cette API en respectant les principes de la Clean Architecture.
+Nous disposons d'une API qui interagit exclusivement avec une base de données. L'objectif principal de l'API DbSder est d'effectuer des opérations CRUD (Create, Read, Update, Delete) sur la base de données dbsder, tout en limitant les accès en écriture/lecture aux utilisateurs de cette dernière. Nous devons déterminer l'approche architecturale la plus appropriée pour concevoir cette API en respectant les principes de la Clean Architecture.
 
 ## Problématique
 
@@ -12,15 +12,15 @@ Comment concevoir l'API de manière à ce qu'elle communique efficacement avec l
 
 a. Accès direct à la base de données :
 
-L'API interagit directement avec la base de données en utilisant des requêtes SQL ou des API spécifiques à la base de données.
+L'API DbSder interagit directement avec la base de données dbsder en utilisant des requêtes SQL ou des API spécifiques à la base de données.
 
 b. Utilisation du Modèle de Base de Données comme Interface :
 
-L'API utilise le modèle de base de données comme interface pour communiquer avec la base de données, en alignant cette approche avec le modèle de Clean Architecture.
+L'API DbSder utilise le modèle de base de données (schéma sous Mongodb) comme interface pour communiquer avec la base de données, en alignant cette approche avec le modèle de Clean Architecture.
 
 ## Décision prise
 
-Nous choisissons l'option d'utiliser le modèle de base de données comme interface dans l'API.
+Nous choisissons l'option d'utiliser le modèle de base de données comme interface dans l'API. Le modèle d'objet technique correspondant champs pour champs à l'objet métier.
 
 ## Justification
 
@@ -32,9 +32,9 @@ Nous choisissons l'option d'utiliser le modèle de base de données comme interf
 
 - **Réutilisabilité** : Le modèle de base de données peut être réutilisé à travers divers points d'extrémité ou services de l'API, favorisant la réutilisation du code et évitant la duplication de la logique liée à la base de données.
 
-- **Facilité de Test** : En adoptant cette approche, les tests sont simplifiés, permettant le mockage ou le stubbing des interactions avec la base de données lors des tests unitaires, améliorant ainsi la testabilité globale de l'API.
+- **Facilité de Test** : En adoptant cette approche, les tests sont simplifiés, permettant le mockage ou le stubbing des interactions avec la base de données lors des tests unitaires, améliorant ainsi la testabilité globale de l'API. Les tests techniques d'infrastructure peuvent donc consolider la robustesse de nos règles métiers.
 
-- **Extensibilité future** : Avec le modèle de base de données comme interface, l'API peut intégrer des logiques métier supplémentaires ou des transformations de données sans altérer directement sa fonctionnalité principale, facilitant ainsi son évolutivité future.
+- **Extensibilité future** : Avec le modèle de base de données comme interface, l'API peut intégrer des logiques métier supplémentaires ou des transformations de données sans altérer directement sa fonctionnalité principale, facilitant ainsi son évolutivité future. À ce jour, nous traitons les tribunaux de Cour de Cassation et Cour d'Appel. À terme, nous traiterons également les tribunaux de commerce. La gestion de ces différentes entités conforte notre approche évolutive.
 
 ## Défis potentiels et mesures d'atténuation
 
