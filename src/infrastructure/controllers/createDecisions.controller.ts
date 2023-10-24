@@ -2,8 +2,8 @@ import { Body, Controller, HttpStatus, Logger, Put, Request, UsePipes } from '@n
 import {
   ApiBadRequestResponse,
   ApiBody,
-  ApiCreatedResponse,
   ApiHeader,
+  ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
@@ -35,7 +35,7 @@ export class CreateDecisionsController {
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
     type: CreateDecisionDTO
   })
-  @ApiCreatedResponse({ description: 'Décision créée', status: HttpStatus.OK })
+  @ApiOkResponse({ description: 'Décision créée', type: CreateDecisionResponse })
   @ApiBadRequestResponse({
     description: 'Il manque un ou plusieurs champs obligatoires dans la décision'
   })

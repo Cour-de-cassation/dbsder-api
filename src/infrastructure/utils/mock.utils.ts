@@ -257,4 +257,9 @@ export class MockUtils {
     prenom: 'Prenom Presidente',
     civilite: 'Mme.'
   }
+
+  createDecisionResponse = {
+    _id: 'someID',
+    message: 'Decision créée'
+  }
 }
