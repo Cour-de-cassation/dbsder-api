@@ -37,9 +37,7 @@ export class ValidateDtoPipe implements PipeTransform {
     }
     const errors: ValidationError[] = await validate(object)
     if (errors.length > 0) {
-      const missingProperties = errors.map((err) =>
-        this.findPropertyNameInErrorMessage(err.toString(false))
-      )
+      const missingProperties = errors.map((err) => err.property)
       const error = new MissingPropertiesException(missingProperties.join(', '))
       this.logger.error({
         operationName: 'transform',
@@ -55,20 +53,5 @@ export class ValidateDtoPipe implements PipeTransform {
   private toValidate(metatype): boolean {
     const types = [String, Boolean, Number, Array, Object]
     return !types.includes(metatype)
-  }
-
-  findPropertyNameInErrorMessage(message): string {
-    const cleanMessage: RegExpExecArray = /property (.*?) /g.exec(message)
-    /* exemple d'output du RegexExecArray
-        [
-          'property dateDecision ',
-          'dateDecision', <-- cette valeur nous intéresse
-          index: 60,
-          input: 'An instance of MetadonneesDto has failed the validation:\n' +
-            ' - property dateDecision has failed the following constraints: isDateString, matches, isString \n',
-          groups: undefined
-        ]
-    */
-    return cleanMessage ? cleanMessage[1] : ''
   }
 }
