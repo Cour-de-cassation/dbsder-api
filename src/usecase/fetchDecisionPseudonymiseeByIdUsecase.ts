@@ -1,6 +1,6 @@
 import { DecisionNotFoundError } from '../domain/errors/decisionNotFound.error'
 import { MapModelToResponseService } from '../service/mapModelToResponse.service'
-import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
+import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { GetDecisionByIdResponse } from '../infrastructure/controllers/responses/getDecisionById.response'
 
 export class FetchDecisionPseudonymiseeByIdUsecase {

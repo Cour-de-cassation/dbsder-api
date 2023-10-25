@@ -1,4 +1,4 @@
-import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
+import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 
 export class UpdateDecisionPseudonymiseeUsecase {
   constructor(private decisionsRepository: InterfaceDecisionsRepository) {}

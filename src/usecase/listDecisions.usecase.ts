@@ -3,7 +3,7 @@ import {
   mapDecisionSearchCriteriaToDTO
 } from '../domain/decisionSearchCriteria'
 import { MapModelToResponseService } from '../service/mapModelToResponse.service'
-import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
+import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { GetDecisionsListResponse } from '../infrastructure/controllers/responses/getDecisionsList.response'
 
 export class ListDecisionsUsecase {

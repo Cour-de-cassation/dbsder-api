@@ -4,7 +4,7 @@ import { DecisionModel } from '../models/decision.model'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
 import { RapportOccultation } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
-import { InterfaceDecisionsRepository } from '../decisions.repository.interface'
+import { InterfaceDecisionsRepository } from '../../../domain/decisions.repository.interface'
 import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
 

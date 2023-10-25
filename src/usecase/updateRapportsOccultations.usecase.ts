@@ -1,5 +1,5 @@
 import { RapportOccultation } from '../infrastructure/dto/updateDecision.dto'
-import { InterfaceDecisionsRepository } from '../infrastructure/db/decisions.repository.interface'
+import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 
 export class UpdateRapportsOccultationsUsecase {
   constructor(private decisionsRepository: InterfaceDecisionsRepository) {}

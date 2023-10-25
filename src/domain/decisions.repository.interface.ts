@@ -1,7 +1,7 @@
-import { DecisionModel } from './models/decision.model'
-import { CreateDecisionDTO } from '../dto/createDecision.dto'
-import { RapportOccultation } from '../dto/updateDecision.dto'
-import { GetDecisionsListDto } from '../dto/getDecisionsList.dto'
+import { DecisionModel } from '../infrastructure/db/models/decision.model'
+import { CreateDecisionDTO } from '../infrastructure/dto/createDecision.dto'
+import { RapportOccultation } from '../infrastructure/dto/updateDecision.dto'
+import { GetDecisionsListDto } from '../infrastructure/dto/getDecisionsList.dto'
 
 export interface InterfaceDecisionsRepository {
   create(decision: CreateDecisionDTO): Promise<DecisionModel>
