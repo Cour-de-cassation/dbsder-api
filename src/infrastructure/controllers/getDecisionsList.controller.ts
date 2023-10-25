@@ -45,7 +45,7 @@ export class ListDecisionsController {
     name: 'endDate',
     description: 'date de fin de la période de recherche'
   })
-  @ApiOkResponse({ description: 'Une liste de décisions' })
+  @ApiOkResponse({ description: 'Une liste de décisions', type: [GetDecisionsListResponse] })
   @ApiBadRequestResponse({
     description: "Le paramètre écrit n'est présent dans la liste des valeurs acceptées"
   })

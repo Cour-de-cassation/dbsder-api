@@ -1,10 +1,9 @@
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsList.response'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
-import { LabelStatus, QualitePartie, Sources, TypePartie } from 'dbsder-api-types'
+import { LabelStatus, Occultation, QualitePartie, Sources, TypePartie } from 'dbsder-api-types'
 import { DecisionModel } from '../db/models/decision.model'
 
 const TODAY = new Date().toISOString()
-const YESTERDAY = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString()
 const YESTERDAY_YYYY_MM_DD = new Date(new Date().setDate(new Date().getDate() - 1))
   .toISOString()
   .split('T')[0]
@@ -57,7 +56,7 @@ export class MockUtils {
     chamberId: 'someChamberId',
     chamberName: 'someChamberName',
     dateCreation: TODAY,
-    dateDecision: YESTERDAY,
+    dateDecision: YESTERDAY_YYYY_MM_DD,
     decatt: [1, 2],
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
@@ -227,21 +226,21 @@ export class MockUtils {
 
   createDecisionTJDto = {
     ...this.createDecisionDTO,
-    codeService: '0A',
-    libelleNAC: 'Demande en dommages-intérêts contre un organisme',
-    numeroRoleGeneral: '01/12345',
-    libelleService: 'Libelle de service',
     codeDecision: '0aA',
-    libelleCodeDecision: 'some libelle code decision',
     codeNature: '6C',
-    libelleNatureParticuliere: 'Autres demandes en matière de frais et dépens',
-    recommandationOccultation: 'aucune',
-    selection: false,
-    matiereDeterminee: true,
-    pourvoiLocal: false,
-    pourvoiCourDeCassation: false,
+    codeService: '0A',
     debatPublic: true,
-    indicateurQPC: true
+    indicateurQPC: true,
+    libelleNAC: 'Demande en dommages-intérêts contre un organisme',
+    libelleService: 'Libelle de service',
+    libelleCodeDecision: 'some libelle code decision',
+    libelleNatureParticuliere: 'Autres demandes en matière de frais et dépens',
+    matiereDeterminee: true,
+    numeroRoleGeneral: '01/12345',
+    recommandationOccultation: Occultation.AUCUNE,
+    pourvoiCourDeCassation: false,
+    pourvoiLocal: false,
+    selection: false
   }
 
   decisionAssociee = {
