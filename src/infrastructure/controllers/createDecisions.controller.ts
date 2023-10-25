@@ -35,7 +35,7 @@ export class CreateDecisionsController {
     description: 'Décision intègre au format wordperfect et metadonnées associées.',
     type: CreateDecisionDTO
   })
-  @ApiOkResponse({ description: 'Décision créée', type: CreateDecisionResponse })
+  @ApiOkResponse({ description: 'Décision créée ou mise à jour', type: CreateDecisionResponse })
   @ApiBadRequestResponse({
     description: 'Il manque un ou plusieurs champs obligatoires dans la décision'
   })
@@ -80,7 +80,7 @@ export class CreateDecisionsController {
     })
     return {
       _id: decisionCreated._id,
-      message: 'Decision créée'
+      message: 'Decision créée ou mise à jour'
     }
   }
 }
