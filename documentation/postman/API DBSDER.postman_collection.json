@@ -21,7 +21,7 @@
 									"});",
 									"",
 									"pm.test(\"message\", function(){",
-									"    pm.expect(pm.response.json().message).to.eql(\"Decision créée\");",
+									"    pm.expect(pm.response.json().message).to.eql(\"Decision créée ou mise à jour\");",
 									"});"
 								],
 								"type": "text/javascript"
