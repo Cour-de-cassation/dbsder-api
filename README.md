@@ -34,7 +34,7 @@ npm run docker:start:db
  ```
 3. Créer un .env en copiant le docker.env et modifier la variable MONGO_DB_URL:
 ```text
-MONGO_DB_URL=mongodb://localhost:55432
+MONGO_DB_URL=mongodb://localhost:55433
 ```
 4. Lancer l'application
  ```bash
