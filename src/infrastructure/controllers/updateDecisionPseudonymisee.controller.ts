@@ -80,7 +80,8 @@ export class UpdateDecisionPseudonymiseeController {
       operationName: 'updateDecisionPseudonymisee',
       httpMethod: req.method,
       path: req.path,
-      msg: `PUT /decisions/id/decision-pseudonymisee called with ID ${id} and decisionPseudonymisee ${body.decisionPseudonymisee}`
+      msg: `PUT /decisions/id/decision-pseudonymisee called with ID ${id} and decisionPseudonymisee ${body.decisionPseudonymisee}`,
+      data: { id, decisionPseudonymisee: body.decisionPseudonymisee }
     }
     this.logger.log(formatLogs)
 

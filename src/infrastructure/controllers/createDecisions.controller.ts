@@ -51,7 +51,8 @@ export class CreateDecisionsController {
       operationName: 'createDecisions',
       httpMethod: req.method,
       path: req.path,
-      msg: `PUT /decisions called with ${JSON.stringify(decision)}`
+      msg: `PUT /decisions called with ${JSON.stringify(decision)}`,
+      data: { decision }
     }
     this.logger.log(formatLogs)
 

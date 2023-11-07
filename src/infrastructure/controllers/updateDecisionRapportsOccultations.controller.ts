@@ -80,7 +80,8 @@ export class UpdateDecisionRapportsOccultationsController {
       operationName: 'updateDecisionRapportsOccultations',
       httpMethod: req.method,
       path: req.path,
-      msg: `PUT /decisions/id/rapport-occultations called with ID ${id} and rapportsOccultations`
+      msg: `PUT /decisions/id/rapport-occultations called with ID ${id} and rapportsOccultations`,
+      data: { id, rapportsOccultations: body.rapportsOccultations }
     }
     this.logger.log(formatLogs)
 

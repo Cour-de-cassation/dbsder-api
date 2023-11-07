@@ -79,7 +79,8 @@ export class UpdateDecisionStatutController {
       operationName: 'updateDecisionStatut',
       httpMethod: req.method,
       path: req.path,
-      msg: `PUT /decisions/id/statut called with ID ${id} and status ${labelStatus}`
+      msg: `PUT /decisions/id/statut called with ID ${id} and status ${labelStatus}`,
+      data: { id, labelStatus }
     }
     this.logger.log(formatLogs)
 
