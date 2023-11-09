@@ -51,10 +51,9 @@ export class CreateDecisionsController {
       operationName: 'createDecisions',
       httpMethod: req.method,
       path: req.path,
-      msg: `PUT /decisions called with ${JSON.stringify(decision)}`,
-      data: { decision }
+      msg: 'PUT /decisions called'
     }
-    this.logger.log(formatLogs)
+    this.logger.log({ ...formatLogs, data: { decision } })
 
     const authorizedApiKeys = [process.env.NORMALIZATION_API_KEY, process.env.OPENSDER_API_KEY]
     const apiKey = req.headers['x-api-key']
