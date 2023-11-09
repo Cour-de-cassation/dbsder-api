@@ -80,9 +80,12 @@ export class UpdateDecisionPseudonymiseeController {
       operationName: 'updateDecisionPseudonymisee',
       httpMethod: req.method,
       path: req.path,
-      msg: `PUT /decisions/id/decision-pseudonymisee called with ID ${id} and decisionPseudonymisee ${body.decisionPseudonymisee}`
+      msg: 'PUT /decisions/id/decision-pseudonymisee called'
     }
-    this.logger.log(formatLogs)
+    this.logger.log({
+      ...formatLogs,
+      data: { id, decisionPseudonymisee: body.decisionPseudonymisee }
+    })
 
     const updateDecisionUsecase = new UpdateDecisionPseudonymiseeUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, body.decisionPseudonymisee).catch((error) => {
