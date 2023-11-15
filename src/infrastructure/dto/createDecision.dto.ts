@@ -21,7 +21,7 @@ import { AnnotationDto } from './updateDecision.dto'
 
 const mockUtils = new MockUtils()
 
-class DecisionDto {
+class DecisionAssocieeDto {
   @ApiProperty({
     description: 'Numéro de registre de la décision associée',
     type: String,
@@ -62,7 +62,7 @@ class DecisionDto {
   date: string
 
   @ApiPropertyOptional({
-    description: 'ID de la décision provenant de Winci TGI',
+    description: 'ID de la décision associée provenant de Winci TGI',
     type: String,
     example: 'some-id'
   })
@@ -577,7 +577,7 @@ export class CreateDecisionDTO {
 
   @ApiPropertyOptional({
     description: 'Décision intègre chainée à la décision',
-    type: DecisionDto,
+    type: DecisionAssocieeDto,
     example: mockUtils.decisionAssociee
   })
   @IsOptional()
@@ -585,8 +585,8 @@ export class CreateDecisionDTO {
   @IsObject()
   @IsNotEmptyObject()
   @ValidateNested()
-  @Type(() => DecisionDto)
-  decisionAssociee?: DecisionDto
+  @Type(() => DecisionAssocieeDto)
+  decisionAssociee?: DecisionAssocieeDto
 
   @ApiPropertyOptional({
     description: 'Libellé du type de décision',
