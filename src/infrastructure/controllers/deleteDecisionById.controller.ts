@@ -1,4 +1,4 @@
-import { Controller, Delete, HttpStatus, Logger, Param, Request } from '@nestjs/common'
+import { Controller, Delete, HttpCode, HttpStatus, Logger, Param, Request } from '@nestjs/common'
 import {
   ApiHeader,
   ApiNoContentResponse,
@@ -24,6 +24,7 @@ export class DeleteDecisionByIdController {
   private readonly logger = new Logger()
 
   @Delete(':id')
+  @HttpCode(204)
   @ApiHeader({
     name: 'x-api-key',
     description: 'Clé API'
@@ -32,7 +33,7 @@ export class DeleteDecisionByIdController {
     name: 'id',
     description: 'Identifiant de la décision'
   })
-  @ApiNoContentResponse()
+  @ApiNoContentResponse({ description: 'La décision a bien été supprimée' })
   @ApiNotFoundResponse({
     description: "La decision n'a pas été trouvée"
   })

@@ -45,7 +45,7 @@ describe('DeleteDecisionByIdController', () => {
         .set({ 'x-api-key': opsApiKey })
 
       // THEN
-      expect(result.status).toEqual(HttpStatus.OK)
+      expect(result.status).toEqual(HttpStatus.NO_CONTENT)
     })
   })
 
