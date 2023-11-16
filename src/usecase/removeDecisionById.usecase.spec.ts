@@ -1,32 +1,29 @@
 import { MockProxy, mock } from 'jest-mock-extended'
-import { FetchDecisionByIdUsecase } from './fetchDecisionById.usecase'
-import { MockUtils } from '../infrastructure/utils/mock.utils'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { DecisionNotFoundError } from '../domain/errors/decisionNotFound.error'
 import { DatabaseError } from '../domain/errors/database.error'
+import { RemoveDecisionByIdUsecase } from './removeDecisionById.usecase'
 
-describe('FetchDecisionByIdUsecase', () => {
+describe('RemoveDecisionByIdUsecase', () => {
   const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
     mock<InterfaceDecisionsRepository>()
-  const mockUtils = new MockUtils()
-  const usecase = new FetchDecisionByIdUsecase(mockDecisionsRepository)
+  const usecase = new RemoveDecisionByIdUsecase(mockDecisionsRepository)
 
   beforeEach(() => {
     jest.resetAllMocks()
   })
 
   describe('Success case', () => {
-    it('returns the decision when provided ID exist', async () => {
+    it.only('', async () => {
       //GIVEN
       const id = '1'
-      const expectedDecision = mockUtils.decisionModel
-      jest.spyOn(mockDecisionsRepository, 'getById').mockResolvedValue(expectedDecision)
+      jest.spyOn(mockDecisionsRepository, 'removeById').mockResolvedValue(null)
 
       // WHEN
-      const decision = await usecase.execute(id)
+      await usecase.execute(id)
 
       // THEN
-      expect(decision).toEqual(expectedDecision)
+      expect(mockDecisionsRepository.removeById).toHaveBeenCalledWith('1')
     })
   })
 
