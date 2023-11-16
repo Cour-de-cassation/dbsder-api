@@ -42,12 +42,15 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
   }
 
   async removeById(id: string): Promise<void> {
-    await this.decisionModel
+    const removalData = await this.decisionModel
       .deleteOne({ _id: id })
       .lean()
       .catch((error) => {
         throw new DatabaseError(error)
       })
+    if (removalData.deletedCount === 0) {
+      throw new DecisionNotFoundError()
+    }
   }
 
   async updateStatut(id: string, status: string): Promise<string> {

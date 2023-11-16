@@ -1,4 +1,4 @@
-import { Controller, Delete, Logger, Param, Request } from '@nestjs/common'
+import { Controller, Delete, HttpStatus, Logger, Param, Request } from '@nestjs/common'
 import {
   ApiHeader,
   ApiNoContentResponse,
@@ -8,10 +8,13 @@ import {
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
-import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
 import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.exception'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
+import { RemoveDecisionByIdUsecase } from '../../usecase/removeDecisionById.usecase'
+import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.error'
 import { LogsFormat } from '../utils/logsFormat.utils'
+import { DependencyException } from '../exceptions/dependency.exception'
+import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -36,16 +39,13 @@ export class DeleteDecisionByIdController {
   @ApiUnauthorizedResponse({
     description: "Vous n'êtes pas autorisé à appeler cette route"
   })
-  async deleteDecisionById(
-    @Param('id') id: string,
-    @Request() req
-  ): Promise<GetDecisionByIdResponse> {
+  async deleteDecisionById(@Param('id') id: string, @Request() req): Promise<void> {
     const authorizedApiKeys = [process.env.OPS_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ClientNotAuthorizedException()
     }
-    //const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.decisionsRepository)
+    const removeDecisionByIdUsecase = new RemoveDecisionByIdUsecase(this.decisionsRepository)
 
     const formatLogs: LogsFormat = {
       operationName: 'deleteDecisionById',
@@ -54,7 +54,18 @@ export class DeleteDecisionByIdController {
       msg: `DELETE /decisions/:id called with id ${id}`
     }
     this.logger.log(formatLogs)
-
-    return
+    await removeDecisionByIdUsecase.execute(id).catch((error) => {
+      if (error instanceof DecisionNotFoundError) {
+        this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
+        throw new DecisionNotFoundException()
+      } else {
+        this.logger.error({
+          ...formatLogs,
+          msg: error.message,
+          statusCode: HttpStatus.SERVICE_UNAVAILABLE
+        })
+        throw new DependencyException(error)
+      }
+    })
   }
 }

@@ -14,7 +14,8 @@ const mockDecisionModel = () => ({
   create: jest.fn(),
   findOne: jest.fn(),
   updateOne: jest.fn(),
-  findOneAndUpdate: jest.fn()
+  findOneAndUpdate: jest.fn(),
+  deleteOne: jest.fn()
 })
 
 describe('DecisionsRepository', () => {
@@ -94,46 +95,41 @@ describe('DecisionsRepository', () => {
     })
   })
 
-  describe('getById', () => {
+  describe('removeById', () => {
     const id = '1'
 
-    it('return a decision when a valid ID is provided', async () => {
+    it('remove a decision when a valid ID is provided', async () => {
       // GIVEN
-      const expectedDecision = mockUtils.decisionModel
-      jest.spyOn(decisionModel, 'findOne').mockImplementation(
+      jest.spyOn(decisionModel, 'deleteOne').mockImplementation(
         () =>
           ({
-            lean: jest.fn().mockResolvedValue(expectedDecision)
+            lean: jest.fn().mockResolvedValue({ acknowledged: true, deletedCount: 1 })
           }) as any
       )
-
       // WHEN
-      const decision = await decisionsRepository.getById(id)
-
-      // THEN
-      expect(decision).toEqual(expectedDecision)
+      await expect(decisionsRepository.removeById(id))
+        // THEN
+        .resolves.toEqual(undefined)
     })
 
     it('returns null when no decision was found with provided ID', async () => {
       // GIVEN
-      const expectedDecision = null
-      jest.spyOn(decisionModel, 'findOne').mockImplementation(
+      jest.spyOn(decisionModel, 'deleteOne').mockImplementation(
         () =>
           ({
-            lean: jest.fn().mockResolvedValue(null)
+            lean: jest.fn().mockResolvedValue({ acknowledged: true, deletedCount: 0 })
           }) as any
       )
 
       // WHEN
-      const decision = await decisionsRepository.getById(id)
-
-      // THEN
-      expect(decision).toEqual(expectedDecision)
+      await expect(decisionsRepository.removeById(id))
+        // THEN
+        .rejects.toThrow(DecisionNotFoundError)
     })
 
     it('throws a DatabaseError when the database is unavailable', async () => {
       // GIVEN
-      jest.spyOn(decisionModel, 'findOne').mockImplementation(
+      jest.spyOn(decisionModel, 'deleteOne').mockImplementation(
         () =>
           ({
             lean: jest.fn().mockRejectedValueOnce(new Error())
@@ -141,7 +137,7 @@ describe('DecisionsRepository', () => {
       )
 
       // WHEN
-      await expect(decisionsRepository.getById(id))
+      await expect(decisionsRepository.removeById(id))
         // THEN
         .rejects.toThrow(DatabaseError)
     })
