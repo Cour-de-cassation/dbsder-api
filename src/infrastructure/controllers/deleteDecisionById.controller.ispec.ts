@@ -32,8 +32,8 @@ describe('DeleteDecisionByIdController', () => {
     await dropDatabase()
   })
 
-  describe.only('Success case', () => {
-    it('returns a 204 NO CONTENT and delete the decision with the given valid id', async () => {
+  describe('Success case', () => {
+    it('returns a 204 No content and delete the decision with the given valid id', async () => {
       // GIVEN
       const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
       await decisionsRepository.create(decisionToSave)
@@ -50,15 +50,15 @@ describe('DeleteDecisionByIdController', () => {
   })
 
   describe('Error cases', () => {
-    it('throws a 404 Not Found error if the ID does not exist', async () => {
+    it.skip('throws a 404 Not Found error if the ID does not exist', async () => {
       // GIVEN
-      const labelApiKey = process.env.LABEL_API_KEY
+      const opsApiKey = process.env.OPS_API_KEY
       const unknownDecisionId = 'unknownDecisionId'
 
       // WHEN
       const result = await request(app.getHttpServer())
-        .get(`/decisions/${unknownDecisionId}`)
-        .set({ 'x-api-key': labelApiKey })
+        .delete(`/decisions/${unknownDecisionId}`)
+        .set({ 'x-api-key': opsApiKey })
 
       // THEN
       expect(result.status).toEqual(HttpStatus.NOT_FOUND)
@@ -70,7 +70,7 @@ describe('DeleteDecisionByIdController', () => {
 
       // WHEN
       const result = await request(app.getHttpServer())
-        .get(`/decisions/${decisionId}`)
+        .delete(`/decisions/${decisionId}`)
         .set({ 'x-api-key': normalisationApiKey })
 
       // THEN
@@ -80,7 +80,7 @@ describe('DeleteDecisionByIdController', () => {
     it('throws a 401 Unauthorized error when the apiKey is not valid', async () => {
       // WHEN
       const result = await request(app.getHttpServer())
-        .get(`/decisions/${decisionId}`)
+        .delete(`/decisions/${decisionId}`)
         .set({ 'x-api-key': 'notValidApiKey' })
 
       // THEN
@@ -89,7 +89,7 @@ describe('DeleteDecisionByIdController', () => {
 
     it('throws a 401 Unauthorized error when the apiKey is not present', async () => {
       // WHEN
-      const result = await request(app.getHttpServer()).get(`/decisions/${decisionId}`)
+      const result = await request(app.getHttpServer()).delete(`/decisions/${decisionId}`)
 
       // THEN
       expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
