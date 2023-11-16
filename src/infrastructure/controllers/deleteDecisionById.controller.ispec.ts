@@ -50,7 +50,7 @@ describe('DeleteDecisionByIdController', () => {
   })
 
   describe('Error cases', () => {
-    it.skip('throws a 404 Not Found error if the ID does not exist', async () => {
+    it('throws a 404 Not Found error if the ID does not exist', async () => {
       // GIVEN
       const opsApiKey = process.env.OPS_API_KEY
       const unknownDecisionId = 'unknownDecisionId'
