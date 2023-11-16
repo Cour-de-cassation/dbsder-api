@@ -45,6 +45,7 @@ test:
 
 build_api:
   stage: build
+  needs: ["test"]
   variables:
     HTTP_PROXY: $HTTP_PROXY
     HTTPS_PROXY: $HTTPS_PROXY
@@ -65,6 +66,7 @@ build_api:
 
 deploy_api:
   stage: deploy
+  needs: ["build_api"]
   variables:
     DBSDER_API_INDEX_API_KEY: $DBSDER_API_INDEX_API_KEY
     DBSDER_API_LABEL_API_KEY: $DBSDER_API_LABEL_API_KEY
@@ -84,11 +86,8 @@ deploy_api:
     - envsubst < .deploys/deploy_ingress.yaml | kubectl --kubeconfig=/home/gitlab-runner/.kube/$CI_COMMIT_BRANCH apply -f -
   rules:
     - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "re7"
-      when: always
+      when: on_success
     - if: $CI_COMMIT_BRANCH == "master"
       when: manual
   tags:
     - shell
-  dependencies:
-    - build_api
-  needs: ["build_api"]
