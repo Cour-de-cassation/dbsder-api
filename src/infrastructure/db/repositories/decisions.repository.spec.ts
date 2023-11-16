@@ -98,7 +98,7 @@ describe('DecisionsRepository', () => {
   describe('removeById', () => {
     const id = '1'
 
-    it('remove a decision when a valid ID is provided', async () => {
+    it('removes a decision when a valid ID is provided', async () => {
       // GIVEN
       jest.spyOn(decisionModel, 'deleteOne').mockImplementation(
         () =>
@@ -112,7 +112,7 @@ describe('DecisionsRepository', () => {
         .resolves.toEqual(undefined)
     })
 
-    it('returns null when no decision was found with provided ID', async () => {
+    it('throws a DecisionNotFoundError when no decision was found for provided ID', async () => {
       // GIVEN
       jest.spyOn(decisionModel, 'deleteOne').mockImplementation(
         () =>
