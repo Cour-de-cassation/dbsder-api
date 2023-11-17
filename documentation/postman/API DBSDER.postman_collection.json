@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "bc88ec62-0dab-4c98-ad13-0b7c8a05b380",
+		"_postman_id": "1ad24ae4-53fa-44eb-91ae-a49671726bd9",
 		"name": "API DBSDER",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "14689636"
+		"_exporter_id": "13592912",
+		"_collection_link": "https://grey-spaceship-298416.postman.co/workspace/Judilibre~828b28c6-eaba-44c4-b963-f6155ff2c3e8/collection/13592912-1ad24ae4-53fa-44eb-91ae-a49671726bd9?action=share&source=collection_link&creator=13592912"
 	},
 	"item": [
 		{
@@ -17,7 +18,7 @@
 							"script": {
 								"exec": [
 									"pm.test(\"statusCode\", function(){",
-									"    pm.response.to.have.status(200);",
+									"    pm.response.to.have.status(204);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -77,7 +78,7 @@
 						"header": [
 							{
 								"key": "x-api-key",
-								"value": "{{LABEL_API_KEY}}",
+								"value": "{{OPS_API_KEY}}",
 								"type": "default"
 							}
 						],
