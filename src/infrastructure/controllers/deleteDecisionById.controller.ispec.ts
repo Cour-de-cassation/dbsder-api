@@ -44,8 +44,11 @@ describe('DeleteDecisionByIdController', () => {
         .delete(`/decisions/${decisionId}`)
         .set({ 'x-api-key': opsApiKey })
 
+      const resultAfterDelete = await decisionsRepository.getById(decisionId)
+
       // THEN
       expect(result.status).toEqual(HttpStatus.NO_CONTENT)
+      expect(resultAfterDelete).toBeNull()
     })
   })
 
