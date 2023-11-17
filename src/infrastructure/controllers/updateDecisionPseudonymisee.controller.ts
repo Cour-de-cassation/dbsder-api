@@ -99,7 +99,7 @@ export class UpdateDecisionPseudonymiseeController {
           msg: error.message,
           statusCode: HttpStatus.UNPROCESSABLE_ENTITY
         })
-        throw new UnprocessableException(id, body.decisionPseudonymisee, error.message)
+        throw new UnprocessableException(id, error.message)
       }
       if (error instanceof DatabaseError) {
         this.logger.error({

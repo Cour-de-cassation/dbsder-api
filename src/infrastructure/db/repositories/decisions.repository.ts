@@ -5,7 +5,11 @@ import { CreateDecisionDTO } from '../../dto/createDecision.dto'
 import { RapportOccultation } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { InterfaceDecisionsRepository } from '../../../domain/decisions.repository.interface'
-import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
+import {
+  DatabaseError,
+  DeleteFailedError,
+  UpdateFailedError
+} from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
 
 export class DecisionsRepository implements InterfaceDecisionsRepository {
@@ -50,6 +54,9 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       })
     if (removalResponse.deletedCount === 0) {
       throw new DecisionNotFoundError()
+    }
+    if (!removalResponse.acknowledged) {
+      throw new DeleteFailedError('Mongoose error while deleting decision')
     }
   }
 

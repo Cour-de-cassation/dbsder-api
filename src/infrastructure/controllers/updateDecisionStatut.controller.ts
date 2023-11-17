@@ -95,7 +95,7 @@ export class UpdateDecisionStatutController {
           msg: error.message,
           statusCode: HttpStatus.UNPROCESSABLE_ENTITY
         })
-        throw new UnprocessableException(id, labelStatus.toString(), error.message)
+        throw new UnprocessableException(id, error.message)
       }
       if (error instanceof DatabaseError) {
         this.logger.error({

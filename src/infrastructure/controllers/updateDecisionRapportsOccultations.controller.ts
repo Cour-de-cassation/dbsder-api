@@ -99,11 +99,7 @@ export class UpdateDecisionRapportsOccultationsController {
           msg: error.message,
           statusCode: HttpStatus.UNPROCESSABLE_ENTITY
         })
-        throw new UnprocessableException(
-          id,
-          JSON.stringify(body.rapportsOccultations),
-          error.message
-        )
+        throw new UnprocessableException(id, error.message)
       }
       if (error instanceof DatabaseError) {
         this.logger.error({

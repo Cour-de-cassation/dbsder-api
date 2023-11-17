@@ -15,6 +15,8 @@ import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.erro
 import { LogsFormat } from '../utils/logsFormat.utils'
 import { DependencyException } from '../exceptions/dependency.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
+import { DeleteFailedError } from '../../domain/errors/database.error'
+import { UnprocessableException } from '../exceptions/unprocessable.exception'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -59,6 +61,9 @@ export class DeleteDecisionByIdController {
       if (error instanceof DecisionNotFoundError) {
         this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
         throw new DecisionNotFoundException()
+      }
+      if (error instanceof DeleteFailedError) {
+        throw new UnprocessableException(id, error.message)
       } else {
         this.logger.error({
           ...formatLogs,
