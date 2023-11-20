@@ -38,17 +38,20 @@ describe('DeleteDecisionByIdController', () => {
       const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
       await decisionsRepository.create(decisionToSave)
       const opsApiKey = process.env.OPS_API_KEY
+      const labelApiKey = process.env.LABEL_API_KEY
 
       // WHEN
       const result = await request(app.getHttpServer())
         .delete(`/decisions/${decisionId}`)
         .set({ 'x-api-key': opsApiKey })
 
-      const resultAfterDelete = await decisionsRepository.getById(decisionId)
+      const resultAfterDelete = await request(app.getHttpServer())
+        .get(`/decisions/${decisionId}`)
+        .set({ 'x-api-key': labelApiKey })
 
       // THEN
       expect(result.status).toEqual(HttpStatus.NO_CONTENT)
-      expect(resultAfterDelete).toBeNull()
+      expect(resultAfterDelete.status).toEqual(HttpStatus.NOT_FOUND)
     })
   })
 
