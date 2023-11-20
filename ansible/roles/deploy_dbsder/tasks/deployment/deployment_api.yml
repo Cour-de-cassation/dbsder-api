@@ -1,0 +1,43 @@
+---
+- name: Create Deployment api
+  k8s:
+    apply: true
+    state: present
+    verify_ssl: true
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: api-deployment
+        namespace: "{{ dbsder_namespace }}"
+        labels:
+          app:
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: "{{ api_app_selector }}"
+        template:
+          metadata:
+            labels:
+              app: api
+          spec:
+            containers:
+              - name: api
+                image: $CI_REGISTRY/cour-de-cassation/dbsder-api:$CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA-api
+                ports:
+                  - containerPort: 3000
+                envFrom:
+                  - configMapRef:
+                      name: "api-config"
+                  - secretRef:
+                      name: "api-secret"
+                  - configMapRef:
+                      name: "bucket-config"
+                  - secretRef:
+                      name: "bucket-secret"
+                  - configMapRef:
+                      name: "s3-config"
+                  - secretRef:
+                      name: "s3-secret"
+...

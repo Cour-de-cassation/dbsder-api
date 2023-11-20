@@ -1,0 +1,22 @@
+---
+- name: Creation database service
+  k8s:
+    apply: true
+    state: present
+    verify_ssl: true
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: "{{ database_service }}"
+        namespace: "{{ dbsder_namespace }}"
+      spec:
+        selector:
+          app: "{{ database_app_selector }}"
+        ports:
+          - name: database
+            port: 27017
+            targetPort: 27017
+        type: ClusterIP
+
+...
