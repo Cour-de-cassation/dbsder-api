@@ -97,5 +97,21 @@ describe('DeleteDecisionByIdController', () => {
       // THEN
       expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
     })
+
+    it('throws a 503 Service unavailable when database connection drops', async () => {
+      // GIVEN
+      await dropDatabase()
+      const opsApiKey = process.env.OPS_API_KEY
+
+      // WHEN
+      const result = await request(app.getHttpServer())
+        .delete(`/decisions/${decisionId}`)
+        .set({ 'x-api-key': opsApiKey })
+
+      await connectDatabase()
+
+      // THEN
+      expect(result.status).toEqual(HttpStatus.SERVICE_UNAVAILABLE)
+    })
   })
 })
