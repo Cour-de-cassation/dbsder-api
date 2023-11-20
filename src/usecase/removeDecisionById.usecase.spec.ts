@@ -29,7 +29,7 @@ describe('RemoveDecisionByIdUsecase', () => {
 
   describe('Fail cases', () => {
     const id = 'id'
-    it(`returns a service unavailable when the repository don't respond`, async () => {
+    it(`returns a database error when the repository don't respond`, async () => {
       // GIVEN
       jest.spyOn(mockDecisionsRepository, 'removeById').mockImplementationOnce(() => {
         throw new DatabaseError('')
@@ -43,9 +43,9 @@ describe('RemoveDecisionByIdUsecase', () => {
 
     it('throws a DecisionNotFoundError when the decision does not exist', async () => {
       // GIVEN
-      jest
-        .spyOn(mockDecisionsRepository, 'removeById')
-        .mockRejectedValueOnce(new DecisionNotFoundError())
+      jest.spyOn(mockDecisionsRepository, 'removeById').mockImplementationOnce(() => {
+        throw new DecisionNotFoundError()
+      })
 
       // WHEN
       await expect(usecase.execute(id))

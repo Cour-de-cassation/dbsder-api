@@ -17,7 +17,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async list(decisionSearchParams: GetDecisionsListDto): Promise<DecisionModel[]> {
     try {
-      const findCriterias = this.mapDecisionSearchParametersToFindCriterias(decisionSearchParams)
+      const findCriterias = this.mapDecisionSearchParametersToFindCriteria(decisionSearchParams)
 
       const savedDecisions = await this.decisionModel.find(findCriterias)
       return Promise.resolve(savedDecisions)
@@ -120,7 +120,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return id
   }
 
-  mapDecisionSearchParametersToFindCriterias(decisionSearchParams: GetDecisionsListDto) {
+  mapDecisionSearchParametersToFindCriteria(decisionSearchParams: GetDecisionsListDto) {
     const todayDate = new Date().toISOString().slice(0, 10)
     // syntax :  https://medium.com/@slamflipstrom/conditional-object-properties-using-spread-in-javascript-714e0a12f496
     return {

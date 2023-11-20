@@ -15,8 +15,9 @@ import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.erro
 import { LogsFormat } from '../utils/logsFormat.utils'
 import { DependencyException } from '../exceptions/dependency.exception'
 import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
-import { DeleteFailedError } from '../../domain/errors/database.error'
+import { DatabaseError, DeleteFailedError } from '../../domain/errors/database.error'
 import { UnprocessableException } from '../exceptions/unprocessable.exception'
+import { UnexpectedException } from '../exceptions/unexpected.exception'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -63,15 +64,27 @@ export class DeleteDecisionByIdController {
         throw new DecisionNotFoundException()
       }
       if (error instanceof DeleteFailedError) {
+        this.logger.error({
+          ...formatLogs,
+          msg: error.message,
+          statusCode: HttpStatus.UNPROCESSABLE_ENTITY
+        })
         throw new UnprocessableException(id, error.message)
-      } else {
+      }
+      if (error instanceof DatabaseError) {
         this.logger.error({
           ...formatLogs,
           msg: error.message,
           statusCode: HttpStatus.SERVICE_UNAVAILABLE
         })
-        throw new DependencyException(error)
+        throw new DependencyException(error.message)
       }
+      this.logger.error({
+        ...formatLogs,
+        msg: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+      })
+      throw new UnexpectedException(error)
     })
   }
 }
