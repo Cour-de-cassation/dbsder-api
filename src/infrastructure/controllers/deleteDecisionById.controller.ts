@@ -1,17 +1,5 @@
+import { Controller, Delete, HttpCode, HttpStatus, Logger, Param, Request } from '@nestjs/common'
 import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Logger,
-  Param,
-  Put,
-  Request,
-  UsePipes
-} from '@nestjs/common'
-import {
-  ApiBadRequestResponse,
-  ApiBody,
   ApiHeader,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -20,27 +8,25 @@ import {
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
-import { DatabaseError, UpdateFailedError } from '../../domain/errors/database.error'
-import { UnprocessableException } from '../exceptions/unprocessable.exception'
-import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.error'
-import { UpdateRapportsOccultationsUsecase } from '../../usecase/updateRapportsOccultations.usecase'
-import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
-import { UnexpectedException } from '../exceptions/unexpected.exception'
-import { DependencyException } from '../exceptions/dependency.exception'
-import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
 import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.exception'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
-import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
+import { RemoveDecisionByIdUsecase } from '../../usecase/removeDecisionById.usecase'
+import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.error'
 import { LogsFormat } from '../utils/logsFormat.utils'
+import { DependencyException } from '../exceptions/dependency.exception'
+import { DecisionNotFoundException } from '../exceptions/decisionNotFound.exception'
+import { DatabaseError, DeleteFailedError } from '../../domain/errors/database.error'
+import { UnprocessableException } from '../exceptions/unprocessable.exception'
+import { UnexpectedException } from '../exceptions/unexpected.exception'
 
 @ApiTags('DbSder')
 @Controller('decisions')
-export class UpdateDecisionRapportsOccultationsController {
+export class DeleteDecisionByIdController {
   constructor(private readonly decisionsRepository: DecisionsRepository) {}
 
   private readonly logger = new Logger()
 
-  @Put(':id/rapports-occultations')
+  @Delete(':id')
   @HttpCode(204)
   @ApiHeader({
     name: 'x-api-key',
@@ -50,50 +36,34 @@ export class UpdateDecisionRapportsOccultationsController {
     name: 'id',
     description: 'Identifiant de la décision'
   })
-  @ApiBody({
-    description: `Rapport d'occultations de la décision`,
-    type: UpdateDecisionRapportsOccultationsDTO
-  })
-  @ApiNoContentResponse()
-  @ApiBadRequestResponse({
-    description: 'Statut manquant ou invalide'
-  })
+  @ApiNoContentResponse({ description: 'La décision a bien été supprimée' })
   @ApiNotFoundResponse({
     description: "La decision n'a pas été trouvée"
   })
   @ApiUnauthorizedResponse({
     description: "Vous n'êtes pas autorisé à appeler cette route"
   })
-  @UsePipes()
-  async updateDecisionRapportsOccultations(
-    @Param('id') id: string,
-    @Body(new ValidateDtoPipe()) body: UpdateDecisionRapportsOccultationsDTO,
-    @Request() req
-  ): Promise<void> {
-    const authorizedApiKeys = [process.env.LABEL_API_KEY]
+  async deleteDecisionById(@Param('id') id: string, @Request() req): Promise<void> {
+    const authorizedApiKeys = [process.env.OPS_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ClientNotAuthorizedException()
     }
+    const removeDecisionByIdUsecase = new RemoveDecisionByIdUsecase(this.decisionsRepository)
 
     const formatLogs: LogsFormat = {
-      operationName: 'updateDecisionRapportsOccultations',
+      operationName: 'deleteDecisionById',
       httpMethod: req.method,
       path: req.path,
-      msg: 'PUT /decisions/id/rapport-occultations called'
+      msg: `DELETE /decisions/:id called with id ${id}`
     }
-    this.logger.log({
-      ...formatLogs,
-      data: { id, rapportsOccultations: body.rapportsOccultations }
-    })
-
-    const updateDecisionUsecase = new UpdateRapportsOccultationsUsecase(this.decisionsRepository)
-    await updateDecisionUsecase.execute(id, body.rapportsOccultations).catch((error) => {
+    this.logger.log(formatLogs)
+    await removeDecisionByIdUsecase.execute(id).catch((error) => {
       if (error instanceof DecisionNotFoundError) {
         this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
         throw new DecisionNotFoundException()
       }
-      if (error instanceof UpdateFailedError) {
+      if (error instanceof DeleteFailedError) {
         this.logger.error({
           ...formatLogs,
           msg: error.message,

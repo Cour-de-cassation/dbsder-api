@@ -32,7 +32,7 @@ describe('FetchDecisionByIdUsecase', () => {
 
   describe('Fail cases', () => {
     const id = 'id'
-    it("returns a service unavailable when the respository don't respond", async () => {
+    it("returns a service unavailable when the repository don't respond", async () => {
       // GIVEN
       jest.spyOn(mockDecisionsRepository, 'getById').mockImplementationOnce(() => {
         throw new DatabaseError('')

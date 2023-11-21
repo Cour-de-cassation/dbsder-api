@@ -5,7 +5,11 @@ import { CreateDecisionDTO } from '../../dto/createDecision.dto'
 import { RapportOccultation } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { InterfaceDecisionsRepository } from '../../../domain/decisions.repository.interface'
-import { DatabaseError, UpdateFailedError } from '../../../domain/errors/database.error'
+import {
+  DatabaseError,
+  DeleteFailedError,
+  UpdateFailedError
+} from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
 
 export class DecisionsRepository implements InterfaceDecisionsRepository {
@@ -13,7 +17,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async list(decisionSearchParams: GetDecisionsListDto): Promise<DecisionModel[]> {
     try {
-      const findCriterias = this.mapDecisionSearchParametersToFindCriterias(decisionSearchParams)
+      const findCriterias = this.mapDecisionSearchParametersToFindCriteria(decisionSearchParams)
 
       const savedDecisions = await this.decisionModel.find(findCriterias)
       return Promise.resolve(savedDecisions)
@@ -39,6 +43,21 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
         throw new DatabaseError(error)
       })
     return decision
+  }
+
+  async removeById(id: string): Promise<void> {
+    const removalResponse = await this.decisionModel
+      .deleteOne({ _id: id })
+      .lean()
+      .catch((error) => {
+        throw new DatabaseError(error)
+      })
+    if (removalResponse.deletedCount === 0) {
+      throw new DecisionNotFoundError()
+    }
+    if (!removalResponse.acknowledged) {
+      throw new DeleteFailedError('Mongoose error while deleting decision')
+    }
   }
 
   async updateStatut(id: string, status: string): Promise<string> {
@@ -101,7 +120,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return id
   }
 
-  mapDecisionSearchParametersToFindCriterias(decisionSearchParams: GetDecisionsListDto) {
+  mapDecisionSearchParametersToFindCriteria(decisionSearchParams: GetDecisionsListDto) {
     const todayDate = new Date().toISOString().slice(0, 10)
     // syntax :  https://medium.com/@slamflipstrom/conditional-object-properties-using-spread-in-javascript-714e0a12f496
     return {

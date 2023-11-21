@@ -13,4 +13,5 @@ export interface InterfaceDecisionsRepository {
     id: string,
     rapportsOccultations: RapportOccultation[]
   ): Promise<string>
+  removeById(id: string): Promise<void>
 }

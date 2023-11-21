@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus } from '@nestjs/common'
 
 export class UnprocessableException extends HttpException {
-  constructor(decisionId: string, value: string, reason: string) {
+  constructor(decisionId: string, reason: string) {
     super(
-      `La mise à jour de la valeur "${value}" a échouée pour la décision "${decisionId}" : "${reason}"`,
+      `Le traitement de la décision "${decisionId}" a échoué: "${reason}"`,
       HttpStatus.UNPROCESSABLE_ENTITY
     )
   }

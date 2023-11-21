@@ -18,6 +18,7 @@ import { UpdateDecisionStatutController } from './infrastructure/controllers/upd
 import { GetDecisionPseudonymiseesController } from './infrastructure/controllers/getDecisionPseudonymiseeById.controller'
 import { UpdateDecisionPseudonymiseeController } from './infrastructure/controllers/updateDecisionPseudonymisee.controller'
 import { UpdateDecisionRapportsOccultationsController } from './infrastructure/controllers/updateDecisionRapportsOccultations.controller'
+import { DeleteDecisionByIdController } from './infrastructure/controllers/deleteDecisionById.controller'
 
 @Module({
   imports: [
@@ -39,7 +40,8 @@ import { UpdateDecisionRapportsOccultationsController } from './infrastructure/c
     CreateDecisionsController,
     UpdateDecisionPseudonymiseeController,
     UpdateDecisionRapportsOccultationsController,
-    UpdateDecisionStatutController
+    UpdateDecisionStatutController,
+    DeleteDecisionByIdController
   ],
   providers: [DecisionsRepository]
 })
