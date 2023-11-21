@@ -4,7 +4,3 @@ dbsder_application: dbsder
 
 api_app_selector: api
 database_app_selector: database
-bucket_app_selector: bucket
-
-api_stripprefix: api-stripprefix
-bucket_stripprefix: bucket-stripprefix
