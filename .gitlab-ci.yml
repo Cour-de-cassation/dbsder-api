@@ -80,7 +80,7 @@ deploy_api:
     - if: $CI_COMMIT_BRANCH == "ajout_ansible" || $CI_COMMIT_BRANCH == "prod" || $CI_COMMIT_BRANCH == "re7"
       when: manual
     - if: $CI_COMMIT_BRANCH == "dev"
-      when: manual
+      when: on_success
 
   tags:
     - docker
