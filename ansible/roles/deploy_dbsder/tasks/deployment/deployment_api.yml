@@ -24,7 +24,7 @@
           spec:
             containers:
               - name: api
-                image: $CI_REGISTRY/cour-de-cassation/dbsder-api:$CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA-api
+                image: "{{ dbsder_api_image }}"
                 ports:
                   - containerPort: 3000
                 envFrom:
