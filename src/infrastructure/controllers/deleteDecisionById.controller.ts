@@ -4,8 +4,10 @@ import {
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiParam,
+  ApiServiceUnavailableResponse,
   ApiTags,
-  ApiUnauthorizedResponse
+  ApiUnauthorizedResponse,
+  ApiUnprocessableEntityResponse
 } from '@nestjs/swagger'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.exception'
@@ -43,6 +45,8 @@ export class DeleteDecisionByIdController {
   @ApiUnauthorizedResponse({
     description: "Vous n'êtes pas autorisé à appeler cette route"
   })
+  @ApiUnprocessableEntityResponse({ description: 'Entité non processable' })
+  @ApiServiceUnavailableResponse({ description: 'Service non disponible' })
   async deleteDecisionById(@Param('id') id: string, @Request() req): Promise<void> {
     const authorizedApiKeys = [process.env.OPS_API_KEY]
     const apiKey = req.headers['x-api-key']
