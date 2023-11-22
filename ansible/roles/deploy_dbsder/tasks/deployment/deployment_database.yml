@@ -8,7 +8,7 @@
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: database-deployment
+        name: "{{ database_app_id }}-deployment"
         namespace: "{{ dbsder_namespace }}"
         labels:
           app:
@@ -16,14 +16,14 @@
         replicas: 1
         selector:
           matchLabels:
-            app: "{{ database_app_selector }}"
+            app: "{{ database_app_id }}"
         template:
           metadata:
             labels:
-              app: database
+              app: "{{ database_app_id }}"
           spec:
             containers:
-              - name: database
+              - name: "{{ database_app_id }}"
                 image: mongo:6.0.4-jammy
                 ports:
                   - containerPort: 27017

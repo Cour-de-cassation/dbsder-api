@@ -8,7 +8,7 @@
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: api-deployment
+        name: "{{ api_app_id }}-deployment"
         namespace: "{{ dbsder_namespace }}"
         labels:
           app:
@@ -16,14 +16,14 @@
         replicas: 1
         selector:
           matchLabels:
-            app: "{{ api_app_selector }}"
+            app: "{{ api_app_id }}"
         template:
           metadata:
             labels:
-              app: api
+              app: "{{ api_app_id }}"
           spec:
             containers:
-              - name: api
+              - name: "{{ api_app_id }}"
                 image: "{{ dbsder_api_image }}"
                 ports:
                   - containerPort: 3000

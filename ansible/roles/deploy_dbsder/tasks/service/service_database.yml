@@ -12,7 +12,7 @@
         namespace: "{{ dbsder_namespace }}"
       spec:
         selector:
-          app: "{{ database_app_selector }}"
+          app: "{{ database_app_id }}"
         ports:
           - name: database
             port: 27017
