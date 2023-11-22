@@ -7,5 +7,5 @@ database_service: "database-service"
 dbsder_private_name: "apidbsder.judilibre-prive.local"
 
 doc_login: "root"
-mongo_db_url: "http://{{ database_service }}:27017"
+mongo_db_url: "mongodb://{{ database_service }}:27017"
 no_color: "true"
