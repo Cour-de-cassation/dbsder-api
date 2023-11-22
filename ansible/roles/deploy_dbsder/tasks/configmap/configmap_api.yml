@@ -14,7 +14,7 @@
           app: "{{ dbsder_application }}"
       data:
         DOC_LOGIN: "{{ doc_login }}"
-        MONGO_DB_URL: "{{ dbsder_api_url }}"
+        MONGO_DB_URL: "{{ mongo_db_url }}"
         NO_COLOR: "{{ no_color }}"
 
 ...
