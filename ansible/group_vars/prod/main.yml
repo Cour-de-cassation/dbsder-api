@@ -1,0 +1,10 @@
+---
+attachments_api_key: "{{ vault_attachments_api_key }}"
+doc_password: "{{ vault_doc_password }}"
+index_api_key: "{{ vault_index_api_key }}"
+label_api_key: "{{ vault_label_api_key }}"
+normalization_api_key: "{{ vault_normalization_api_key }}"
+opensder_api_key: "{{ vault_opensder_api_key }}"
+ops_api_key: "{{ vault_ops_api_key }}"
+publication_api_key: "{{ vault_publication_api_key }}"
+mongo_db_url: "{{ vault_mongo_db_url }}"

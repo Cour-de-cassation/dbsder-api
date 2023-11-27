@@ -2,6 +2,13 @@ image: docker:20.10.22
 services:
   - docker:20.10.22-dind
 
+variables:
+  dev: dev
+  re7: preprod
+  master: prod
+  api_docker_image: "$CI_REGISTRY/cour-de-cassation/dbsder-api:$CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA"
+
+
 stages:
   - test
   - build
@@ -12,18 +19,8 @@ test:
   services:
   - docker:20.10.22
   variables:
-    HTTP_PROXY: $HTTP_PROXY
-    HTTPS_PROXY: $HTTPS_PROXY
-    DBSDER_API_INDEX_API_KEY: $DBSDER_API_INDEX_API_KEY
-    DBSDER_API_LABEL_API_KEY: $DBSDER_API_LABEL_API_KEY
-    DBSDER_API_NORMALIZATION_API_KEY: $DBSDER_API_NORMALIZATION_API_KEY
-    DBSDER_API_OPENSDER_API_KEY: $DBSDER_API_OPENSDER_API_KEY
-    DBSDER_API_OPS_API_KEY: $DBSDER_API_OPS_API_KEY
-    DBSDER_API_PUBLICATION_API_KEY: $DBSDER_API_PUBLICATION_API_KEY
-    DBSDER_API_ATTACHMENTS_API_KEY: $DBSDER_API_ATTACHMENTS_API_KEY
-    DBSDER_API_DOC_LOGIN: $DBSDER_API_DOC_LOGIN
-    DBSDER_API_DOC_PASSWORD: $DBSDER_API_DOC_PASSWORD
-    DBSDER_API_MONGO_DB_URL: $DBSDER_API_MONGO_DB_URL
+    HTTP_PROXY: $HTTP_PROXY_DEV
+    HTTPS_PROXY: $HTTPS_PROXY_DEV
   script:
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
     - docker build 
@@ -45,7 +42,6 @@ test:
 
 build_api:
   stage: build
-  needs: ["test"]
   variables:
     HTTP_PROXY: $HTTP_PROXY
     HTTPS_PROXY: $HTTPS_PROXY
@@ -55,8 +51,8 @@ build_api:
         --build-arg http_proxy=$HTTP_PROXY
         --build-arg https_proxy=$HTTPS_PROXY
         --target api
-        -t $CI_REGISTRY/cour-de-cassation/dbsder-api:$CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA-api .
-    - docker push $CI_REGISTRY/cour-de-cassation/dbsder-api:$CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA-api
+        -t $api_docker_image .
+    - docker push $api_docker_image
   only:
     - master
     - re7
@@ -64,30 +60,26 @@ build_api:
   tags:
     - docker
 
+
 deploy_api:
   stage: deploy
-  needs: ["build_api"]
+  image: alpine/ansible:latest
   variables:
-    DBSDER_API_INDEX_API_KEY: $DBSDER_API_INDEX_API_KEY
-    DBSDER_API_LABEL_API_KEY: $DBSDER_API_LABEL_API_KEY
-    DBSDER_API_NORMALIZATION_API_KEY: $DBSDER_API_NORMALIZATION_API_KEY
-    DBSDER_API_OPENSDER_API_KEY: $DBSDER_API_OPENSDER_API_KEY
-    DBSDER_API_OPS_API_KEY: $DBSDER_API_OPS_API_KEY
-    DBSDER_API_PUBLICATION_API_KEY: $DBSDER_API_PUBLICATION_API_KEY
-    DBSDER_API_ATTACHMENTS_API_KEY: $DBSDER_API_ATTACHMENTS_API_KEY
-    DBSDER_API_DOC_LOGIN: $DBSDER_API_DOC_LOGIN
-    DBSDER_API_DOC_PASSWORD: $DBSDER_API_DOC_PASSWORD
-    DBSDER_API_MONGO_DB_URL: $DBSDER_API_MONGO_DB_URL
     DOLLAR: $$
   script:
-    - envsubst < .deploys/deploy_namespace.yaml | kubectl --kubeconfig=/home/gitlab-runner/.kube/$CI_COMMIT_BRANCH apply -f -
-    - envsubst < .deploys/deploy_api.yaml | kubectl --kubeconfig=/home/gitlab-runner/.kube/$CI_COMMIT_BRANCH apply -f -
-    - envsubst < .deploys/deploy_database.yaml | kubectl --kubeconfig=/home/gitlab-runner/.kube/$CI_COMMIT_BRANCH apply -f -
-    - envsubst < .deploys/deploy_ingress.yaml | kubectl --kubeconfig=/home/gitlab-runner/.kube/$CI_COMMIT_BRANCH apply -f -
+    - inventaire=$(eval "echo \$$CI_COMMIT_BRANCH")
+    - mkdir /root/.ssh
+    - cat $SSH_KEY > /root/.ssh/id_rsa
+    - cat $KNOWN_HOSTS > /root/.ssh/known_hosts
+    - chmod 600 /root/.ssh/id_rsa
+    - chmod 600 /root/.ssh/known_hosts
+    - ansible-playbook -e dbsder_api_image=$api_docker_image -i ansible/inventory/$inventaire.yml ansible/deploy_dbsder.yml --vault-password-file=$ANSIBLE_VAULT_PASS
   rules:
+    - if: $CI_COMMIT_BRANCH == "master" 
+      when: manual
     - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "re7"
       when: on_success
-    - if: $CI_COMMIT_BRANCH == "master"
-      when: manual
   tags:
-    - shell
+    - docker
+  dependencies:
+    - build_api

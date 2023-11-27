@@ -1,0 +1,19 @@
+---
+- name: Creation de la ConfigMap de l'api
+  k8s:
+    apply: true
+    state: present
+    verify_ssl: true
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: api-config
+        namespace: "{{ dbsder_namespace }}"
+        labels:
+          app: "{{ dbsder_application }}"
+      data:
+        DOC_LOGIN: "{{ doc_login }}"
+        NO_COLOR: "{{ no_color }}"
+
+...
