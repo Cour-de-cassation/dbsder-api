@@ -43,6 +43,15 @@ export class GetDecisionByIdController {
     description: "Vous n'êtes pas autorisé à appeler cette route"
   })
   async getDecisionById(@Param('id') id: string, @Request() req): Promise<GetDecisionByIdResponse> {
+    const routePath = req.method + ' ' + req.path
+    const formatLogs: LogsFormat = {
+      operationName: 'getDecisionById',
+      httpMethod: req.method,
+      path: req.path,
+      msg: `${routePath} called with id ${id}`
+    }
+    this.logger.log(formatLogs)
+
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
@@ -50,15 +59,7 @@ export class GetDecisionByIdController {
     }
     const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.decisionsRepository)
 
-    const formatLogs: LogsFormat = {
-      operationName: 'getDecisionById',
-      httpMethod: req.method,
-      path: req.path,
-      msg: `GET /decisions/:id called with id ${id}`
-    }
-    this.logger.log(formatLogs)
-
-    return await fetchDecisionByIdUsecase.execute(id).catch((error) => {
+    const foundDecision = await fetchDecisionByIdUsecase.execute(id).catch((error) => {
       if (error instanceof DecisionNotFoundError) {
         this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
         throw new DecisionNotFoundException()
@@ -78,5 +79,15 @@ export class GetDecisionByIdController {
       })
       throw new UnexpectedException(error.message)
     })
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { originalText, pseudoText, ...decisionToLog } = foundDecision
+    this.logger.log({
+      ...formatLogs,
+      msg: routePath + ' returns ' + HttpStatus.OK,
+      data: { decision: decisionToLog },
+      statusCode: HttpStatus.OK
+    })
+    return foundDecision
   }
 }

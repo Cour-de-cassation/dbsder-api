@@ -9,16 +9,19 @@ export class GetDecisionsListResponse {
     example: mockUtils.decisionTJToBeTreated._id
   })
   _id: string
+
   @ApiProperty({
     description: 'Statut de la décision',
     example: mockUtils.decisionTJToBeTreated.status
   })
   status: LabelStatus
+
   @ApiProperty({
     description: 'Source de la décision',
     example: mockUtils.decisionTJToBeTreated.source
   })
   source: Sources
+
   @ApiProperty({
     description: 'Date de création de la décision au format ISO 8601',
     example: mockUtils.decisionTJToBeTreated.dateCreation

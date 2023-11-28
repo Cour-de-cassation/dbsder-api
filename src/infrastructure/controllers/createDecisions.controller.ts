@@ -47,13 +47,17 @@ export class CreateDecisionsController {
     @Request() req,
     @Body('decision', new ValidateDtoPipe()) decision: CreateDecisionDTO
   ): Promise<CreateDecisionResponse> {
+    const routePath = req.method + ' ' + req.path
+
     const formatLogs: LogsFormat = {
       operationName: 'createDecisions',
       httpMethod: req.method,
       path: req.path,
-      msg: 'PUT /decisions called'
+      msg: `${routePath} called`
     }
-    this.logger.log({ ...formatLogs, data: { decision } })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { originalText, pseudoText, ...decisionToLog } = decision
+    this.logger.log({ ...formatLogs, data: { decision: decisionToLog } })
 
     const authorizedApiKeys = [process.env.NORMALIZATION_API_KEY, process.env.OPENSDER_API_KEY]
     const apiKey = req.headers['x-api-key']
@@ -78,6 +82,14 @@ export class CreateDecisionsController {
       })
       throw new UnexpectedException(error)
     })
+
+    this.logger.log({
+      ...formatLogs,
+      msg: routePath + ' returns ' + HttpStatus.OK,
+      data: { decisionId: decisionId.toString() },
+      statusCode: HttpStatus.OK
+    })
+
     return {
       _id: decisionId.toString(),
       message: 'Decision créée ou mise à jour'

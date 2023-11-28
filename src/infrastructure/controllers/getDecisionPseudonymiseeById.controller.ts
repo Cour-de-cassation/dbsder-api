@@ -57,6 +57,15 @@ export class GetDecisionPseudonymiseesController {
     @Query('avecMetadonneesPersonnelles', new ParseBoolPipe()) avecMetadonneesPersonnelles: boolean,
     @Request() req
   ): Promise<GetDecisionByIdResponse> {
+    const routePath = req.method + ' ' + req.path
+    const formatLogs: LogsFormat = {
+      operationName: 'getDecisionById',
+      httpMethod: req.method,
+      path: req.path,
+      msg: `${routePath} called with id ${id}`
+    }
+    this.logger.log(formatLogs)
+
     const authorizedApiKeys = [
       process.env.OPENSDER_API_KEY,
       process.env.ATTACHMENTS_API_KEY,
@@ -75,15 +84,7 @@ export class GetDecisionPseudonymiseesController {
       this.decisionsRepository
     )
 
-    const formatLogs: LogsFormat = {
-      operationName: 'getDecisionById',
-      httpMethod: req.method,
-      path: req.path,
-      msg: `GET /decisions/:id called with id ${id}`
-    }
-    this.logger.log(formatLogs)
-
-    return await fetchDecisionPseudonymiseeByIdUsecase
+    const foundDecision = await fetchDecisionPseudonymiseeByIdUsecase
       .execute(id, avecMetadonneesPersonnelles)
       .catch((error) => {
         if (error instanceof DecisionNotFoundError) {
@@ -105,5 +106,15 @@ export class GetDecisionPseudonymiseesController {
         })
         throw new UnexpectedException(error.message)
       })
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { originalText, pseudoText, ...decisionToLog } = foundDecision
+    this.logger.log({
+      ...formatLogs,
+      msg: routePath + ' returns ' + HttpStatus.OK,
+      data: { decision: decisionToLog },
+      statusCode: HttpStatus.OK
+    })
+    return foundDecision
   }
 }

@@ -69,19 +69,20 @@ export class UpdateDecisionStatutController {
     @Body('statut', new ParseEnumPipe(LabelStatus)) labelStatus: UpdateDecisionStatutDTO,
     @Request() req
   ): Promise<void> {
+    const routePath = req.method + ' ' + req.path
+    const formatLogs: LogsFormat = {
+      operationName: 'updateDecisionStatut',
+      httpMethod: req.method,
+      path: req.path,
+      msg: `${routePath} called`
+    }
+    this.logger.log({ ...formatLogs, data: { id, labelStatus } })
+
     const authorizedApiKeys = [process.env.LABEL_API_KEY, process.env.PUBLICATION_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ClientNotAuthorizedException()
     }
-
-    const formatLogs: LogsFormat = {
-      operationName: 'updateDecisionStatut',
-      httpMethod: req.method,
-      path: req.path,
-      msg: 'PUT /decisions/id/statut called'
-    }
-    this.logger.log({ ...formatLogs, data: { id, labelStatus } })
 
     const updateDecisionUsecase = new UpdateStatutUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, labelStatus.toString()).catch((error) => {
@@ -111,6 +112,13 @@ export class UpdateDecisionStatutController {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR
       })
       throw new UnexpectedException(error)
+    })
+
+    this.logger.log({
+      ...formatLogs,
+      msg: routePath + ' returns ' + HttpStatus.NO_CONTENT,
+      data: { decisionId: id },
+      statusCode: HttpStatus.NO_CONTENT
     })
   }
 }

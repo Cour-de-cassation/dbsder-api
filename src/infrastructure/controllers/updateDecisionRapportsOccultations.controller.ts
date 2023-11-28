@@ -70,22 +70,23 @@ export class UpdateDecisionRapportsOccultationsController {
     @Body(new ValidateDtoPipe()) body: UpdateDecisionRapportsOccultationsDTO,
     @Request() req
   ): Promise<void> {
-    const authorizedApiKeys = [process.env.LABEL_API_KEY]
-    const apiKey = req.headers['x-api-key']
-    if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
-      throw new ClientNotAuthorizedException()
-    }
-
+    const routePath = req.method + ' ' + req.path
     const formatLogs: LogsFormat = {
       operationName: 'updateDecisionRapportsOccultations',
       httpMethod: req.method,
       path: req.path,
-      msg: 'PUT /decisions/id/rapport-occultations called'
+      msg: `${routePath} called`
     }
     this.logger.log({
       ...formatLogs,
       data: { id, rapportsOccultations: body.rapportsOccultations }
     })
+
+    const authorizedApiKeys = [process.env.LABEL_API_KEY]
+    const apiKey = req.headers['x-api-key']
+    if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
+      throw new ClientNotAuthorizedException()
+    }
 
     const updateDecisionUsecase = new UpdateRapportsOccultationsUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, body.rapportsOccultations).catch((error) => {
@@ -115,6 +116,13 @@ export class UpdateDecisionRapportsOccultationsController {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR
       })
       throw new UnexpectedException(error)
+    })
+
+    this.logger.log({
+      ...formatLogs,
+      msg: routePath + ' returns ' + HttpStatus.NO_CONTENT,
+      data: { decisionId: id },
+      statusCode: HttpStatus.NO_CONTENT
     })
   }
 }

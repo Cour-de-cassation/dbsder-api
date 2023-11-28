@@ -56,6 +56,15 @@ export class ListDecisionsController {
     @Query(new ValidateDtoPipe()) getDecisionListCriteria: DecisionSearchCriteria,
     @Request() req
   ): Promise<GetDecisionsListResponse[]> {
+    const routePath = req.method + ' ' + req.path
+    const formatLogs: LogsFormat = {
+      operationName: 'getDecisions',
+      httpMethod: req.method,
+      path: req.path,
+      msg: `${routePath} called with ${JSON.stringify(getDecisionListCriteria)}`
+    }
+    this.logger.log(formatLogs)
+
     const authorizedApiKeys = [
       process.env.LABEL_API_KEY,
       process.env.INDEX_API_KEY,
@@ -66,32 +75,34 @@ export class ListDecisionsController {
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ClientNotAuthorizedException()
     }
-    const formatLogs: LogsFormat = {
-      operationName: 'getDecisions',
-      httpMethod: req.method,
-      path: req.path,
-      msg: `GET /decisions called with ${JSON.stringify(getDecisionListCriteria)}`
-    }
-
-    this.logger.log(formatLogs)
 
     const listDecisionUsecase = new ListDecisionsUsecase(this.decisionsRepository)
 
-    return await listDecisionUsecase.execute(getDecisionListCriteria).catch((error) => {
-      if (error instanceof DatabaseError) {
+    const decisionList = await listDecisionUsecase
+      .execute(getDecisionListCriteria)
+      .catch((error) => {
+        if (error instanceof DatabaseError) {
+          this.logger.error({
+            ...formatLogs,
+            msg: error.message,
+            statusCode: HttpStatus.SERVICE_UNAVAILABLE
+          })
+          throw new DependencyException(error.message)
+        }
         this.logger.error({
           ...formatLogs,
           msg: error.message,
-          statusCode: HttpStatus.SERVICE_UNAVAILABLE
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR
         })
-        throw new DependencyException(error.message)
-      }
-      this.logger.error({
-        ...formatLogs,
-        msg: error.message,
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+        throw new UnexpectedException(error.message)
       })
-      throw new UnexpectedException(error.message)
+
+    this.logger.log({
+      ...formatLogs,
+      msg: routePath + ' returns ' + HttpStatus.OK,
+      data: { decisions: decisionList },
+      statusCode: HttpStatus.OK
     })
+    return decisionList
   }
 }
