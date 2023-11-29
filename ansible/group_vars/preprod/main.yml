@@ -1,6 +1,6 @@
 ---
-attachments_api_key: "{{ vault_attachments_api_key }}"
 doc_password: "{{ vault_doc_password }}"
+attachments_api_key: "{{ vault_attachments_api_key }}"
 index_api_key: "{{ vault_index_api_key }}"
 label_api_key: "{{ vault_label_api_key }}"
 normalization_api_key: "{{ vault_normalization_api_key }}"
