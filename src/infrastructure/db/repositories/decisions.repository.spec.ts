@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { Model, UpdateWriteOpResult } from 'mongoose'
 import { MockUtils } from '../../utils/mock.utils'
 import { DecisionsRepository } from './decisions.repository'
-import { DecisionModel } from '../models/decision.model'
+import { Decision } from '../models/decision.model'
 import {
   DatabaseError,
   DeleteFailedError,
@@ -25,21 +25,21 @@ const mockDecisionModel = () => ({
 describe('DecisionsRepository', () => {
   const mockUtils = new MockUtils()
   let decisionsRepository: DecisionsRepository
-  let decisionModel: Model<DecisionModel>
+  let decisionModel: Model<Decision>
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         DecisionsRepository,
         {
-          provide: getModelToken(DecisionModel.name),
+          provide: getModelToken(Decision.name),
           useFactory: mockDecisionModel
         }
       ]
     }).compile()
 
     decisionsRepository = module.get<DecisionsRepository>(DecisionsRepository)
-    decisionModel = module.get<Model<DecisionModel>>(getModelToken(DecisionModel.name))
+    decisionModel = module.get<Model<Decision>>(getModelToken(Decision.name))
   })
 
   beforeEach(() => {
@@ -51,7 +51,7 @@ describe('DecisionsRepository', () => {
 
     it('returns created decision when decision is successfully created in DB', async () => {
       // GIVEN
-      const expectedDecision: DecisionModel = mockUtils.decisionModel
+      const expectedDecision: Decision = mockUtils.decisionModel
       jest.spyOn(decisionModel, 'findOneAndUpdate').mockResolvedValueOnce(expectedDecision)
 
       // WHEN

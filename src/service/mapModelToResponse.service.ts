@@ -1,10 +1,10 @@
 import { GetDecisionsListResponse } from '../infrastructure/controllers/responses/getDecisionsList.response'
-import { DecisionModel } from '../infrastructure/db/models/decision.model'
+import { Decision } from '../infrastructure/db/models/decision.model'
 import { GetDecisionByIdResponse } from '../infrastructure/controllers/responses/getDecisionById.response'
 
 export class MapModelToResponseService {
   mapGetDecisionsListModelToResponse(
-    decisionsListModel: DecisionModel[]
+    decisionsListModel: Decision[]
   ): Promise<GetDecisionsListResponse[]> {
     return Promise.all(
       decisionsListModel.map((decision) => ({
@@ -16,14 +16,12 @@ export class MapModelToResponseService {
     )
   }
 
-  mapGetDecisionByIdToResponse(
-    getDecisionByIdModel: DecisionModel
-  ): Promise<GetDecisionByIdResponse> {
+  mapGetDecisionByIdToResponse(getDecisionByIdModel: Decision): Promise<GetDecisionByIdResponse> {
     return Promise.resolve({ ...getDecisionByIdModel })
   }
 
   mapGetDecisionPseudonymiseeByIdToResponse(
-    getDecisionByIdModel: DecisionModel
+    getDecisionByIdModel: Decision
   ): Promise<GetDecisionByIdResponse> {
     return Promise.resolve(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

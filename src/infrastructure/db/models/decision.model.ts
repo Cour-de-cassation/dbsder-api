@@ -12,7 +12,7 @@ import {
 } from 'dbsder-api-types'
 
 @Schema()
-export class DecisionModel {
+export class Decision {
   @Prop()
   _id: string
 
@@ -183,4 +183,4 @@ export class DecisionModel {
   idDecisionWinci?: string
 }
 
-export const DecisionSchema = SchemaFactory.createForClass(DecisionModel)
+export const DecisionSchema = SchemaFactory.createForClass(Decision)

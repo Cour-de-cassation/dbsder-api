@@ -1,12 +1,12 @@
-import { DecisionModel } from '../infrastructure/db/models/decision.model'
+import { Decision } from '../infrastructure/db/models/decision.model'
 import { CreateDecisionDTO } from '../infrastructure/dto/createDecision.dto'
 import { RapportOccultation } from '../infrastructure/dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../infrastructure/dto/getDecisionsList.dto'
 
 export interface InterfaceDecisionsRepository {
-  create(decision: CreateDecisionDTO): Promise<DecisionModel>
-  list(decision: GetDecisionsListDto): Promise<DecisionModel[]>
-  getById(id: string): Promise<DecisionModel>
+  create(decision: CreateDecisionDTO): Promise<Decision>
+  list(decision: GetDecisionsListDto): Promise<Decision[]>
+  getById(id: string): Promise<Decision>
   updateStatut(id: string, status: string): Promise<string>
   updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<string>
   updateRapportsOccultations(

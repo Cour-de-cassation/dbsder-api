@@ -1,6 +1,6 @@
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
-import { DecisionModel } from '../models/decision.model'
+import { Decision } from '../models/decision.model'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
 import { RapportOccultation } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
@@ -13,9 +13,9 @@ import {
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
 
 export class DecisionsRepository implements InterfaceDecisionsRepository {
-  constructor(@InjectModel('DecisionModel') private decisionModel: Model<DecisionModel>) {}
+  constructor(@InjectModel('Decision') private decisionModel: Model<Decision>) {}
 
-  async list(decisionSearchParams: GetDecisionsListDto): Promise<DecisionModel[]> {
+  async list(decisionSearchParams: GetDecisionsListDto): Promise<Decision[]> {
     try {
       const findCriterias = this.mapDecisionSearchParametersToFindCriteria(decisionSearchParams)
 
@@ -26,8 +26,8 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     }
   }
 
-  async create(decision: CreateDecisionDTO): Promise<DecisionModel> {
-    const savedDecision: DecisionModel = await this.decisionModel
+  async create(decision: CreateDecisionDTO): Promise<Decision> {
+    const savedDecision: Decision = await this.decisionModel
       .findOneAndUpdate({ _id: decision._id }, decision, { upsert: true, new: true })
       .catch((error) => {
         throw new DatabaseError(error)
@@ -35,7 +35,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return Promise.resolve(savedDecision)
   }
 
-  async getById(id: string): Promise<DecisionModel> {
+  async getById(id: string): Promise<Decision> {
     const decision = await this.decisionModel
       .findOne({ _id: id })
       .lean()

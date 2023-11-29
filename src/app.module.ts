@@ -7,7 +7,7 @@ import { RedirectController } from './app.controller'
 import { AuthModule } from './infrastructure/auth/auth.module'
 import { pinoConfig } from './infrastructure/utils/pinoConfig.utils'
 import { envValidationConfig } from './infrastructure/dto/env.validation'
-import { DecisionSchema } from './infrastructure/db/models/decision.model'
+import { Decision, DecisionSchema } from './infrastructure/db/models/decision.model'
 import { AuthMiddleware } from './infrastructure/middleware/auth/auth.middleware'
 import { DecisionsRepository } from './infrastructure/db/repositories/decisions.repository'
 import { HealthController } from './infrastructure/controllers/health/health.controller'
@@ -28,7 +28,7 @@ import { DeleteDecisionByIdController } from './infrastructure/controllers/delet
       logger: false
     }),
     MongooseModule.forRoot(process.env.MONGO_DB_URL),
-    MongooseModule.forFeature([{ name: 'DecisionModel', schema: DecisionSchema }]),
+    MongooseModule.forFeature([{ name: Decision.name, schema: DecisionSchema }]),
     LoggerModule.forRoot(pinoConfig)
   ],
   controllers: [

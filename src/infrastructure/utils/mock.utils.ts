@@ -1,7 +1,7 @@
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsList.response'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
 import { LabelStatus, Occultation, QualitePartie, Sources, TypePartie } from 'dbsder-api-types'
-import { DecisionModel } from '../db/models/decision.model'
+import { Decision } from '../db/models/decision.model'
 
 const TODAY = new Date().toISOString()
 const YESTERDAY_YYYY_MM_DD = new Date(new Date().setDate(new Date().getDate() - 1))
@@ -96,7 +96,7 @@ export class MockUtils {
     codeMatiereCivil: 'someCodeMatiereCivil'
   }
 
-  decisionModel: DecisionModel = {
+  decisionModel: Decision = {
     codeDecision: '',
     codeNature: '',
     codeService: '',
