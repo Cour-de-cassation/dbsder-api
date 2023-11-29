@@ -79,7 +79,7 @@ export class CreateDecisionsController {
       throw new UnexpectedException(error)
     })
     return {
-      _id: decisionCreated._id,
+      _id: decisionCreated._id.toString(),
       message: 'Decision créée ou mise à jour'
     }
   }

@@ -22,6 +22,8 @@ const mockDecisionModel = () => ({
   deleteOne: jest.fn()
 })
 
+const validId = '6348acd2e1a47ca32e79f46f'
+
 describe('DecisionsRepository', () => {
   const mockUtils = new MockUtils()
   let decisionsRepository: DecisionsRepository
@@ -100,8 +102,6 @@ describe('DecisionsRepository', () => {
   })
 
   describe('getById', () => {
-    const id = '1'
-
     it('return a decision when a valid ID is provided', async () => {
       // GIVEN
       const expectedDecision = mockUtils.decisionModel
@@ -113,7 +113,7 @@ describe('DecisionsRepository', () => {
       )
 
       // WHEN
-      const decision = await decisionsRepository.getById(id)
+      const decision = await decisionsRepository.getById(validId)
 
       // THEN
       expect(decision).toEqual(expectedDecision)
@@ -130,7 +130,7 @@ describe('DecisionsRepository', () => {
       )
 
       // WHEN
-      const decision = await decisionsRepository.getById(id)
+      const decision = await decisionsRepository.getById(validId)
 
       // THEN
       expect(decision).toEqual(expectedDecision)
@@ -146,15 +146,13 @@ describe('DecisionsRepository', () => {
       )
 
       // WHEN
-      await expect(decisionsRepository.getById(id))
+      await expect(decisionsRepository.getById(validId))
         // THEN
         .rejects.toThrow(DatabaseError)
     })
   })
 
   describe('removeById', () => {
-    const id = '1'
-
     it('removes a decision when a valid ID is provided', async () => {
       // GIVEN
       jest.spyOn(decisionModel, 'deleteOne').mockImplementation(
@@ -164,7 +162,7 @@ describe('DecisionsRepository', () => {
           }) as any
       )
       // WHEN
-      await expect(decisionsRepository.removeById(id))
+      await expect(decisionsRepository.removeById(validId))
         // THEN
         .resolves.toEqual(undefined)
     })
@@ -179,7 +177,7 @@ describe('DecisionsRepository', () => {
       )
 
       // WHEN
-      await expect(decisionsRepository.removeById(id))
+      await expect(decisionsRepository.removeById(validId))
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
     })
@@ -194,7 +192,7 @@ describe('DecisionsRepository', () => {
       )
 
       // WHEN
-      await expect(decisionsRepository.removeById(id))
+      await expect(decisionsRepository.removeById(validId))
         // THEN
         .rejects.toThrow(DatabaseError)
     })
@@ -209,14 +207,13 @@ describe('DecisionsRepository', () => {
       )
 
       // WHEN
-      await expect(decisionsRepository.removeById(id))
+      await expect(decisionsRepository.removeById(validId))
         // THEN
         .rejects.toThrow(DeleteFailedError)
     })
   })
 
   describe('updateStatut', () => {
-    const decisionId = 'some-id'
     const decisionStatus = 'some-status'
 
     it('returns updated decision ID when status is successfully updated', async () => {
@@ -231,10 +228,10 @@ describe('DecisionsRepository', () => {
       jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoSuccessfulResponse)
 
       // WHEN
-      const result = await decisionsRepository.updateStatut(decisionId, decisionStatus)
+      const result = await decisionsRepository.updateStatut(validId, decisionStatus)
 
       // THEN
-      expect(result).toEqual(decisionId)
+      expect(result).toEqual(validId)
     })
 
     it('returns decision ID when decision was found but update failed because it already has the provided status', async () => {
@@ -251,10 +248,10 @@ describe('DecisionsRepository', () => {
       jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithoutUpdate)
 
       // WHEN
-      const result = await decisionsRepository.updateStatut(decisionId, decisionStatus)
+      const result = await decisionsRepository.updateStatut(validId, decisionStatus)
 
       // THEN
-      expect(result).toEqual(decisionId)
+      expect(result).toEqual(validId)
     })
 
     it('throws a DecisionNotFoundError when decision is not found', async () => {
@@ -269,7 +266,7 @@ describe('DecisionsRepository', () => {
       jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseNotFound)
 
       // WHEN
-      await expect(decisionsRepository.updateStatut(decisionId, decisionStatus))
+      await expect(decisionsRepository.updateStatut(validId, decisionStatus))
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
     })
@@ -286,7 +283,7 @@ describe('DecisionsRepository', () => {
       jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithError)
 
       // WHEN
-      await expect(decisionsRepository.updateStatut(decisionId, decisionStatus))
+      await expect(decisionsRepository.updateStatut(validId, decisionStatus))
         // THEN
         .rejects.toThrow(UpdateFailedError)
     })
@@ -296,14 +293,13 @@ describe('DecisionsRepository', () => {
       jest.spyOn(decisionModel, 'updateOne').mockRejectedValueOnce(new Error())
 
       // WHEN
-      await expect(decisionsRepository.updateStatut(decisionId, decisionStatus))
+      await expect(decisionsRepository.updateStatut(validId, decisionStatus))
         // THEN
         .rejects.toThrow(DatabaseError)
     })
   })
 
   describe('updateDecisionPseudonymisee', () => {
-    const decisionId = 'some-id'
     const decisionPseudonymizedDecision = 'some pseudonymized decision'
 
     it('returns updated decision ID when pseudonymized-decision is successfully updated', async () => {
@@ -319,12 +315,12 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       const result = await decisionsRepository.updateDecisionPseudonymisee(
-        decisionId,
+        validId,
         decisionPseudonymizedDecision
       )
 
       // THEN
-      expect(result).toEqual(decisionId)
+      expect(result).toEqual(validId)
     })
 
     it('returns decision ID when decision was found but update failed because it already has the provided pseudonymized-decision', async () => {
@@ -340,12 +336,12 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       const result = await decisionsRepository.updateDecisionPseudonymisee(
-        decisionId,
+        validId,
         decisionPseudonymizedDecision
       )
 
       // THEN
-      expect(result).toEqual(decisionId)
+      expect(result).toEqual(validId)
     })
 
     it('throws a DecisionNotFoundError when decision is not found', async () => {
@@ -361,7 +357,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(decisionId, decisionPseudonymizedDecision)
+        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
       )
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
@@ -380,7 +376,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(decisionId, decisionPseudonymizedDecision)
+        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
       )
         // THEN
         .rejects.toThrow(UpdateFailedError)
@@ -392,7 +388,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(decisionId, decisionPseudonymizedDecision)
+        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
       )
         // THEN
         .rejects.toThrow(DatabaseError)
@@ -400,7 +396,6 @@ describe('DecisionsRepository', () => {
   })
 
   describe('updateRapportsOccultations', () => {
-    const decisionId = 'some-id'
     const decisionConcealmentReports = mockUtils.decisionRapportsOccultations.rapportsOccultations
 
     it('returns updated decision ID when concealment reports are successfully updated', async () => {
@@ -416,12 +411,12 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       const result = await decisionsRepository.updateRapportsOccultations(
-        decisionId,
+        validId,
         decisionConcealmentReports
       )
 
       // THEN
-      expect(result).toEqual(decisionId)
+      expect(result).toEqual(validId)
     })
 
     it('returns decision ID when decision was found but update failed because it already has the provided concealment reports', async () => {
@@ -437,12 +432,12 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       const result = await decisionsRepository.updateRapportsOccultations(
-        decisionId,
+        validId,
         decisionConcealmentReports
       )
 
       // THEN
-      expect(result).toEqual(decisionId)
+      expect(result).toEqual(validId)
     })
 
     it('throws a DecisionNotFoundError when decision is not found', async () => {
@@ -458,7 +453,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateRapportsOccultations(decisionId, decisionConcealmentReports)
+        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports)
       )
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
@@ -477,7 +472,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateRapportsOccultations(decisionId, decisionConcealmentReports)
+        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports)
       )
         // THEN
         .rejects.toThrow(UpdateFailedError)
@@ -489,7 +484,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateRapportsOccultations(decisionId, decisionConcealmentReports)
+        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports)
       )
         // THEN
         .rejects.toThrow(DatabaseError)

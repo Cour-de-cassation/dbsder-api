@@ -10,7 +10,7 @@ describe('GetDecisionByIdController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
   let decisionsRepository: DecisionsRepository
-  const decisionId = 'validId'
+  const decisionId = '507f1f77bcf86cd799439011'
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({

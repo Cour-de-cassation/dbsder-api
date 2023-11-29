@@ -12,7 +12,7 @@ describe('DecisionsController', () => {
   let decisionsRepository: DecisionsRepository
 
   const mockUtils = new MockUtils()
-  const decisionId = 'validId'
+  const decisionId = '507f1f77bcf86cd799439011'
   const validApiKey = process.env.LABEL_API_KEY
 
   beforeAll(async () => {

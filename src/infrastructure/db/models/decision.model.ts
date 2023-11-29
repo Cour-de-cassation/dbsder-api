@@ -10,11 +10,12 @@ import {
   Occultation,
   PartieTJ
 } from 'dbsder-api-types'
+import { Types } from 'mongoose'
 
 @Schema()
 export class Decision {
   @Prop()
-  _id: string
+  _id: Types.ObjectId
 
   @Prop({ type: Object })
   analysis?: DecisionAnalyse

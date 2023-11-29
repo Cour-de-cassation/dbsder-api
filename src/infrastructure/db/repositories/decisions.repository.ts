@@ -1,4 +1,4 @@
-import { Model } from 'mongoose'
+import { Model, Types } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { Decision } from '../models/decision.model'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
@@ -19,8 +19,8 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     try {
       const findCriterias = this.mapDecisionSearchParametersToFindCriteria(decisionSearchParams)
 
-      const savedDecisions = await this.decisionModel.find(findCriterias)
-      return Promise.resolve(savedDecisions)
+      const foundDecisions = await this.decisionModel.find(findCriterias)
+      return Promise.resolve(foundDecisions)
     } catch (error) {
       throw new DatabaseError(error)
     }
@@ -28,7 +28,10 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async create(decision: CreateDecisionDTO): Promise<Decision> {
     const savedDecision: Decision = await this.decisionModel
-      .findOneAndUpdate({ _id: decision._id }, decision, { upsert: true, new: true })
+      .findOneAndUpdate({ _id: new Types.ObjectId(decision._id) }, decision, {
+        upsert: true,
+        new: true
+      })
       .catch((error) => {
         throw new DatabaseError(error)
       })
@@ -37,7 +40,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async getById(id: string): Promise<Decision> {
     const decision = await this.decisionModel
-      .findOne({ _id: id })
+      .findOne({ _id: new Types.ObjectId(id) })
       .lean()
       .catch((error) => {
         throw new DatabaseError(error)
@@ -47,7 +50,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async removeById(id: string): Promise<void> {
     const removalResponse = await this.decisionModel
-      .deleteOne({ _id: id })
+      .deleteOne({ _id: new Types.ObjectId(id) })
       .lean()
       .catch((error) => {
         throw new DatabaseError(error)
@@ -62,7 +65,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async updateStatut(id: string, status: string): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ _id: id }, { $set: { labelStatus: status } })
+      .updateOne({ _id: new Types.ObjectId(id) }, { $set: { labelStatus: status } })
       .catch((error) => {
         throw new DatabaseError(error)
       })
@@ -81,7 +84,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ _id: id }, { $set: { pseudoText: decisionPseudonymisee } })
+      .updateOne({ _id: new Types.ObjectId(id) }, { $set: { pseudoText: decisionPseudonymisee } })
       .catch((error) => {
         throw new DatabaseError(error)
       })
@@ -103,7 +106,10 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     rapportsOccultations: RapportOccultation[]
   ): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ _id: id }, { $set: { labelTreatments: rapportsOccultations } })
+      .updateOne(
+        { _id: new Types.ObjectId(id) },
+        { $set: { labelTreatments: rapportsOccultations } }
+      )
       .catch((error) => {
         throw new DatabaseError(error)
       })

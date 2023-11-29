@@ -2,6 +2,7 @@ import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsL
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
 import { LabelStatus, Occultation, QualitePartie, Sources, TypePartie } from 'dbsder-api-types'
 import { Decision } from '../db/models/decision.model'
+import { Types } from 'mongoose'
 
 const TODAY = new Date().toISOString()
 const YESTERDAY_YYYY_MM_DD = new Date(new Date().setDate(new Date().getDate() - 1))
@@ -14,7 +15,7 @@ const TOMORROW_YYYY_MM_DD = new Date(new Date().setDate(new Date().getDate() + 1
 export class MockUtils {
   decisionTJToBeTreated: GetDecisionsListResponse = {
     dateCreation: TODAY,
-    _id: 'id2023',
+    _id: '507f1f77bcf86cd799439011',
     source: Sources.TJ,
     status: LabelStatus.TOBETREATED
   }
@@ -41,7 +42,7 @@ export class MockUtils {
   }
 
   createDecisionDTO = {
-    _id: 'someID',
+    _id: '6348acd2e1a47ca32e79f46f',
     analysis: {
       analyse: ['someAnalyse'],
       doctrine: 'someDoctrine',
@@ -132,7 +133,7 @@ export class MockUtils {
     dateDecision: YESTERDAY_YYYY_MM_DD,
     decatt: [1, 2],
     formation: 'someFormation',
-    _id: 'id2023',
+    _id: new Types.ObjectId('507f1f77bcf86cd799439011'),
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',
@@ -206,7 +207,7 @@ export class MockUtils {
     dateDecision: YESTERDAY_YYYY_MM_DD,
     decatt: [1, 2],
     formation: 'someFormation',
-    _id: 'id2023',
+    _id: '507f1f77bcf86cd799439011',
     jurisdictionCode: 'someJurisdictionCode',
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',

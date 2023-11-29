@@ -12,7 +12,7 @@ describe('DecisionsController', () => {
 
   const mockUtils = new MockUtils()
   const validApiKey = process.env.LABEL_API_KEY
-  const decisionId = 'some-valid-id'
+  const decisionId = '507f1f77bcf86cd799439011'
   const rapportsOccultations = [
     {
       annotations: [

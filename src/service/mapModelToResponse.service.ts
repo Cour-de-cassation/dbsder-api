@@ -8,7 +8,7 @@ export class MapModelToResponseService {
   ): Promise<GetDecisionsListResponse[]> {
     return Promise.all(
       decisionsListModel.map((decision) => ({
-        _id: decision._id,
+        _id: decision._id.toString(),
         status: decision.labelStatus,
         source: decision.sourceName,
         dateCreation: decision.dateCreation
@@ -17,15 +17,17 @@ export class MapModelToResponseService {
   }
 
   mapGetDecisionByIdToResponse(getDecisionByIdModel: Decision): Promise<GetDecisionByIdResponse> {
-    return Promise.resolve({ ...getDecisionByIdModel })
+    return Promise.resolve({ ...getDecisionByIdModel, _id: getDecisionByIdModel._id.toString() })
   }
 
   mapGetDecisionPseudonymiseeByIdToResponse(
     getDecisionByIdModel: Decision
   ): Promise<GetDecisionByIdResponse> {
-    return Promise.resolve(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      (({ originalText, sommaire, parties, ...decision }) => decision)(getDecisionByIdModel)
-    )
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { originalText, sommaire, parties, ...decisionWithoutProperties } = getDecisionByIdModel
+    return Promise.resolve({
+      ...decisionWithoutProperties,
+      _id: getDecisionByIdModel._id.toString()
+    })
   }
 }
