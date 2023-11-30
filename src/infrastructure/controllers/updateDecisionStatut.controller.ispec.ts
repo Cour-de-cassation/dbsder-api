@@ -12,7 +12,7 @@ describe('DecisionsController', () => {
   let decisionsRepository: DecisionsRepository
 
   const mockUtils = new MockUtils()
-  const decisionId = 'validId'
+  const decisionId = '507f1f77bcf86cd799439011'
   const validApiKey = process.env.LABEL_API_KEY
 
   beforeAll(async () => {
@@ -148,7 +148,7 @@ describe('DecisionsController', () => {
 
       it('returns 404 Not Found when provided ID does not exist', async () => {
         // GIVEN
-        const unknownDecisionId = 'unknownDecisionId'
+        const unknownDecisionId = '007f1f77bcf86cd799439011'
 
         // WHEN
         const result = await request(app.getHttpServer())

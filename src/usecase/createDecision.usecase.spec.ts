@@ -20,15 +20,17 @@ describe('createDecisionUsecase', () => {
   it('creates decision successfully when database is available', async () => {
     // GIVEN
     const expectedDecision = mockUtils.decisionModel
+    const providedDecision = { ...expectedDecision, _id: expectedDecision._id.toString() }
+
     jest
       .spyOn(mockDecisionsRepository, 'create')
-      .mockImplementationOnce(async () => expectedDecision)
+      .mockImplementationOnce(async () => expectedDecision._id.toString())
 
     // WHEN
-    const result = await usecase.execute(expectedDecision)
+    const result = await usecase.execute(providedDecision)
 
     // THEN
-    expect(result).toEqual(expectedDecision)
+    expect(result).toEqual(expectedDecision._id.toString())
   })
 
   it('propagates an Error when repository returns an error', async () => {

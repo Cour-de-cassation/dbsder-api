@@ -1,3 +1,4 @@
+import { Decision } from 'src/infrastructure/db/models/decision.model'
 import { DecisionNotFoundError } from '../domain/errors/decisionNotFound.error'
 import { MapModelToResponseService } from '../service/mapModelToResponse.service'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
@@ -7,7 +8,7 @@ export class FetchDecisionPseudonymiseeByIdUsecase {
   constructor(private decisionsRepository: InterfaceDecisionsRepository) {}
 
   async execute(id: string, withPersonalData: boolean): Promise<GetDecisionByIdResponse> {
-    const decision = await this.decisionsRepository.getById(id)
+    const decision: Decision = await this.decisionsRepository.getById(id)
     if (!decision) {
       throw new DecisionNotFoundError()
     }

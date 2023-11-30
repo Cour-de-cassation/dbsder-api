@@ -1,4 +1,4 @@
-import { Model } from 'mongoose'
+import { Model, Types } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { Decision } from '../models/decision.model'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
@@ -6,6 +6,7 @@ import { RapportOccultation } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { InterfaceDecisionsRepository } from '../../../domain/decisions.repository.interface'
 import {
+  CreateFailedError,
   DatabaseError,
   DeleteFailedError,
   UpdateFailedError
@@ -19,25 +20,38 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     try {
       const findCriterias = this.mapDecisionSearchParametersToFindCriteria(decisionSearchParams)
 
-      const savedDecisions = await this.decisionModel.find(findCriterias)
-      return Promise.resolve(savedDecisions)
+      const foundDecisions = await this.decisionModel.find(findCriterias)
+      return Promise.resolve(foundDecisions)
     } catch (error) {
       throw new DatabaseError(error)
     }
   }
 
-  async create(decision: CreateDecisionDTO): Promise<Decision> {
-    const savedDecision: Decision = await this.decisionModel
-      .findOneAndUpdate({ _id: decision._id }, decision, { upsert: true, new: true })
+  async create(decision: CreateDecisionDTO): Promise<string> {
+    const { _id, ...decisionToSave } = decision
+    const savedDecision = await this.decisionModel
+      .updateOne({ _id: new Types.ObjectId(_id) }, decisionToSave, {
+        upsert: true,
+        new: true
+      })
       .catch((error) => {
         throw new DatabaseError(error)
       })
-    return Promise.resolve(savedDecision)
+    if (!savedDecision.acknowledged) {
+      throw new CreateFailedError('Mongoose error while creating decision')
+    }
+
+    const hasCreateFailed = savedDecision.matchedCount === 0 && savedDecision.upsertedCount === 0
+    if (hasCreateFailed) {
+      throw new CreateFailedError('MongoDB error while creating decision')
+    }
+
+    return Promise.resolve(_id.toString())
   }
 
   async getById(id: string): Promise<Decision> {
     const decision = await this.decisionModel
-      .findOne({ _id: id })
+      .findOne({ _id: new Types.ObjectId(id) })
       .lean()
       .catch((error) => {
         throw new DatabaseError(error)
@@ -47,7 +61,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async removeById(id: string): Promise<void> {
     const removalResponse = await this.decisionModel
-      .deleteOne({ _id: id })
+      .deleteOne({ _id: new Types.ObjectId(id) })
       .lean()
       .catch((error) => {
         throw new DatabaseError(error)
@@ -62,7 +76,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async updateStatut(id: string, status: string): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ _id: id }, { $set: { labelStatus: status } })
+      .updateOne({ _id: new Types.ObjectId(id) }, { $set: { labelStatus: status } })
       .catch((error) => {
         throw new DatabaseError(error)
       })
@@ -81,7 +95,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ _id: id }, { $set: { pseudoText: decisionPseudonymisee } })
+      .updateOne({ _id: new Types.ObjectId(id) }, { $set: { pseudoText: decisionPseudonymisee } })
       .catch((error) => {
         throw new DatabaseError(error)
       })
@@ -103,7 +117,10 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     rapportsOccultations: RapportOccultation[]
   ): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ _id: id }, { $set: { labelTreatments: rapportsOccultations } })
+      .updateOne(
+        { _id: new Types.ObjectId(id) },
+        { $set: { labelTreatments: rapportsOccultations } }
+      )
       .catch((error) => {
         throw new DatabaseError(error)
       })
