@@ -37,10 +37,11 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       .catch((error) => {
         throw new DatabaseError(error)
       })
-    const hasCreateFailed = savedDecision.matchedCount === 0 && savedDecision.upsertedCount === 0
     if (!savedDecision.acknowledged) {
       throw new CreateFailedError('Mongoose error while creating decision')
     }
+
+    const hasCreateFailed = savedDecision.matchedCount === 0 && savedDecision.upsertedCount === 0
     if (hasCreateFailed) {
       throw new CreateFailedError('MongoDB error while creating decision')
     }

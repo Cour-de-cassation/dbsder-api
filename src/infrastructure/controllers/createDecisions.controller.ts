@@ -62,7 +62,7 @@ export class CreateDecisionsController {
     }
 
     const createDecisionUsecase = new CreateDecisionUsecase(this.decisionsRepository)
-    const decisionCreated = await createDecisionUsecase.execute(decision).catch((error) => {
+    const decisionId = await createDecisionUsecase.execute(decision).catch((error) => {
       if (error instanceof DatabaseError) {
         this.logger.error({
           ...formatLogs,
@@ -79,7 +79,7 @@ export class CreateDecisionsController {
       throw new UnexpectedException(error)
     })
     return {
-      _id: decisionCreated.toString(),
+      _id: decisionId.toString(),
       message: 'Decision créée ou mise à jour'
     }
   }

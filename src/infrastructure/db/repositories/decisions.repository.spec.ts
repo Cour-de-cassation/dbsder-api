@@ -69,6 +69,7 @@ describe('DecisionsRepository', () => {
         // THEN
         expect(result).toEqual(expectedDecisionId)
       })
+
       it('returns updated decision when decision is successfully updated in DB', async () => {
         // GIVEN
         const decision = mockUtils.createDecisionDTO
@@ -89,6 +90,7 @@ describe('DecisionsRepository', () => {
         expect(result).toEqual(expectedDecisionId)
       })
     })
+
     describe('error cases', () => {
       it('throws a CreateFailedError when the insertion in the DB has failed', async () => {
         // GIVEN
