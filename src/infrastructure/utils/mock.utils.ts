@@ -42,7 +42,7 @@ export class MockUtils {
   }
 
   createDecisionDTO = {
-    _id: '6348acd2e1a47ca32e79f46f',
+    _id: '507f1f77bcf86cd799439011',
     analysis: {
       analyse: ['someAnalyse'],
       doctrine: 'someDoctrine',
@@ -259,7 +259,7 @@ export class MockUtils {
   }
 
   createDecisionResponse = {
-    _id: 'someID',
+    _id: '507f1f77bcf86cd799439011',
     message: 'Decision créée ou mise à jour'
   }
 }

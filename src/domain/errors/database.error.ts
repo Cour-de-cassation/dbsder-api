@@ -15,3 +15,9 @@ export class DeleteFailedError extends Error {
     super('Erreur lors de la suppression en base de données : ' + reason)
   }
 }
+
+export class CreateFailedError extends Error {
+  constructor(reason: string) {
+    super('Erreur lors de la création en base de données : ' + reason)
+  }
+}

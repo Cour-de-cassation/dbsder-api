@@ -67,7 +67,7 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
     it('throws a 404 Not Found error if the ID does not exist', async () => {
       // GIVEN
       const opensderApiKey = process.env.OPENSDER_API_KEY
-      const unknownDecisionId = 'unknownDecisionId'
+      const unknownDecisionId = '007f1f77bcf86cd799439011'
 
       // WHEN
       const result = await request(app.getHttpServer())

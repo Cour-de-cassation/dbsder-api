@@ -24,13 +24,13 @@ describe('createDecisionUsecase', () => {
 
     jest
       .spyOn(mockDecisionsRepository, 'create')
-      .mockImplementationOnce(async () => expectedDecision)
+      .mockImplementationOnce(async () => expectedDecision._id.toString())
 
     // WHEN
     const result = await usecase.execute(providedDecision)
 
     // THEN
-    expect(result).toEqual(expectedDecision)
+    expect(result).toEqual(expectedDecision._id.toString())
   })
 
   it('propagates an Error when repository returns an error', async () => {

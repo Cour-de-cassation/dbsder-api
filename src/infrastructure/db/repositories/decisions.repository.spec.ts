@@ -1,10 +1,11 @@
 import { getModelToken } from '@nestjs/mongoose'
 import { Test, TestingModule } from '@nestjs/testing'
-import { Model, UpdateWriteOpResult } from 'mongoose'
+import { Model, Types, UpdateWriteOpResult } from 'mongoose'
 import { MockUtils } from '../../utils/mock.utils'
 import { DecisionsRepository } from './decisions.repository'
 import { Decision } from '../models/decision.model'
 import {
+  CreateFailedError,
   DatabaseError,
   DeleteFailedError,
   UpdateFailedError
@@ -47,30 +48,76 @@ describe('DecisionsRepository', () => {
   beforeEach(() => {
     jest.resetAllMocks()
   })
-
   describe('create', () => {
-    const decision = mockUtils.createDecisionDTO
+    describe('success cases', () => {
+      it('returns created decision when decision is successfully created in DB', async () => {
+        // GIVEN
+        const decision = mockUtils.createDecisionDTO
+        const expectedUpdateResponse = {
+          acknowledged: true,
+          modifiedCount: 0,
+          matchedCount: 0,
+          upsertedCount: 1,
+          upsertedId: new Types.ObjectId(decision._id)
+        }
+        const expectedDecisionId = decision._id
+        jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(expectedUpdateResponse)
 
-    it('returns created decision when decision is successfully created in DB', async () => {
-      // GIVEN
-      const expectedDecision: Decision = mockUtils.decisionModel
-      jest.spyOn(decisionModel, 'findOneAndUpdate').mockResolvedValueOnce(expectedDecision)
+        // WHEN
+        const result = await decisionsRepository.create(decision)
 
-      // WHEN
-      const result = await decisionsRepository.create(decision)
-
-      // THEN
-      expect(result).toMatchObject(expectedDecision)
-    })
-
-    it('throws a DatabaseError when the insertion in the DB has failed', async () => {
-      // GIVEN
-      jest.spyOn(decisionModel, 'findOneAndUpdate').mockRejectedValueOnce(new Error())
-
-      // WHEN
-      await expect(decisionsRepository.create(decision))
         // THEN
-        .rejects.toThrow(DatabaseError)
+        expect(result).toEqual(expectedDecisionId)
+      })
+      it('returns updated decision when decision is successfully updated in DB', async () => {
+        // GIVEN
+        const decision = mockUtils.createDecisionDTO
+        const expectedUpdateResponse = {
+          acknowledged: true,
+          modifiedCount: 1,
+          matchedCount: 1,
+          upsertedCount: 0,
+          upsertedId: null
+        }
+        const expectedDecisionId = decision._id
+        jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(expectedUpdateResponse)
+
+        // WHEN
+        const result = await decisionsRepository.create(decision)
+
+        // THEN
+        expect(result).toEqual(expectedDecisionId)
+      })
+    })
+    describe('error cases', () => {
+      it('throws a CreateFailedError when the insertion in the DB has failed', async () => {
+        // GIVEN
+        const decision = mockUtils.createDecisionDTO
+        const expectedUpdateResponse = {
+          acknowledged: true,
+          modifiedCount: 0,
+          matchedCount: 0,
+          upsertedCount: 0,
+          upsertedId: new Types.ObjectId(decision._id)
+        }
+        jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(expectedUpdateResponse)
+
+        // WHEN
+        await expect(decisionsRepository.create(decision))
+          // THEN
+          .rejects.toThrow(CreateFailedError)
+      })
+
+      it('throws a DatabaseError when the DB is unavailable', async () => {
+        // GIVEN
+        const decision = mockUtils.createDecisionDTO
+        jest.spyOn(decisionModel, 'updateOne').mockRejectedValueOnce(new Error())
+
+        // WHEN
+        await expect(decisionsRepository.create(decision))
+          // THEN
+          .rejects.toThrow(DatabaseError)
+      })
     })
   })
 
