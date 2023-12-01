@@ -48,6 +48,15 @@ export class DeleteDecisionByIdController {
   @ApiUnprocessableEntityResponse({ description: 'Entité non processable' })
   @ApiServiceUnavailableResponse({ description: 'Service non disponible' })
   async deleteDecisionById(@Param('id') id: string, @Request() req): Promise<void> {
+    const routePath = req.method + ' ' + req.path
+    const formatLogs: LogsFormat = {
+      operationName: 'deleteDecisionById',
+      httpMethod: req.method,
+      path: req.path,
+      msg: `${routePath} called with id ${id}`
+    }
+    this.logger.log(formatLogs)
+
     const authorizedApiKeys = [process.env.OPS_API_KEY]
     const apiKey = req.headers['x-api-key']
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
@@ -55,13 +64,6 @@ export class DeleteDecisionByIdController {
     }
     const removeDecisionByIdUsecase = new RemoveDecisionByIdUsecase(this.decisionsRepository)
 
-    const formatLogs: LogsFormat = {
-      operationName: 'deleteDecisionById',
-      httpMethod: req.method,
-      path: req.path,
-      msg: `DELETE /decisions/:id called with id ${id}`
-    }
-    this.logger.log(formatLogs)
     await removeDecisionByIdUsecase.execute(id).catch((error) => {
       if (error instanceof DecisionNotFoundError) {
         this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
@@ -89,6 +91,13 @@ export class DeleteDecisionByIdController {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR
       })
       throw new UnexpectedException(error)
+    })
+
+    this.logger.log({
+      ...formatLogs,
+      msg: routePath + ' returns ' + HttpStatus.NO_CONTENT,
+      data: { decisionId: id },
+      statusCode: HttpStatus.NO_CONTENT
     })
   }
 }
