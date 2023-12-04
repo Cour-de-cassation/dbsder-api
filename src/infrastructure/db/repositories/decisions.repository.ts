@@ -6,7 +6,6 @@ import { RapportOccultation } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { InterfaceDecisionsRepository } from '../../../domain/decisions.repository.interface'
 import {
-  CreateFailedError,
   DatabaseError,
   DeleteFailedError,
   UpdateFailedError
@@ -28,25 +27,21 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
   }
 
   async create(decision: CreateDecisionDTO): Promise<string> {
-    const { _id, ...decisionToSave } = decision
     const savedDecision = await this.decisionModel
-      .updateOne({ _id: new Types.ObjectId(_id) }, decisionToSave, {
-        upsert: true,
-        new: true
-      })
+      .findOneAndUpdate(
+        { sourceId: decision.sourceId, sourceName: decision.sourceName },
+        decision,
+        {
+          upsert: true,
+          new: true,
+          lean: true
+        }
+      )
       .catch((error) => {
         throw new DatabaseError(error)
       })
-    if (!savedDecision.acknowledged) {
-      throw new CreateFailedError('Mongoose error while creating decision')
-    }
 
-    const hasCreateFailed = savedDecision.matchedCount === 0 && savedDecision.upsertedCount === 0
-    if (hasCreateFailed) {
-      throw new CreateFailedError('MongoDB error while creating decision')
-    }
-
-    return Promise.resolve(_id.toString())
+    return Promise.resolve(savedDecision._id.toString())
   }
 
   async getById(id: string): Promise<Decision> {

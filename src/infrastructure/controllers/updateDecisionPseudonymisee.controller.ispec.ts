@@ -12,7 +12,6 @@ describe('DecisionsController', () => {
 
   const mockUtils = new MockUtils()
   const validApiKey = process.env.LABEL_API_KEY
-  const decisionId = '507f1f77bcf86cd799439011'
   const decisionPseudonymisee = 'some pseudonymised decision'
 
   beforeAll(async () => {
@@ -40,10 +39,9 @@ describe('DecisionsController', () => {
       it('returns 204 No Content when decision pseudonymised-decision is updated with valid API Key and pseudonymised-decision', async () => {
         // GIVEN
         const decisionToSave = {
-          ...mockUtils.decisionModel,
-          _id: decisionId
+          ...mockUtils.decisionModel
         }
-        await decisionsRepository.create(decisionToSave)
+        const decisionId = await decisionsRepository.create(decisionToSave)
 
         // WHEN
         const result = await request(app.getHttpServer())
@@ -59,10 +57,9 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
-          _id: decisionId,
           decisionPseudonymisee
         }
-        await decisionsRepository.create(decisionToSave)
+        const decisionId = await decisionsRepository.create(decisionToSave)
 
         // WHEN
         const result = await request(app.getHttpServer())
@@ -78,6 +75,13 @@ describe('DecisionsController', () => {
     describe('Error cases', () => {
       describe('returns 401 Unauthorized', () => {
         it('when apiKey is not provided', async () => {
+          // GIVEN
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            decisionPseudonymisee
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
+
           // WHEN
           const result = await request(app.getHttpServer())
             .put(`/decisions/${decisionId}/decision-pseudonymisee`)
@@ -89,6 +93,12 @@ describe('DecisionsController', () => {
 
         it('when apiKey does not exist', async () => {
           // GIVEN
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            decisionPseudonymisee
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
+
           const unknownApiKey = 'unknownApiKey'
 
           // WHEN
@@ -103,6 +113,12 @@ describe('DecisionsController', () => {
 
         it('when the apiKey is not authorized to call this endpoint', async () => {
           // GIVEN
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            decisionPseudonymisee
+          }
+
+          const decisionId = await decisionsRepository.create(decisionToSave)
           const unauthorizedApiKey = process.env.NORMALIZATION_API_KEY
 
           // WHEN
@@ -118,6 +134,13 @@ describe('DecisionsController', () => {
 
       describe('returns 400 Bad Request', () => {
         it('when pseudonymised-decision is not provided', async () => {
+          // GIVEN
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            decisionPseudonymisee
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
+
           // WHEN
           const result = await request(app.getHttpServer())
             .put(`/decisions/${decisionId}/decision-pseudonymisee`)
@@ -129,6 +152,12 @@ describe('DecisionsController', () => {
 
         it('when pseudonymised-decision is not a string', async () => {
           // GIVEN
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            decisionPseudonymisee
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
+
           const wrongFormatDecisionPseudonymisee = 123
 
           // WHEN

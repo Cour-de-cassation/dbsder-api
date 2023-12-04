@@ -12,7 +12,6 @@ describe('DecisionsController', () => {
 
   const mockUtils = new MockUtils()
   const validApiKey = process.env.LABEL_API_KEY
-  const decisionId = '507f1f77bcf86cd799439011'
   const rapportsOccultations = [
     {
       annotations: [
@@ -54,10 +53,9 @@ describe('DecisionsController', () => {
       it('returns 204 No Content when decision is updated with valid API Key and concealment reports', async () => {
         // GIVEN
         const decisionToSave = {
-          ...mockUtils.decisionModel,
-          _id: decisionId
+          ...mockUtils.decisionModel
         }
-        await decisionsRepository.create(decisionToSave)
+        const decisionId = await decisionsRepository.create(decisionToSave)
 
         // WHEN
         const result = await request(app.getHttpServer())
@@ -73,10 +71,9 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
-          _id: decisionId,
           rapportsOccultations
         }
-        await decisionsRepository.create(decisionToSave)
+        const decisionId = await decisionsRepository.create(decisionToSave)
 
         // WHEN
         const result = await request(app.getHttpServer())
@@ -92,6 +89,14 @@ describe('DecisionsController', () => {
     describe('Error cases', () => {
       describe('returns 401 Unauthorized', () => {
         it('when apiKey is not provided', async () => {
+          // GIVEN
+
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            rapportsOccultations
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
+
           // WHEN
           const result = await request(app.getHttpServer())
             .put(`/decisions/${decisionId}/rapports-occultations`)
@@ -104,6 +109,11 @@ describe('DecisionsController', () => {
         it('when apiKey does not exist', async () => {
           // GIVEN
           const unknownApiKey = 'unknownApiKey'
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            rapportsOccultations
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
 
           // WHEN
           const result = await request(app.getHttpServer())
@@ -118,6 +128,11 @@ describe('DecisionsController', () => {
         it('when the apiKey is not authorized to call this endpoint', async () => {
           // GIVEN
           const unauthorizedApiKey = process.env.NORMALIZATION_API_KEY
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            rapportsOccultations
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
 
           // WHEN
           const result = await request(app.getHttpServer())
@@ -132,6 +147,13 @@ describe('DecisionsController', () => {
 
       describe('returns 400 Bad Request', () => {
         it('when concealment reports are not provided', async () => {
+          // GIVEN
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            rapportsOccultations
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
+
           // WHEN
           const result = await request(app.getHttpServer())
             .put(`/decisions/${decisionId}/rapports-occultations`)
@@ -144,6 +166,11 @@ describe('DecisionsController', () => {
         it('when provided concealment reports has a wrong format', async () => {
           // GIVEN
           const wrongConcealmentReportsFormat = 'some report'
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            rapportsOccultations
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
 
           // WHEN
           const result = await request(app.getHttpServer())

@@ -16,7 +16,7 @@ const mockUtils = new MockUtils()
 export class GetDecisionByIdResponse {
   @ApiProperty({
     description: 'Identifiant de la décision',
-    example: mockUtils.createDecisionDTO._id
+    example: mockUtils.validId
   })
   _id: string
 

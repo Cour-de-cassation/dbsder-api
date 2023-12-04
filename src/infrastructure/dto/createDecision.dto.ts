@@ -229,14 +229,6 @@ export class DecisionAnalyse {
 
 export class CreateDecisionDTO {
   @ApiProperty({
-    description: 'Identifiant de la decision',
-    type: String,
-    example: mockUtils.createDecisionDTO._id
-  })
-  @IsString()
-  _id: string
-
-  @ApiProperty({
     description: 'Analyse de la décision',
     type: () => DecisionAnalyse,
     example: mockUtils.createDecisionDTO.analysis

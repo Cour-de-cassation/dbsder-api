@@ -11,8 +11,7 @@ describe('DecisionsController', () => {
   const mockUtils = new MockUtils()
   const labelApiKey = process.env.LABEL_API_KEY
   const providedDecisionModel = {
-    ...mockUtils.decisionModel,
-    _id: mockUtils.decisionModel._id.toString()
+    ...mockUtils.decisionModel
   }
 
   let decisionsRepository: DecisionsRepository
@@ -55,7 +54,11 @@ describe('DecisionsController', () => {
 
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.OK)
-        expect(result.body).toEqual(expectedDecisions)
+
+        // we skip _id because it's auto generated
+        expect(result.body[0].source).toEqual(expectedDecisions[0].source)
+        expect(result.body[0].status).toEqual(expectedDecisions[0].status)
+        expect(result.body[0].dateCreation).toEqual(expectedDecisions[0].dateCreation)
       })
 
       it('returns a 200 OK with a list of decisions with given number', async () => {
@@ -72,7 +75,10 @@ describe('DecisionsController', () => {
 
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.OK)
-        expect(result.body).toEqual(expectedDecisions)
+        // we skip _id because it's auto generated
+        expect(result.body[0].source).toEqual(expectedDecisions[0].source)
+        expect(result.body[0].status).toEqual(expectedDecisions[0].status)
+        expect(result.body[0].dateCreation).toEqual(expectedDecisions[0].dateCreation)
       })
     })
 
