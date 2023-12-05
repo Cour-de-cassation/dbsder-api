@@ -10,7 +10,6 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
   let decisionsRepository: DecisionsRepository
-  const decisionId = '507f1f77bcf86cd799439011'
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -35,8 +34,8 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
   describe('Success case', () => {
     it('returns a 200 OK with found decision when given a valid ID with personal data', async () => {
       // GIVEN
-      const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
-      await decisionsRepository.create(decisionToSave)
+      const decisionToSave = { ...mockUtils.decisionModel }
+      const decisionId = await decisionsRepository.create(decisionToSave)
       const opensderApiKey = process.env.OPENSDER_API_KEY
 
       // WHEN
@@ -49,8 +48,8 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
     })
     it('returns a 200 OK with found decision when given a valid ID without personal data', async () => {
       // GIVEN
-      const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
-      await decisionsRepository.create(decisionToSave)
+      const decisionToSave = { ...mockUtils.decisionModel }
+      const decisionId = await decisionsRepository.create(decisionToSave)
       const indexApiKey = process.env.INDEX_API_KEY
 
       // WHEN
@@ -80,8 +79,8 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
 
     it('throws a 401 Unauthorized error if the Api Key is not allowed to use this filter', async () => {
       // GIVEN
-      const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
-      await decisionsRepository.create(decisionToSave)
+      const decisionToSave = { ...mockUtils.decisionModel }
+      const decisionId = await decisionsRepository.create(decisionToSave)
       const indexApiKey = process.env.INDEX_API_KEY
 
       // WHEN
@@ -94,6 +93,12 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
     })
 
     it('throws a 401 Unauthorized error when the apiKey is not valid', async () => {
+      // GIVEN
+      const decisionToSave = {
+        ...mockUtils.decisionModel
+      }
+      const decisionId = await decisionsRepository.create(decisionToSave)
+
       // WHEN
       const result = await request(app.getHttpServer())
         .get(`/decisions-pseudonymisees/${decisionId}?avecMetadonneesPersonnelles=true`)
@@ -104,6 +109,12 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
     })
 
     it('throws a 401 Unauthorized error when the apiKey is not present', async () => {
+      // GIVEN
+      const decisionToSave = {
+        ...mockUtils.decisionModel
+      }
+      const decisionId = await decisionsRepository.create(decisionToSave)
+
       // WHEN
       const result = await request(app.getHttpServer()).get(
         `/decisions-pseudonymisees/${decisionId}`

@@ -10,7 +10,6 @@ describe('DeleteDecisionByIdController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
   let decisionsRepository: DecisionsRepository
-  const decisionId = '507f1f77bcf86cd799439011'
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -35,8 +34,8 @@ describe('DeleteDecisionByIdController', () => {
   describe('Success case', () => {
     it('returns a 204 No content and delete the decision with the given valid id', async () => {
       // GIVEN
-      const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
-      await decisionsRepository.create(decisionToSave)
+      const decisionToSave = { ...mockUtils.decisionModel }
+      const decisionId = await decisionsRepository.create(decisionToSave)
       const opsApiKey = process.env.OPS_API_KEY
       const labelApiKey = process.env.LABEL_API_KEY
 
@@ -74,6 +73,11 @@ describe('DeleteDecisionByIdController', () => {
       // GIVEN
       const normalisationApiKey = process.env.NORMALIZATION_API_KEY
 
+      const decisionToSave = {
+        ...mockUtils.decisionModel
+      }
+      const decisionId = await decisionsRepository.create(decisionToSave)
+
       // WHEN
       const result = await request(app.getHttpServer())
         .delete(`/decisions/${decisionId}`)
@@ -84,6 +88,13 @@ describe('DeleteDecisionByIdController', () => {
     })
 
     it('throws a 401 Unauthorized error when the apiKey is not valid', async () => {
+      // GIVEN
+
+      const decisionToSave = {
+        ...mockUtils.decisionModel
+      }
+      const decisionId = await decisionsRepository.create(decisionToSave)
+
       // WHEN
       const result = await request(app.getHttpServer())
         .delete(`/decisions/${decisionId}`)
@@ -94,6 +105,13 @@ describe('DeleteDecisionByIdController', () => {
     })
 
     it('throws a 401 Unauthorized error when the apiKey is not present', async () => {
+      // GIVEN
+
+      const decisionToSave = {
+        ...mockUtils.decisionModel
+      }
+      const decisionId = await decisionsRepository.create(decisionToSave)
+
       // WHEN
       const result = await request(app.getHttpServer()).delete(`/decisions/${decisionId}`)
 
@@ -103,6 +121,12 @@ describe('DeleteDecisionByIdController', () => {
 
     it('throws a 503 Service unavailable when database connection drops', async () => {
       // GIVEN
+
+      const decisionToSave = {
+        ...mockUtils.decisionModel
+      }
+      const decisionId = await decisionsRepository.create(decisionToSave)
+
       await dropDatabase()
       const opsApiKey = process.env.OPS_API_KEY
 

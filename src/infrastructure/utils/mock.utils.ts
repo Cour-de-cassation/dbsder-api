@@ -1,7 +1,6 @@
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsList.response'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
 import { LabelStatus, Occultation, QualitePartie, Sources, TypePartie } from 'dbsder-api-types'
-import { Decision } from '../db/models/decision.model'
 import { Types } from 'mongoose'
 
 const TODAY = new Date().toISOString()
@@ -41,8 +40,9 @@ export class MockUtils {
     number: 'unknownNumber'
   }
 
+  validId = '507f1f77bcf86cd799439011'
+
   createDecisionDTO = {
-    _id: '507f1f77bcf86cd799439011',
     analysis: {
       analyse: ['someAnalyse'],
       doctrine: 'someDoctrine',
@@ -94,10 +94,11 @@ export class MockUtils {
     NAOCode: 'someNAOCode',
     natureAffaireCivil: 'someNatureAffaireCivil',
     natureAffairePenal: 'someNatureAffairePenal',
-    codeMatiereCivil: 'someCodeMatiereCivil'
+    codeMatiereCivil: 'someCodeMatiereCivil',
+    idDecisionTJ: 'TJ00001A01-1234520221121'
   }
 
-  decisionModel: Decision = {
+  decisionModel = {
     codeDecision: '',
     codeNature: '',
     codeService: '',
@@ -241,7 +242,8 @@ export class MockUtils {
     recommandationOccultation: Occultation.AUCUNE,
     pourvoiCourDeCassation: false,
     pourvoiLocal: false,
-    selection: false
+    selection: false,
+    idDecisionTJ: 'TJ00001A01-1234520221121'
   }
 
   decisionAssociee = {

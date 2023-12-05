@@ -182,6 +182,9 @@ export class Decision {
 
   @Prop()
   idDecisionWinci?: string
+
+  @Prop()
+  idDecisionTJ?: string
 }
 
 export const DecisionSchema = SchemaFactory.createForClass(Decision)

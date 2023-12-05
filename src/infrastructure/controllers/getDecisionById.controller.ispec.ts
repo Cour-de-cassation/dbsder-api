@@ -10,7 +10,6 @@ describe('GetDecisionByIdController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
   let decisionsRepository: DecisionsRepository
-  const decisionId = '507f1f77bcf86cd799439011'
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -35,8 +34,8 @@ describe('GetDecisionByIdController', () => {
   describe('Success case', () => {
     it('returns a 200 OK with found decision when given a valid ID', async () => {
       // GIVEN
-      const decisionToSave = { ...mockUtils.decisionModel, _id: decisionId }
-      await decisionsRepository.create(decisionToSave)
+      const decisionToSave = { ...mockUtils.decisionModel }
+      const decisionId = await decisionsRepository.create(decisionToSave)
       const labelApiKey = process.env.LABEL_API_KEY
 
       // WHEN
@@ -67,6 +66,10 @@ describe('GetDecisionByIdController', () => {
     it('throws a 401 Unauthorized error when the apiKey is not authorized to call this endpoint', async () => {
       // GIVEN
       const normalisationApiKey = process.env.NORMALIZATION_API_KEY
+      const decisionToSave = {
+        ...mockUtils.decisionModel
+      }
+      const decisionId = await decisionsRepository.create(decisionToSave)
 
       // WHEN
       const result = await request(app.getHttpServer())
@@ -78,6 +81,12 @@ describe('GetDecisionByIdController', () => {
     })
 
     it('throws a 401 Unauthorized error when the apiKey is not valid', async () => {
+      // GIVEN
+      const decisionToSave = {
+        ...mockUtils.decisionModel
+      }
+      const decisionId = await decisionsRepository.create(decisionToSave)
+
       // WHEN
       const result = await request(app.getHttpServer())
         .get(`/decisions/${decisionId}`)
@@ -88,6 +97,12 @@ describe('GetDecisionByIdController', () => {
     })
 
     it('throws a 401 Unauthorized error when the apiKey is not present', async () => {
+      // GIVEN
+      const decisionToSave = {
+        ...mockUtils.decisionModel
+      }
+      const decisionId = await decisionsRepository.create(decisionToSave)
+
       // WHEN
       const result = await request(app.getHttpServer()).get(`/decisions/${decisionId}`)
 

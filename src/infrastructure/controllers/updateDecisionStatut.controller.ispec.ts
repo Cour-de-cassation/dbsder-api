@@ -12,7 +12,6 @@ describe('DecisionsController', () => {
   let decisionsRepository: DecisionsRepository
 
   const mockUtils = new MockUtils()
-  const decisionId = '507f1f77bcf86cd799439011'
   const validApiKey = process.env.LABEL_API_KEY
 
   beforeAll(async () => {
@@ -43,11 +42,10 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
-          _id: decisionId,
           labelStatus: LabelStatus.TOBETREATED
         }
 
-        await decisionsRepository.create(decisionToSave)
+        const decisionId = await decisionsRepository.create(decisionToSave)
 
         // WHEN
         const result = await request(app.getHttpServer())
@@ -63,10 +61,9 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
-          _id: decisionId,
           labelStatus: LabelStatus.TOBETREATED
         }
-        await decisionsRepository.create(decisionToSave)
+        const decisionId = await decisionsRepository.create(decisionToSave)
 
         // WHEN
         const result = await request(app.getHttpServer())
@@ -82,6 +79,12 @@ describe('DecisionsController', () => {
     describe('Error cases', () => {
       describe('returns 401 Unauthorized', () => {
         it('when apiKey is not provided', async () => {
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            labelStatus: LabelStatus.TOBETREATED
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
+
           // WHEN
           const result = await request(app.getHttpServer())
             .put(`/decisions/${decisionId}/statut`)
@@ -93,6 +96,12 @@ describe('DecisionsController', () => {
 
         it('when apiKey does not exist', async () => {
           // GIVEN
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            labelStatus: LabelStatus.TOBETREATED
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
+
           const unknownApiKey = 'unknownApiKey'
 
           // WHEN
@@ -107,6 +116,12 @@ describe('DecisionsController', () => {
 
         it('when the apiKey is not authorized to call this endpoint', async () => {
           // GIVEN
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            labelStatus: LabelStatus.TOBETREATED
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
+
           const unauthorizedApiKey = process.env.NORMALIZATION_API_KEY
 
           // WHEN
@@ -122,6 +137,12 @@ describe('DecisionsController', () => {
 
       describe('returns 400 Bad Request', () => {
         it('when status is not provided', async () => {
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            labelStatus: LabelStatus.TOBETREATED
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
+
           // WHEN
           const result = await request(app.getHttpServer())
             .put(`/decisions/${decisionId}/statut`)
@@ -133,6 +154,12 @@ describe('DecisionsController', () => {
 
         it('when provided status is unknown', async () => {
           // GIVEN
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            labelStatus: LabelStatus.TOBETREATED
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
+
           const unknownStatus = 'unknownStatus'
 
           // WHEN

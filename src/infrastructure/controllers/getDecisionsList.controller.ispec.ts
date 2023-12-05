@@ -11,8 +11,7 @@ describe('DecisionsController', () => {
   const mockUtils = new MockUtils()
   const labelApiKey = process.env.LABEL_API_KEY
   const providedDecisionModel = {
-    ...mockUtils.decisionModel,
-    _id: mockUtils.decisionModel._id.toString()
+    ...mockUtils.decisionModel
   }
 
   let decisionsRepository: DecisionsRepository
@@ -43,10 +42,10 @@ describe('DecisionsController', () => {
     describe('Success case', () => {
       it('returns a 200 OK with a list of decisions from known source', async () => {
         // GIVEN
-        await decisionsRepository.create(providedDecisionModel)
+        const decisionId = await decisionsRepository.create(providedDecisionModel)
         const expectedDecisions = [mockUtils.decisionTJToBeTreated]
         const getDecisionsListDTO = mockUtils.decisionQueryDTO
-
+        expectedDecisions[0]._id = decisionId
         // WHEN
         const result = await request(app.getHttpServer())
           .get('/decisions')
@@ -60,9 +59,10 @@ describe('DecisionsController', () => {
 
       it('returns a 200 OK with a list of decisions with given number', async () => {
         // GIVEN
-        await decisionsRepository.create(providedDecisionModel)
+        const decisionId = await decisionsRepository.create(providedDecisionModel)
         const expectedDecisions = [mockUtils.decisionTJToBeTreated]
         const getDecisionsListDTO = mockUtils.decisionQueryByNumberDTO
+        expectedDecisions[0]._id = decisionId
 
         // WHEN
         const result = await request(app.getHttpServer())
