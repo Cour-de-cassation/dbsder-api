@@ -335,4 +335,10 @@ export class GetDecisionByIdResponse {
     example: mockUtils.createDecisionTJDto.selection
   })
   selection?: boolean
+
+  @ApiPropertyOptional({
+    description: 'Identifiant technique TJ',
+    example: mockUtils.createDecisionTJDto.idDecisionTJ
+  })
+  idDecisionTJ?: string
 }

@@ -16,7 +16,14 @@ import {
 import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { MockUtils } from '../utils/mock.utils'
-import { LabelStatus, Occultation, LabelTreatment, Annotation, PartieTJ } from 'dbsder-api-types'
+import {
+  LabelStatus,
+  Occultation,
+  LabelTreatment,
+  Annotation,
+  PartieTJ,
+  Sources
+} from 'dbsder-api-types'
 import { AnnotationDto } from './updateDecision.dto'
 
 const mockUtils = new MockUtils()
@@ -414,13 +421,12 @@ export class CreateDecisionDTO {
     type: String,
     example: mockUtils.createDecisionDTO.sourceName
   })
-  @IsString()
-  sourceName: string
+  @IsEnum(Sources)
+  sourceName: Sources
 
   @ApiPropertyOptional({
     description: '(interne) Mise en page des décisions diffusées par extrait',
-    type: String,
-    example: mockUtils.createDecisionDTO.sourceName
+    type: String
   })
   @IsObject()
   @IsOptional()
