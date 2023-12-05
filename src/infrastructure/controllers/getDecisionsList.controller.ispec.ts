@@ -42,10 +42,10 @@ describe('DecisionsController', () => {
     describe('Success case', () => {
       it('returns a 200 OK with a list of decisions from known source', async () => {
         // GIVEN
-        await decisionsRepository.create(providedDecisionModel)
+        const decisionId = await decisionsRepository.create(providedDecisionModel)
         const expectedDecisions = [mockUtils.decisionTJToBeTreated]
         const getDecisionsListDTO = mockUtils.decisionQueryDTO
-
+        expectedDecisions[0]._id = decisionId
         // WHEN
         const result = await request(app.getHttpServer())
           .get('/decisions')
@@ -54,18 +54,15 @@ describe('DecisionsController', () => {
 
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.OK)
-
-        // we skip _id because it's auto generated
-        expect(result.body[0].source).toEqual(expectedDecisions[0].source)
-        expect(result.body[0].status).toEqual(expectedDecisions[0].status)
-        expect(result.body[0].dateCreation).toEqual(expectedDecisions[0].dateCreation)
+        expect(result.body).toEqual(expectedDecisions)
       })
 
       it('returns a 200 OK with a list of decisions with given number', async () => {
         // GIVEN
-        await decisionsRepository.create(providedDecisionModel)
+        const decisionId = await decisionsRepository.create(providedDecisionModel)
         const expectedDecisions = [mockUtils.decisionTJToBeTreated]
         const getDecisionsListDTO = mockUtils.decisionQueryByNumberDTO
+        expectedDecisions[0]._id = decisionId
 
         // WHEN
         const result = await request(app.getHttpServer())
@@ -75,10 +72,7 @@ describe('DecisionsController', () => {
 
         // THEN
         expect(result.statusCode).toEqual(HttpStatus.OK)
-        // we skip _id because it's auto generated
-        expect(result.body[0].source).toEqual(expectedDecisions[0].source)
-        expect(result.body[0].status).toEqual(expectedDecisions[0].status)
-        expect(result.body[0].dateCreation).toEqual(expectedDecisions[0].dateCreation)
+        expect(result.body).toEqual(expectedDecisions)
       })
     })
 

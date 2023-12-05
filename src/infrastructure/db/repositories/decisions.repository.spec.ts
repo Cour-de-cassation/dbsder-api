@@ -22,7 +22,7 @@ const mockDecisionModel = () => ({
   deleteOne: jest.fn()
 })
 
-const validId = new MockUtils().decisionModel._id.toString()
+const validId = new MockUtils().validId
 
 describe('DecisionsRepository', () => {
   const mockUtils = new MockUtils()
