@@ -545,16 +545,6 @@ export class CreateDecisionDTO {
   codeDecision?: string
 
   @ApiPropertyOptional({
-    description: "Complément d'information du code NAC. Au format : ^[0-9a-zA-Z]{1-2}$",
-    type: String,
-    example: mockUtils.createDecisionTJDto.codeNature
-  })
-  @IsOptional()
-  @IsString()
-  @Matches('^[0-9a-zA-Z]{1,2}$')
-  codeNature?: string
-
-  @ApiPropertyOptional({
     description: 'Identifiant du service de la juridiction. Au format: ^[0-9a-zA-Z]{2}$',
     type: String,
     example: mockUtils.createDecisionTJDto.codeService
