@@ -19,6 +19,7 @@ import { GetDecisionPseudonymiseesController } from './infrastructure/controller
 import { UpdateDecisionPseudonymiseeController } from './infrastructure/controllers/updateDecisionPseudonymisee.controller'
 import { UpdateDecisionRapportsOccultationsController } from './infrastructure/controllers/updateDecisionRapportsOccultations.controller'
 import { DeleteDecisionByIdController } from './infrastructure/controllers/deleteDecisionById.controller'
+import { CodeNac, CodeNacSchema } from './infrastructure/db/models/codeNac.model'
 
 @Module({
   imports: [
@@ -28,7 +29,10 @@ import { DeleteDecisionByIdController } from './infrastructure/controllers/delet
       logger: false
     }),
     MongooseModule.forRoot(process.env.MONGO_DB_URL),
-    MongooseModule.forFeature([{ name: Decision.name, schema: DecisionSchema }]),
+    MongooseModule.forFeature([
+      { name: Decision.name, schema: DecisionSchema },
+      { name: CodeNac.name, schema: CodeNacSchema }
+    ]),
     LoggerModule.forRoot(pinoConfig)
   ],
   controllers: [
