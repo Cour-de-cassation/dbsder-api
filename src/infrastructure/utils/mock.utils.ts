@@ -264,4 +264,101 @@ export class MockUtils {
     _id: '507f1f77bcf86cd799439011',
     message: 'Decision créée ou mise à jour'
   }
+
+  codeNacMock = {
+    _id: new Types.ObjectId('507f1f77bcf86cd799439011'),
+    codeNAC: '45C',
+    libelleNAC:
+      'Appel sur une décision  relative à la modification substantielle du plan de cession (procédures ouvertes avant le 1er janvier 2006)',
+    blocOccultationCA: 3,
+    blocOccultationTb: 3,
+    indicateurDecisionRenduePubliquement: null,
+    indicateurDebatsPublics: null,
+    indicateurAffaireSignalee: 0,
+    routeRelecture: null,
+    categoriesToOmitTJ: {
+      aucune: [
+        'adresse',
+        'cadastre',
+        'personneMorale',
+        'professionnelAvocat',
+        'professionnelMagistratGreffier',
+        'dateNaissance',
+        'dateDeces',
+        'dateMariage',
+        'numeroIdentifiant',
+        'plaqueImmatriculation',
+        'compteBancaire',
+        'localite',
+        'numeroSiretSiren',
+        'annotationSupplementaire',
+        'siteWebSensible',
+        'etablissement',
+        'telephoneFax'
+      ],
+      conforme: ['professionnelAvocat', 'professionnelMagistratGreffier', 'personneMorale'],
+      substituant: [
+        'adresse',
+        'cadastre',
+        'personneMorale',
+        'professionnelAvocat',
+        'professionnelMagistratGreffier',
+        'dateNaissance',
+        'dateDeces',
+        'dateMariage',
+        'numeroIdentifiant',
+        'plaqueImmatriculation',
+        'compteBancaire',
+        'localite',
+        'numeroSiretSiren',
+        'annotationSupplementaire',
+        'siteWebSensible',
+        'etablissement',
+        'telephoneFax'
+      ],
+      complément: ['professionnelAvocat', 'professionnelMagistratGreffier', 'personneMorale']
+    },
+    categoriesToOmitCA: {
+      aucune: [
+        'adresse',
+        'cadastre',
+        'personneMorale',
+        'professionnelAvocat',
+        'professionnelMagistratGreffier',
+        'dateNaissance',
+        'dateDeces',
+        'dateMariage',
+        'numeroIdentifiant',
+        'plaqueImmatriculation',
+        'compteBancaire',
+        'localite',
+        'numeroSiretSiren',
+        'annotationSupplementaire',
+        'siteWebSensible',
+        'etablissement',
+        'telephoneFax'
+      ],
+      conforme: ['professionnelAvocat', 'professionnelMagistratGreffier', 'personneMorale'],
+      substituant: [
+        'adresse',
+        'cadastre',
+        'personneMorale',
+        'professionnelAvocat',
+        'professionnelMagistratGreffier',
+        'dateNaissance',
+        'dateDeces',
+        'dateMariage',
+        'numeroIdentifiant',
+        'plaqueImmatriculation',
+        'compteBancaire',
+        'localite',
+        'numeroSiretSiren',
+        'annotationSupplementaire',
+        'siteWebSensible',
+        'etablissement',
+        'telephoneFax'
+      ],
+      complément: ['professionnelAvocat', 'professionnelMagistratGreffier', 'personneMorale']
+    }
+  }
 }

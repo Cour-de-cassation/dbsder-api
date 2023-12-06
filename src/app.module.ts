@@ -20,6 +20,7 @@ import { UpdateDecisionPseudonymiseeController } from './infrastructure/controll
 import { UpdateDecisionRapportsOccultationsController } from './infrastructure/controllers/updateDecisionRapportsOccultations.controller'
 import { DeleteDecisionByIdController } from './infrastructure/controllers/deleteDecisionById.controller'
 import { CodeNac, CodeNacSchema } from './infrastructure/db/models/codeNac.model'
+import { CodeNACsRepository } from './infrastructure/db/repositories/codeNACs.repository'
 
 @Module({
   imports: [
@@ -47,7 +48,7 @@ import { CodeNac, CodeNacSchema } from './infrastructure/db/models/codeNac.model
     UpdateDecisionStatutController,
     DeleteDecisionByIdController
   ],
-  providers: [DecisionsRepository]
+  providers: [DecisionsRepository, CodeNACsRepository]
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
