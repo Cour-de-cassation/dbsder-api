@@ -19,22 +19,22 @@ export class CodeNAC {
   blocOccultationTJ: number
 
   @Prop()
-  indicateurDecisionRenduePubliquement?: string
+  indicateurDecisionRenduePubliquement?: boolean
 
   @Prop()
-  indicateurDebatsPublics?: string
+  indicateurDebatsPublics?: boolean
 
   @Prop()
-  indicateurAffaireSignalee: number
+  indicateurAffaireSignalee: boolean
 
   @Prop()
   routeRelecture?: string
 
   @Prop({ type: Object })
-  categoriesToOmitTJ: object
+  categoriesToOmitTJ: any
 
   @Prop({ type: Object })
-  categoriesToOmitCA: object
+  categoriesToOmitCA: any
 }
 
 export const CodeNacSchema = SchemaFactory.createForClass(CodeNAC)

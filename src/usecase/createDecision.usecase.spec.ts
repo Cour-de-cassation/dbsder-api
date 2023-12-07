@@ -50,9 +50,11 @@ describe('createDecisionUsecase', () => {
       .spyOn(mockDecisionsRepository, 'create')
       .mockImplementationOnce(async () => expectedDecision._id.toString())
 
-    jest.spyOn(mockCodeNACsRepository, 'getByCodeNac').mockResolvedValue(providedCodeNAC)
+    jest
+      .spyOn(mockCodeNACsRepository, 'getByCodeNac')
+      .mockImplementationOnce(async () => providedCodeNAC)
     // WHEN
-    const result = await usecase.execute(providedDecision)
+    const result = await usecase.execute(providedDecision, providedCodeNAC.codeNAC)
 
     // THEN
     expect(result).toEqual(expectedDecision._id.toString())
@@ -60,12 +62,13 @@ describe('createDecisionUsecase', () => {
 
   it('propagates an Error when repository returns an error', async () => {
     // GIVEN
+    const providedCodeNAC = mockUtils.codeNacMock.codeNAC
     const rejectedDecision = mockUtils.createDecisionDTO
     jest.spyOn(mockDecisionsRepository, 'create').mockImplementationOnce(() => {
       throw new Error()
     })
     // WHEN
-    await expect(usecase.execute(rejectedDecision))
+    await expect(usecase.execute(rejectedDecision, providedCodeNAC))
       // THEN
       .rejects.toThrow(Error)
   })

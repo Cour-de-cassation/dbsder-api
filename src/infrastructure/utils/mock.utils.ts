@@ -175,6 +175,7 @@ export class MockUtils {
   }
 
   decisionPseudonymisee = {
+    codeNAC: '45C',
     codeDecision: '',
     codeNature: '',
     codeService: '',
@@ -276,7 +277,7 @@ export class MockUtils {
     blocOccultationTJ: 3,
     indicateurDecisionRenduePubliquement: null,
     indicateurDebatsPublics: null,
-    indicateurAffaireSignalee: 0,
+    indicateurAffaireSignalee: false,
     routeRelecture: null,
     categoriesToOmitTJ: {
       aucune: [
