@@ -4,6 +4,7 @@ import { Model } from 'mongoose'
 import { MockUtils } from '../../utils/mock.utils'
 import { CodeNACsRepository } from './codeNACs.repository'
 import { CodeNAC } from '../models/codeNAC.model'
+import { CodeNACNotFoundError } from '../../../domain/errors/codeNAC.error'
 
 const mockCodeNacModel = () => ({
   find: jest.fn(),
@@ -51,6 +52,22 @@ describe('CodeNACsRepository', () => {
 
       // THEN
       expect(codeNac).toEqual(expectedCodeNAC)
+    })
+
+    it('return error if provided codeNAC is not present in DB', async () => {
+      // GIVEN
+      const givenCodeNAC = 'notValidGivenCodeNAC'
+      jest.spyOn(codeNACModel, 'findOne').mockImplementation(
+        () =>
+          ({
+            lean: jest.fn().mockRejectedValueOnce(new Error())
+          }) as any
+      )
+
+      // WHEN
+      await expect(codeNACsRepository.getByCodeNac(givenCodeNAC))
+        // THEN
+        .rejects.toThrow(CodeNACNotFoundError)
     })
   })
 })
