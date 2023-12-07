@@ -4,7 +4,7 @@ import { Model } from 'mongoose'
 import { MockUtils } from '../../utils/mock.utils'
 import { CodeNACsRepository } from './codeNACs.repository'
 import { CodeNAC } from '../models/codeNAC.model'
-import { CodeNACNotFoundError } from '../../../domain/errors/codeNAC.error'
+import { DatabaseError } from '../../../domain/errors/database.error'
 
 const mockCodeNacModel = () => ({
   find: jest.fn(),
@@ -67,7 +67,7 @@ describe('CodeNACsRepository', () => {
       // WHEN
       await expect(codeNACsRepository.getByCodeNac(givenCodeNAC))
         // THEN
-        .rejects.toThrow(CodeNACNotFoundError)
+        .rejects.toThrow(DatabaseError)
     })
   })
 })
