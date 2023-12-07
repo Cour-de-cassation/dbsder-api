@@ -1,4 +1,5 @@
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsList.response'
+import { CodeNAC } from '../db/models/codeNAC.model'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
 import { LabelStatus, Occultation, QualitePartie, Sources, TypePartie } from 'dbsder-api-types'
 import { Types } from 'mongoose'
@@ -99,6 +100,7 @@ export class MockUtils {
   }
 
   decisionModel = {
+    codeNAC: '45C',
     codeDecision: '',
     codeNature: '',
     codeService: '',
@@ -265,13 +267,13 @@ export class MockUtils {
     message: 'Decision créée ou mise à jour'
   }
 
-  codeNacMock = {
+  codeNacMock: CodeNAC = {
     _id: new Types.ObjectId('507f1f77bcf86cd799439011'),
     codeNAC: '45C',
     libelleNAC:
       'Appel sur une décision  relative à la modification substantielle du plan de cession (procédures ouvertes avant le 1er janvier 2006)',
     blocOccultationCA: 3,
-    blocOccultationTb: 3,
+    blocOccultationTJ: 3,
     indicateurDecisionRenduePubliquement: null,
     indicateurDebatsPublics: null,
     indicateurAffaireSignalee: 0,
