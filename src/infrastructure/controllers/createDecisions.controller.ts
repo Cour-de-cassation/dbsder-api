@@ -18,11 +18,15 @@ import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { LogsFormat } from '../utils/logsFormat.utils'
+import { CodeNACsRepository } from '../db/repositories/codeNACs.repository'
 
 @ApiTags('DbSder')
 @Controller('decisions')
 export class CreateDecisionsController {
-  constructor(private readonly decisionsRepository: DecisionsRepository) {}
+  constructor(
+    private readonly decisionsRepository: DecisionsRepository,
+    private readonly codeNACsRepository: CodeNACsRepository
+  ) {}
 
   private readonly logger = new Logger()
 
@@ -65,23 +69,28 @@ export class CreateDecisionsController {
       throw new ClientNotAuthorizedException()
     }
 
-    const createDecisionUsecase = new CreateDecisionUsecase(this.decisionsRepository)
-    const decisionId = await createDecisionUsecase.execute(decision).catch((error) => {
-      if (error instanceof DatabaseError) {
+    const createDecisionUsecase = new CreateDecisionUsecase(
+      this.decisionsRepository,
+      this.codeNACsRepository
+    )
+    const decisionId = await createDecisionUsecase
+      .execute(decision, decision.NACCode)
+      .catch((error) => {
+        if (error instanceof DatabaseError) {
+          this.logger.error({
+            ...formatLogs,
+            msg: error.message,
+            statusCode: HttpStatus.SERVICE_UNAVAILABLE
+          })
+          throw new DependencyException(error.message)
+        }
         this.logger.error({
           ...formatLogs,
           msg: error.message,
-          statusCode: HttpStatus.SERVICE_UNAVAILABLE
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR
         })
-        throw new DependencyException(error.message)
-      }
-      this.logger.error({
-        ...formatLogs,
-        msg: error.message,
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+        throw new UnexpectedException(error)
       })
-      throw new UnexpectedException(error)
-    })
 
     //
 
