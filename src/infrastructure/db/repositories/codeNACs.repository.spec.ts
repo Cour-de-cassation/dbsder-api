@@ -3,30 +3,31 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { Model } from 'mongoose'
 import { MockUtils } from '../../utils/mock.utils'
 import { CodeNACsRepository } from './codeNACs.repository'
-import { CodeNac } from '../models/codeNAC.model'
+import { CodeNAC } from '../models/codeNAC.model'
 
 const mockCodeNacModel = () => ({
-  find: jest.fn()
+  find: jest.fn(),
+  findOne: jest.fn()
 })
 
 describe('CodeNACsRepository', () => {
   const mockUtils = new MockUtils()
   let codeNACsRepository: CodeNACsRepository
-  let codeNacModel: Model<CodeNac>
+  let codeNACModel: Model<CodeNAC>
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CodeNACsRepository,
         {
-          provide: getModelToken(CodeNac.name),
+          provide: getModelToken(CodeNAC.name),
           useFactory: mockCodeNacModel
         }
       ]
     }).compile()
 
     codeNACsRepository = module.get<CodeNACsRepository>(CodeNACsRepository)
-    codeNacModel = module.get<Model<CodeNac>>(getModelToken(CodeNac.name))
+    codeNACModel = module.get<Model<CodeNAC>>(getModelToken(CodeNAC.name))
   })
 
   beforeEach(() => {
@@ -38,7 +39,7 @@ describe('CodeNACsRepository', () => {
       // GIVEN
       const expectedCodeNAC = mockUtils.codeNacMock
       const givenCodeNAC = mockUtils.codeNacMock.codeNAC
-      jest.spyOn(codeNacModel, 'findOne').mockImplementation(
+      jest.spyOn(codeNACModel, 'findOne').mockImplementation(
         () =>
           ({
             lean: jest.fn().mockResolvedValue(expectedCodeNAC)
