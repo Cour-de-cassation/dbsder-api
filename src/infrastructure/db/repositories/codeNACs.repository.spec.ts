@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { Model } from 'mongoose'
 import { MockUtils } from '../../utils/mock.utils'
 import { CodeNACsRepository } from './codeNACs.repository'
-import { CodeNac } from '../models/codeNac.model'
+import { CodeNac } from '../models/codeNAC.model'
 
 const mockCodeNacModel = () => ({
   find: jest.fn()

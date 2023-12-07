@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Types } from 'mongoose'
 
 @Schema()
-export class CodeNac {
+export class CodeNAC {
   @Prop()
   _id: Types.ObjectId
 
@@ -37,4 +37,4 @@ export class CodeNac {
   categoriesToOmitCA: object
 }
 
-export const CodeNacSchema = SchemaFactory.createForClass(CodeNac)
+export const CodeNacSchema = SchemaFactory.createForClass(CodeNAC)

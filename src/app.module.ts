@@ -19,7 +19,7 @@ import { GetDecisionPseudonymiseesController } from './infrastructure/controller
 import { UpdateDecisionPseudonymiseeController } from './infrastructure/controllers/updateDecisionPseudonymisee.controller'
 import { UpdateDecisionRapportsOccultationsController } from './infrastructure/controllers/updateDecisionRapportsOccultations.controller'
 import { DeleteDecisionByIdController } from './infrastructure/controllers/deleteDecisionById.controller'
-import { CodeNac, CodeNacSchema } from './infrastructure/db/models/codeNac.model'
+import { CodeNAC, CodeNacSchema } from './infrastructure/db/models/codeNAC.model'
 import { CodeNACsRepository } from './infrastructure/db/repositories/codeNACs.repository'
 
 @Module({
@@ -32,7 +32,7 @@ import { CodeNACsRepository } from './infrastructure/db/repositories/codeNACs.re
     MongooseModule.forRoot(process.env.MONGO_DB_URL),
     MongooseModule.forFeature([
       { name: Decision.name, schema: DecisionSchema },
-      { name: CodeNac.name, schema: CodeNacSchema }
+      { name: CodeNAC.name, schema: CodeNacSchema }
     ]),
     LoggerModule.forRoot(pinoConfig)
   ],
