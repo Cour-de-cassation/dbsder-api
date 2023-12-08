@@ -38,8 +38,8 @@ describe('CodeNACsRepository', () => {
   describe('getByCodeNac', () => {
     it('return data from codeNAC table with provided codeNAC', async () => {
       // GIVEN
-      const expectedCodeNAC = mockUtils.codeNacMock
-      const givenCodeNAC = mockUtils.codeNacMock.codeNAC
+      const expectedCodeNAC = mockUtils.codeNACMock
+      const givenCodeNAC = mockUtils.codeNACMock.codeNAC
       jest.spyOn(codeNACModel, 'findOne').mockImplementation(
         () =>
           ({

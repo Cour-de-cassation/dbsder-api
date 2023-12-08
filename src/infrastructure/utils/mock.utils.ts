@@ -268,7 +268,7 @@ export class MockUtils {
     message: 'Decision créée ou mise à jour'
   }
 
-  codeNacMock: CodeNAC = {
+  codeNACMock: CodeNAC = {
     _id: new Types.ObjectId('507f1f77bcf86cd799439011'),
     codeNAC: '45C',
     libelleNAC:

@@ -1,6 +1,7 @@
 import { CreateDecisionDTO } from '../infrastructure/dto/createDecision.dto'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { CodeNACsRepository } from '../infrastructure/db/repositories/codeNACs.repository'
+import { Sources } from 'dbsder-api-types'
 
 export class CreateDecisionUsecase {
   constructor(
@@ -8,11 +9,19 @@ export class CreateDecisionUsecase {
     private codeNACsRepository: CodeNACsRepository
   ) {}
 
-  async execute(decision: CreateDecisionDTO, codeNAC: string): Promise<string> {
-    const givenCodeNAC = await this.codeNACsRepository.getByCodeNac(codeNAC)
+  async execute(decision: CreateDecisionDTO): Promise<string> {
+    if (decision.sourceName === Sources.TJ && decision.NACCode) {
+      const givenCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
 
-    // gestion bloc occultation ?
+      decision.blocOccultation = givenCodeNAC.blocOccultationTJ
 
-    return this.decisionsRepository.create(decision, givenCodeNAC.codeNAC)
+      console.log(decision.recommandationOccultation.toString())
+
+      decision.occultation.categoriesToOmit =
+        givenCodeNAC.categoriesToOmitTJ[decision.recommandationOccultation.toString()]
+    }
+    console.log(decision)
+
+    return this.decisionsRepository.create(decision)
   }
 }

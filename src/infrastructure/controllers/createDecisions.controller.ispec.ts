@@ -32,7 +32,7 @@ describe('DecisionsController', () => {
       const result = await request(app.getHttpServer())
         .put('/decisions')
         .set({ 'x-api-key': normalizationApiKey })
-        .send({ decision: mockUtils.createDecisionDTO })
+        .send({ decision: mockUtils.createDecisionDTO, codeNAC: mockUtils.codeNACMock.codeNAC })
 
       // THEN
       expect(result.status).toEqual(HttpStatus.OK)

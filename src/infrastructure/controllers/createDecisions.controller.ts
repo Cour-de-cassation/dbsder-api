@@ -73,24 +73,22 @@ export class CreateDecisionsController {
       this.decisionsRepository,
       this.codeNACsRepository
     )
-    const decisionId = await createDecisionUsecase
-      .execute(decision, decision.NACCode)
-      .catch((error) => {
-        if (error instanceof DatabaseError) {
-          this.logger.error({
-            ...formatLogs,
-            msg: error.message,
-            statusCode: HttpStatus.SERVICE_UNAVAILABLE
-          })
-          throw new DependencyException(error.message)
-        }
+    const decisionId = await createDecisionUsecase.execute(decision).catch((error) => {
+      if (error instanceof DatabaseError) {
         this.logger.error({
           ...formatLogs,
           msg: error.message,
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+          statusCode: HttpStatus.SERVICE_UNAVAILABLE
         })
-        throw new UnexpectedException(error)
+        throw new DependencyException(error.message)
+      }
+      this.logger.error({
+        ...formatLogs,
+        msg: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
       })
+      throw new UnexpectedException(error)
+    })
 
     //
 

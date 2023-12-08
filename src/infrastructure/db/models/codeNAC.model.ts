@@ -37,4 +37,4 @@ export class CodeNAC {
   categoriesToOmitCA: any
 }
 
-export const CodeNacSchema = SchemaFactory.createForClass(CodeNAC)
+export const CodeNACSchema = SchemaFactory.createForClass(CodeNAC)

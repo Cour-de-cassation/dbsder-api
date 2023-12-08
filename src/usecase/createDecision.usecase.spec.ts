@@ -43,7 +43,7 @@ describe('createDecisionUsecase', () => {
   it('creates decision successfully and add occultation based on codeNAC when database is available', async () => {
     // GIVEN
     const expectedDecision = mockUtils.decisionModel
-    const providedCodeNAC = mockUtils.codeNacMock
+    const providedCodeNAC = mockUtils.codeNACMock
     const providedDecision = { ...expectedDecision, _id: expectedDecision._id.toString() }
 
     jest
@@ -62,7 +62,7 @@ describe('createDecisionUsecase', () => {
 
   it('propagates an Error when repository returns an error', async () => {
     // GIVEN
-    const providedCodeNAC = mockUtils.codeNacMock.codeNAC
+    const providedCodeNAC = mockUtils.codeNACMock.codeNAC
     const rejectedDecision = mockUtils.createDecisionDTO
     jest.spyOn(mockDecisionsRepository, 'create').mockImplementationOnce(() => {
       throw new Error()
