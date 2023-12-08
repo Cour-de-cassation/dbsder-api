@@ -54,6 +54,23 @@ describe('CodeNACsRepository', () => {
       expect(codeNac).toEqual(expectedCodeNAC)
     })
 
+    it('return null when codeNAC is not found', async () => {
+      // GIVEN
+      const givenCodeNAC = 'XXO'
+      jest.spyOn(codeNACModel, 'findOne').mockImplementation(
+        () =>
+          ({
+            lean: jest.fn().mockResolvedValue(null)
+          }) as any
+      )
+
+      // WHEN
+      const codeNac = await codeNACsRepository.getByCodeNac(givenCodeNAC)
+
+      // THEN
+      expect(codeNac).toEqual(null)
+    })
+
     it('return error if provided codeNAC is not present in DB', async () => {
       // GIVEN
       const givenCodeNAC = 'notValidGivenCodeNAC'

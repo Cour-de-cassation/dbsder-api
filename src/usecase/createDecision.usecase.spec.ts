@@ -58,7 +58,7 @@ describe('createDecisionUsecase', () => {
       })
     })
 
-    it('When decision is from CA or CC, creates decision successfully wit no added occultation', async () => {
+    it('When decision is from CA or CC, creates decision successfully with no added occultation', async () => {
       // GIVEN
       const expectedDecision = mockUtils.decisionModel
       const providedDecision = {
