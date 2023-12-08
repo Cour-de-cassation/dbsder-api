@@ -15,12 +15,9 @@ export class CreateDecisionUsecase {
 
       decision.blocOccultation = givenCodeNAC.blocOccultationTJ
 
-      console.log(decision.recommandationOccultation.toString())
-
       decision.occultation.categoriesToOmit =
         givenCodeNAC.categoriesToOmitTJ[decision.recommandationOccultation.toString()]
     }
-    console.log(decision)
 
     return this.decisionsRepository.create(decision)
   }

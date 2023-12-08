@@ -100,7 +100,7 @@ export class MockUtils {
   }
 
   decisionModel = {
-    codeNAC: '45C',
+    NACCode: '45C',
     codeDecision: '',
     codeNature: '',
     codeService: '',
