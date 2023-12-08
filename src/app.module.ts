@@ -19,6 +19,8 @@ import { GetDecisionPseudonymiseesController } from './infrastructure/controller
 import { UpdateDecisionPseudonymiseeController } from './infrastructure/controllers/updateDecisionPseudonymisee.controller'
 import { UpdateDecisionRapportsOccultationsController } from './infrastructure/controllers/updateDecisionRapportsOccultations.controller'
 import { DeleteDecisionByIdController } from './infrastructure/controllers/deleteDecisionById.controller'
+import { CodeNAC, CodeNACSchema } from './infrastructure/db/models/codeNAC.model'
+import { CodeNACsRepository } from './infrastructure/db/repositories/codeNACs.repository'
 
 @Module({
   imports: [
@@ -28,7 +30,10 @@ import { DeleteDecisionByIdController } from './infrastructure/controllers/delet
       logger: false
     }),
     MongooseModule.forRoot(process.env.MONGO_DB_URL),
-    MongooseModule.forFeature([{ name: Decision.name, schema: DecisionSchema }]),
+    MongooseModule.forFeature([
+      { name: Decision.name, schema: DecisionSchema },
+      { name: CodeNAC.name, schema: CodeNACSchema }
+    ]),
     LoggerModule.forRoot(pinoConfig)
   ],
   controllers: [
@@ -43,7 +48,7 @@ import { DeleteDecisionByIdController } from './infrastructure/controllers/delet
     UpdateDecisionStatutController,
     DeleteDecisionByIdController
   ],
-  providers: [DecisionsRepository]
+  providers: [DecisionsRepository, CodeNACsRepository]
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

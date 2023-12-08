@@ -1,4 +1,5 @@
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsList.response'
+import { CodeNAC } from '../db/models/codeNAC.model'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
 import { LabelStatus, Occultation, QualitePartie, Sources, TypePartie } from 'dbsder-api-types'
 import { Types } from 'mongoose'
@@ -99,6 +100,7 @@ export class MockUtils {
   }
 
   decisionModel = {
+    NACCode: '45C',
     codeDecision: '',
     codeNature: '',
     codeService: '',
@@ -173,6 +175,7 @@ export class MockUtils {
   }
 
   decisionPseudonymisee = {
+    NACCode: '45C',
     codeDecision: '',
     codeNature: '',
     codeService: '',
@@ -263,5 +266,58 @@ export class MockUtils {
   createDecisionResponse = {
     _id: '507f1f77bcf86cd799439011',
     message: 'Decision créée ou mise à jour'
+  }
+
+  codeNACMock: CodeNAC = {
+    _id: new Types.ObjectId('507f1f77bcf86cd799439011'),
+    codeNAC: '45C',
+    libelleNAC: 'Modification Indemnités',
+    blocOccultationCA: 3,
+    blocOccultationTJ: 3,
+    indicateurDecisionRenduePubliquement: null,
+    indicateurDebatsPublics: null,
+    indicateurAffaireSignalee: false,
+    routeRelecture: null,
+    categoriesToOmitTJ: {
+      aucune: ['adresse', 'personne', 'etablissement', 'telephone'],
+      conforme: ['professionnelAvocat', 'professionnelMagistratGreffier', 'personneMorale'],
+      substituant: [
+        'adresse',
+        'localite',
+        'numeroSiretSiren',
+        'siteWeb',
+        'etablissement',
+        'telephoneFax'
+      ],
+      complément: ['avocat', 'greffier', 'personneMorale']
+    },
+    categoriesToOmitCA: {
+      aucune: [
+        'adresse',
+        'cadastre',
+        'personne',
+        'professionnelAvocat',
+        'professionnelMagistratGreffier',
+        'dateNaissance',
+        'dateDeces',
+        'dateMariage',
+        'numeroIdentifiant',
+        'localite'
+      ],
+      conforme: ['avocat', 'greffier', 'personneMorale'],
+      substituant: [
+        'adresse',
+        'cadastre',
+        'personne',
+        'professionnelAvocat',
+        'professionnelMagistratGreffier',
+        'dateNaissance',
+        'dateDeces',
+        'dateMariage',
+        'numeroIdentifiant',
+        'localite'
+      ],
+      complément: ['avocat', 'greffier', 'personneMorale']
+    }
   }
 }
