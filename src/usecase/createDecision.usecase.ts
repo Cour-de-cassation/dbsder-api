@@ -1,7 +1,7 @@
 import { CreateDecisionDTO } from '../infrastructure/dto/createDecision.dto'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { CodeNACsRepository } from '../infrastructure/db/repositories/codeNACs.repository'
-import { Sources } from 'dbsder-api-types'
+import { LabelStatus, Sources } from 'dbsder-api-types'
 
 export class CreateDecisionUsecase {
   constructor(
@@ -13,10 +13,14 @@ export class CreateDecisionUsecase {
     if (decision.sourceName === Sources.TJ && decision.NACCode) {
       const givenCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
 
-      decision.blocOccultation = givenCodeNAC.blocOccultationTJ
+      if (givenCodeNAC !== null) {
+        decision.occultation.categoriesToOmit =
+          givenCodeNAC.categoriesToOmitTJ[decision.recommandationOccultation.toString()]
 
-      decision.occultation.categoriesToOmit =
-        givenCodeNAC.categoriesToOmitTJ[decision.recommandationOccultation.toString()]
+        decision.blocOccultation = givenCodeNAC.blocOccultationTJ
+      } else {
+        decision.labelStatus = LabelStatus.IGNORED_CODE_NAC_INCONNU
+      }
     }
 
     return this.decisionsRepository.create(decision)

@@ -175,7 +175,7 @@ export class MockUtils {
   }
 
   decisionPseudonymisee = {
-    codeNAC: '45C',
+    NACCode: '45C',
     codeDecision: '',
     codeNature: '',
     codeService: '',
@@ -271,8 +271,7 @@ export class MockUtils {
   codeNACMock: CodeNAC = {
     _id: new Types.ObjectId('507f1f77bcf86cd799439011'),
     codeNAC: '45C',
-    libelleNAC:
-      'Appel sur une décision  relative à la modification substantielle du plan de cession (procédures ouvertes avant le 1er janvier 2006)',
+    libelleNAC: 'Modification Indemnités',
     blocOccultationCA: 3,
     blocOccultationTJ: 3,
     indicateurDecisionRenduePubliquement: null,
@@ -280,88 +279,45 @@ export class MockUtils {
     indicateurAffaireSignalee: false,
     routeRelecture: null,
     categoriesToOmitTJ: {
-      aucune: [
-        'adresse',
-        'cadastre',
-        'personneMorale',
-        'professionnelAvocat',
-        'professionnelMagistratGreffier',
-        'dateNaissance',
-        'dateDeces',
-        'dateMariage',
-        'numeroIdentifiant',
-        'plaqueImmatriculation',
-        'compteBancaire',
-        'localite',
-        'numeroSiretSiren',
-        'annotationSupplementaire',
-        'siteWebSensible',
-        'etablissement',
-        'telephoneFax'
-      ],
+      aucune: ['adresse', 'personne', 'etablissement', 'telephone'],
       conforme: ['professionnelAvocat', 'professionnelMagistratGreffier', 'personneMorale'],
       substituant: [
         'adresse',
-        'cadastre',
-        'personneMorale',
-        'professionnelAvocat',
-        'professionnelMagistratGreffier',
-        'dateNaissance',
-        'dateDeces',
-        'dateMariage',
-        'numeroIdentifiant',
-        'plaqueImmatriculation',
-        'compteBancaire',
         'localite',
         'numeroSiretSiren',
-        'annotationSupplementaire',
-        'siteWebSensible',
+        'siteWeb',
         'etablissement',
         'telephoneFax'
       ],
-      complément: ['professionnelAvocat', 'professionnelMagistratGreffier', 'personneMorale']
+      complément: ['avocat', 'greffier', 'personneMorale']
     },
     categoriesToOmitCA: {
       aucune: [
         'adresse',
         'cadastre',
-        'personneMorale',
+        'personne',
         'professionnelAvocat',
         'professionnelMagistratGreffier',
         'dateNaissance',
         'dateDeces',
         'dateMariage',
         'numeroIdentifiant',
-        'plaqueImmatriculation',
-        'compteBancaire',
-        'localite',
-        'numeroSiretSiren',
-        'annotationSupplementaire',
-        'siteWebSensible',
-        'etablissement',
-        'telephoneFax'
+        'localite'
       ],
-      conforme: ['professionnelAvocat', 'professionnelMagistratGreffier', 'personneMorale'],
+      conforme: ['avocat', 'greffier', 'personneMorale'],
       substituant: [
         'adresse',
         'cadastre',
-        'personneMorale',
+        'personne',
         'professionnelAvocat',
         'professionnelMagistratGreffier',
         'dateNaissance',
         'dateDeces',
         'dateMariage',
         'numeroIdentifiant',
-        'plaqueImmatriculation',
-        'compteBancaire',
-        'localite',
-        'numeroSiretSiren',
-        'annotationSupplementaire',
-        'siteWebSensible',
-        'etablissement',
-        'telephoneFax'
+        'localite'
       ],
-      complément: ['professionnelAvocat', 'professionnelMagistratGreffier', 'personneMorale']
+      complément: ['avocat', 'greffier', 'personneMorale']
     }
   }
 }

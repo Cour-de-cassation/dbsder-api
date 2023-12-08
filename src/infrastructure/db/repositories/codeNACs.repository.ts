@@ -7,7 +7,6 @@ export class CodeNACsRepository {
   constructor(@InjectModel('CodeNAC') private codeNACModel: Model<CodeNAC>) {}
 
   async getByCodeNac(codeNac: string): Promise<CodeNAC> {
-    console.log(codeNac)
     const codeNAC = await this.codeNACModel
       .findOne({ codeNAC: codeNac })
       .lean()
