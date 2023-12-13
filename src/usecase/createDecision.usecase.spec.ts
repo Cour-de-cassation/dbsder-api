@@ -82,6 +82,31 @@ describe('createDecisionUsecase', () => {
       // THEN
       expect(result).toEqual(expectedDecision._id.toString())
     })
+
+    it('When decision is not public and from TJ, we create decision without added occultation', async () => {
+      // GIVEN
+      const nonPublicCodeNAC = '11A'
+      const expectedDecision = {
+        ...mockUtils.decisionModel,
+        NACCode: nonPublicCodeNAC
+      }
+      const providedDecision = {
+        ...expectedDecision,
+        _id: expectedDecision._id.toString(),
+        labelStatus: LabelStatus.IGNORED_CODE_NAC_DECISION_NON_PUBLIQUE,
+        NACCode: nonPublicCodeNAC
+      }
+
+      jest
+        .spyOn(mockDecisionsRepository, 'create')
+        .mockImplementationOnce(async () => expectedDecision._id.toString())
+
+      // WHEN
+      const result = await usecase.execute(providedDecision)
+
+      // THEN
+      expect(result).toEqual(expectedDecision._id.toString())
+    })
   })
 
   describe('Error cases', () => {
