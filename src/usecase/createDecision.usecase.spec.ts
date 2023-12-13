@@ -83,7 +83,7 @@ describe('createDecisionUsecase', () => {
       expect(result).toEqual(expectedDecision._id.toString())
     })
 
-    it('When decision is not public and from TJ, we create decision without added occultation', async () => {
+    it('Creates decision without added occultation when decision is not from TJ and tobeTreated', async () => {
       // GIVEN
       const nonPublicCodeNAC = '11A'
       const expectedDecision = {
@@ -93,8 +93,7 @@ describe('createDecisionUsecase', () => {
       const providedDecision = {
         ...expectedDecision,
         _id: expectedDecision._id.toString(),
-        labelStatus: LabelStatus.IGNORED_CODE_NAC_DECISION_NON_PUBLIQUE,
-        NACCode: nonPublicCodeNAC
+        labelStatus: LabelStatus.IGNORED_CODE_NAC_DECISION_NON_PUBLIQUE
       }
 
       jest

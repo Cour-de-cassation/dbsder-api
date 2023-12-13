@@ -10,14 +10,10 @@ export class CreateDecisionUsecase {
   ) {}
 
   async execute(decision: CreateDecisionDTO): Promise<string> {
-    const labelStatusNonPublic = [
-      LabelStatus.IGNORED_DECISION_NON_PUBLIQUE,
-      LabelStatus.IGNORED_CODE_NAC_DECISION_NON_PUBLIQUE
-    ]
     if (
       decision.sourceName === Sources.TJ &&
       decision.NACCode &&
-      !labelStatusNonPublic.includes(decision.labelStatus)
+      decision.labelStatus === LabelStatus.TOBETREATED
     ) {
       const givenCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
 
