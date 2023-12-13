@@ -10,7 +10,11 @@ export class CreateDecisionUsecase {
   ) {}
 
   async execute(decision: CreateDecisionDTO): Promise<string> {
-    if (decision.sourceName === Sources.TJ && decision.NACCode) {
+    if (
+      decision.sourceName === Sources.TJ &&
+      decision.NACCode &&
+      decision.labelStatus === LabelStatus.TOBETREATED
+    ) {
       const givenCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
 
       if (givenCodeNAC !== null) {
