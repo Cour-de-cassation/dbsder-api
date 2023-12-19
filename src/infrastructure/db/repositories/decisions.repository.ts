@@ -11,8 +11,12 @@ import {
   UpdateFailedError
 } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
+import { Logger } from '@nestjs/common'
+import { LogsFormat } from '../../utils/logsFormat.utils'
 
 export class DecisionsRepository implements InterfaceDecisionsRepository {
+  private readonly logger = new Logger()
+
   constructor(@InjectModel('Decision') private decisionModel: Model<Decision>) {}
 
   async list(decisionSearchParams: GetDecisionsListDto): Promise<Decision[]> {
@@ -41,6 +45,15 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
         throw new DatabaseError(error)
       })
 
+    const formatLogs: LogsFormat = {
+      operationName: 'create',
+      msg: `Decision created with id ${savedDecision._id.toString()}`,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      data: (({ originalText, sommaire, parties, ...finalDecision }) => finalDecision)(
+        savedDecision
+      )
+    }
+    this.logger.log(formatLogs)
     return Promise.resolve(savedDecision._id.toString())
   }
 
