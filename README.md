@@ -8,6 +8,10 @@ Elle offre la possibilité de stocker, lire et mettre à jour des décisions de 
 ```bash
 nvm install
 ```
+- Puis lancer la commande :
+```bash
+ nvm use
+```
 
 ### Installation 
 
