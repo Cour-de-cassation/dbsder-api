@@ -1,6 +1,6 @@
 # Source : https://github.com/nestjs/awesome-nestjs#resources boilerplates
 # --- Builder --- #
-FROM node:18-alpine as builder
+FROM node:20.11.0-alpine as builder
 
 ENV NODE_ENV build
 
@@ -20,7 +20,7 @@ COPY --chown=node:node . .
 # Mongo-memory-server require to use an older image 
 # https://github.com/nodkz/mongodb-memory-server/issues/732 
 # https://nodkz.github.io/mongodb-memory-server/docs/guides/known-issues/#no-build-available-for-alpine-linux 
-FROM node:16 as test
+FROM node:20.11.0-alpine as test
 
 ENV NODE_ENV build
 
@@ -45,7 +45,7 @@ RUN npm run build && npm prune --production
 
 
 # --- Base final image with only shared dist content --- #
-FROM node:18-alpine as shared
+FROM node:20.11.0-alpine as shared
 
 ENV NODE_ENV production
 
