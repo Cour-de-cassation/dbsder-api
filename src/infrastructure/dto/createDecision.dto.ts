@@ -509,7 +509,7 @@ export class CreateDecisionDTO {
   NPCode?: string
 
   @ApiPropertyOptional({
-    description: 'Code de décision final',
+    description: "Code de fin d'affaire/code décision",
     type: String
   })
   @IsOptional()
@@ -545,13 +545,13 @@ export class CreateDecisionDTO {
   codeDecision?: string
 
   @ApiPropertyOptional({
-    description: 'Identifiant du service de la juridiction. Au format: ^[0-9a-zA-Z]{2}$',
+    description: 'Identifiant du service de la juridiction. Au format: ^[\\S]{2}$$',
     type: String,
     example: mockUtils.createDecisionTJDto.codeService
   })
   @IsOptional()
   @IsString()
-  @Matches('^[0-9a-zA-Z]{2}$')
+  @Matches('^[\\S]{2}$')
   codeService?: string
 
   @ApiPropertyOptional({
