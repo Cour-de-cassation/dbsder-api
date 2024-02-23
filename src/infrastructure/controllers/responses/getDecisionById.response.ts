@@ -207,6 +207,12 @@ export class GetDecisionByIdResponse {
   endCaseCode?: string
 
   @ApiPropertyOptional({
+    description: 'Libellé endCaseCode du code décision',
+    example: mockUtils.createDecisionTJDto.libelleEndCaseCode
+  })
+  libelleEndCaseCode?: string
+
+  @ApiPropertyOptional({
     description: 'Nom du fichier source de la décision'
   })
   filenameSource?: string

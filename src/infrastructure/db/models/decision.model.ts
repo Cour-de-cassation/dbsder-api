@@ -118,6 +118,9 @@ export class Decision {
   endCaseCode?: string
 
   @Prop()
+  libelleEndCaseCode?: string
+
+  @Prop()
   filenameSource?: string
 
   @Prop()
@@ -130,6 +133,9 @@ export class Decision {
   codeDecision: string
 
   @Prop()
+  libelleCodeDecision: string
+
+  @Prop()
   codeNature: string
 
   @Prop()
@@ -140,9 +146,6 @@ export class Decision {
 
   @Prop({ type: Object })
   decisionAssociee: DecisionAssociee
-
-  @Prop()
-  libelleCodeDecision: string
 
   @Prop()
   libelleNAC: string
