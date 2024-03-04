@@ -512,10 +512,6 @@ export class CreateDecisionDTO {
     description: 'Code de décision final',
     type: String
   })
-  @IsOptional()
-  @IsString()
-  endCaseCode?: string
-
   @ApiPropertyOptional({
     description: 'Nom du fichier source',
     type: String
@@ -537,12 +533,12 @@ export class CreateDecisionDTO {
   @ApiPropertyOptional({
     description: 'Code du type de décision. Au format : ^[0-9a-zA-Z]{3}$',
     type: String,
-    example: mockUtils.createDecisionTJDto.codeDecision
+    example: mockUtils.createDecisionTJDto.endCaseCode
   })
   @IsOptional()
   @IsString()
   @Matches('^[0-9a-zA-Z]{3}$')
-  codeDecision?: string
+  endCaseCode?: string
 
   @ApiPropertyOptional({
     description: 'Identifiant du service de la juridiction. Au format: ^[0-9a-zA-Z]{2}$',
@@ -579,12 +575,12 @@ export class CreateDecisionDTO {
   @ApiPropertyOptional({
     description: 'Libellé du type de décision',
     type: String,
-    example: mockUtils.createDecisionTJDto.libelleCodeDecision
+    example: mockUtils.createDecisionTJDto.libelleEndCaseCode
   })
   @IsOptional()
   @IsString()
   @Length(0, 200)
-  libelleCodeDecision?: string
+  libelleEndCaseCode?: string
 
   @ApiPropertyOptional({
     description: 'Libellé du code NAC de la décision',

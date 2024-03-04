@@ -233,12 +233,6 @@ export class GetDecisionByIdResponse {
   pubCategory?: string
 
   @ApiPropertyOptional({
-    description: 'Code de la décision',
-    example: mockUtils.createDecisionTJDto.codeDecision
-  })
-  codeDecision?: string
-
-  @ApiPropertyOptional({
     description: 'Code de la nature de la décision',
     example: mockUtils.createDecisionTJDto.codeNature
   })
@@ -271,12 +265,6 @@ export class GetDecisionByIdResponse {
     description: 'Identifiant de la décision Winci'
   })
   idDecisionWinci?: string
-
-  @ApiPropertyOptional({
-    description: 'Libellé du code décision',
-    example: mockUtils.createDecisionTJDto.libelleCodeDecision
-  })
-  libelleCodeDecision?: string
 
   @ApiPropertyOptional({
     description: 'Libellé du code NAC',

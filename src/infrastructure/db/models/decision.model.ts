@@ -130,12 +130,6 @@ export class Decision {
   labelTreatments?: LabelTreatment[]
 
   @Prop()
-  codeDecision: string
-
-  @Prop()
-  libelleCodeDecision: string
-
-  @Prop()
   codeNature: string
 
   @Prop()

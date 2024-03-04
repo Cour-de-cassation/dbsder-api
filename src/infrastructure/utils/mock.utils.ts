@@ -101,13 +101,11 @@ export class MockUtils {
 
   decisionModel = {
     NACCode: '45C',
-    codeDecision: '',
     endCaseCode: '',
     codeNature: '',
     codeService: '',
     debatPublic: false,
     decisionAssociee: undefined,
-    libelleCodeDecision: '',
     libelleEndCaseCode: '',
     libelleNAC: '',
     libelleNatureParticuliere: '',
@@ -178,13 +176,11 @@ export class MockUtils {
 
   decisionPseudonymisee = {
     NACCode: '45C',
-    codeDecision: '',
     endCaseCode: '',
     codeNature: '',
     codeService: '',
     debatPublic: false,
     decisionAssociee: undefined,
-    libelleCodeDecision: '',
     libelleEndCaseCode: '',
     libelleNAC: '',
     libelleNatureParticuliere: '',
@@ -235,15 +231,13 @@ export class MockUtils {
 
   createDecisionTJDto = {
     ...this.createDecisionDTO,
-    codeDecision: '0aA',
-    endCaseCode: '0aA_example',
+    endCaseCode: '0aA',
     codeNature: '6C',
     codeService: '0A',
     debatPublic: true,
     indicateurQPC: true,
     libelleNAC: 'Demande en dommages-intérêts contre un organisme',
     libelleService: 'Libelle de service',
-    libelleCodeDecision: 'some libelle code decision',
     libelleEndCaseCode: 'some libelle code decision - endCaseCode',
     libelleNatureParticuliere: 'Autres demandes en matière de frais et dépens',
     matiereDeterminee: true,
