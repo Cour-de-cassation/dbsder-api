@@ -238,7 +238,7 @@ export class MockUtils {
     indicateurQPC: true,
     libelleNAC: 'Demande en dommages-intérêts contre un organisme',
     libelleService: 'Libelle de service',
-    libelleEndCaseCode: 'some libelle code decision - endCaseCode',
+    libelleEndCaseCode: 'some libelle code decision / endCaseCode',
     libelleNatureParticuliere: 'Autres demandes en matière de frais et dépens',
     matiereDeterminee: true,
     numeroRoleGeneral: '01/12345',

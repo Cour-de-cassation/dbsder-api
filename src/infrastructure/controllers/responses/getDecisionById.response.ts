@@ -207,7 +207,7 @@ export class GetDecisionByIdResponse {
   endCaseCode?: string
 
   @ApiPropertyOptional({
-    description: 'Libellé endCaseCode du code décision',
+    description: 'Libellé endCaseCode / codeDecision',
     example: mockUtils.createDecisionTJDto.libelleEndCaseCode
   })
   libelleEndCaseCode?: string

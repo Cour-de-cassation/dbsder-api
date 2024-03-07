@@ -509,9 +509,15 @@ export class CreateDecisionDTO {
   NPCode?: string
 
   @ApiPropertyOptional({
-    description: 'Code de décision final',
-    type: String
+    description: 'CodeDecision/endCaseCode. Au format : ^[0-9a-zA-Z]{3}$',
+    type: String,
+    example: mockUtils.createDecisionTJDto.endCaseCode
   })
+  @IsOptional()
+  @IsString()
+  @Matches('^[0-9a-zA-Z]{3}$')
+  endCaseCode?: string
+
   @ApiPropertyOptional({
     description: 'Nom du fichier source',
     type: String
@@ -529,16 +535,6 @@ export class CreateDecisionDTO {
   pubCategory?: string
 
   // TJ VVV
-
-  @ApiPropertyOptional({
-    description: 'Code du type de décision. Au format : ^[0-9a-zA-Z]{3}$',
-    type: String,
-    example: mockUtils.createDecisionTJDto.endCaseCode
-  })
-  @IsOptional()
-  @IsString()
-  @Matches('^[0-9a-zA-Z]{3}$')
-  endCaseCode?: string
 
   @ApiPropertyOptional({
     description: 'Identifiant du service de la juridiction. Au format: ^[0-9a-zA-Z]{2}$',
