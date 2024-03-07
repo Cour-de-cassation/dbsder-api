@@ -509,11 +509,13 @@ export class CreateDecisionDTO {
   NPCode?: string
 
   @ApiPropertyOptional({
-    description: "Code de fin d'affaire/code décision",
-    type: String
+    description: 'CodeDecision/endCaseCode. Au format : ^[0-9a-zA-Z]{3}$',
+    type: String,
+    example: mockUtils.createDecisionTJDto.endCaseCode
   })
   @IsOptional()
   @IsString()
+  @Matches('^[0-9a-zA-Z]{3}$')
   endCaseCode?: string
 
   @ApiPropertyOptional({
@@ -533,16 +535,6 @@ export class CreateDecisionDTO {
   pubCategory?: string
 
   // TJ VVV
-
-  @ApiPropertyOptional({
-    description: 'Code du type de décision. Au format : ^[0-9a-zA-Z]{3}$',
-    type: String,
-    example: mockUtils.createDecisionTJDto.codeDecision
-  })
-  @IsOptional()
-  @IsString()
-  @Matches('^[0-9a-zA-Z]{3}$')
-  codeDecision?: string
 
   @ApiPropertyOptional({
     description: 'Identifiant du service de la juridiction. Au format: ^[\\S]{2}$$',
@@ -579,12 +571,12 @@ export class CreateDecisionDTO {
   @ApiPropertyOptional({
     description: 'Libellé du type de décision',
     type: String,
-    example: mockUtils.createDecisionTJDto.libelleCodeDecision
+    example: mockUtils.createDecisionTJDto.libelleEndCaseCode
   })
   @IsOptional()
   @IsString()
   @Length(0, 200)
-  libelleCodeDecision?: string
+  libelleEndCaseCode?: string
 
   @ApiPropertyOptional({
     description: 'Libellé du code NAC de la décision',

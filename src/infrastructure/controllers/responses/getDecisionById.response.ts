@@ -207,6 +207,12 @@ export class GetDecisionByIdResponse {
   endCaseCode?: string
 
   @ApiPropertyOptional({
+    description: 'Libellé endCaseCode / codeDecision',
+    example: mockUtils.createDecisionTJDto.libelleEndCaseCode
+  })
+  libelleEndCaseCode?: string
+
+  @ApiPropertyOptional({
     description: 'Nom du fichier source de la décision'
   })
   filenameSource?: string
@@ -225,12 +231,6 @@ export class GetDecisionByIdResponse {
     description: 'Catégorie de publication de la décision'
   })
   pubCategory?: string
-
-  @ApiPropertyOptional({
-    description: 'Code de la décision',
-    example: mockUtils.createDecisionTJDto.codeDecision
-  })
-  codeDecision?: string
 
   @ApiPropertyOptional({
     description: 'Code de la nature de la décision',
@@ -265,12 +265,6 @@ export class GetDecisionByIdResponse {
     description: 'Identifiant de la décision Winci'
   })
   idDecisionWinci?: string
-
-  @ApiPropertyOptional({
-    description: 'Libellé du code décision',
-    example: mockUtils.createDecisionTJDto.libelleCodeDecision
-  })
-  libelleCodeDecision?: string
 
   @ApiPropertyOptional({
     description: 'Libellé du code NAC',
