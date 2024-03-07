@@ -43,8 +43,8 @@ test:
 build_api:
   stage: build
   variables:
-    HTTP_PROXY: $HTTP_PROXY
-    HTTPS_PROXY: $HTTPS_PROXY
+    HTTP_PROXY: $HTTP_PROXY_DEV
+    HTTPS_PROXY: $HTTPS_PROXY_DEV
   script: 
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
     - docker build

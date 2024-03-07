@@ -1,0 +1,1 @@
+## Don't forget to update the dbsder-api-types version if needed
