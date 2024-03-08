@@ -15,7 +15,7 @@ Pour installer les packages nécessaires au bon fonctionnement de l'application,
 ```bash
 npm install
 ```  
-N'oubliez pas d'installer **husky** pour obtenir les hooks de commit/push
+Vous pouvez installer **husky** pour obtenir les hooks de commit/push
 ```bash
 npx husky install
 ```
@@ -24,7 +24,7 @@ npx husky install
 
 Pour démarrer l'application:
 
-1. Compiler l'image docker mongodb:
+1. Compiler l'image docker:
  ```bash
 npm run docker:build
  ```
@@ -32,14 +32,20 @@ npm run docker:build
  ```bash
 npm run docker:start:db
  ```
-3. Créer un .env en copiant le docker.env et modifier la variable MONGO_DB_URL:
-```text
-MONGO_DB_URL=mongodb://localhost:55433
-```
-4. Lancer l'application
- ```bash
-npm run start:dev
- ```
+3. Configurer les variables d'environnement:
+    - Dupliquer le fichier `docker.env.example` et le rennomer `docker.env`, adapter les variables d'environnement si besoin
+    - Dupliquer le fichier `.env.example` et le rennomer `.env`, adapter les variables d'environnement si besoin
+
+4. Lancer l'API:
+    - Pour lancer l'API avec docker :
+        ```bash
+        npm run docker:start
+        ```
+    - Pour lancer l'API en phase de développement et afin de disposer d'une mise à jour à chaud du serveur à chaque changement:
+         ```bash
+        npm run docker:start:db
+        npm run start:dev
+        ```
 
 ### Tests
 
@@ -49,53 +55,7 @@ Pour lancer les tests, écrire dans un terminal :
 npm run test
  ```
 
-### Variables d'environnement en local 
-
-Créer un fichier `.env` à la racine du dossier avec les variables suivantes :
-
-```.env
-### Pour désactiver la coloration des logs
-NO_COLOR=true 
-
-## Clés API des consommateurs de l'API DBSDER
-LABEL_API_KEY=some_uuid
-NORMALIZATION_API_KEY=some_uuid
-OPENSDER_API_KEY=some_uuid
-OPS_API_KEY=some_uuid
-PUBLICATION_API_KEY=some_uuid
-ATTACHMENTS_API_KEY=some_uuid
-INDEX_API_KEY=some_uuid
-
-## Identifiants Swagger
-DOC_LOGIN=login
-DOC_PASSWORD=pwd
-
-## Mongo URL
-MONGO_DB_URL=mongodb://<URL>:<PORT>/<DB_NAME>
-```
-
-Un exemple de fichier `.env` est nommé `.env.example`
-
-
-### Démarrer l'application via Docker
-
-Démarrer l'application nécessite au préalable d'initaliser les fichiers de variables d'environnement. 
-
-Pour lancer l'ensemble de DBSDER-api avec Docker, écrire dans un terminal : 
-
-```bash
-npm run docker:build
-npm run docker:start
-```
-
-Pour lancer l'API en phase de développement et afin de disposer d'une mise à jour à chaud du serveur à chaque changement, écrire dans un terminal : 
-```bash
-npm run docker:build
-npm run docker:start:db
-npm run start:dev
-```
-
-### Documentation complémentaire 
+### Postman 
 
 Le dossier `/documentation` contient : 
 - Les requêtes Postman et comment les installer [lien](documentation/postman/README.md)
