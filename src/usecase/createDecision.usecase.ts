@@ -2,7 +2,9 @@ import { CreateDecisionDTO } from '../infrastructure/dto/createDecision.dto'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { CodeNACsRepository } from '../infrastructure/db/repositories/codeNACs.repository'
 import { LabelStatus, Sources } from 'dbsder-api-types'
+import { ZoningApiService } from '../service/zoningApi.service'
 
+const zoningApiService = new ZoningApiService()
 export class CreateDecisionUsecase {
   constructor(
     private decisionsRepository: InterfaceDecisionsRepository,
@@ -10,6 +12,10 @@ export class CreateDecisionUsecase {
   ) {}
 
   async execute(decision: CreateDecisionDTO): Promise<string> {
+    // call zoning to complete originalTextZoning
+    const decisionZoning = await zoningApiService.getDecisionZoning(decision)
+    console.log(decisionZoning)
+
     if (
       decision.sourceName === Sources.TJ &&
       decision.NACCode &&
