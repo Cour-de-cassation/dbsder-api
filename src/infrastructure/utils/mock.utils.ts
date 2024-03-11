@@ -99,6 +99,15 @@ export class MockUtils {
     idDecisionTJ: 'TJ00001A01-1234520221121'
   }
 
+  zoningModel = {
+    zones: null,
+    introduction_subzonage: null,
+    visa: [],
+    is_public: true,
+    is_public_text: [],
+    arret_id: 0
+  }
+
   decisionModel = {
     NACCode: '45C',
     endCaseCode: '',
@@ -153,7 +162,8 @@ export class MockUtils {
     registerNumber: 'someRegisterNumber',
     solution: 'someSolution',
     sourceId: 1,
-    sourceName: Sources.TJ
+    sourceName: Sources.TJ,
+    originalTextZoning: this.zoningModel
   }
 
   decisionRapportsOccultations: UpdateDecisionRapportsOccultationsDTO = {
@@ -226,7 +236,8 @@ export class MockUtils {
     registerNumber: 'someRegisterNumber',
     solution: 'someSolution',
     sourceId: 1,
-    sourceName: Sources.TJ
+    sourceName: Sources.TJ,
+    originalTextZoning: this.zoningModel
   }
 
   createDecisionTJDto = {
