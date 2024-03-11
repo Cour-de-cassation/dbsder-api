@@ -430,6 +430,7 @@ export class CreateDecisionDTO {
     type: Object,
     deprecated: true
   })
+  @IsObject()
   @IsOptional()
   zoning?: object
 
