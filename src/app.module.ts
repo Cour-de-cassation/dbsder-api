@@ -21,6 +21,7 @@ import { UpdateDecisionRapportsOccultationsController } from './infrastructure/c
 import { DeleteDecisionByIdController } from './infrastructure/controllers/deleteDecisionById.controller'
 import { CodeNAC, CodeNACSchema } from './infrastructure/db/models/codeNAC.model'
 import { CodeNACsRepository } from './infrastructure/db/repositories/codeNACs.repository'
+import { ZoningApiService } from './service/zoningApi.service'
 
 @Module({
   imports: [
@@ -48,7 +49,7 @@ import { CodeNACsRepository } from './infrastructure/db/repositories/codeNACs.re
     UpdateDecisionStatutController,
     DeleteDecisionByIdController
   ],
-  providers: [DecisionsRepository, CodeNACsRepository]
+  providers: [DecisionsRepository, CodeNACsRepository, ZoningApiService]
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

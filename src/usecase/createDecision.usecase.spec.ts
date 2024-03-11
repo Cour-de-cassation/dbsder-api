@@ -4,15 +4,19 @@ import { CreateDecisionUsecase } from './createDecision.usecase'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { CodeNACsRepository } from '../infrastructure/db/repositories/codeNACs.repository'
 import { LabelStatus, Occultation, Sources } from 'dbsder-api-types'
+import { FakeZoningApiService } from '../service/fakeZoningApi.service'
+import { ZoningApiService } from '../service/zoningApi.service'
 
 describe('createDecisionUsecase', () => {
   const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
     mock<InterfaceDecisionsRepository>()
   const mockCodeNACsRepository: MockProxy<CodeNACsRepository> = mock<CodeNACsRepository>()
+  const fakeZoningApiService: ZoningApiService = new FakeZoningApiService()
   let mockUtils: MockUtils
   const usecase: CreateDecisionUsecase = new CreateDecisionUsecase(
     mockDecisionsRepository,
-    mockCodeNACsRepository
+    mockCodeNACsRepository,
+    fakeZoningApiService
   )
 
   beforeAll(async () => {

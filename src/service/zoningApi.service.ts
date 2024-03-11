@@ -16,7 +16,7 @@ export class ZoningApiService {
 
   async getDecisionZoning(decision: CreateDecisionDTO): Promise<Zoning> {
     let zonageSource: string
-    switch (decision.sourceName){
+    switch (decision.sourceName) {
       case Sources.CC:
         zonageSource = 'cc'
         break
@@ -25,7 +25,7 @@ export class ZoningApiService {
       default:
         zonageSource = 'ca'
     }
-    
+
     const zoningRequestParameters = JSON.stringify({
       arret_id: decision.sourceId,
       source: zonageSource,
