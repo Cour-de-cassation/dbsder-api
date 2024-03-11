@@ -9,15 +9,26 @@ import {
   ConflictException,
   ServiceUnavailableException
 } from '@nestjs/common'
+import { Sources, Zoning } from 'dbsder-api-types'
 
 export class ZoningApiService {
   private readonly logger = new Logger()
 
-  async getDecisionZoning(decision: CreateDecisionDTO) {
-    // const zoningUrl = process.env.ZONING_API_URL
+  async getDecisionZoning(decision: CreateDecisionDTO): Promise<Zoning> {
+    let zonageSource: string
+    switch (decision.sourceName){
+      case Sources.CC:
+        zonageSource = 'cc'
+        break
+      case Sources.CA:
+      case Sources.TJ:
+      default:
+        zonageSource = 'ca'
+    }
+    
     const zoningRequestParameters = JSON.stringify({
       arret_id: decision.sourceId,
-      source: decision.sourceName,
+      source: zonageSource,
       text: decision.originalText
     })
     const zoningApiUrl = process.env.ZONING_API_URL
