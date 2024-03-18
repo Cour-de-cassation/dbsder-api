@@ -8,5 +8,6 @@ process.env = {
   ATTACHMENTS_API_KEY: 'a2a4a449-c4b7-4bbe-9da0-98429bee59d0',
   MONGO_DB_URL: 'mongodb://127.0.0.1:5353/test',
   DOC_LOGIN: 'login',
-  DOC_PASSWORD: 'password'
+  DOC_PASSWORD: 'password',
+  ZONING_API_URL: 'http://localhost:8090'
 }

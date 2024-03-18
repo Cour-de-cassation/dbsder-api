@@ -4,6 +4,8 @@ import { HttpStatus, INestApplication } from '@nestjs/common'
 import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
+import { FakeZoningApiService } from '../../service/fakeZoningApi.service'
+import { ZoningApiService } from '../../service/zoningApi.service'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -13,7 +15,10 @@ describe('DecisionsController', () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule]
-    }).compile()
+    })
+      .overrideProvider(ZoningApiService)
+      .useValue(new FakeZoningApiService())
+      .compile()
 
     app = moduleFixture.createNestApplication({ logger: false })
 

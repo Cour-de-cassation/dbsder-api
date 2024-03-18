@@ -26,6 +26,8 @@ services:
     networks: 
       - default
       - dbsder-external-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 networks:
   default:

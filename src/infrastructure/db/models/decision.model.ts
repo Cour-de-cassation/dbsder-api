@@ -8,7 +8,8 @@ import {
   DecisionAssociee,
   President,
   Occultation,
-  PartieTJ
+  PartieTJ,
+  Zoning
 } from 'dbsder-api-types'
 import { Types } from 'mongoose'
 
@@ -86,6 +87,12 @@ export class Decision {
     })
   )
   zoning?: object
+
+  @Prop({ type: Object })
+  originalTextZoning: Zoning
+
+  @Prop({ type: Object })
+  pseudoTextZoning?: Zoning
 
   @Prop()
   publication?: string[]

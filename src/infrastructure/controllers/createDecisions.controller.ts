@@ -19,13 +19,15 @@ import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { LogsFormat } from '../utils/logsFormat.utils'
 import { CodeNACsRepository } from '../db/repositories/codeNACs.repository'
+import { ZoningApiService } from '../../service/zoningApi.service'
 
 @ApiTags('DbSder')
 @Controller('decisions')
 export class CreateDecisionsController {
   constructor(
     private readonly decisionsRepository: DecisionsRepository,
-    private readonly codeNACsRepository: CodeNACsRepository
+    private readonly codeNACsRepository: CodeNACsRepository,
+    private readonly zoningApiService: ZoningApiService
   ) {}
 
   private readonly logger = new Logger()
@@ -71,7 +73,8 @@ export class CreateDecisionsController {
 
     const createDecisionUsecase = new CreateDecisionUsecase(
       this.decisionsRepository,
-      this.codeNACsRepository
+      this.codeNACsRepository,
+      this.zoningApiService
     )
     const decisionId = await createDecisionUsecase.execute(decision).catch((error) => {
       if (error instanceof DatabaseError) {

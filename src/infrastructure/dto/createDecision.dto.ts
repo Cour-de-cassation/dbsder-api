@@ -22,7 +22,8 @@ import {
   LabelTreatment,
   Annotation,
   PartieTJ,
-  Sources
+  Sources,
+  Zoning
 } from 'dbsder-api-types'
 import { AnnotationDto } from './updateDecision.dto'
 
@@ -426,11 +427,28 @@ export class CreateDecisionDTO {
 
   @ApiPropertyOptional({
     description: '(interne) Mise en page des décisions diffusées par extrait',
-    type: String
+    type: Object,
+    deprecated: true
   })
   @IsObject()
   @IsOptional()
   zoning?: object
+
+  @ApiPropertyOptional({
+    description: 'Zonage de la décision sur le texte intègre',
+    type: Object,
+    example: mockUtils.createDecisionDTO.blocOccultation
+  })
+  @IsOptional()
+  originalTextZoning?: Zoning
+
+  @ApiPropertyOptional({
+    description: 'Zonage de la décision sur le texte pseudonymisé',
+    type: Object,
+    example: mockUtils.createDecisionDTO.blocOccultation
+  })
+  @IsOptional()
+  pseudoTextZoning?: Zoning
 
   @ApiProperty({
     description:
