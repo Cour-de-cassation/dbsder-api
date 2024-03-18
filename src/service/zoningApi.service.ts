@@ -5,9 +5,8 @@ import {
   Logger,
   HttpStatus,
   BadRequestException,
-  UnauthorizedException,
-  ConflictException,
-  ServiceUnavailableException
+  ServiceUnavailableException,
+  UnprocessableEntityException
 } from '@nestjs/common'
 import { Sources, Zoning } from 'dbsder-api-types'
 
@@ -44,36 +43,31 @@ export class ZoningApiService {
         msg: 'Error while calling Zoning API'
       }
       if (error.response) {
-        if (error.response.data.statusCode === HttpStatus.BAD_REQUEST) {
+        if (error.response.status === HttpStatus.BAD_REQUEST) {
           this.logger.error({
             ...formatLogs,
-            msg: error.response.data.message,
+            msg: error.response.statusText,
             data: error.response.data,
             statusCode: HttpStatus.BAD_REQUEST
           })
           throw new BadRequestException(
-            'Zoning API Bad request error : ' + error.response.data.message
+            `Zoning API Bad request error :  + ${error.response.statusText}`
           )
-        } else if (error.response.data.statusCode === HttpStatus.UNAUTHORIZED) {
+        } else if (error.response.status === HttpStatus.UNPROCESSABLE_ENTITY) {
           this.logger.error({
             ...formatLogs,
-            msg: error.response.data.message,
+            msg: error.response.statusText,
             data: error.response.data,
-            statusCode: HttpStatus.UNAUTHORIZED
+            statusCode: HttpStatus.UNPROCESSABLE_ENTITY
           })
-          throw new UnauthorizedException('You are not authorized to call this route')
-        } else if (error.response.data.statusCode === HttpStatus.CONFLICT) {
-          this.logger.error({
-            ...formatLogs,
-            msg: error.response.data.message,
-            data: error.response.data,
-            statusCode: HttpStatus.CONFLICT
-          })
-          throw new ConflictException('Zoning API error: ' + error.response.data.message)
+          throw new UnprocessableEntityException(
+            `Le texte de la décision ${decision.sourceName}:${decision.sourceId} est mal encodé pour l'API de zonage : ${error.response.statusText}`
+          )
         } else {
+          console.log(error)
           this.logger.error({
             ...formatLogs,
-            msg: error.response.data.message,
+            msg: error.response.statusText,
             data: error.response.data,
             statusCode: HttpStatus.SERVICE_UNAVAILABLE
           })

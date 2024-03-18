@@ -12,12 +12,8 @@ export class CreateDecisionUsecase {
   ) {}
 
   async execute(decision: CreateDecisionDTO): Promise<string> {
-    try {
-      const decisionZoning: Zoning = await this.zoningApiService.getDecisionZoning(decision)
-      decision.originalTextZoning = decisionZoning
-    } catch (error) {
-      throw new Error(error)
-    }
+    const decisionZoning: Zoning = await this.zoningApiService.getDecisionZoning(decision)
+    decision.originalTextZoning = decisionZoning
 
     if (
       decision.sourceName === Sources.TJ &&
