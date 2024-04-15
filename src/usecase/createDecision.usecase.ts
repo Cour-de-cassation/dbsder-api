@@ -3,6 +3,7 @@ import { InterfaceDecisionsRepository } from '../domain/decisions.repository.int
 import { CodeNACsRepository } from '../infrastructure/db/repositories/codeNACs.repository'
 import { LabelStatus, Sources, Zoning } from 'dbsder-api-types'
 import { ZoningApiService } from '../service/zoningApi.service'
+import { computeLabelStatus } from '../infrastructure/utils/computeLabelStatus.utils'
 
 export class CreateDecisionUsecase {
   constructor(
@@ -11,9 +12,20 @@ export class CreateDecisionUsecase {
     private zoningApiService: ZoningApiService
   ) {}
 
-  async execute(decision: CreateDecisionDTO): Promise<string> {
-    const decisionZoning: Zoning = await this.zoningApiService.getDecisionZoning(decision)
-    decision.originalTextZoning = decisionZoning
+  async execute(decision: CreateDecisionDTO): Promise<string> {    
+    try {
+      const decisionZoning: Zoning = await this.zoningApiService.getDecisionZoning(decision)
+      decision.originalTextZoning = decisionZoning
+    } catch (error) {
+      throw new Error(error)
+    }
+
+    if(Sources.TJ){
+      // new filter for the new logique
+      const detailsCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
+      const result = computeLabelStatus(decision, "", detailsCodeNAC)
+      decision.labelStatus = result
+    }
 
     if (
       decision.sourceName === Sources.TJ &&
@@ -24,9 +36,8 @@ export class CreateDecisionUsecase {
 
       if (givenCodeNAC !== null) {
         decision.occultation.categoriesToOmit =
-          givenCodeNAC.categoriesToOmitTJ[decision.recommandationOccultation.toString()]
-
-        decision.blocOccultation = givenCodeNAC.blocOccultationTJ
+          givenCodeNAC?.categoriesToOmitTJ[decision.recommandationOccultation.toString()]
+        decision.blocOccultation = givenCodeNAC?.blocOccultationTJ
       } else {
         decision.labelStatus = LabelStatus.IGNORED_CODE_NAC_INCONNU
       }

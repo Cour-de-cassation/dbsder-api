@@ -53,11 +53,10 @@ describe('createDecisionUsecase', () => {
       expect(result).toEqual(expectedDecision._id.toString())
       expect(mockDecisionsRepository.create).toHaveBeenCalledWith({
         ...providedDecision,
-        blocOccultation: providedCodeNAC.blocOccultationTJ,
+        blocOccultation: 1,
         occultation: {
           ...providedDecision.occultation,
-          categoriesToOmit:
-            providedCodeNAC.categoriesToOmitTJ[providedDecision.recommandationOccultation]
+          categoriesToOmit:["someCategoriesToOmit"]
         }
       })
     })
@@ -119,6 +118,7 @@ describe('createDecisionUsecase', () => {
         ...mockUtils.decisionModel,
         recommandationOccultation: Occultation.CONFORME,
         sourceName: Sources.TJ,
+        endCaseCode:'11E',
         NACCode: 'XX0'
       }
       const providedDecision = { ...expectedDecision, _id: expectedDecision._id.toString() }
