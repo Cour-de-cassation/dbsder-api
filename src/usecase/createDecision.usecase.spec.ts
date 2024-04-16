@@ -30,12 +30,14 @@ describe('createDecisionUsecase', () => {
   describe('Success cases', () => {
     it('when decision is from TJ, creates decision and add occultation based on codeNAC successfully', async () => {
       // GIVEN
+      const providedCodeNAC = mockUtils.codeNACMock;
       const expectedDecision = {
         ...mockUtils.decisionModel,
+        endCaseCode: '11E',
+        debatPublic: false,
         recommandationOccultation: Occultation.CONFORME,
         sourceName: Sources.TJ
       }
-      const providedCodeNAC = mockUtils.codeNACMock
       const providedDecision = { ...expectedDecision, _id: expectedDecision._id.toString() }
 
       jest
@@ -53,10 +55,10 @@ describe('createDecisionUsecase', () => {
       expect(result).toEqual(expectedDecision._id.toString())
       expect(mockDecisionsRepository.create).toHaveBeenCalledWith({
         ...providedDecision,
-        blocOccultation: 1,
+        blocOccultation: providedCodeNAC.blocOccultationTJ,
         occultation: {
           ...providedDecision.occultation,
-          categoriesToOmit: ['someCategoriesToOmit']
+          categoriesToOmit: providedCodeNAC.categoriesToOmitTJ[providedDecision.recommandationOccultation]
         }
       })
     })

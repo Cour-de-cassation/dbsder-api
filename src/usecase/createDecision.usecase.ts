@@ -20,27 +20,19 @@ export class CreateDecisionUsecase {
       throw new Error(error)
     }
 
-    if (Sources.TJ) {
-      // new filter for the new logique
-      const detailsCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
-      const result = computeLabelStatus(decision, '', detailsCodeNAC)
-      decision.labelStatus = result
-    }
-
     if (
       decision.sourceName === Sources.TJ &&
-      decision.NACCode &&
-      decision.labelStatus === LabelStatus.TOBETREATED
+      decision.NACCode
     ) {
       const givenCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
-
-      if (givenCodeNAC !== null) {
+      const labelStatus = computeLabelStatus(decision, '', givenCodeNAC)
+      decision.labelStatus = labelStatus
+      if (givenCodeNAC !== null && labelStatus == LabelStatus.TOBETREATED) {
         decision.occultation.categoriesToOmit =
           givenCodeNAC?.categoriesToOmitTJ[decision.recommandationOccultation.toString()]
         decision.blocOccultation = givenCodeNAC?.blocOccultationTJ
-      } else {
-        decision.labelStatus = LabelStatus.IGNORED_CODE_NAC_INCONNU
       }
+
     }
 
     return this.decisionsRepository.create(decision)

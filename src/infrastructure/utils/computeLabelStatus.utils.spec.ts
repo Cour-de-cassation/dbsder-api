@@ -14,107 +14,50 @@ describe('updateLabelStatus', () => {
   })
 
   describe('Changes labelStatus if it has exceptions', () => {
-    describe('Returns ignored_decisionDateIncoherente', () => {
-      it('when dateDecision is in the future compared to dateCreation', () => {
+
+    describe('Returns labelStatus with IGNORED_CODE_NAC_INCONNU -- IGNORED_CODE_NAC_OBSOLETE', () => {
+      it('returns ignored_codeNACInconnu when we have null from codenac table in database', async () => {
         // GIVEN
-        const dateDecisionInTheFuture = new Date(2023, 7, 20)
-        const dateCreation = new Date(2023, 6, 20)
         const mockDecisionLabel = {
           ...mockUtils.decisionModel,
-          dateDecision: dateDecisionInTheFuture.toISOString(),
-          dateCreation: dateCreation.toISOString(),
-          public: true,
+          NACCode: '11E',
+          public: false,
           _id: mockUtils.decisionModel._id.toString()
         }
-        const expectedLabelStatus = LabelStatus.IGNORED_DATE_DECISION_INCOHERENTE
+
+        const expectedLabelStatus = LabelStatus.IGNORED_CODE_NAC_INCONNU
 
         // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel)
+        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', null)
 
         // THEN
         expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
       })
 
-      it('when decision is older than 6 months', () => {
+      it('returns ignored_codeNacObsolete when blocOccultation == 0 or categoriesToOmit == null', async () => {
         // GIVEN
-        const dateDecisionSevenMonthsBefore = new Date(2022, 11, 15)
-        const dateCreation = new Date(2023, 6, 20)
         const mockDecisionLabel = {
           ...mockUtils.decisionModel,
-          dateDecision: dateDecisionSevenMonthsBefore.toISOString(),
-          dateCreation: dateCreation.toISOString(),
-          public: true,
+          public: false,
           _id: mockUtils.decisionModel._id.toString()
         }
-        const expectedLabelStatus = LabelStatus.IGNORED_DATE_DECISION_INCOHERENTE
 
-        // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel)
-
-        // THEN
-        expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
-      })
-    })
-
-    describe('returns ignored_dateAvantMiseEnService', () => {
-      it('when decisionDate is before mise en service date', () => {
-        // GIVEN
-        const dateDecisionBeforeMiseEnService = new Date(2023, 11, 13)
-        const mockDecisionLabel = {
-          ...mockUtils.decisionModel,
-          dateDecision: dateDecisionBeforeMiseEnService.toISOString(),
-          _id: mockUtils.decisionModel._id.toString()
+        const expectedLabelStatus = LabelStatus.IGNORED_CODE_NAC_OBSOLETE
+        const providedCodeNAC = {
+          ...mockUtils.codeNACMock,
+          categoriesToOmitTJ: null,
+          blocOccultationTJ: 0
         }
-        const expectedLabelStatus = LabelStatus.IGNORED_DATE_AVANT_MISE_EN_SERVICE
-
         // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel)
-
-        // THEN
-        expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
-      })
-
-      it('when decisionDate is in January 2023 and dateCreation is in July 2023', () => {
-        // GIVEN
-        const dateJanuary2023 = new Date(2023, 0, 15)
-        const dateJuly2023 = new Date(2023, 6, 20)
-        const mockDecisionLabel = {
-          ...mockUtils.decisionModel,
-          dateDecision: dateJanuary2023.toISOString(),
-          dateCreation: dateJuly2023.toISOString(),
-          _id: mockUtils.decisionModel._id.toString()
-        }
-        // change with new condditions now this is before mise en service
-        const expectedLabelStatus = LabelStatus.IGNORED_DATE_AVANT_MISE_EN_SERVICE
-
-        // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel)
-
-        // THEN
-        expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
-      })
-
-      it('when decisionDate is in September 2022 and dateCreation is in March 2023', () => {
-        // GIVEN
-        const dateSeptember2022 = new Date(2022, 8, 20)
-        const dateMarch2023 = new Date(2023, 2, 25)
-        const mockDecisionLabel = {
-          ...mockUtils.decisionModel,
-          dateDecision: dateSeptember2022.toISOString(),
-          dateCreation: dateMarch2023.toISOString(),
-          _id: mockUtils.decisionModel._id.toString()
-        }
-        const expectedLabelStatus = LabelStatus.IGNORED_DATE_AVANT_MISE_EN_SERVICE
-
-        // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel)
+        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', providedCodeNAC)
 
         // THEN
         expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
       })
     })
 
-    describe('Returns labelStatus with IGNORED_DECISION_NON_PUBLIQUE  -- IGNORED_CODE_DECISION_BLOQUE_CC -- IGNORED_CARACTERE_INCONNU', () => {
+
+    describe('Returns labelStatus with IGNORED_DECISION_NON_PUBLIQUE', () => {
       it('returns ignored_decisionNonPublique when decision is not public', async () => {
         // GIVEN
         const mockDecisionLabel = {
@@ -127,42 +70,6 @@ describe('updateLabelStatus', () => {
         const providedCodeNAC = mockUtils.codeNACMock
 
         const expectedLabelStatus = LabelStatus.IGNORED_DECISION_NON_PUBLIQUE
-
-        // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', providedCodeNAC)
-
-        // THEN
-        expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
-      })
-
-      it('returns ignored_codeDecisionBloqueCC when endCaseCode (codeDecision) is not in the list of codeDecision that needs to be transmitted to CC', () => {
-        // GIVEN
-        const mockDecisionLabel = {
-          ...mockUtils.decisionModel,
-          endCaseCode: '32A',
-          _id: mockUtils.decisionModel._id.toString()
-        }
-        const expectedLabelStatus = LabelStatus.IGNORED_CODE_DECISION_BLOQUE_CC
-
-        // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel)
-
-        // THEN
-        expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
-      })
-
-      it('when originalText contains tibetan characters', () => {
-        // GIVEN
-
-        const mockDecisionLabel = {
-          ...mockUtils.decisionModel,
-          endCaseCode: '11E',
-          _id: mockUtils.decisionModel._id.toString(),
-          originalText:
-            'La créance des tiers payeurs et déduction faite des provisions à hauteur de 9. 000 སྒྱ, en réparation de son préjudice corporel, consécutif à l’accident survenu le'
-        }
-        const providedCodeNAC = mockUtils.codeNACMock
-        const expectedLabelStatus = LabelStatus.IGNORED_CARACTERE_INCONNU
 
         // WHEN
         mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', providedCodeNAC)
