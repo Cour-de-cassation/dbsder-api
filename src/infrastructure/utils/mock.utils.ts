@@ -106,7 +106,7 @@ export class MockUtils {
     is_public_text: [],
     arret_id: 0
   }
-  
+
   decisionModel = {
     NACCode: '45C',
     endCaseCode: '',
@@ -331,5 +331,4 @@ export class MockUtils {
       complément: ['avocat', 'greffier', 'personneMorale']
     }
   }
-  
 }
