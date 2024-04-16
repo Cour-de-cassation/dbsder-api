@@ -20,10 +20,10 @@ export class CreateDecisionUsecase {
       throw new Error(error)
     }
 
-    if(Sources.TJ){
+    if (Sources.TJ) {
       // new filter for the new logique
       const detailsCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
-      const result = computeLabelStatus(decision, "", detailsCodeNAC)
+      const result = computeLabelStatus(decision, '', detailsCodeNAC)
       decision.labelStatus = result
     }
 
