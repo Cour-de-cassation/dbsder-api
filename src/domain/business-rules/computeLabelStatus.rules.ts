@@ -63,18 +63,17 @@ export function computeLabelStatus(
   }
 
   //debatPublic == false ==> TOBETREATED
-  if (decisionDto.sourceName === 'juritj') {
-    if (decisionDto?.debatPublic === false) {
-      logger.warn({
-        ...formatLogs,
-        msg: `Decision debat is not public, changing LabelStatus to ${LabelStatus.TOBETREATED}.`
-      })
-      return LabelStatus.TOBETREATED
-    }
+  if (decisionDto?.debatPublic === false) {
+    logger.warn({
+      ...formatLogs,
+      msg: `Decision debat is not public, changing LabelStatus to ${LabelStatus.TOBETREATED}.`
+    })
+    return LabelStatus.TOBETREATED
   }
 
+
   //tableNACCIndicateurDebatsPublics === false
-  if (isDecisionPartiallyPublic(detailsNAC)) {
+  if (decisionDto?.debatPublic === true && isDecisionPartiallyPublic(detailsNAC)) {
     logger.warn({
       ...formatLogs,
       msg: `Decision can not be treated by Judilibre because NACCode indicates that the decision is partially public, changing LabelStatus to ${LabelStatus.IGNORED_CODE_NAC_DECISION_PARTIELLEMENT_PUBLIQUE}.`
@@ -83,7 +82,7 @@ export function computeLabelStatus(
   }
 
   //zonage_is_public === 2
-  if (decisionDto.originalTextZoning?.is_public === 2) {
+  if (decisionDto?.debatPublic === true && decisionDto.originalTextZoning?.is_public === 2) {
     logger.warn({
       ...formatLogs,
       msg: `Decision is not public, changing LabelStatus to ${LabelStatus.IGNORED_DECISION_PARTIELLEMENT_PUBLIQUE_PAR_ZONAGE}.`
@@ -96,23 +95,23 @@ export function computeLabelStatus(
 
 function isDecisionNotPublic(detailsNAC: CodeNAC): boolean {
   if (detailsNAC) {
-    return !detailsNAC.indicateurDecisionRenduePubliquement;
+    return !detailsNAC.indicateurDecisionRenduePubliquement
   }
   return false
 }
 
 function isDecisionPartiallyPublic(detailsNAC: CodeNAC): boolean {
   if (detailsNAC) {
-    return !detailsNAC.indicateurDebatsPublics;
+    return !detailsNAC.indicateurDebatsPublics
   }
 
-  return false;
+  return false
 }
 
 function isCodeNACCInconnu(detailsNAC: CodeNAC, decisionNACC: string): boolean {
-  return (!(decisionNACC && detailsNAC !== null && detailsNAC?.codeNAC == decisionNACC))
+  return !(decisionNACC && detailsNAC !== null && detailsNAC?.codeNAC == decisionNACC)
 }
 
 function isCodeNACCObsolete(detailsNAC: CodeNAC): boolean {
-  return (!(detailsNAC.categoriesToOmitTJ !== null && detailsNAC.blocOccultationTJ !== 0))
+  return !(detailsNAC.categoriesToOmitTJ !== null && detailsNAC.blocOccultationTJ !== 0)
 }

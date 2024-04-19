@@ -165,7 +165,6 @@ export class MockUtils {
     originalTextZoning: this.zoningModel
   }
 
-  // JuriTJ Normalization context
   decisionRapportsOccultations: UpdateDecisionRapportsOccultationsDTO = {
     rapportsOccultations: [
       {

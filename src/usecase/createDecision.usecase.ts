@@ -37,9 +37,7 @@ export class CreateDecisionUsecase {
       }
     }
 
-    if (
-      decision.labelStatus === LabelStatus.TOBETREATED
-    ){
+    if (decision.labelStatus === LabelStatus.TOBETREATED) {
       const givenCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
       decision.labelStatus === computeLabelStatus(decision, givenCodeNAC)
     }
