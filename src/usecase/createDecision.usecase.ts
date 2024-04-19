@@ -3,7 +3,7 @@ import { InterfaceDecisionsRepository } from '../domain/decisions.repository.int
 import { CodeNACsRepository } from '../infrastructure/db/repositories/codeNACs.repository'
 import { LabelStatus, Sources, Zoning } from 'dbsder-api-types'
 import { ZoningApiService } from '../service/zoningApi.service'
-import { computeLabelStatus } from '../infrastructure/utils/computeLabelStatus.utils'
+import { computeLabelStatus } from '../domain/business-rules/computeLabelStatus.rules'
 
 export class CreateDecisionUsecase {
   constructor(
@@ -12,7 +12,7 @@ export class CreateDecisionUsecase {
     private zoningApiService: ZoningApiService
   ) {}
 
-  async execute(decision: CreateDecisionDTO): Promise<string> {    
+  async execute(decision: CreateDecisionDTO): Promise<string> {
     try {
       const decisionZoning: Zoning = await this.zoningApiService.getDecisionZoning(decision)
       decision.originalTextZoning = decisionZoning
@@ -22,17 +22,26 @@ export class CreateDecisionUsecase {
 
     if (
       decision.sourceName === Sources.TJ &&
-      decision.NACCode
+      decision.NACCode &&
+      decision.labelStatus === LabelStatus.TOBETREATED
     ) {
       const givenCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
-      const labelStatus = computeLabelStatus(decision, '', givenCodeNAC)
-      decision.labelStatus = labelStatus
-      if (givenCodeNAC !== null && labelStatus == LabelStatus.TOBETREATED) {
-        decision.occultation.categoriesToOmit =
-          givenCodeNAC?.categoriesToOmitTJ[decision.recommandationOccultation.toString()]
-        decision.blocOccultation = givenCodeNAC?.blocOccultationTJ
-      }
 
+      if (givenCodeNAC !== null) {
+        decision.occultation.categoriesToOmit =
+          givenCodeNAC.categoriesToOmitTJ[decision.recommandationOccultation.toString()]
+
+        decision.blocOccultation = givenCodeNAC.blocOccultationTJ
+      } else {
+        decision.labelStatus = LabelStatus.IGNORED_CODE_NAC_INCONNU
+      }
+    }
+
+    if (
+      decision.labelStatus === LabelStatus.TOBETREATED
+    ){
+      const givenCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
+      decision.labelStatus === computeLabelStatus(decision, givenCodeNAC)
     }
 
     return this.decisionsRepository.create(decision)

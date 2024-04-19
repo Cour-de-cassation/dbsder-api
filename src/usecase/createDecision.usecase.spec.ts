@@ -30,10 +30,9 @@ describe('createDecisionUsecase', () => {
   describe('Success cases', () => {
     it('when decision is from TJ, creates decision and add occultation based on codeNAC successfully', async () => {
       // GIVEN
-      const providedCodeNAC = mockUtils.codeNACMock;
+      const providedCodeNAC = mockUtils.codeNACMock
       const expectedDecision = {
         ...mockUtils.decisionModel,
-        endCaseCode: '11E',
         debatPublic: false,
         recommandationOccultation: Occultation.CONFORME,
         sourceName: Sources.TJ
@@ -58,7 +57,8 @@ describe('createDecisionUsecase', () => {
         blocOccultation: providedCodeNAC.blocOccultationTJ,
         occultation: {
           ...providedDecision.occultation,
-          categoriesToOmit: providedCodeNAC.categoriesToOmitTJ[providedDecision.recommandationOccultation]
+          categoriesToOmit:
+            providedCodeNAC.categoriesToOmitTJ[providedDecision.recommandationOccultation]
         }
       })
     })
@@ -120,7 +120,6 @@ describe('createDecisionUsecase', () => {
         ...mockUtils.decisionModel,
         recommandationOccultation: Occultation.CONFORME,
         sourceName: Sources.TJ,
-        endCaseCode: '11E',
         NACCode: 'XX0'
       }
       const providedDecision = { ...expectedDecision, _id: expectedDecision._id.toString() }

@@ -1,5 +1,5 @@
-import { computeLabelStatus } from './computeLabelStatus.utils'
-import { MockUtils } from './mock.utils'
+import { computeLabelStatus } from './computeLabelStatus.rules'
+import { MockUtils } from '../../infrastructure/utils/mock.utils'
 import { LabelStatus } from 'dbsder-api-types'
 
 describe('updateLabelStatus', () => {
@@ -14,13 +14,12 @@ describe('updateLabelStatus', () => {
   })
 
   describe('Changes labelStatus if it has exceptions', () => {
-
     describe('Returns labelStatus with IGNORED_CODE_NAC_INCONNU -- IGNORED_CODE_NAC_OBSOLETE', () => {
       it('returns ignored_codeNACInconnu when we have null from codenac table in database', async () => {
         // GIVEN
         const mockDecisionLabel = {
           ...mockUtils.decisionModel,
-          NACCode: '11E',
+          NACCode: '123E',
           public: false,
           _id: mockUtils.decisionModel._id.toString()
         }
@@ -28,7 +27,7 @@ describe('updateLabelStatus', () => {
         const expectedLabelStatus = LabelStatus.IGNORED_CODE_NAC_INCONNU
 
         // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', null)
+        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel,  null)
 
         // THEN
         expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
@@ -49,20 +48,18 @@ describe('updateLabelStatus', () => {
           blocOccultationTJ: 0
         }
         // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', providedCodeNAC)
+        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel,  providedCodeNAC)
 
         // THEN
         expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
       })
     })
 
-
     describe('Returns labelStatus with IGNORED_DECISION_NON_PUBLIQUE', () => {
       it('returns ignored_decisionNonPublique when decision is not public', async () => {
         // GIVEN
         const mockDecisionLabel = {
           ...mockUtils.decisionModel,
-          endCaseCode: '11E',
           public: false,
           _id: mockUtils.decisionModel._id.toString()
         }
@@ -72,7 +69,7 @@ describe('updateLabelStatus', () => {
         const expectedLabelStatus = LabelStatus.IGNORED_DECISION_NON_PUBLIQUE
 
         // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', providedCodeNAC)
+        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel,  providedCodeNAC)
 
         // THEN
         expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
@@ -89,7 +86,6 @@ describe('updateLabelStatus', () => {
         }
         const mockDecisionLabel = {
           ...mockUtils.decisionModel,
-          endCaseCode: '11E',
           CodeNAC: '45E',
           originalTextZoning: originalTextZoning,
           _id: mockUtils.decisionModel._id.toString()
@@ -101,7 +97,7 @@ describe('updateLabelStatus', () => {
         }
 
         // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', providedCodeNAC)
+        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel,  providedCodeNAC)
 
         // THEN
         expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
@@ -115,7 +111,6 @@ describe('updateLabelStatus', () => {
         }
         const mockDecisionLabel = {
           ...mockUtils.decisionModel,
-          endCaseCode: '11E',
           debatPublic: true,
           originalTextZoning: originalTextZoning,
           _id: mockUtils.decisionModel._id.toString()
@@ -127,7 +122,7 @@ describe('updateLabelStatus', () => {
         }
         const expectedLabelStatus = LabelStatus.IGNORED_DECISION_PARTIELLEMENT_PUBLIQUE_PAR_ZONAGE
         // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', providedCodeNAC)
+        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel,  providedCodeNAC)
         // THEN
         expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
       })
@@ -142,7 +137,6 @@ describe('updateLabelStatus', () => {
         }
         const mockDecisionLabel = {
           ...mockUtils.decisionModel,
-          endCaseCode: '11E',
           debatPublic: true,
           originalTextZoning: originalTextZoning,
           _id: mockUtils.decisionModel._id.toString()
@@ -155,7 +149,7 @@ describe('updateLabelStatus', () => {
         const expectedLabelStatus = LabelStatus.IGNORED_CODE_NAC_DECISION_NON_PUBLIQUE
 
         // WHEN
-        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', providedCodeNAC)
+        mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel,  providedCodeNAC)
         // THEN
 
         // THEN
@@ -175,7 +169,6 @@ describe('updateLabelStatus', () => {
       const mockDecisionLabel = {
         ...mockUtils.decisionModel,
         originalTextZoning: originalTextZoning,
-        endCaseCode: '11E',
         debatPublic: true,
         _id: mockUtils.decisionModel._id.toString()
       }
@@ -187,7 +180,7 @@ describe('updateLabelStatus', () => {
       }
 
       // WHEN
-      mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', providedCodeNAC)
+      mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel,  providedCodeNAC)
 
       // THEN
       expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
@@ -205,38 +198,19 @@ describe('updateLabelStatus', () => {
         ...mockUtils.decisionModel,
         originalTextZoning: originalTextZoning,
         _id: mockUtils.decisionModel._id.toString(),
-        endCaseCode: '11E',
         dateDecision: dateDecember2023.toISOString(),
         dateCreation: dateMarch2024.toISOString(),
         public: true
       }
       const expectedLabelStatus = LabelStatus.TOBETREATED
-      const providedCodeNAC = mockUtils.codeNACMock
+      const providedCodeNAC = {
+        ...mockUtils.codeNACMock,
+        indicateurDecisionRenduePubliquement: true,
+        indicateurDebatsPublics: true
+      }
 
       // WHEN
-      mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', providedCodeNAC)
-
-      // THEN
-      expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
-    })
-
-    it(`when decision endCaseCode (codeDecision) is in transmissible codeDecision list`, () => {
-      // GIVEN
-      const originalTextZoning = {
-        is_public: 1,
-        arret_id: 1
-      }
-      const mockDecisionLabel = {
-        ...mockUtils.decisionModel,
-        originalTextZoning: originalTextZoning,
-        endCaseCode: '11E',
-        _id: mockUtils.decisionModel._id.toString()
-      }
-      const expectedLabelStatus = LabelStatus.TOBETREATED
-      const providedCodeNAC = mockUtils.codeNACMock
-
-      // WHEN
-      mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel, '', providedCodeNAC)
+      mockDecisionLabel.labelStatus = computeLabelStatus(mockDecisionLabel,  providedCodeNAC)
 
       // THEN
       expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)

@@ -1,8 +1,7 @@
 import { CodeNAC, LabelStatus } from 'dbsder-api-types'
-import { LogsFormat } from './logsFormat.utils'
-import { CreateDecisionDTO } from '../dto/createDecision.dto'
+import { LogsFormat } from '../../infrastructure/utils/logsFormat.utils'
+import { CreateDecisionDTO } from '../../infrastructure/dto/createDecision.dto'
 import { Logger } from '@nestjs/common'
-
 
 const logger = new Logger()
 const formatLogs: LogsFormat = {
@@ -12,10 +11,8 @@ const formatLogs: LogsFormat = {
 
 export function computeLabelStatus(
   decisionDto: CreateDecisionDTO,
-  source?: string,
-  detailsNAC?: CodeNAC
+  detailsNAC: CodeNAC
 ): LabelStatus {
-  
   logger.log({ ...formatLogs })
   //codeNACC est absent dans la table des codeNACC
   if (isCodeNACCInconnu(detailsNAC, decisionDto.NACCode)) {
@@ -26,7 +23,7 @@ export function computeLabelStatus(
     return LabelStatus.IGNORED_CODE_NAC_INCONNU
   }
 
-  //codeNACC est obsolete 
+  //codeNACC est obsolete
   if (isCodeNACCObsolete(detailsNAC)) {
     logger.warn({
       ...formatLogs,
@@ -37,7 +34,7 @@ export function computeLabelStatus(
 
   // public === false
   if (decisionDto.public === false) {
-    logger.error({
+    logger.warn({
       ...formatLogs,
       msg: `Decision is not public, changing LabelStatus to ${LabelStatus.IGNORED_DECISION_NON_PUBLIQUE}.`
     })
@@ -58,7 +55,7 @@ export function computeLabelStatus(
     decisionDto.originalTextZoning?.is_public !== undefined &&
     decisionDto.originalTextZoning?.is_public === 0
   ) {
-    logger.error({
+    logger.warn({
       ...formatLogs,
       msg: `Decision is not public by zonage, changing LabelStatus to ${LabelStatus.IGNORED_DECISION_NON_PUBLIQUE}.`
     })
@@ -68,7 +65,7 @@ export function computeLabelStatus(
   //debatPublic == false ==> TOBETREATED
   if (decisionDto.sourceName === 'juritj') {
     if (decisionDto?.debatPublic === false) {
-      logger.error({
+      logger.warn({
         ...formatLogs,
         msg: `Decision debat is not public, changing LabelStatus to ${LabelStatus.TOBETREATED}.`
       })
@@ -87,7 +84,7 @@ export function computeLabelStatus(
 
   //zonage_is_public === 2
   if (decisionDto.originalTextZoning?.is_public === 2) {
-    logger.error({
+    logger.warn({
       ...formatLogs,
       msg: `Decision is not public, changing LabelStatus to ${LabelStatus.IGNORED_DECISION_PARTIELLEMENT_PUBLIQUE_PAR_ZONAGE}.`
     })
@@ -98,38 +95,24 @@ export function computeLabelStatus(
 }
 
 function isDecisionNotPublic(detailsNAC: CodeNAC): boolean {
-  if (detailsNAC && detailsNAC.indicateurDecisionRenduePubliquement === false) {
-    return true
+  if (detailsNAC) {
+    return !detailsNAC.indicateurDecisionRenduePubliquement;
   }
-
-  if (detailsNAC && detailsNAC.indicateurDecisionRenduePubliquement === true) {
-    return false
-  }
-
   return false
 }
 
 function isDecisionPartiallyPublic(detailsNAC: CodeNAC): boolean {
-  if (detailsNAC && detailsNAC.indicateurDebatsPublics === false) {
-    return true
-  }
-  if (detailsNAC && detailsNAC.indicateurDebatsPublics === true) {
-    return false
+  if (detailsNAC) {
+    return !detailsNAC.indicateurDebatsPublics;
   }
 
-  return false
+  return false;
 }
 
 function isCodeNACCInconnu(detailsNAC: CodeNAC, decisionNACC: string): boolean {
-  if (decisionNACC && detailsNAC !== null && detailsNAC?.codeNAC === decisionNACC) {
-    return false
-  }
-  return true
+  return (!(decisionNACC && detailsNAC !== null && detailsNAC?.codeNAC == decisionNACC))
 }
 
 function isCodeNACCObsolete(detailsNAC: CodeNAC): boolean {
-  if (detailsNAC.categoriesToOmitTJ !== null && detailsNAC.blocOccultationTJ !== 0) {
-    return false
-  }
-  return true
+  return (!(detailsNAC.categoriesToOmitTJ !== null && detailsNAC.blocOccultationTJ !== 0))
 }
