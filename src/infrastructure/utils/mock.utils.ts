@@ -102,7 +102,7 @@ export class MockUtils {
     zones: null,
     introduction_subzonage: null,
     visa: [],
-    is_public: 0,
+    is_public: 1,
     is_public_text: [],
     arret_id: 0
   }
