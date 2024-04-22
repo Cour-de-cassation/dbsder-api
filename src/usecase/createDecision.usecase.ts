@@ -27,19 +27,14 @@ export class CreateDecisionUsecase {
     ) {
       const givenCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
 
-      if (givenCodeNAC !== null) {
+      decision.labelStatus = computeLabelStatus(decision, givenCodeNAC)
+
+      if (decision.labelStatus === LabelStatus.TOBETREATED) {
         decision.occultation.categoriesToOmit =
           givenCodeNAC.categoriesToOmitTJ[decision.recommandationOccultation.toString()]
 
         decision.blocOccultation = givenCodeNAC.blocOccultationTJ
-      } else {
-        decision.labelStatus = LabelStatus.IGNORED_CODE_NAC_INCONNU
       }
-    }
-
-    if (decision.labelStatus === LabelStatus.TOBETREATED) {
-      const givenCodeNAC = await this.codeNACsRepository.getByCodeNac(decision.NACCode)
-      decision.labelStatus === computeLabelStatus(decision, givenCodeNAC)
     }
 
     return this.decisionsRepository.create(decision)
