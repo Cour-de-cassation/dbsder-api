@@ -14,10 +14,6 @@ nvm install
 Pour installer les packages nécessaires au bon fonctionnement de l'application, ouvrir un terminal et entrer la commande suivante : 
 ```bash
 npm install
-```  
-N'oubliez pas d'installer **husky** pour obtenir les hooks de commit/push
-```bash
-npx husky install
 ```
 
 ### Démarrer l'application
