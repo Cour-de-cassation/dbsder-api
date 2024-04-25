@@ -28,7 +28,7 @@ export class CreateDecisionsController {
     private readonly decisionsRepository: DecisionsRepository,
     private readonly codeNACsRepository: CodeNACsRepository,
     private readonly zoningApiService: ZoningApiService
-  ) {}
+  ) { }
 
   private readonly logger = new Logger()
 
@@ -62,7 +62,15 @@ export class CreateDecisionsController {
       msg: `${routePath} called`
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { originalText, pseudoText, ...decisionToLog } = decision
+    const decisionToLog = {
+      sourceId: decision.sourceId,
+      sourceName: decision.sourceName,
+      idDecision: decision.idDecisionWinci,
+      jurisdictionCode: decision.jurisdictionCode,
+      dateDecision: decision.dateDecision,
+      numeroRoleGeneral: decision.numeroRoleGeneral,
+      numeroRegistre: decision.registerNumber,
+    }
     this.logger.log({ ...formatLogs, data: { decision: decisionToLog } })
 
     const authorizedApiKeys = [process.env.NORMALIZATION_API_KEY, process.env.OPENSDER_API_KEY]

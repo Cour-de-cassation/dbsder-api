@@ -32,7 +32,7 @@ import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
 @ApiTags('DbSder')
 @Controller('decisions-pseudonymisees')
 export class GetDecisionPseudonymiseesController {
-  constructor(private readonly decisionsRepository: DecisionsRepository) {}
+  constructor(private readonly decisionsRepository: DecisionsRepository) { }
 
   private readonly logger = new Logger()
 
@@ -108,7 +108,15 @@ export class GetDecisionPseudonymiseesController {
       })
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { originalText, pseudoText, ...decisionToLog } = foundDecision
+    const decisionToLog = {
+      sourceId: foundDecision.sourceId,
+      sourceName: foundDecision.sourceName,
+      idDecision: foundDecision.idDecisionWinci,
+      jurisdictionCode: foundDecision.jurisdictionCode,
+      dateDecision: foundDecision.dateDecision,
+      numeroRoleGeneral: foundDecision.numeroRoleGeneral,
+      numeroRegistre: foundDecision.registerNumber,
+    }
     this.logger.log({
       ...formatLogs,
       msg: routePath + ' returns ' + HttpStatus.OK,
