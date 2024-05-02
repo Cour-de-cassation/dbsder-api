@@ -28,7 +28,7 @@ export class CreateDecisionsController {
     private readonly decisionsRepository: DecisionsRepository,
     private readonly codeNACsRepository: CodeNACsRepository,
     private readonly zoningApiService: ZoningApiService
-  ) { }
+  ) {}
 
   private readonly logger = new Logger()
 
@@ -69,7 +69,7 @@ export class CreateDecisionsController {
       jurisdictionCode: decision.jurisdictionCode,
       dateDecision: decision.dateDecision,
       numeroRoleGeneral: decision.numeroRoleGeneral,
-      numeroRegistre: decision.registerNumber,
+      numeroRegistre: decision.registerNumber
     }
     this.logger.log({ ...formatLogs, data: { decision: decisionToLog } })
 

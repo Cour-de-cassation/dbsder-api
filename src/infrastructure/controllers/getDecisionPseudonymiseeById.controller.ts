@@ -32,7 +32,7 @@ import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
 @ApiTags('DbSder')
 @Controller('decisions-pseudonymisees')
 export class GetDecisionPseudonymiseesController {
-  constructor(private readonly decisionsRepository: DecisionsRepository) { }
+  constructor(private readonly decisionsRepository: DecisionsRepository) {}
 
   private readonly logger = new Logger()
 
@@ -115,7 +115,7 @@ export class GetDecisionPseudonymiseesController {
       jurisdictionCode: foundDecision.jurisdictionCode,
       dateDecision: foundDecision.dateDecision,
       numeroRoleGeneral: foundDecision.numeroRoleGeneral,
-      numeroRegistre: foundDecision.registerNumber,
+      numeroRegistre: foundDecision.registerNumber
     }
     this.logger.log({
       ...formatLogs,

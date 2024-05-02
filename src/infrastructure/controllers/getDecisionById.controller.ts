@@ -22,7 +22,7 @@ import { LogsFormat } from '../utils/logsFormat.utils'
 @ApiTags('DbSder')
 @Controller('decisions')
 export class GetDecisionByIdController {
-  constructor(private readonly decisionsRepository: DecisionsRepository) { }
+  constructor(private readonly decisionsRepository: DecisionsRepository) {}
 
   private readonly logger = new Logger()
 
@@ -88,7 +88,7 @@ export class GetDecisionByIdController {
       jurisdictionCode: foundDecision.jurisdictionCode,
       dateDecision: foundDecision.dateDecision,
       numeroRoleGeneral: foundDecision.numeroRoleGeneral,
-      numeroRegistre: foundDecision.registerNumber,
+      numeroRegistre: foundDecision.registerNumber
     }
     this.logger.log({
       ...formatLogs,
