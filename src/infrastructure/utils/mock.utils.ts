@@ -3,7 +3,6 @@ import { CodeNAC } from '../db/models/codeNAC.model'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
 import { LabelStatus, Occultation, QualitePartie, Sources, TypePartie } from 'dbsder-api-types'
 import { Types } from 'mongoose'
-
 const TODAY = new Date().toISOString()
 const YESTERDAY_YYYY_MM_DD = new Date(new Date().setDate(new Date().getDate() - 1))
   .toISOString()
@@ -99,6 +98,15 @@ export class MockUtils {
     idDecisionTJ: 'TJ00001A01-1234520221121'
   }
 
+  zoningModel = {
+    zones: null,
+    introduction_subzonage: null,
+    visa: [],
+    is_public: 1,
+    is_public_text: [],
+    arret_id: 0
+  }
+
   decisionModel = {
     NACCode: '45C',
     endCaseCode: '',
@@ -153,7 +161,8 @@ export class MockUtils {
     registerNumber: 'someRegisterNumber',
     solution: 'someSolution',
     sourceId: 1,
-    sourceName: Sources.TJ
+    sourceName: Sources.TJ,
+    originalTextZoning: this.zoningModel
   }
 
   decisionRapportsOccultations: UpdateDecisionRapportsOccultationsDTO = {
@@ -226,7 +235,8 @@ export class MockUtils {
     registerNumber: 'someRegisterNumber',
     solution: 'someSolution',
     sourceId: 1,
-    sourceName: Sources.TJ
+    sourceName: Sources.TJ,
+    originalTextZoning: this.zoningModel
   }
 
   createDecisionTJDto = {

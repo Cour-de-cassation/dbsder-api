@@ -4,15 +4,19 @@ import { CreateDecisionUsecase } from './createDecision.usecase'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { CodeNACsRepository } from '../infrastructure/db/repositories/codeNACs.repository'
 import { LabelStatus, Occultation, Sources } from 'dbsder-api-types'
+import { FakeZoningApiService } from '../service/fakeZoningApi.service'
+import { ZoningApiService } from '../service/zoningApi.service'
 
 describe('createDecisionUsecase', () => {
   const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
     mock<InterfaceDecisionsRepository>()
   const mockCodeNACsRepository: MockProxy<CodeNACsRepository> = mock<CodeNACsRepository>()
+  const fakeZoningApiService: ZoningApiService = new FakeZoningApiService()
   let mockUtils: MockUtils
   const usecase: CreateDecisionUsecase = new CreateDecisionUsecase(
     mockDecisionsRepository,
-    mockCodeNACsRepository
+    mockCodeNACsRepository,
+    fakeZoningApiService
   )
 
   beforeAll(async () => {
@@ -26,12 +30,13 @@ describe('createDecisionUsecase', () => {
   describe('Success cases', () => {
     it('when decision is from TJ, creates decision and add occultation based on codeNAC successfully', async () => {
       // GIVEN
+      const providedCodeNAC = mockUtils.codeNACMock
       const expectedDecision = {
         ...mockUtils.decisionModel,
+        debatPublic: false,
         recommandationOccultation: Occultation.CONFORME,
         sourceName: Sources.TJ
       }
-      const providedCodeNAC = mockUtils.codeNACMock
       const providedDecision = { ...expectedDecision, _id: expectedDecision._id.toString() }
 
       jest

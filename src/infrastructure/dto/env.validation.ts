@@ -33,6 +33,7 @@ export const envValidationConfig = {
     }),
     DOC_LOGIN: Joi.string().required(),
     DOC_PASSWORD: Joi.string().required(),
-    MONGO_DB_URL: Joi.string().required()
+    MONGO_DB_URL: Joi.string().required(),
+    ZONING_API_URL: Joi.string().required()
   })
 }
