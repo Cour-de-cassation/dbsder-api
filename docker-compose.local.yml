@@ -1,4 +1,4 @@
-version: "3.7"
+name: dbsder-api
 
 services:
   db:
@@ -31,7 +31,6 @@ services:
 
 networks:
   default:
-    name: dbsder-api-network
   dbsder-external-network:
     name: dbsder-external-network
 
