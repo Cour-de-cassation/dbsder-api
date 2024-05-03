@@ -9,11 +9,10 @@
       kind: ConfigMap
       metadata:
         name: api-config
-        namespace: "{{ dbsder_namespace }}"
+        namespace: '{{ dbsder_namespace }}'
         labels:
-          app: "{{ dbsder_application }}"
+          app: '{{ dbsder_application }}'
       data:
-        DOC_LOGIN: "{{ doc_login }}"
-        NO_COLOR: "{{ no_color }}"
-
-...
+        DOC_LOGIN: '{{ doc_login }}'
+        NO_COLOR: '{{ no_color }}'
+        ZONING_API_URL: '{{ zoning_api_url}}'
