@@ -23,14 +23,6 @@ export function computeLabelStatus(
     return LabelStatus.IGNORED_CODE_NAC_INCONNU
   }
 
-  if (detailsNAC.categoriesToOmitTJ == null || detailsNAC.blocOccultationTJ === 0) {
-    logger.warn({
-      ...formatLogs,
-      msg: `Decision can not be treated by Judilibre because its codeNACC ${decisionDto.NACCode} is obsolete, changing LabelStatus to ${LabelStatus.IGNORED_CODE_NAC_OBSOLETE}.`
-    })
-    return LabelStatus.IGNORED_CODE_NAC_OBSOLETE
-  }
-
   if (decisionDto.public === false) {
     logger.warn({
       ...formatLogs,
@@ -53,6 +45,14 @@ export function computeLabelStatus(
       msg: `Decision can not be treated by Judilibre because zoning indicates that the decision can not be public, changing LabelStatus to ${LabelStatus.IGNORED_DECISION_NON_PUBLIQUE_PAR_ZONAGE}.`
     })
     return LabelStatus.IGNORED_DECISION_NON_PUBLIQUE_PAR_ZONAGE
+  }
+
+  if (detailsNAC.categoriesToOmitTJ == null || detailsNAC.blocOccultationTJ === 0) {
+    logger.warn({
+      ...formatLogs,
+      msg: `Decision can not be treated by Judilibre because its codeNACC ${decisionDto.NACCode} is obsolete, changing LabelStatus to ${LabelStatus.IGNORED_BLOC_OCCULATION_NON_DEFINI}.`
+    })
+    return LabelStatus.IGNORED_BLOC_OCCULATION_NON_DEFINI
   }
 
   if (decisionDto?.debatPublic === true) {

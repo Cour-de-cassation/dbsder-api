@@ -30,12 +30,12 @@ describe('updateLabelStatus', () => {
         expect(mockDecisionLabel.labelStatus).toEqual(expectedLabelStatus)
       })
 
-      it('when NAC code is obsolete', async () => {
+      it('when bloc occultation is not defined', async () => {
         // GIVEN
         const mockDecisionLabel = {
           ...mockUtils.decisionModel
         }
-        const expectedLabelStatus = LabelStatus.IGNORED_CODE_NAC_OBSOLETE
+        const expectedLabelStatus = LabelStatus.IGNORED_BLOC_OCCULATION_NON_DEFINI
         const providedCodeNAC = {
           ...mockUtils.codeNACMock,
           categoriesToOmitTJ: null,
