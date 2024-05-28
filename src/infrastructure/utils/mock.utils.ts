@@ -65,7 +65,8 @@ export class MockUtils {
     labelStatus: LabelStatus.TOBETREATED,
     occultation: {
       additionalTerms: 'someAdditionalTerms',
-      categoriesToOmit: ['someCategoriesToOmit']
+      categoriesToOmit: ['someCategoriesToOmit'],
+      motivationOccultation: false
     },
     originalText: 'someOriginalText',
     parties: [
@@ -153,7 +154,8 @@ export class MockUtils {
     natureAffairePenal: 'someNatureAffairePenal',
     occultation: {
       additionalTerms: 'someAdditionalTerms',
-      categoriesToOmit: ['someCategoriesToOmit']
+      categoriesToOmit: ['someCategoriesToOmit'],
+      motivationOccultation: false
     },
     originalText: 'someOriginalText',
     parties: [{}],
@@ -229,7 +231,8 @@ export class MockUtils {
     natureAffairePenal: 'someNatureAffairePenal',
     occultation: {
       additionalTerms: 'someAdditionalTerms',
-      categoriesToOmit: ['someCategoriesToOmit']
+      categoriesToOmit: ['someCategoriesToOmit'],
+      motivationOccultation: false
     },
     publication: ['somePublication'],
     registerNumber: 'someRegisterNumber',

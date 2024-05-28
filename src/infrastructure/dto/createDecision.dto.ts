@@ -159,6 +159,14 @@ export class DecisionOccultation {
   })
   @IsString({ each: true })
   categoriesToOmit: string[]
+
+  @ApiProperty({
+    description: 'Booleen permettant de savoir si il faut occulter les motivations de la décision',
+    type: Boolean,
+    example: mockUtils.createDecisionDTO.occultation.motivationOccultation
+  })
+  @IsBoolean()
+  motivationOccultation: boolean
 }
 
 export class DecisionAnalyse {
@@ -340,6 +348,7 @@ export class CreateDecisionDTO {
   occultation: {
     additionalTerms: string
     categoriesToOmit: string[]
+    motivationOccultation: boolean
   }
 
   @ApiProperty({
