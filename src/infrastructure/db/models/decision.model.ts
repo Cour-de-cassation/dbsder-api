@@ -9,7 +9,8 @@ import {
   President,
   Occultation,
   PartieTJ,
-  Zoning
+  Zoning,
+  PublishStatus
 } from 'dbsder-api-types'
 import { Types } from 'mongoose'
 
@@ -50,6 +51,9 @@ export class Decision {
 
   @Prop()
   labelStatus: LabelStatus
+
+  @Prop()
+  publishStatus: PublishStatus
 
   @Prop({ type: Object })
   occultation: DecisionOccultation
