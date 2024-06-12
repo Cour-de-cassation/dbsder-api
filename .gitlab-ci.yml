@@ -6,8 +6,7 @@ variables:
   dev: dev
   re7: preprod
   master: prod
-  api_docker_image: "$CI_REGISTRY/cour-de-cassation/dbsder-api:$CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA"
-
+  api_docker_image: '$CI_REGISTRY/cour-de-cassation/dbsder-api:$CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA'
 
 stages:
   - test
@@ -17,17 +16,17 @@ stages:
 test:
   stage: test
   services:
-  - docker:20.10.22
+    - docker:20.10.22
   variables:
     HTTP_PROXY: $HTTP_PROXY_DEV
     HTTPS_PROXY: $HTTPS_PROXY_DEV
   script:
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
-    - docker build 
-        --build-arg http_proxy=$HTTP_PROXY
-        --build-arg https_proxy=$HTTPS_PROXY
-        --target test
-        -t dbsder-api .
+    - docker build
+      --build-arg http_proxy=$HTTP_PROXY
+      --build-arg https_proxy=$HTTPS_PROXY
+      --target test
+      -t dbsder-api .
     #- docker run -e HTTP_PROXY=$HTTP_PROXY -e HTTPS_PROXY=$HTTPS_PROXY dbsder-api npm audit
     - docker run -e HTTP_PROXY=$HTTP_PROXY -e HTTPS_PROXY=$HTTPS_PROXY dbsder-api npm run format
     - docker run -e HTTP_PROXY=$HTTP_PROXY -e HTTPS_PROXY=$HTTPS_PROXY dbsder-api npm run lint
@@ -45,13 +44,13 @@ build_api:
   variables:
     HTTP_PROXY: $HTTP_PROXY_DEV
     HTTPS_PROXY: $HTTPS_PROXY_DEV
-  script: 
+  script:
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
     - docker build
-        --build-arg http_proxy=$HTTP_PROXY
-        --build-arg https_proxy=$HTTPS_PROXY
-        --target api
-        -t $api_docker_image .
+      --build-arg http_proxy=$HTTP_PROXY
+      --build-arg https_proxy=$HTTPS_PROXY
+      --target api
+      -t $api_docker_image .
     - docker push $api_docker_image
   only:
     - master
@@ -60,10 +59,9 @@ build_api:
   tags:
     - docker
 
-
 deploy_api:
   stage: deploy
-  image: alpine/ansible:latest
+  image: alpine/ansible:2.16.1
   variables:
     DOLLAR: $$
   script:
@@ -75,7 +73,7 @@ deploy_api:
     - chmod 600 /root/.ssh/known_hosts
     - ansible-playbook -e dbsder_api_image=$api_docker_image -i ansible/inventory/$inventaire.yml ansible/deploy_dbsder.yml --vault-password-file=$ANSIBLE_VAULT_PASS
   rules:
-    - if: $CI_COMMIT_BRANCH == "master" 
+    - if: $CI_COMMIT_BRANCH == "master"
       when: manual
     - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "re7"
       when: on_success
