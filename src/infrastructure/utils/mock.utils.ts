@@ -1,7 +1,14 @@
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsList.response'
 import { CodeNAC } from '../db/models/codeNAC.model'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
-import { LabelStatus, Occultation, QualitePartie, Sources, TypePartie } from 'dbsder-api-types'
+import {
+  LabelStatus,
+  Occultation,
+  PublishStatus,
+  QualitePartie,
+  Sources,
+  TypePartie
+} from 'dbsder-api-types'
 import { Types } from 'mongoose'
 const TODAY = new Date().toISOString()
 const YESTERDAY_YYYY_MM_DD = new Date(new Date().setDate(new Date().getDate() - 1))
@@ -63,6 +70,7 @@ export class MockUtils {
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',
     labelStatus: LabelStatus.TOBETREATED,
+    publishStatus: PublishStatus.TOBEPUBLISHED,
     occultation: {
       additionalTerms: 'someAdditionalTerms',
       categoriesToOmit: ['someCategoriesToOmit'],
@@ -150,6 +158,7 @@ export class MockUtils {
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',
     labelStatus: LabelStatus.TOBETREATED,
+    publishStatus: PublishStatus.TOBEPUBLISHED,
     natureAffaireCivil: 'someNatureAffaireCivil',
     natureAffairePenal: 'someNatureAffairePenal',
     occultation: {
@@ -227,6 +236,7 @@ export class MockUtils {
     jurisdictionId: 'someJurisdictionId',
     jurisdictionName: 'someJurisdictionName',
     labelStatus: LabelStatus.TOBETREATED,
+    publishStatus: PublishStatus.TOBEPUBLISHED,
     natureAffaireCivil: 'someNatureAffaireCivil',
     natureAffairePenal: 'someNatureAffairePenal',
     occultation: {

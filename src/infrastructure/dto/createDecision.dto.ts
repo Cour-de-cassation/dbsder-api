@@ -18,6 +18,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { MockUtils } from '../utils/mock.utils'
 import {
   LabelStatus,
+  PublishStatus,
   Occultation,
   LabelTreatment,
   Annotation,
@@ -331,12 +332,21 @@ export class CreateDecisionDTO {
   jurisdictionName: string
 
   @ApiProperty({
-    description: 'Statut de la décision dans Judilibre',
+    description: 'Etat du traitement de la décision',
     enum: LabelStatus,
     example: mockUtils.createDecisionDTO.labelStatus
   })
   @IsEnum(LabelStatus)
   labelStatus: LabelStatus
+
+  @ApiProperty({
+    description: 'Statut de la publication de la décision sur Judilibre',
+    enum: PublishStatus,
+    example: mockUtils.createDecisionDTO.publishStatus
+  })
+  @IsOptional()
+  @IsEnum(PublishStatus)
+  publishStatus?: PublishStatus
 
   @ApiProperty({
     description: 'Statut de la décision dans Judilibre',

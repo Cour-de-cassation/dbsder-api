@@ -4,6 +4,7 @@ import { CodeNACsRepository } from '../infrastructure/db/repositories/codeNACs.r
 import { LabelStatus, Sources, Zoning } from 'dbsder-api-types'
 import { ZoningApiService } from '../service/zoningApi.service'
 import { computeLabelStatus } from '../domain/business-rules/computeLabelStatus.rules'
+import { computePublishStatus } from '../domain/business-rules/computePublishStatus.rules'
 
 export class CreateDecisionUsecase {
   constructor(
@@ -36,6 +37,8 @@ export class CreateDecisionUsecase {
         decision.blocOccultation = givenCodeNAC.blocOccultationTJ
       }
     }
+
+    decision.publishStatus = computePublishStatus(decision)
 
     return this.decisionsRepository.create(decision)
   }
