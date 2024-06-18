@@ -26,9 +26,11 @@ export class ZoningApiService {
           zonageSource = 'cc'
           break
         case Sources.CA:
-        case Sources.TJ:
-        default:
           zonageSource = 'ca'
+          break
+        case Sources.TJ:
+          zonageSource = 'tj'
+          break
       }
 
       const zoningRequestParameters = JSON.stringify({
