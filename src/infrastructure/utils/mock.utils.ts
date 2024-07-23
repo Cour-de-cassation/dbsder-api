@@ -1,4 +1,5 @@
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsList.response'
+import { CodeDecision } from '../db/models/codeDecision.model'
 import { CodeNAC } from '../db/models/codeNAC.model'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
 import {
@@ -351,5 +352,18 @@ export class MockUtils {
       libelle: 'Niveau 13'
     },
     isInJuricaDatabase: true
+  }
+
+  codeDecisionMock: CodeDecision = {
+    _id: new Types.ObjectId('507f1f77bcf86cd799439099'),
+    codeDecision: '6D',
+    libelleCodeDecision: 'Libelle du code decision.',
+    categorieCodeDecision: {
+      code: '4',
+      libelle: 'Libelle categorie code decision'
+    },
+    routeCA: 'Automatic',
+    routeTJ: 'Exhaustive',
+    overwritesNAC: false
   }
 }

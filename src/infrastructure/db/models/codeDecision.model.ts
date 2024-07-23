@@ -31,7 +31,7 @@ export class CodeDecision {
   routeTJ: string
 
   @Prop()
-  overwritesNAC: string
+  overwritesNAC: boolean
 }
 
 export const CodeDecisionSchema = SchemaFactory.createForClass(CodeDecision)
