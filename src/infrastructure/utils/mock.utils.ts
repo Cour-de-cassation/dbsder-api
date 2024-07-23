@@ -341,6 +341,15 @@ export class MockUtils {
         'localite'
       ],
       complément: ['avocat', 'greffier', 'personneMorale']
-    }
+    },
+    niveau1NAC: {
+      code: '1',
+      libelle: 'Niveau 1'
+    },
+    niveau2NAC: {
+      code: '13',
+      libelle: 'Niveau 13'
+    },
+    isInJuricaDatabase: true
   }
 }
