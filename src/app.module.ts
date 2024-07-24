@@ -24,6 +24,7 @@ import { CodeNACsRepository } from './infrastructure/db/repositories/codeNACs.re
 import { ZoningApiService } from './service/zoningApi.service'
 import { CodeDecision, CodeDecisionSchema } from './infrastructure/db/models/codeDecision.model'
 import { CodeDecisionRepository } from './infrastructure/db/repositories/codeDecision.repository'
+import { GetDecisionRouteController } from './infrastructure/controllers/getDecisionRoute.controller'
 
 @Module({
   imports: [
@@ -50,7 +51,8 @@ import { CodeDecisionRepository } from './infrastructure/db/repositories/codeDec
     UpdateDecisionPseudonymiseeController,
     UpdateDecisionRapportsOccultationsController,
     UpdateDecisionStatutController,
-    DeleteDecisionByIdController
+    DeleteDecisionByIdController,
+    GetDecisionRouteController
   ],
   providers: [DecisionsRepository, CodeNACsRepository, ZoningApiService, CodeDecisionRepository]
 })
