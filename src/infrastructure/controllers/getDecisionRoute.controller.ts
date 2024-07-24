@@ -1,4 +1,13 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Request } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Logger,
+  Request,
+  UsePipes
+} from '@nestjs/common'
 import {
   ApiHeader,
   ApiBadRequestResponse,
@@ -15,6 +24,7 @@ import { DependencyException } from '../exceptions/dependency.exception'
 import { UnexpectedException } from '../exceptions/unexpected.exception'
 import { FindDecisionRouteUseCase } from 'src/usecase/findDecisionRoute.usecase'
 import { GetDecisionRouteDTO } from '../dto/getRoute.dto'
+import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 
 @ApiTags('DbSder')
 @Controller('decision-route')
@@ -41,18 +51,14 @@ export class GetDecisionRouteController {
   @ApiUnauthorizedResponse({
     description: "Vous n'êtes pas autorisé à appeler cette route"
   })
-  async getDecisionRoute(
-    @Body('codeNac') codeNac: GetDecisionRouteDTO['codeNac'],
-    @Body('codeDecision') codeDecision: GetDecisionRouteDTO['codeDecision'],
-    @Body('source') source: GetDecisionRouteDTO['source'],
-    @Request() req
-  ): Promise<any> {
+  @UsePipes(new ValidateDtoPipe())
+  async getDecisionRoute(@Body() body: GetDecisionRouteDTO, @Request() req): Promise<any> {
     const routePath = `${req.method} ${req.path}`
     const formatLogs: LogsFormat = {
       operationName: 'getDecisionRoute',
       httpMethod: req.method,
       path: req.path,
-      msg: `${routePath} called with codeNac ${codeNac}, codeDecision ${codeDecision}, source ${source}`
+      msg: `${routePath} called with codeNac ${body.codeNac}, codeDecision ${body.codeDecision}, source ${body.source}`
     }
     this.logger.log(formatLogs)
 
@@ -65,7 +71,11 @@ export class GetDecisionRouteController {
     const findDecisionRouteUseCase = new FindDecisionRouteUseCase()
 
     try {
-      const result = await findDecisionRouteUseCase.execute(codeNac, codeDecision, source)
+      const result = await findDecisionRouteUseCase.execute(
+        body.codeNac,
+        body.codeDecision,
+        body.source
+      )
       this.logger.log({
         ...formatLogs,
         msg: routePath + ' returns ' + HttpStatus.OK,
