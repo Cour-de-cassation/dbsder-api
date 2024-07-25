@@ -15,13 +15,13 @@ export class FindDecisionRouteUseCase {
     if (givenCodeDecision && givenCodeDecision.overwritesNAC) {
       switch (source) {
         case Sources.TJ:
-          return givenCodeDecision.routeTJ
+          return givenCodeDecision.routeTJ.toLocaleLowerCase()
         case Sources.CA:
         default:
-          return givenCodeDecision.routeCA
+          return givenCodeDecision.routeCA.toLocaleLowerCase()
       }
     } else if (givenCodeNAC) {
-      return givenCodeNAC.routeRelecture
+      return givenCodeNAC.routeRelecture.toLocaleLowerCase()
     } else {
       return undefined
     }
