@@ -37,7 +37,7 @@ describe('FindDecisionRouteUseCase', () => {
       const result = await usecase.execute(codeNac, codeDecision, source)
 
       // THEN
-      expect(result).toBe('routeCodeDecision')
+      expect(result).toBe('routecodedecision')
     })
 
     it('returns routeRelecture when codeDecision does not overwriteNAC and codeNAC exists', async () => {
@@ -54,7 +54,7 @@ describe('FindDecisionRouteUseCase', () => {
       const result = await usecase.execute(codeNac, codeDecision, source)
 
       // THEN
-      expect(result).toBe('routeNac')
+      expect(result).toBe('routenac')
     })
 
     it('returns undefined when neither givenCodeDecision nor givenCodeNAC exist', async () => {
