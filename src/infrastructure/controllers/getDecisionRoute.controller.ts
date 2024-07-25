@@ -22,13 +22,20 @@ import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.
 import { LogsFormat } from '../utils/logsFormat.utils'
 import { DependencyException } from '../exceptions/dependency.exception'
 import { UnexpectedException } from '../exceptions/unexpected.exception'
-import { FindDecisionRouteUseCase } from 'src/usecase/findDecisionRoute.usecase'
+import { FindDecisionRouteUseCase } from '../../usecase/findDecisionRoute.usecase'
 import { GetDecisionRouteDTO } from '../dto/getRoute.dto'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
+import { CodeNACsRepository } from '../db/repositories/codeNACs.repository'
+import { CodeDecisionRepository } from '../db/repositories/codeDecision.repository'
 
 @ApiTags('DbSder')
 @Controller('decision-route')
 export class GetDecisionRouteController {
+  constructor(
+    private readonly codeNACsRepository: CodeNACsRepository,
+    private readonly codeDecisionRepository: CodeDecisionRepository
+  ) {}
+
   private readonly logger = new Logger(GetDecisionRouteController.name)
 
   @Get()
@@ -68,7 +75,10 @@ export class GetDecisionRouteController {
       throw new ClientNotAuthorizedException()
     }
 
-    const findDecisionRouteUseCase = new FindDecisionRouteUseCase()
+    const findDecisionRouteUseCase = new FindDecisionRouteUseCase(
+      this.codeNACsRepository,
+      this.codeDecisionRepository
+    )
 
     try {
       const result = await findDecisionRouteUseCase.execute(
