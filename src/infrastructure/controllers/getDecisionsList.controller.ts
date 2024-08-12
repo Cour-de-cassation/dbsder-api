@@ -38,6 +38,10 @@ export class ListDecisionsController {
     enum: LabelStatus
   })
   @ApiQuery({
+    name: 'dateDecision',
+    description: 'Date de la décision'
+  })
+  @ApiQuery({
     name: 'startDate',
     description: 'date de début de la période de recherche'
   })

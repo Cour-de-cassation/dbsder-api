@@ -10,7 +10,7 @@ export class MapModelToResponseService {
       decisionsListModel.map((decision) => ({
         _id: decision._id.toString(),
         status: decision.labelStatus,
-        source: decision.sourceName,
+        sourceName: decision.sourceName,
         dateCreation: decision.dateCreation
       }))
     )
