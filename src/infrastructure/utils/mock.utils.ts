@@ -29,8 +29,8 @@ export class MockUtils {
 
     decisionQueryDTO = {
         status: LabelStatus.TOBETREATED,
-        source: Sources.TJ,
-        sourceid: 1,
+        sourceName: Sources.TJ,
+        sourceId: 1,
         jurisdition: 'someJurisdictionName',
         chamber: 'someChamberName',
         dateDecision: YESTERDAY_YYYY_MM_DD,
