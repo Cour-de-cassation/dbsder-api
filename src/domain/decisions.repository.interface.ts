@@ -8,7 +8,7 @@ export interface InterfaceDecisionsRepository {
   list(decision: GetDecisionsListDto): Promise<Decision[]>
   getById(id: string): Promise<Decision>
   updateStatut(id: string, status: string): Promise<string>
-  updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<string>
+  updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<Decision>
   updateRapportsOccultations(
     id: string,
     rapportsOccultations: RapportOccultation[]
