@@ -17,7 +17,8 @@ import { LogsFormat } from '../../utils/logsFormat.utils'
 export class DecisionsRepository implements InterfaceDecisionsRepository {
   private readonly logger = new Logger()
 
-  constructor(@InjectModel('Decision') private decisionModel: Model<Decision>) {}
+  constructor(@InjectModel('Decision') private decisionModel: Model<Decision>) {
+  }
 
   async list(decisionSearchParams: GetDecisionsListDto): Promise<Decision[]> {
     try {
@@ -112,9 +113,9 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return id
   }
 
-  async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<string> {
+  async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<Decision> {
     const result = await this.decisionModel
-      .updateOne({ _id: new Types.ObjectId(id) }, { $set: { pseudoText: decisionPseudonymisee } })
+      .updateOne({ _id: new Types.ObjectId(id) }, { $set: { pseudoText: decisionPseudonymisee } }, { new: true })
       .catch((error) => {
         throw new DatabaseError(error)
       })
@@ -128,7 +129,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       throw new UpdateFailedError('Mongoose error while updating decision pseudonymised decision')
     }
 
-    return id
+    return this.decisionModel.findById(new Types.ObjectId(id))
   }
 
   async updateRapportsOccultations(

@@ -36,7 +36,8 @@ import { LogsFormat } from '../utils/logsFormat.utils'
 @ApiTags('DbSder')
 @Controller('decisions')
 export class UpdateDecisionPseudonymiseeController {
-  constructor(private readonly decisionsRepository: DecisionsRepository) {}
+  constructor(private readonly decisionsRepository: DecisionsRepository) {
+  }
 
   private readonly logger = new Logger()
 
@@ -59,10 +60,10 @@ export class UpdateDecisionPseudonymiseeController {
     description: 'Statut manquant ou invalide'
   })
   @ApiNotFoundResponse({
-    description: "La decision n'a pas été trouvée"
+    description: 'La decision n\'a pas été trouvée'
   })
   @ApiUnauthorizedResponse({
-    description: "Vous n'êtes pas autorisé à appeler cette route"
+    description: 'Vous n\'êtes pas autorisé à appeler cette route'
   })
   @UsePipes()
   async updateDecisionPseudonymisee(
@@ -89,7 +90,7 @@ export class UpdateDecisionPseudonymiseeController {
     }
 
     const updateDecisionUsecase = new UpdateDecisionPseudonymiseeUsecase(this.decisionsRepository)
-    await updateDecisionUsecase.execute(id, body.decisionPseudonymisee).catch((error) => {
+    const decision = await updateDecisionUsecase.execute(id, body.decisionPseudonymisee).catch((error) => {
       if (error instanceof DecisionNotFoundError) {
         this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
         throw new DecisionNotFoundException()
@@ -121,7 +122,7 @@ export class UpdateDecisionPseudonymiseeController {
     this.logger.log({
       ...formatLogs,
       msg: routePath + ' returns ' + HttpStatus.NO_CONTENT,
-      data: { decisionId: id },
+      data: { decisionId: decision._id, publishStatus: decision.publishStatus },
       statusCode: HttpStatus.NO_CONTENT
     })
   }
