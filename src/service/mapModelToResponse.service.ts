@@ -21,13 +21,30 @@ export class MapModelToResponseService {
   }
 
   mapGetDecisionPseudonymiseeByIdToResponse(
-    getDecisionByIdModel: Decision
+    getDecisionByIdModel: Decision,
+    withPersonalData: Boolean
   ): Promise<GetDecisionByIdResponse> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { originalText, sommaire, parties, ...decisionWithoutProperties } = getDecisionByIdModel
-    return Promise.resolve({
-      ...decisionWithoutProperties,
-      _id: getDecisionByIdModel._id.toString()
-    })
+    if (withPersonalData) {
+      const { originalText, sommaire, parties, ...decisionWithoutProperties } = getDecisionByIdModel
+      return Promise.resolve({
+        ...decisionWithoutProperties,
+        _id: getDecisionByIdModel._id.toString()
+      })
+    } else {
+      const {
+        originalText,
+        sommaire,
+        parties,
+        analysis,
+        occultation,
+        pseudoText,
+        ...decisionWithoutProperties
+      } = getDecisionByIdModel
+      return Promise.resolve({
+        ...decisionWithoutProperties,
+        _id: getDecisionByIdModel._id.toString()
+      })
+    }
+
   }
 }

@@ -4,12 +4,13 @@ import { InterfaceDecisionsRepository } from '../domain/decisions.repository.int
 import { DecisionNotFoundError } from '../domain/errors/decisionNotFound.error'
 import { DatabaseError } from '../domain/errors/database.error'
 import { FetchDecisionPseudonymiseeByIdUsecase } from './fetchDecisionPseudonymiseeByIdUsecase'
+import { MapModelToResponseService } from '../service/mapModelToResponse.service'
 
 describe('FetchDecisionPseudomymiseeByIdUsecase', () => {
   const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
     mock<InterfaceDecisionsRepository>()
   const mockUtils = new MockUtils()
-  const usecase = new FetchDecisionPseudonymiseeByIdUsecase(mockDecisionsRepository)
+  const usecase = new FetchDecisionPseudonymiseeByIdUsecase(mockDecisionsRepository, new MapModelToResponseService())
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -32,7 +33,7 @@ describe('FetchDecisionPseudomymiseeByIdUsecase', () => {
 
   describe('Fail cases', () => {
     const id = 'id'
-    it("returns a service unavailable when the respository don't respond", async () => {
+    it('returns a service unavailable when the respository don\'t respond', async () => {
       // GIVEN
       jest.spyOn(mockDecisionsRepository, 'getById').mockImplementationOnce(() => {
         throw new DatabaseError('')
