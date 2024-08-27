@@ -28,11 +28,13 @@ import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { LogsFormat } from '../utils/logsFormat.utils'
 import { FetchDecisionPseudonymiseeByIdUsecase } from '../../usecase/fetchDecisionPseudonymiseeByIdUsecase'
 import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
+import { MapModelToResponseService } from '../../service/mapModelToResponse.service'
 
 @ApiTags('DbSder')
 @Controller('decisions-pseudonymisees')
 export class GetDecisionPseudonymiseesController {
-  constructor(private readonly decisionsRepository: DecisionsRepository) {}
+  constructor(private readonly decisionsRepository: DecisionsRepository, private readonly mapModelToResponseService: MapModelToResponseService) {
+  }
 
   private readonly logger = new Logger()
 
@@ -47,10 +49,10 @@ export class GetDecisionPseudonymiseesController {
   })
   @ApiOkResponse({ description: 'La décision', type: GetDecisionByIdResponse })
   @ApiNotFoundResponse({
-    description: "La decision n'a pas été trouvée"
+    description: 'La decision n\'a pas été trouvée'
   })
   @ApiUnauthorizedResponse({
-    description: "Vous n'êtes pas autorisé à appeler cette route"
+    description: 'Vous n\'êtes pas autorisé à appeler cette route'
   })
   async getDecisionById(
     @Param('id') id: string,
@@ -81,7 +83,7 @@ export class GetDecisionPseudonymiseesController {
       }
     }
     const fetchDecisionPseudonymiseeByIdUsecase = new FetchDecisionPseudonymiseeByIdUsecase(
-      this.decisionsRepository
+      this.decisionsRepository, this.mapModelToResponseService
     )
 
     const foundDecision = await fetchDecisionPseudonymiseeByIdUsecase

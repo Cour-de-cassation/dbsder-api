@@ -18,11 +18,12 @@ import { DecisionNotFoundException } from '../exceptions/decisionNotFound.except
 import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.exception'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { LogsFormat } from '../utils/logsFormat.utils'
+import { MapModelToResponseService } from '../../service/mapModelToResponse.service'
 
 @ApiTags('DbSder')
 @Controller('decisions')
 export class GetDecisionByIdController {
-  constructor(private readonly decisionsRepository: DecisionsRepository) {}
+  constructor(private readonly decisionsRepository: DecisionsRepository,private readonly mapModelToResponseService: MapModelToResponseService) {}
 
   private readonly logger = new Logger()
 
@@ -57,7 +58,7 @@ export class GetDecisionByIdController {
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ClientNotAuthorizedException()
     }
-    const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.decisionsRepository)
+    const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.decisionsRepository,this.mapModelToResponseService)
 
     const foundDecision = await fetchDecisionByIdUsecase.execute(id).catch((error) => {
       if (error instanceof DecisionNotFoundError) {
