@@ -9,7 +9,7 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "docker:build": "docker compose -f docker-compose.local.yml build",
-    "docker:start": "docker compose -f docker-compose.local.yml up -d",
+    "docker:start": "docker compose -f docker-compose.local.yml up",
     "docker:start:db": "docker compose -f docker-compose.local.yml up -d db",
     "docker:stop:db": "docker compose -f docker-compose.local.yml stop db",
     "docker:stop": "docker compose -f docker-compose.local.yml stop",

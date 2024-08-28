@@ -16,7 +16,7 @@ services:
   dbsder-api:
     build:
       context: ./
-      target: api
+      target: api-local
     env_file:
       - docker.env
     expose: 
@@ -28,6 +28,8 @@ services:
       - dbsder-external-network
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    volumes:
+      - .:/home/node
 
 networks:
   default:

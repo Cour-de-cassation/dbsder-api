@@ -63,3 +63,15 @@ USER node
 COPY --from=prod --chown=node:node /home/node/dist ./dist
 
 CMD ["node", "dist/main"]
+
+# --- Base final image with api dist content --- #
+FROM node:18-alpine as api-local
+
+ENV NODE_ENV local
+
+USER node
+WORKDIR /home/node
+
+COPY --chown=node:node . .
+
+CMD ["npm", "run", "start:dev"]
