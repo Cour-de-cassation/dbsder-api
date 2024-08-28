@@ -63,6 +63,7 @@ npm run test
 
 Le dossier `/documentation` contient :
 
+- [filtrage.md](documentation/filtrage.md) qui explique les règles de filtrage communes aux décisions de justice des Cour d'appel et des Tribunaux judiciaires.
 - Les requêtes Postman et comment les installer [lien](documentation/postman/README.md)
 
 ### Swagger
