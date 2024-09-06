@@ -13,6 +13,7 @@ import {
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
 import { Logger } from '@nestjs/common'
 import { LogsFormat } from '../../utils/logsFormat.utils'
+import { LabelStatus, LabelTreatment, PublishStatus } from 'dbsder-api-types'
 
 export class DecisionsRepository implements InterfaceDecisionsRepository {
   private readonly logger = new Logger()
@@ -102,9 +103,16 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return id
   }
 
-  async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<Decision> {
+  async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string, labelTreatments: LabelTreatment[], publishStatus: PublishStatus, labelStatus: LabelStatus): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ _id: new Types.ObjectId(id) }, { $set: { pseudoText: decisionPseudonymisee } }, { new: true })
+      .updateOne({ _id: new Types.ObjectId(id) }, {
+        $set: {
+          pseudoText: decisionPseudonymisee,
+          publishStatus: publishStatus,
+          labelTreatments: labelTreatments,
+          labelStatus: labelStatus
+        }
+      }, { new: true })
       .catch((error) => {
         throw new DatabaseError(error)
       })
@@ -118,17 +126,19 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       throw new UpdateFailedError('Mongoose error while updating decision pseudonymised decision')
     }
 
-    return this.decisionModel.findById(new Types.ObjectId(id))
+    return id
   }
 
   async updateRapportsOccultations(
     id: string,
-    rapportsOccultations: RapportOccultation[]
+    rapportsOccultations: RapportOccultation[],
+    publishStatus: PublishStatus,
+    labelStatus: LabelStatus
   ): Promise<string> {
     const result = await this.decisionModel
       .updateOne(
         { _id: new Types.ObjectId(id) },
-        { $set: { labelTreatments: rapportsOccultations } }
+        { $set: { labelTreatments: rapportsOccultations, labelStatus: labelStatus, publishStatus: publishStatus } }
       )
       .catch((error) => {
         throw new DatabaseError(error)

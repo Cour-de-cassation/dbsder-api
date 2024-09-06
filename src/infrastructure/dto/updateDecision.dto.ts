@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator'
+import { IsArray, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { MockUtils } from '../utils/mock.utils'
 import { Type } from 'class-transformer'
-import { Annotation, LabelStatus } from 'dbsder-api-types'
+import { Annotation, LabelStatus, LabelTreatment, PublishStatus } from 'dbsder-api-types'
+import { LabelTreatmentDto } from './createDecision.dto'
 
 const mockUtils = new MockUtils()
 
@@ -23,6 +24,33 @@ export class UpdateDecisionPseudonymiseeDTO {
   })
   @IsString()
   decisionPseudonymisee: string
+
+  @ApiProperty({
+    description: 'Statut de la publication de la décision sur Judilibre',
+    enum: PublishStatus,
+    example: mockUtils.createDecisionDTO.publishStatus
+  })
+  @IsOptional()
+  @IsEnum(PublishStatus)
+  publishStatus?: PublishStatus
+
+  @ApiProperty({
+    description: 'Statut de la décision dans Judilibre',
+    enum: LabelStatus,
+    example: mockUtils.createDecisionDTO.labelStatus
+  })
+  @IsOptional()
+  @IsEnum(LabelStatus)
+  labelStatus?: LabelStatus
+
+  @ApiProperty({
+    description: 'Traitements appliqués par Label',
+    type: [LabelTreatmentDto]
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => LabelTreatmentDto)
+  labelTreatments: LabelTreatment[]
 }
 
 export class UpdateDecisionRapportsOccultationsDTO {
@@ -35,6 +63,24 @@ export class UpdateDecisionRapportsOccultationsDTO {
   @ValidateNested({ each: true })
   @Type(() => RapportOccultation)
   rapportsOccultations: RapportOccultation[]
+
+  @ApiProperty({
+    description: 'Statut de la publication de la décision sur Judilibre',
+    enum: PublishStatus,
+    example: mockUtils.createDecisionDTO.publishStatus
+  })
+  @IsOptional()
+  @IsEnum(PublishStatus)
+  publishStatus?: PublishStatus
+
+  @ApiProperty({
+    description: 'Statut de la décision dans Judilibre',
+    enum: LabelStatus,
+    example: mockUtils.createDecisionDTO.labelStatus
+  })
+  @IsOptional()
+  @IsEnum(LabelStatus)
+  labelStatus?: LabelStatus
 }
 
 export class RapportOccultation {
@@ -67,7 +113,7 @@ export class RapportOccultation {
 
 export class AnnotationDto {
   @ApiProperty({
-    description: "Categorie de l'annotation",
+    description: 'Categorie de l\'annotation',
     type: String,
     example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].category
   })
@@ -91,7 +137,7 @@ export class AnnotationDto {
   start: number
 
   @ApiProperty({
-    description: "Texte de l'annotation",
+    description: 'Texte de l\'annotation',
     type: String,
     example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].text
   })
@@ -102,7 +148,7 @@ export class AnnotationDto {
     description: 'Score de certitude',
     type: Number,
     example:
-      mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].certaintyScore
+    mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].certaintyScore
   })
   @IsNumber()
   certaintyScore: number

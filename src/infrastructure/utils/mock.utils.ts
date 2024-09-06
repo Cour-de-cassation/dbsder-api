@@ -2,7 +2,7 @@ import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsL
 import { CodeNAC } from '../db/models/codeNAC.model'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
 import {
-  LabelStatus,
+  LabelStatus, LabelTreatment,
   Occultation,
   PublishStatus,
   QualitePartie,
@@ -10,6 +10,7 @@ import {
   TypePartie
 } from 'dbsder-api-types'
 import { Types } from 'mongoose'
+
 const TODAY = new Date().toISOString()
 const YESTERDAY_YYYY_MM_DD = new Date(new Date().setDate(new Date().getDate() - 1))
   .toISOString()
@@ -192,6 +193,7 @@ export class MockUtils {
         order: 1
       }
     ]
+    // labelTreatments:Array<LabelTreatment>[]
   }
 
   decisionPseudonymisee = {
