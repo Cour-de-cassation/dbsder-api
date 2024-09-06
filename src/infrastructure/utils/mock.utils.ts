@@ -193,7 +193,6 @@ export class MockUtils {
         order: 1
       }
     ]
-    // labelTreatments:Array<LabelTreatment>[]
   }
 
   decisionPseudonymisee = {
