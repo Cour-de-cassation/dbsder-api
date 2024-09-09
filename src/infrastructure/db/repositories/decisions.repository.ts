@@ -117,6 +117,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
         throw new DatabaseError(error)
       })
 
+
     if (result.matchedCount === 0 && result.acknowledged) {
       throw new DecisionNotFoundError()
     }
@@ -144,6 +145,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
         throw new DatabaseError(error)
       })
 
+
     if (result.matchedCount === 0 && result.acknowledged) {
       throw new DecisionNotFoundError()
     }
@@ -161,7 +163,26 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     // syntax :  https://medium.com/@slamflipstrom/conditional-object-properties-using-spread-in-javascript-714e0a12f496
     return {
       ...(decisionSearchParams.status && { labelStatus: decisionSearchParams.status }),
-      ...(decisionSearchParams.source && { sourceName: decisionSearchParams.source }),
+      ...(decisionSearchParams.sourceName && { sourceName: decisionSearchParams.sourceName }),
+      ...(decisionSearchParams.sourceId && { sourceId: decisionSearchParams.sourceId }),
+      ...(decisionSearchParams.jurisdiction && {
+          $or: [
+            { jurisdictionCode: decisionSearchParams.jurisdiction },
+            { jurisdictionName: decisionSearchParams.jurisdiction },
+            { jurisdictionId: decisionSearchParams.jurisdiction }
+          ]
+        }
+      ),
+      ...(decisionSearchParams.chamber && {
+          $or: [
+            { chamberId: decisionSearchParams.chamber },
+            { chamberName: decisionSearchParams.chamber }
+          ]
+        }
+      ),
+      ...(decisionSearchParams.dateDecision && {
+        dateDecision: decisionSearchParams.dateDecision
+      }),
       ...(decisionSearchParams.startDate && {
         dateCreation: { $gte: decisionSearchParams.startDate, $lte: todayDate }
       }),

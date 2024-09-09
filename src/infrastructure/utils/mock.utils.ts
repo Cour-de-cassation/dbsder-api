@@ -2,7 +2,7 @@ import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsL
 import { CodeNAC } from '../db/models/codeNAC.model'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
 import {
-  LabelStatus, LabelTreatment,
+  LabelStatus,
   Occultation,
   PublishStatus,
   QualitePartie,
@@ -10,6 +10,7 @@ import {
   TypePartie
 } from 'dbsder-api-types'
 import { Types } from 'mongoose'
+
 
 const TODAY = new Date().toISOString()
 const YESTERDAY_YYYY_MM_DD = new Date(new Date().setDate(new Date().getDate() - 1))
@@ -23,13 +24,17 @@ export class MockUtils {
   decisionTJToBeTreated: GetDecisionsListResponse = {
     dateCreation: TODAY,
     _id: '507f1f77bcf86cd799439011',
-    source: Sources.TJ,
+    sourceName: Sources.TJ,
     status: LabelStatus.TOBETREATED
   }
 
   decisionQueryDTO = {
     status: LabelStatus.TOBETREATED,
-    source: Sources.TJ,
+    sourceName: Sources.TJ,
+    sourceId: 1,
+    jurisdition: 'someJurisdictionName',
+    chamber: 'someChamberName',
+    dateDecision: YESTERDAY_YYYY_MM_DD,
     startDate: YESTERDAY_YYYY_MM_DD,
     endDate: TOMORROW_YYYY_MM_DD
   }
