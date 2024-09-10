@@ -79,7 +79,7 @@ export class UpdateDecisionRapportsOccultationsController {
     }
     this.logger.log({
       ...formatLogs,
-      data: { id, rapportsOccultations: body.rapportsOccultations }
+      data: { id }
     })
 
     const authorizedApiKeys = [process.env.LABEL_API_KEY]
