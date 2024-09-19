@@ -8,10 +8,10 @@ services:
     command: mongod --port 55433
     volumes:
       - dbsder-mongo-storage:/data/db-sder/db
+    expose:
+      - 55433
     ports:
       - 55433:55433
-    networks: 
-      - judilibre-local
 
   dbsder-api:
     build:
@@ -19,10 +19,13 @@ services:
       target: api-local
     env_file:
       - docker.env
+    expose:
+      - 3008
     ports:
       - 3008:3008
-    networks: 
-      - judilibre-local
+    networks:
+      - default
+      - dbsder-external-network
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
@@ -30,12 +33,10 @@ services:
 
 networks:
   default:
-  judilibre-local:
-    name: judilibre-local
+  dbsder-external-network:
+    name: dbsder-external-network
 
 volumes:
   dbsder-mongo-storage:
     driver: local
     name: dbsder-mongo-storage
-
-
