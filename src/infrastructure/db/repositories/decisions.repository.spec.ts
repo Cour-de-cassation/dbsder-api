@@ -515,7 +515,7 @@ describe('DecisionsRepository', () => {
     it('should map decision search params to findCriterias with correct parameters', () => {
       // GIVEN
       const decisionSearchParams: GetDecisionsListDto = {
-        source: Sources.CA,
+        sourceName: Sources.CA,
         status: LabelStatus.TOBETREATED,
         startDate: '2020-01-01',
         number: '123'
@@ -547,7 +547,7 @@ describe('DecisionsRepository', () => {
     it('should map decision search params to findCriterias without all parameters', () => {
       // GIVEN
       const decisionSearchParams: GetDecisionsListDto = {
-        source: Sources.CA,
+        sourceName: Sources.CA,
         status: LabelStatus.TOBETREATED,
         number: '123'
       }
