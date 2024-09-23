@@ -5,6 +5,7 @@ import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
+import { LabelStatus, PublishStatus } from 'dbsder-api-types'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -53,7 +54,9 @@ describe('DecisionsController', () => {
       it('returns 204 No Content when decision is updated with valid API Key and concealment reports', async () => {
         // GIVEN
         const decisionToSave = {
-          ...mockUtils.decisionModel
+          ...mockUtils.decisionModel,
+          publishStatus: PublishStatus.PENDING,
+          labelStatus: LabelStatus.BLOCKED
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
