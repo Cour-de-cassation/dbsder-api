@@ -45,13 +45,24 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
         throw new DatabaseError(error)
       })
 
+    const decisionToLog = {
+      sourceId: decision.sourceId,
+      sourceName: decision.sourceName,
+      idDecision: decision.idDecisionWinci,
+      jurisdictionCode: decision.jurisdictionCode,
+      jurisdictionName: decision.jurisdictionName,
+      dateDecision: decision.dateDecision,
+      numeroRoleGeneral: decision.numeroRoleGeneral,
+      labelStatus: decision.labelStatus,
+      NACCode: decision.NACCode,
+      recommandationOccultation: decision.recommandationOccultation,
+      occultation: { motivationOccultation: decision.occultation.motivationOccultation }
+    }
+
     const formatLogs: LogsFormat = {
       operationName: 'create',
       msg: `Decision created with id ${savedDecision._id.toString()}`,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      data: (({ originalText, sommaire, parties, ...finalDecision }) => finalDecision)(
-        savedDecision
-      )
+      data: { decision: decisionToLog }
     }
     this.logger.log(formatLogs)
     return Promise.resolve(savedDecision._id.toString())
