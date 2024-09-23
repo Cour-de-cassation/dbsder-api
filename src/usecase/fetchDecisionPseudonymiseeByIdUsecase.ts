@@ -5,19 +5,14 @@ import { InterfaceDecisionsRepository } from '../domain/decisions.repository.int
 import { GetDecisionByIdResponse } from '../infrastructure/controllers/responses/getDecisionById.response'
 
 export class FetchDecisionPseudonymiseeByIdUsecase {
-  constructor(private decisionsRepository: InterfaceDecisionsRepository) {}
+  constructor(private decisionsRepository: InterfaceDecisionsRepository,private mapModelToResponseService: MapModelToResponseService) {
+  }
 
   async execute(id: string, withPersonalData: boolean): Promise<GetDecisionByIdResponse> {
     const decision: Decision = await this.decisionsRepository.getById(id)
     if (!decision) {
       throw new DecisionNotFoundError()
     }
-    const decisionPseudonymisee =
-      await new MapModelToResponseService().mapGetDecisionPseudonymiseeByIdToResponse(decision)
-    if (withPersonalData) {
-      return decisionPseudonymisee
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return (({ analysis, occultation, pseudoText, ...decision }) => decision)(decisionPseudonymisee)
+    return await this.mapModelToResponseService.mapGetDecisionPseudonymiseeByIdToResponse(decision, withPersonalData)
   }
 }
