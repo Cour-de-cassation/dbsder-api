@@ -28,5 +28,5 @@ echo -e "StrictHostKeyChecking no" >> ~/.ssh/config
 echo "DEPLOY IN HOST : ${DEPLOY_IP}"
 ssh -t "$DEPLOY_USER@$DEPLOY_IP" <<EOF
 echo '${SERVICE_TOKEN}' | sudo docker login --username '${SERVICE_LOGIN}' --password-stdin '${CI_REGISTRY}'
-sudo docker-compose pull ${APP_TO_DEPLOY} && sudo docker-compose up -d --force-recreate ${APP_TO_DEPLOY}; exit
+sudo docker-compose pull ${APP_TO_DEPLOY} && sudo docker-compose up -d --force-recreate ${APP_TO_DEPLOY} && sudo docker-compose up -d reverse-proxy; exit
 EOF
