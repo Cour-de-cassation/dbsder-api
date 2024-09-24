@@ -90,7 +90,7 @@ export class UpdateDecisionPseudonymiseeController {
     }
 
     const updateDecisionUsecase = new UpdateDecisionPseudonymiseeUsecase(this.decisionsRepository)
-    const decision = await updateDecisionUsecase.execute(id, body.decisionPseudonymisee).catch((error) => {
+    await updateDecisionUsecase.execute(id, body.decisionPseudonymisee, body.publishStatus, body.labelTreatments, body.labelStatus).catch((error) => {
       if (error instanceof DecisionNotFoundError) {
         this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
         throw new DecisionNotFoundException()
@@ -122,7 +122,7 @@ export class UpdateDecisionPseudonymiseeController {
     this.logger.log({
       ...formatLogs,
       msg: routePath + ' returns ' + HttpStatus.NO_CONTENT,
-      data: { decisionId: decision._id, publishStatus: decision.publishStatus },
+      data: { decisionId: id },
       statusCode: HttpStatus.NO_CONTENT
     })
   }
