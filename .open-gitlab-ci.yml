@@ -1,0 +1,100 @@
+image: "glregistry.boost.open.global/boost/docker/node-toolkit:16"
+
+variables:
+  DOCKER_API_IMAGE: $CI_REGISTRY_IMAGE/api:$CI_COMMIT_BRANCH-$CI_COMMIT_SHA
+  DOCKER_API_TAG_BRANCH: $CI_REGISTRY_IMAGE/api:$CI_COMMIT_BRANCH
+  GIT_SSL_BACKEND: openssl
+  HTTP_PROXY: ""
+  HTTPS_PROXY: ""
+
+include:
+  - project: "boost/template-ci/pipelines/common"
+    file: "securite/oss-index/oss-index-template.yml"
+  - project: 'boost/template-ci/pipelines/common'
+    file: '/sonar/sonar-scanner.yml'
+  - project: 'bots/trivy-script'
+    file: 'trivy-template-job.yml'
+
+stages:
+  - build
+  - sast
+  - test
+  - quality
+  - docker
+  - scan_docker
+  - deploy
+
+
+# Utilisation du cache pour accélérer les builds
+cache:
+  paths:
+    - node_modules/
+
+# Build du projet
+build:
+  stage: build
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+
+# Test phase
+test-unit:
+  stage: test
+  script:
+    # - npm run test cov
+    - npm run test:cov
+  artifacts:
+    paths:
+      - coverage/
+  allow_failure: true
+
+docker:
+  image: docker:stable
+  stage: docker
+  services:
+    - docker:18-dind
+  before_script:
+    - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script:
+    - docker build -t $DOCKER_API_IMAGE --build-arg http_proxy=$HTTP_PROXY --build-arg https_proxy=$HTTPS_PROXY --target api -f Dockerfile .
+    - docker tag $DOCKER_API_IMAGE $DOCKER_API_TAG_BRANCH
+    - docker push $DOCKER_API_IMAGE
+    - docker push $DOCKER_API_TAG_BRANCH
+  only:
+    - dev
+    - recette
+    - environnement
+
+
+trivy:
+  extends: [".trivy-scan"]
+  stage: scan_docker
+  variables:
+    TRIVY_DOCKER_SCAN: $DOCKER_API_IMAGE
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev"
+
+
+deploy:iaas:
+  stage: deploy
+  image: kroniak/ssh-client
+  variables:
+    APP_TO_DEPLOY: "juritcom"
+  tags:
+    - iaas
+  before_script:
+    - >
+      if [ "$CI_COMMIT_BRANCH" != "recette" ]; then
+        export ENV_DESTINATION="INTEGRATION";
+      else
+        export ENV_DESTINATION="RECETTE";
+      fi
+  script:
+    - |
+    - bash ci/deploy_app.sh ${ENV_DESTINATION} dbsder
+  only:
+    - dev
+    - recette

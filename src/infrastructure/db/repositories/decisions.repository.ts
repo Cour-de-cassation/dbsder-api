@@ -128,6 +128,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
         throw new DatabaseError(error)
       })
 
+
     if (result.matchedCount === 0 && result.acknowledged) {
       throw new DecisionNotFoundError()
     }
@@ -154,6 +155,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       .catch((error) => {
         throw new DatabaseError(error)
       })
+
 
     if (result.matchedCount === 0 && result.acknowledged) {
       throw new DecisionNotFoundError()
