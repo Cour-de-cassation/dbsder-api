@@ -16,20 +16,18 @@ services:
   dbsder-api:
     build:
       context: ./
-      target: api-local
+      target: api
     env_file:
       - docker.env
-    expose:
+    expose: 
       - 3008
     ports:
-      - 3008:3008
-    networks:
+      - 3008:3000
+    networks: 
       - default
       - dbsder-external-network
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    volumes:
-      - .:/home/node
 
 networks:
   default:
@@ -40,3 +38,5 @@ volumes:
   dbsder-mongo-storage:
     driver: local
     name: dbsder-mongo-storage
+
+
