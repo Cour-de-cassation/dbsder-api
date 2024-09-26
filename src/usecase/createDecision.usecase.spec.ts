@@ -37,7 +37,12 @@ describe('createDecisionUsecase', () => {
         recommandationOccultation: Occultation.CONFORME,
         sourceName: Sources.TJ
       }
-      const providedDecision = { ...expectedDecision, _id: expectedDecision._id.toString() }
+      const providedDecision = {
+        ...expectedDecision,
+        _id: expectedDecision._id.toString(),
+        dateImport: new Date().toISOString(),
+        datePublication: null
+      }
 
       jest
         .spyOn(mockDecisionsRepository, 'create')
@@ -69,7 +74,9 @@ describe('createDecisionUsecase', () => {
       const providedDecision = {
         ...expectedDecision,
         _id: expectedDecision._id.toString(),
-        sourceName: Sources.CC
+        sourceName: Sources.CC,
+        dateImport: new Date().toISOString(),
+        datePublication: null
       }
       const providedCodeNAC = mockUtils.codeNACMock
 
@@ -98,7 +105,9 @@ describe('createDecisionUsecase', () => {
       const providedDecision = {
         ...expectedDecision,
         _id: expectedDecision._id.toString(),
-        labelStatus: LabelStatus.IGNORED_CODE_NAC_DECISION_NON_PUBLIQUE
+        labelStatus: LabelStatus.IGNORED_CODE_NAC_DECISION_NON_PUBLIQUE,
+        dateImport: new Date().toISOString(),
+        datePublication: null
       }
 
       jest
@@ -122,7 +131,12 @@ describe('createDecisionUsecase', () => {
         sourceName: Sources.TJ,
         NACCode: 'XX0'
       }
-      const providedDecision = { ...expectedDecision, _id: expectedDecision._id.toString() }
+      const providedDecision = {
+        ...expectedDecision,
+        _id: expectedDecision._id.toString(),
+        dateImport: new Date().toISOString(),
+        datePublication: null
+      }
 
       jest.spyOn(mockCodeNACsRepository, 'getByCodeNac').mockImplementationOnce(async () => null)
       jest
@@ -142,7 +156,11 @@ describe('createDecisionUsecase', () => {
 
     it('propagates an Error when repository returns an error', async () => {
       // GIVEN
-      const rejectedDecision = mockUtils.createDecisionDTO
+      const rejectedDecision = {
+        ...mockUtils.createDecisionDTO,
+        dateImport: new Date().toISOString(),
+        datePublication: null
+      }
       jest.spyOn(mockDecisionsRepository, 'create').mockImplementationOnce(() => {
         throw new Error()
       })

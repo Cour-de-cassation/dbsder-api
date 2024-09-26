@@ -19,7 +19,11 @@ describe('FetchDecisionByIdUsecase', () => {
     it('returns the decision when provided ID exist', async () => {
       //GIVEN
       const id = '1'
-      const providedDecision = mockUtils.decisionModel
+      const providedDecision = {
+        ...mockUtils.decisionModel,
+        dateImport: new Date().toISOString(),
+        datePublication: null
+      }
       const expectedDecision = { ...providedDecision, _id: providedDecision._id.toString() }
 
       jest.spyOn(mockDecisionsRepository, 'getById').mockResolvedValue(providedDecision)

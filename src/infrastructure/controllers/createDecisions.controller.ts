@@ -79,27 +79,33 @@ export class CreateDecisionsController {
       throw new ClientNotAuthorizedException()
     }
 
+    const now = new Date()
+    const dateImport = now.toISOString()
+    const datePublication = null
+
     const createDecisionUsecase = new CreateDecisionUsecase(
       this.decisionsRepository,
       this.codeNACsRepository,
       this.zoningApiService
     )
-    const decisionId = await createDecisionUsecase.execute(decision).catch((error) => {
-      if (error instanceof DatabaseError) {
+    const decisionId = await createDecisionUsecase
+      .execute({ ...decision, dateImport, datePublication })
+      .catch((error) => {
+        if (error instanceof DatabaseError) {
+          this.logger.error({
+            ...formatLogs,
+            msg: error.message,
+            statusCode: HttpStatus.SERVICE_UNAVAILABLE
+          })
+          throw new DependencyException(error.message)
+        }
         this.logger.error({
           ...formatLogs,
           msg: error.message,
-          statusCode: HttpStatus.SERVICE_UNAVAILABLE
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR
         })
-        throw new DependencyException(error.message)
-      }
-      this.logger.error({
-        ...formatLogs,
-        msg: error.message,
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+        throw new UnexpectedException(error)
       })
-      throw new UnexpectedException(error)
-    })
 
     this.logger.log({
       ...formatLogs,

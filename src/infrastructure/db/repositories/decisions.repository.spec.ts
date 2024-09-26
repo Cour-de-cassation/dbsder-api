@@ -51,7 +51,11 @@ describe('DecisionsRepository', () => {
     describe('success cases', () => {
       it('returns created decision when decision is successfully created in DB', async () => {
         // GIVEN
-        const decision = mockUtils.createDecisionDTO
+        const decision = {
+          ...mockUtils.createDecisionDTO,
+          dateImport: new Date().toISOString(),
+          datePublication: null
+        }
 
         const expectedDecisionId = validId
         jest.spyOn(decisionModel, 'findOneAndUpdate').mockResolvedValueOnce(mockUtils.decisionModel)
@@ -65,7 +69,11 @@ describe('DecisionsRepository', () => {
 
       it('returns updated decision when decision is successfully updated in DB', async () => {
         // GIVEN
-        const decision = mockUtils.createDecisionDTO
+        const decision = {
+          ...mockUtils.createDecisionDTO,
+          dateImport: new Date().toISOString(),
+          datePublication: null
+        }
 
         const expectedDecisionId = validId
         jest.spyOn(decisionModel, 'findOneAndUpdate').mockResolvedValueOnce(mockUtils.decisionModel)
@@ -81,7 +89,11 @@ describe('DecisionsRepository', () => {
     describe('error cases', () => {
       it('throws a DatabaseError when the DB is unavailable', async () => {
         // GIVEN
-        const decision = mockUtils.createDecisionDTO
+        const decision = {
+          ...mockUtils.createDecisionDTO,
+          dateImport: new Date().toISOString(),
+          datePublication: null
+        }
         jest.spyOn(decisionModel, 'findOneAndUpdate').mockRejectedValueOnce(new Error())
 
         // WHEN
