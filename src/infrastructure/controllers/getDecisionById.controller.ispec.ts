@@ -34,7 +34,11 @@ describe('GetDecisionByIdController', () => {
   describe('Success case', () => {
     it('returns a 200 OK with found decision when given a valid ID', async () => {
       // GIVEN
-      const decisionToSave = { ...mockUtils.decisionModel }
+      const decisionToSave = {
+        ...mockUtils.decisionModel,
+        dateImport: new Date().toISOString(),
+        datePublication: null
+      }
       const decisionId = await decisionsRepository.create(decisionToSave)
       const labelApiKey = process.env.LABEL_API_KEY
 
@@ -67,7 +71,9 @@ describe('GetDecisionByIdController', () => {
       // GIVEN
       const normalisationApiKey = process.env.NORMALIZATION_API_KEY
       const decisionToSave = {
-        ...mockUtils.decisionModel
+        ...mockUtils.decisionModel,
+        dateImport: new Date().toISOString(),
+        datePublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -83,7 +89,9 @@ describe('GetDecisionByIdController', () => {
     it('throws a 401 Unauthorized error when the apiKey is not valid', async () => {
       // GIVEN
       const decisionToSave = {
-        ...mockUtils.decisionModel
+        ...mockUtils.decisionModel,
+        dateImport: new Date().toISOString(),
+        datePublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -99,7 +107,9 @@ describe('GetDecisionByIdController', () => {
     it('throws a 401 Unauthorized error when the apiKey is not present', async () => {
       // GIVEN
       const decisionToSave = {
-        ...mockUtils.decisionModel
+        ...mockUtils.decisionModel,
+        dateImport: new Date().toISOString(),
+        datePublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 

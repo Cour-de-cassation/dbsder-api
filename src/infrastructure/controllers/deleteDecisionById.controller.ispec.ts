@@ -34,7 +34,11 @@ describe('DeleteDecisionByIdController', () => {
   describe('Success case', () => {
     it('returns a 204 No content and delete the decision with the given valid id', async () => {
       // GIVEN
-      const decisionToSave = { ...mockUtils.decisionModel }
+      const decisionToSave = {
+        ...mockUtils.decisionModel,
+        dateImport: new Date().toISOString(),
+        datePublication: null
+      }
       const decisionId = await decisionsRepository.create(decisionToSave)
       const opsApiKey = process.env.OPS_API_KEY
       const labelApiKey = process.env.LABEL_API_KEY
@@ -74,7 +78,9 @@ describe('DeleteDecisionByIdController', () => {
       const normalisationApiKey = process.env.NORMALIZATION_API_KEY
 
       const decisionToSave = {
-        ...mockUtils.decisionModel
+        ...mockUtils.decisionModel,
+        dateImport: new Date().toISOString(),
+        datePublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -91,7 +97,9 @@ describe('DeleteDecisionByIdController', () => {
       // GIVEN
 
       const decisionToSave = {
-        ...mockUtils.decisionModel
+        ...mockUtils.decisionModel,
+        dateImport: new Date().toISOString(),
+        datePublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -108,7 +116,9 @@ describe('DeleteDecisionByIdController', () => {
       // GIVEN
 
       const decisionToSave = {
-        ...mockUtils.decisionModel
+        ...mockUtils.decisionModel,
+        dateImport: new Date().toISOString(),
+        datePublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -123,7 +133,9 @@ describe('DeleteDecisionByIdController', () => {
       // GIVEN
 
       const decisionToSave = {
-        ...mockUtils.decisionModel
+        ...mockUtils.decisionModel,
+        dateImport: new Date().toISOString(),
+        datePublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 

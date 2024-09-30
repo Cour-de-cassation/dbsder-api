@@ -11,7 +11,9 @@ describe('DecisionsController', () => {
   const mockUtils = new MockUtils()
   const labelApiKey = process.env.LABEL_API_KEY
   const providedDecisionModel = {
-    ...mockUtils.decisionModel
+    ...mockUtils.decisionModel,
+    dateImport: new Date().toISOString(),
+    datePublication: null
   }
 
   let decisionsRepository: DecisionsRepository
