@@ -21,14 +21,21 @@ describe('FetchDecisionPseudomymiseeByIdUsecase', () => {
       const id = '1'
       const dateImport = new Date().toISOString()
       const datePublication = null
+      const dateDepublication = null
       const expectedDecision = {
         ...mockUtils.decisionPseudonymisee,
         dateImport,
-        datePublication
+        datePublication,
+        dateDepublication
       }
       jest
         .spyOn(mockDecisionsRepository, 'getById')
-        .mockResolvedValue({ ...mockUtils.decisionModel, dateImport, datePublication })
+        .mockResolvedValue({
+          ...mockUtils.decisionModel,
+          dateImport,
+          datePublication,
+          dateDepublication
+        })
 
       // WHEN
       const decision = await usecase.execute(id, true)

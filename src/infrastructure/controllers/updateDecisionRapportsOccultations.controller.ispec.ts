@@ -55,7 +55,8 @@ describe('DecisionsController', () => {
         const decisionToSave = {
           ...mockUtils.decisionModel,
           dateImport: new Date().toISOString(),
-          datePublication: null
+          datePublication: null,
+          dateDepublication: null
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -75,7 +76,8 @@ describe('DecisionsController', () => {
           ...mockUtils.decisionModel,
           rapportsOccultations,
           dateImport: new Date().toISOString(),
-          datePublication: null
+          datePublication: null,
+          dateDepublication: null
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -99,7 +101,8 @@ describe('DecisionsController', () => {
             ...mockUtils.decisionModel,
             rapportsOccultations,
             dateImport: new Date().toISOString(),
-            datePublication: null
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -119,7 +122,8 @@ describe('DecisionsController', () => {
             ...mockUtils.decisionModel,
             rapportsOccultations,
             dateImport: new Date().toISOString(),
-            datePublication: null
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -140,7 +144,8 @@ describe('DecisionsController', () => {
             ...mockUtils.decisionModel,
             rapportsOccultations,
             dateImport: new Date().toISOString(),
-            datePublication: null
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -162,7 +167,8 @@ describe('DecisionsController', () => {
             ...mockUtils.decisionModel,
             rapportsOccultations,
             dateImport: new Date().toISOString(),
-            datePublication: null
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -182,7 +188,8 @@ describe('DecisionsController', () => {
             ...mockUtils.decisionModel,
             rapportsOccultations,
             dateImport: new Date().toISOString(),
-            datePublication: null
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 

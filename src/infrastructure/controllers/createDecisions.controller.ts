@@ -82,6 +82,7 @@ export class CreateDecisionsController {
     const now = new Date()
     const dateImport = now.toISOString()
     const datePublication = null
+    const dateDepublication = null
 
     const createDecisionUsecase = new CreateDecisionUsecase(
       this.decisionsRepository,
@@ -89,7 +90,7 @@ export class CreateDecisionsController {
       this.zoningApiService
     )
     const decisionId = await createDecisionUsecase
-      .execute({ ...decision, dateImport, datePublication })
+      .execute({ ...decision, dateImport, datePublication, dateDepublication })
       .catch((error) => {
         if (error instanceof DatabaseError) {
           this.logger.error({

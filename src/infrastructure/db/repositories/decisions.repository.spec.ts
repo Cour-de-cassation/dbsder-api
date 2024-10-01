@@ -54,7 +54,8 @@ describe('DecisionsRepository', () => {
         const decision = {
           ...mockUtils.createDecisionDTO,
           dateImport: new Date().toISOString(),
-          datePublication: null
+          datePublication: null,
+          dateDepublication: null
         }
 
         const expectedDecisionId = validId
@@ -72,7 +73,8 @@ describe('DecisionsRepository', () => {
         const decision = {
           ...mockUtils.createDecisionDTO,
           dateImport: new Date().toISOString(),
-          datePublication: null
+          datePublication: null,
+          dateDepublication: null
         }
 
         const expectedDecisionId = validId
@@ -92,7 +94,8 @@ describe('DecisionsRepository', () => {
         const decision = {
           ...mockUtils.createDecisionDTO,
           dateImport: new Date().toISOString(),
-          datePublication: null
+          datePublication: null,
+          dateDepublication: null
         }
         jest.spyOn(decisionModel, 'findOneAndUpdate').mockRejectedValueOnce(new Error())
 

@@ -37,7 +37,8 @@ describe('DeleteDecisionByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
       const opsApiKey = process.env.OPS_API_KEY
@@ -80,7 +81,8 @@ describe('DeleteDecisionByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -99,7 +101,8 @@ describe('DeleteDecisionByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -118,7 +121,8 @@ describe('DeleteDecisionByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -135,7 +139,8 @@ describe('DeleteDecisionByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 

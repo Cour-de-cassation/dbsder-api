@@ -13,7 +13,8 @@ describe('DecisionsController', () => {
   const providedDecisionModel = {
     ...mockUtils.decisionModel,
     dateImport: new Date().toISOString(),
-    datePublication: null
+    datePublication: null,
+    dateDepublication: null
   }
 
   let decisionsRepository: DecisionsRepository

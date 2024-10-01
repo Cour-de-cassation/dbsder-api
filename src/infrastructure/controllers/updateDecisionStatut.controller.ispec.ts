@@ -44,7 +44,8 @@ describe('DecisionsController', () => {
           ...mockUtils.decisionModel,
           labelStatus: LabelStatus.TOBETREATED,
           dateImport: new Date().toISOString(),
-          datePublication: null
+          datePublication: null,
+          dateDepublication: null
         }
 
         const decisionId = await decisionsRepository.create(decisionToSave)
@@ -65,7 +66,8 @@ describe('DecisionsController', () => {
           ...mockUtils.decisionModel,
           labelStatus: LabelStatus.TOBETREATED,
           dateImport: new Date().toISOString(),
-          datePublication: null
+          datePublication: null,
+          dateDepublication: null
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -87,7 +89,8 @@ describe('DecisionsController', () => {
             ...mockUtils.decisionModel,
             labelStatus: LabelStatus.TOBETREATED,
             dateImport: new Date().toISOString(),
-            datePublication: null
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -106,7 +109,8 @@ describe('DecisionsController', () => {
             ...mockUtils.decisionModel,
             labelStatus: LabelStatus.TOBETREATED,
             dateImport: new Date().toISOString(),
-            datePublication: null
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -128,7 +132,8 @@ describe('DecisionsController', () => {
             ...mockUtils.decisionModel,
             labelStatus: LabelStatus.TOBETREATED,
             dateImport: new Date().toISOString(),
-            datePublication: null
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -151,7 +156,8 @@ describe('DecisionsController', () => {
             ...mockUtils.decisionModel,
             labelStatus: LabelStatus.TOBETREATED,
             dateImport: new Date().toISOString(),
-            datePublication: null
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -170,7 +176,8 @@ describe('DecisionsController', () => {
             ...mockUtils.decisionModel,
             labelStatus: LabelStatus.TOBETREATED,
             dateImport: new Date().toISOString(),
-            datePublication: null
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 

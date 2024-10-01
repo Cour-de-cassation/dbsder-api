@@ -37,7 +37,8 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
       const opensderApiKey = process.env.OPENSDER_API_KEY
@@ -55,7 +56,8 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
       const indexApiKey = process.env.INDEX_API_KEY
@@ -90,7 +92,8 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
       const indexApiKey = process.env.INDEX_API_KEY
@@ -109,7 +112,8 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -127,7 +131,8 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 

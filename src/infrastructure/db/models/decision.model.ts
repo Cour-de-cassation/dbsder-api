@@ -44,6 +44,9 @@ export class Decision {
   datePublication: string
 
   @Prop()
+  dateDepublication: string
+
+  @Prop()
   decatt?: number[]
 
   @Prop()

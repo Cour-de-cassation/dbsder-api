@@ -37,7 +37,8 @@ describe('GetDecisionByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
       const labelApiKey = process.env.LABEL_API_KEY
@@ -73,7 +74,8 @@ describe('GetDecisionByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -91,7 +93,8 @@ describe('GetDecisionByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -109,7 +112,8 @@ describe('GetDecisionByIdController', () => {
       const decisionToSave = {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
       const decisionId = await decisionsRepository.create(decisionToSave)
 

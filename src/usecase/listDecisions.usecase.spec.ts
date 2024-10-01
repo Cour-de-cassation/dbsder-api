@@ -21,7 +21,8 @@ describe('listDecisionUsecase', () => {
       {
         ...mockUtils.decisionModel,
         dateImport: new Date().toISOString(),
-        datePublication: null
+        datePublication: null,
+        dateDepublication: null
       }
     ])
 
