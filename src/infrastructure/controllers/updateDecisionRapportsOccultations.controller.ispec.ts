@@ -53,7 +53,10 @@ describe('DecisionsController', () => {
       it('returns 204 No Content when decision is updated with valid API Key and concealment reports', async () => {
         // GIVEN
         const decisionToSave = {
-          ...mockUtils.decisionModel
+          ...mockUtils.decisionModel,
+          dateImport: new Date().toISOString(),
+          datePublication: null,
+          dateDepublication: null
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -71,7 +74,10 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
-          rapportsOccultations
+          rapportsOccultations,
+          dateImport: new Date().toISOString(),
+          datePublication: null,
+          dateDepublication: null
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -93,7 +99,10 @@ describe('DecisionsController', () => {
 
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            rapportsOccultations
+            rapportsOccultations,
+            dateImport: new Date().toISOString(),
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -111,7 +120,10 @@ describe('DecisionsController', () => {
           const unknownApiKey = 'unknownApiKey'
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            rapportsOccultations
+            rapportsOccultations,
+            dateImport: new Date().toISOString(),
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -130,7 +142,10 @@ describe('DecisionsController', () => {
           const unauthorizedApiKey = process.env.NORMALIZATION_API_KEY
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            rapportsOccultations
+            rapportsOccultations,
+            dateImport: new Date().toISOString(),
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -150,7 +165,10 @@ describe('DecisionsController', () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            rapportsOccultations
+            rapportsOccultations,
+            dateImport: new Date().toISOString(),
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -168,7 +186,10 @@ describe('DecisionsController', () => {
           const wrongConcealmentReportsFormat = 'some report'
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            rapportsOccultations
+            rapportsOccultations,
+            dateImport: new Date().toISOString(),
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 

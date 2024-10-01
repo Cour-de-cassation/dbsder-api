@@ -42,7 +42,10 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
-          labelStatus: LabelStatus.TOBETREATED
+          labelStatus: LabelStatus.TOBETREATED,
+          dateImport: new Date().toISOString(),
+          datePublication: null,
+          dateDepublication: null
         }
 
         const decisionId = await decisionsRepository.create(decisionToSave)
@@ -61,7 +64,10 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
-          labelStatus: LabelStatus.TOBETREATED
+          labelStatus: LabelStatus.TOBETREATED,
+          dateImport: new Date().toISOString(),
+          datePublication: null,
+          dateDepublication: null
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -81,7 +87,10 @@ describe('DecisionsController', () => {
         it('when apiKey is not provided', async () => {
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            labelStatus: LabelStatus.TOBETREATED
+            labelStatus: LabelStatus.TOBETREATED,
+            dateImport: new Date().toISOString(),
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -98,7 +107,10 @@ describe('DecisionsController', () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            labelStatus: LabelStatus.TOBETREATED
+            labelStatus: LabelStatus.TOBETREATED,
+            dateImport: new Date().toISOString(),
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -118,7 +130,10 @@ describe('DecisionsController', () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            labelStatus: LabelStatus.TOBETREATED
+            labelStatus: LabelStatus.TOBETREATED,
+            dateImport: new Date().toISOString(),
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -139,7 +154,10 @@ describe('DecisionsController', () => {
         it('when status is not provided', async () => {
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            labelStatus: LabelStatus.TOBETREATED
+            labelStatus: LabelStatus.TOBETREATED,
+            dateImport: new Date().toISOString(),
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -156,7 +174,10 @@ describe('DecisionsController', () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            labelStatus: LabelStatus.TOBETREATED
+            labelStatus: LabelStatus.TOBETREATED,
+            dateImport: new Date().toISOString(),
+            datePublication: null,
+            dateDepublication: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
