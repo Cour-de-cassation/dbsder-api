@@ -17,7 +17,7 @@ import { LogsFormat } from '../../utils/logsFormat.utils'
 export class DecisionsRepository implements InterfaceDecisionsRepository {
   private readonly logger = new Logger()
 
-  constructor(@InjectModel('Decision') private decisionModel: Model<Decision>) {}
+  constructor(@InjectModel('Decision') private decisionModel: Model<Decision>) { }
 
   async list(decisionSearchParams: GetDecisionsListDto): Promise<Decision[]> {
     try {
@@ -56,7 +56,8 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       labelStatus: decision.labelStatus,
       NACCode: decision.NACCode,
       recommandationOccultation: decision.recommandationOccultation,
-      occultation: { motivationOccultation: decision.occultation.motivationOccultation }
+      occultation: { motivationOccultation: decision.occultation.motivationOccultation },
+      idMongoDecision: savedDecision._id.toString()
     }
 
     const formatLogs: LogsFormat = {
@@ -170,11 +171,11 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       }),
       ...(decisionSearchParams.startDate &&
         decisionSearchParams.endDate && {
-          dateCreation: {
-            $gte: decisionSearchParams.startDate,
-            $lte: decisionSearchParams.endDate
-          }
-        }),
+        dateCreation: {
+          $gte: decisionSearchParams.startDate,
+          $lte: decisionSearchParams.endDate
+        }
+      }),
       ...(decisionSearchParams.number && {
         $or: [
           {
