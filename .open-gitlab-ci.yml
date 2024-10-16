@@ -44,7 +44,6 @@ build:
 test-unit:
   stage: test
   script:
-    # - npm run test cov
     - npm run test:cov
   artifacts:
     paths:
