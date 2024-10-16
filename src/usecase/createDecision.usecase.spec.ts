@@ -40,9 +40,9 @@ describe('createDecisionUsecase', () => {
       const providedDecision = {
         ...expectedDecision,
         _id: expectedDecision._id.toString(),
-        dateImport: new Date().toISOString(),
-        datePublication: null,
-        dateDepublication: null
+        importDate: new Date().toISOString(),
+        publishDate: null,
+        unpublishDate: null
       }
 
       jest
@@ -76,9 +76,9 @@ describe('createDecisionUsecase', () => {
         ...expectedDecision,
         _id: expectedDecision._id.toString(),
         sourceName: Sources.CC,
-        dateImport: new Date().toISOString(),
-        datePublication: null,
-        dateDepublication: null
+        importDate: new Date().toISOString(),
+        publishDate: null,
+        unpublishDate: null
       }
       const providedCodeNAC = mockUtils.codeNACMock
 
@@ -108,9 +108,9 @@ describe('createDecisionUsecase', () => {
         ...expectedDecision,
         _id: expectedDecision._id.toString(),
         labelStatus: LabelStatus.IGNORED_CODE_NAC_DECISION_NON_PUBLIQUE,
-        dateImport: new Date().toISOString(),
-        datePublication: null,
-        dateDepublication: null
+        importDate: new Date().toISOString(),
+        publishDate: null,
+        unpublishDate: null
       }
 
       jest
@@ -137,9 +137,9 @@ describe('createDecisionUsecase', () => {
       const providedDecision = {
         ...expectedDecision,
         _id: expectedDecision._id.toString(),
-        dateImport: new Date().toISOString(),
-        datePublication: null,
-        dateDepublication: null
+        importDate: new Date().toISOString(),
+        publishDate: null,
+        unpublishDate: null
       }
 
       jest.spyOn(mockCodeNACsRepository, 'getByCodeNac').mockImplementationOnce(async () => null)
@@ -162,9 +162,9 @@ describe('createDecisionUsecase', () => {
       // GIVEN
       const rejectedDecision = {
         ...mockUtils.createDecisionDTO,
-        dateImport: new Date().toISOString(),
-        datePublication: null,
-        dateDepublication: null
+        importDate: new Date().toISOString(),
+        publishDate: null,
+        unpublishDate: null
       }
       jest.spyOn(mockDecisionsRepository, 'create').mockImplementationOnce(() => {
         throw new Error()

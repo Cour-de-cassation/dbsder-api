@@ -12,9 +12,9 @@ describe('DecisionsController', () => {
   const labelApiKey = process.env.LABEL_API_KEY
   const providedDecisionModel = {
     ...mockUtils.decisionModel,
-    dateImport: new Date().toISOString(),
-    datePublication: null,
-    dateDepublication: null
+    importDate: new Date().toISOString(),
+    publishDate: null,
+    unpublishDate: null
   }
 
   let decisionsRepository: DecisionsRepository

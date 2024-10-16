@@ -21,9 +21,9 @@ describe('FetchDecisionByIdUsecase', () => {
       const id = '1'
       const providedDecision = {
         ...mockUtils.decisionModel,
-        dateImport: new Date().toISOString(),
-        datePublication: null,
-        dateDepublication: null
+        importDate: new Date().toISOString(),
+        publishDate: null,
+        unpublishDate: null
       }
       const expectedDecision = { ...providedDecision, _id: providedDecision._id.toString() }
 

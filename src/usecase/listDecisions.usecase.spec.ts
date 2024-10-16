@@ -20,9 +20,9 @@ describe('listDecisionUsecase', () => {
     jest.spyOn(mockDecisionsRepository, 'list').mockResolvedValue([
       {
         ...mockUtils.decisionModel,
-        dateImport: new Date().toISOString(),
-        datePublication: null,
-        dateDepublication: null
+        importDate: new Date().toISOString(),
+        publishDate: null,
+        unpublishDate: null
       }
     ])
 

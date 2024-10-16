@@ -40,9 +40,9 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
-          dateImport: new Date().toISOString(),
-          datePublication: null,
-          dateDepublication: null
+          importDate: new Date().toISOString(),
+          publishDate: null,
+          unpublishDate: null
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -61,9 +61,9 @@ describe('DecisionsController', () => {
         const decisionToSave = {
           ...mockUtils.decisionModel,
           decisionPseudonymisee,
-          dateImport: new Date().toISOString(),
-          datePublication: null,
-          dateDepublication: null
+          importDate: new Date().toISOString(),
+          publishDate: null,
+          unpublishDate: null
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -85,9 +85,9 @@ describe('DecisionsController', () => {
           const decisionToSave = {
             ...mockUtils.decisionModel,
             decisionPseudonymisee,
-            dateImport: new Date().toISOString(),
-            datePublication: null,
-            dateDepublication: null
+            importDate: new Date().toISOString(),
+            publishDate: null,
+            unpublishDate: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -105,9 +105,9 @@ describe('DecisionsController', () => {
           const decisionToSave = {
             ...mockUtils.decisionModel,
             decisionPseudonymisee,
-            dateImport: new Date().toISOString(),
-            datePublication: null,
-            dateDepublication: null
+            importDate: new Date().toISOString(),
+            publishDate: null,
+            unpublishDate: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -128,9 +128,9 @@ describe('DecisionsController', () => {
           const decisionToSave = {
             ...mockUtils.decisionModel,
             decisionPseudonymisee,
-            dateImport: new Date().toISOString(),
-            datePublication: null,
-            dateDepublication: null
+            importDate: new Date().toISOString(),
+            publishDate: null,
+            unpublishDate: null
           }
 
           const decisionId = await decisionsRepository.create(decisionToSave)
@@ -153,9 +153,9 @@ describe('DecisionsController', () => {
           const decisionToSave = {
             ...mockUtils.decisionModel,
             decisionPseudonymisee,
-            dateImport: new Date().toISOString(),
-            datePublication: null,
-            dateDepublication: null
+            importDate: new Date().toISOString(),
+            publishDate: null,
+            unpublishDate: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -173,9 +173,9 @@ describe('DecisionsController', () => {
           const decisionToSave = {
             ...mockUtils.decisionModel,
             decisionPseudonymisee,
-            dateImport: new Date().toISOString(),
-            datePublication: null,
-            dateDepublication: null
+            importDate: new Date().toISOString(),
+            publishDate: null,
+            unpublishDate: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 

@@ -38,13 +38,13 @@ export class Decision {
   dateDecision: string
 
   @Prop()
-  dateImport: string
+  importDate: string
 
   @Prop()
-  datePublication: string
+  publishDate: string
 
   @Prop()
-  dateDepublication: string
+  unpublishDate: string
 
   @Prop()
   decatt?: number[]

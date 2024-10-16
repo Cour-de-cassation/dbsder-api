@@ -735,7 +735,7 @@ export class CreateDecisionDTO {
 }
 
 export type CreateDecisionModel = CreateDecisionDTO & {
-  dateImport: string
-  datePublication?: string
-  dateDepublication?: string
+  importDate: string
+  publishDate?: string
+  unpublishDate?: string
 }
