@@ -88,7 +88,7 @@ export class UpdateDecisionRapportsOccultationsController {
       throw new ClientNotAuthorizedException()
     }
     
-    console.log(JSON.stringify(body));
+
     const updateDecisionUsecase = new UpdateRapportsOccultationsUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, body.rapportsOccultations).catch((error) => {
       if (error instanceof DecisionNotFoundError) {

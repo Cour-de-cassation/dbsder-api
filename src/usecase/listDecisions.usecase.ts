@@ -12,9 +12,7 @@ export class ListDecisionsUsecase {
   async execute(
     decisionSearchCriteria: DecisionSearchCriteria
   ): Promise<GetDecisionsListResponse[]> {
-    console.log(decisionSearchCriteria);
     const decisionDTO = mapDecisionSearchCriteriaToDTO(decisionSearchCriteria)
-    console.log(decisionDTO)
     const decisionsList = await this.decisionsRepository.list(decisionDTO)
 
     return new MapModelToResponseService().mapGetDecisionsListModelToResponse(decisionsList)
