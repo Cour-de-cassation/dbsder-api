@@ -87,9 +87,10 @@ export class UpdateDecisionRapportsOccultationsController {
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ClientNotAuthorizedException()
     }
-
+    
+    console.log(JSON.stringify(body));
     const updateDecisionUsecase = new UpdateRapportsOccultationsUsecase(this.decisionsRepository)
-    await updateDecisionUsecase.execute(id, body.rapportsOccultations,body.publishStatus,body.labelStatus).catch((error) => {
+    await updateDecisionUsecase.execute(id, body.rapportsOccultations).catch((error) => {
       if (error instanceof DecisionNotFoundError) {
         this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
         throw new DecisionNotFoundException()

@@ -13,7 +13,7 @@ import {
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
 import { Logger } from '@nestjs/common'
 import { LogsFormat } from '../../utils/logsFormat.utils'
-import { LabelStatus, LabelTreatment, PublishStatus } from 'dbsder-api-types'
+import { PublishStatus } from 'dbsder-api-types'
 
 export class DecisionsRepository implements InterfaceDecisionsRepository {
   private readonly logger = new Logger()
@@ -114,14 +114,12 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return id
   }
 
-  async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string, labelTreatments: LabelTreatment[], publishStatus: PublishStatus, labelStatus: LabelStatus): Promise<string> {
+  async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string, publishStatus: PublishStatus): Promise<string> {
     const result = await this.decisionModel
       .updateOne({ _id: new Types.ObjectId(id) }, {
         $set: {
           pseudoText: decisionPseudonymisee,
-          publishStatus: publishStatus,
-          labelTreatments: labelTreatments,
-          labelStatus: labelStatus
+          publishStatus: publishStatus
         }
       }, { new: true })
       .catch((error) => {
@@ -143,14 +141,12 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async updateRapportsOccultations(
     id: string,
-    rapportsOccultations: RapportOccultation[],
-    publishStatus: PublishStatus,
-    labelStatus: LabelStatus
+    rapportsOccultations: RapportOccultation[]
   ): Promise<string> {
     const result = await this.decisionModel
       .updateOne(
         { _id: new Types.ObjectId(id) },
-        { $set: { labelTreatments: rapportsOccultations, labelStatus: labelStatus, publishStatus: publishStatus } }
+        { $set: { labelTreatments: rapportsOccultations } }
       )
       .catch((error) => {
         throw new DatabaseError(error)
@@ -168,6 +164,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
     return id
   }
+
   mapDecisionSearchParametersToFindCriteria(decisionSearchParams: GetDecisionsListDto) {
     const todayDate = new Date().toISOString().slice(0, 10)
     // syntax :  https://medium.com/@slamflipstrom/conditional-object-properties-using-spread-in-javascript-714e0a12f496
