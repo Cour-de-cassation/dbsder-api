@@ -51,12 +51,7 @@ describe('DecisionsRepository', () => {
     describe('success cases', () => {
       it('returns created decision when decision is successfully created in DB', async () => {
         // GIVEN
-        const decision = {
-          ...mockUtils.createDecisionDTO,
-          importDate: new Date().toISOString(),
-          publishDate: null,
-          unpublishDate: null
-        }
+        const decision = mockUtils.createDecisionDTO
 
         const expectedDecisionId = validId
         jest.spyOn(decisionModel, 'findOneAndUpdate').mockResolvedValueOnce(mockUtils.decisionModel)
@@ -70,12 +65,7 @@ describe('DecisionsRepository', () => {
 
       it('returns updated decision when decision is successfully updated in DB', async () => {
         // GIVEN
-        const decision = {
-          ...mockUtils.createDecisionDTO,
-          importDate: new Date().toISOString(),
-          publishDate: null,
-          unpublishDate: null
-        }
+        const decision = mockUtils.createDecisionDTO
 
         const expectedDecisionId = validId
         jest.spyOn(decisionModel, 'findOneAndUpdate').mockResolvedValueOnce(mockUtils.decisionModel)
@@ -86,17 +76,37 @@ describe('DecisionsRepository', () => {
         // THEN
         expect(result).toEqual(expectedDecisionId)
       })
+
+      it('returns updated decision with dates when decision is successfully updated in DB', async () => {
+        // GIVEN
+        const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString()
+
+        const decision = mockUtils.createDecisionDTO
+        const oldDecision = {
+          ...decision,
+          importDate: yesterday,
+          doctrine: 'otherDoctrine',
+          _id: validId
+        }
+        const newDecision = { ...decision, importDate: yesterday, _id: validId }
+
+        jest.spyOn(decisionModel, 'findOne').mockResolvedValueOnce(oldDecision)
+        const callToUpdate = jest
+          .spyOn(decisionModel, 'findOneAndUpdate')
+          .mockResolvedValue(newDecision)
+
+        // WHEN
+        await decisionsRepository.create(decision)
+
+        // THEN
+        expect(callToUpdate.mock.calls[0][1].importDate).toEqual(yesterday)
+      })
     })
 
     describe('error cases', () => {
       it('throws a DatabaseError when the DB is unavailable', async () => {
         // GIVEN
-        const decision = {
-          ...mockUtils.createDecisionDTO,
-          importDate: new Date().toISOString(),
-          publishDate: null,
-          unpublishDate: null
-        }
+        const decision = mockUtils.createDecisionDTO
         jest.spyOn(decisionModel, 'findOneAndUpdate').mockRejectedValueOnce(new Error())
 
         // WHEN

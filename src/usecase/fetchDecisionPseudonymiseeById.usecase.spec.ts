@@ -19,23 +19,8 @@ describe('FetchDecisionPseudomymiseeByIdUsecase', () => {
     it('returns the decision when provided ID exist', async () => {
       //GIVEN
       const id = '1'
-      const importDate = new Date().toISOString()
-      const publishDate = null
-      const unpublishDate = null
-      const expectedDecision = {
-        ...mockUtils.decisionPseudonymisee,
-        importDate,
-        publishDate,
-        unpublishDate
-      }
-      jest
-        .spyOn(mockDecisionsRepository, 'getById')
-        .mockResolvedValue({
-          ...mockUtils.decisionModel,
-          importDate,
-          publishDate,
-          unpublishDate
-        })
+      const expectedDecision = mockUtils.decisionPseudonymisee
+      jest.spyOn(mockDecisionsRepository, 'getById').mockResolvedValue(mockUtils.decisionModel)
 
       // WHEN
       const decision = await usecase.execute(id, true)

@@ -17,14 +17,7 @@ describe('listDecisionUsecase', () => {
   it('retrieves a list of decisions from the repository', async () => {
     // GIVEN
     const expectedListDecisions = [mockUtils.decisionTJToBeTreated]
-    jest.spyOn(mockDecisionsRepository, 'list').mockResolvedValue([
-      {
-        ...mockUtils.decisionModel,
-        importDate: new Date().toISOString(),
-        publishDate: null,
-        unpublishDate: null
-      }
-    ])
+    jest.spyOn(mockDecisionsRepository, 'list').mockResolvedValue([mockUtils.decisionModel])
 
     // WHEN
     const result = await usecase.execute(listCriteria)

@@ -733,9 +733,3 @@ export class CreateDecisionDTO {
   @IsString()
   idDecisionWinci?: string
 }
-
-export type CreateDecisionModel = CreateDecisionDTO & {
-  importDate: string
-  publishDate?: string
-  unpublishDate?: string
-}

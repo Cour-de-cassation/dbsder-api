@@ -41,6 +41,9 @@ export class Decision {
   importDate: string
 
   @Prop()
+  updateDate: string
+
+  @Prop()
   publishDate: string
 
   @Prop()

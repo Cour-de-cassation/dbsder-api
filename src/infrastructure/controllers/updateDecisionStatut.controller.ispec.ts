@@ -40,13 +40,7 @@ describe('DecisionsController', () => {
     describe('Success case', () => {
       it('returns 204 No Content when decision status is updated with valid API Key and status', async () => {
         // GIVEN
-        const decisionToSave = {
-          ...mockUtils.decisionModel,
-          labelStatus: LabelStatus.TOBETREATED,
-          importDate: new Date().toISOString(),
-          publishDate: null,
-          unpublishDate: null
-        }
+        const decisionToSave = mockUtils.createDecisionDTO
 
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -63,11 +57,8 @@ describe('DecisionsController', () => {
       it('returns 204 No Content when decision status is updated with a status already in database', async () => {
         // GIVEN
         const decisionToSave = {
-          ...mockUtils.decisionModel,
+          ...mockUtils.createDecisionDTO,
           labelStatus: LabelStatus.TOBETREATED,
-          importDate: new Date().toISOString(),
-          publishDate: null,
-          unpublishDate: null
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -86,11 +77,8 @@ describe('DecisionsController', () => {
       describe('returns 401 Unauthorized', () => {
         it('when apiKey is not provided', async () => {
           const decisionToSave = {
-            ...mockUtils.decisionModel,
+            ...mockUtils.createDecisionDTO,
             labelStatus: LabelStatus.TOBETREATED,
-            importDate: new Date().toISOString(),
-            publishDate: null,
-            unpublishDate: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -106,11 +94,8 @@ describe('DecisionsController', () => {
         it('when apiKey does not exist', async () => {
           // GIVEN
           const decisionToSave = {
-            ...mockUtils.decisionModel,
+            ...mockUtils.createDecisionDTO,
             labelStatus: LabelStatus.TOBETREATED,
-            importDate: new Date().toISOString(),
-            publishDate: null,
-            unpublishDate: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -129,11 +114,8 @@ describe('DecisionsController', () => {
         it('when the apiKey is not authorized to call this endpoint', async () => {
           // GIVEN
           const decisionToSave = {
-            ...mockUtils.decisionModel,
+            ...mockUtils.createDecisionDTO,
             labelStatus: LabelStatus.TOBETREATED,
-            importDate: new Date().toISOString(),
-            publishDate: null,
-            unpublishDate: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -153,11 +135,8 @@ describe('DecisionsController', () => {
       describe('returns 400 Bad Request', () => {
         it('when status is not provided', async () => {
           const decisionToSave = {
-            ...mockUtils.decisionModel,
+            ...mockUtils.createDecisionDTO,
             labelStatus: LabelStatus.TOBETREATED,
-            importDate: new Date().toISOString(),
-            publishDate: null,
-            unpublishDate: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -173,11 +152,8 @@ describe('DecisionsController', () => {
         it('when provided status is unknown', async () => {
           // GIVEN
           const decisionToSave = {
-            ...mockUtils.decisionModel,
+            ...mockUtils.createDecisionDTO,
             labelStatus: LabelStatus.TOBETREATED,
-            importDate: new Date().toISOString(),
-            publishDate: null,
-            unpublishDate: null
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 

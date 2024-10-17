@@ -34,12 +34,7 @@ describe('DeleteDecisionByIdController', () => {
   describe('Success case', () => {
     it('returns a 204 No content and delete the decision with the given valid id', async () => {
       // GIVEN
-      const decisionToSave = {
-        ...mockUtils.decisionModel,
-        importDate: new Date().toISOString(),
-        publishDate: null,
-        unpublishDate: null
-      }
+      const decisionToSave = mockUtils.createDecisionDTO
       const decisionId = await decisionsRepository.create(decisionToSave)
       const opsApiKey = process.env.OPS_API_KEY
       const labelApiKey = process.env.LABEL_API_KEY
@@ -78,12 +73,7 @@ describe('DeleteDecisionByIdController', () => {
       // GIVEN
       const normalisationApiKey = process.env.NORMALIZATION_API_KEY
 
-      const decisionToSave = {
-        ...mockUtils.decisionModel,
-        importDate: new Date().toISOString(),
-        publishDate: null,
-        unpublishDate: null
-      }
+      const decisionToSave = mockUtils.createDecisionDTO
       const decisionId = await decisionsRepository.create(decisionToSave)
 
       // WHEN
@@ -98,12 +88,7 @@ describe('DeleteDecisionByIdController', () => {
     it('throws a 401 Unauthorized error when the apiKey is not valid', async () => {
       // GIVEN
 
-      const decisionToSave = {
-        ...mockUtils.decisionModel,
-        importDate: new Date().toISOString(),
-        publishDate: null,
-        unpublishDate: null
-      }
+      const decisionToSave = mockUtils.createDecisionDTO
       const decisionId = await decisionsRepository.create(decisionToSave)
 
       // WHEN
@@ -118,12 +103,7 @@ describe('DeleteDecisionByIdController', () => {
     it('throws a 401 Unauthorized error when the apiKey is not present', async () => {
       // GIVEN
 
-      const decisionToSave = {
-        ...mockUtils.decisionModel,
-        importDate: new Date().toISOString(),
-        publishDate: null,
-        unpublishDate: null
-      }
+      const decisionToSave = mockUtils.createDecisionDTO
       const decisionId = await decisionsRepository.create(decisionToSave)
 
       // WHEN
@@ -136,12 +116,7 @@ describe('DeleteDecisionByIdController', () => {
     it('throws a 503 Service unavailable when database connection drops', async () => {
       // GIVEN
 
-      const decisionToSave = {
-        ...mockUtils.decisionModel,
-        importDate: new Date().toISOString(),
-        publishDate: null,
-        unpublishDate: null
-      }
+      const decisionToSave = mockUtils.createDecisionDTO
       const decisionId = await decisionsRepository.create(decisionToSave)
 
       await dropDatabase()

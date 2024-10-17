@@ -1,7 +1,7 @@
 import { Model, Types } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { Decision } from '../models/decision.model'
-import { CreateDecisionModel } from '../../dto/createDecision.dto'
+import { CreateDecisionDTO } from '../../dto/createDecision.dto'
 import { RapportOccultation } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { InterfaceDecisionsRepository } from '../../../domain/decisions.repository.interface'
@@ -30,11 +30,28 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     }
   }
 
-  async create(decision: CreateDecisionModel): Promise<string> {
+  async create(decision: CreateDecisionDTO): Promise<string> {
+    const now = new Date()
+    const oldDecision = await this.decisionModel.findOne({
+      sourceId: decision.sourceId,
+      sourceName: decision.sourceName
+    })
+
+    const decisionModel = {
+      ...decision,
+      importDate: oldDecision?.importDate ?? now.toISOString(),
+      updateDate: now.toISOString(),
+      publishDate: null,
+      unpublishDate: null
+    }
+
     const savedDecision = await this.decisionModel
       .findOneAndUpdate(
-        { sourceId: decision.sourceId, sourceName: decision.sourceName },
-        decision,
+        {
+          sourceId: decision.sourceId,
+          sourceName: decision.sourceName
+        },
+        decisionModel,
         {
           upsert: true,
           new: true,

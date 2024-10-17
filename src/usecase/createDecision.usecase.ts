@@ -1,4 +1,4 @@
-import { CreateDecisionModel } from '../infrastructure/dto/createDecision.dto'
+import { CreateDecisionDTO } from '../infrastructure/dto/createDecision.dto'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { CodeNACsRepository } from '../infrastructure/db/repositories/codeNACs.repository'
 import { LabelStatus, Sources, Zoning } from 'dbsder-api-types'
@@ -13,7 +13,7 @@ export class CreateDecisionUsecase {
     private zoningApiService: ZoningApiService
   ) {}
 
-  async execute(decision: CreateDecisionModel): Promise<string> {
+  async execute(decision: CreateDecisionDTO): Promise<string> {
     try {
       const decisionZoning: Zoning = await this.zoningApiService.getDecisionZoning(decision)
       decision.originalTextZoning = decisionZoning
