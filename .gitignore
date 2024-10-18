@@ -39,3 +39,7 @@ lerna-debug.log*
 .env
 docker.env
 .npm
+
+.open-gitlab-ci.yml
+/ci
+
