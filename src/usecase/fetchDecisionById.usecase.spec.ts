@@ -4,12 +4,16 @@ import { MockUtils } from '../infrastructure/utils/mock.utils'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { DecisionNotFoundError } from '../domain/errors/decisionNotFound.error'
 import { DatabaseError } from '../domain/errors/database.error'
+import { MapModelToResponseService } from '../service/mapModelToResponse.service'
 
 describe('FetchDecisionByIdUsecase', () => {
   const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
     mock<InterfaceDecisionsRepository>()
   const mockUtils = new MockUtils()
-  const usecase = new FetchDecisionByIdUsecase(mockDecisionsRepository)
+  const usecase = new FetchDecisionByIdUsecase(
+    mockDecisionsRepository,
+    new MapModelToResponseService()
+  )
 
   beforeEach(() => {
     jest.resetAllMocks()

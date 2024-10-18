@@ -13,6 +13,7 @@ import {
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
 import { Logger } from '@nestjs/common'
 import { LogsFormat } from '../../utils/logsFormat.utils'
+import { PublishStatus } from 'dbsder-api-types'
 
 export class DecisionsRepository implements InterfaceDecisionsRepository {
   private readonly logger = new Logger()
@@ -112,9 +113,22 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return id
   }
 
-  async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<string> {
+  async updateDecisionPseudonymisee(
+    id: string,
+    decisionPseudonymisee: string,
+    publishStatus: PublishStatus
+  ): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ _id: new Types.ObjectId(id) }, { $set: { pseudoText: decisionPseudonymisee } })
+      .updateOne(
+        { _id: new Types.ObjectId(id) },
+        {
+          $set: {
+            pseudoText: decisionPseudonymisee,
+            publishStatus: publishStatus
+          }
+        },
+        { new: true }
+      )
       .catch((error) => {
         throw new DatabaseError(error)
       })
@@ -161,7 +175,24 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     // syntax :  https://medium.com/@slamflipstrom/conditional-object-properties-using-spread-in-javascript-714e0a12f496
     return {
       ...(decisionSearchParams.status && { labelStatus: decisionSearchParams.status }),
-      ...(decisionSearchParams.source && { sourceName: decisionSearchParams.source }),
+      ...(decisionSearchParams.sourceName && { sourceName: decisionSearchParams.sourceName }),
+      ...(decisionSearchParams.sourceId && { sourceId: decisionSearchParams.sourceId }),
+      ...(decisionSearchParams.jurisdiction && {
+        $or: [
+          { jurisdictionCode: decisionSearchParams.jurisdiction },
+          { jurisdictionName: decisionSearchParams.jurisdiction },
+          { jurisdictionId: decisionSearchParams.jurisdiction }
+        ]
+      }),
+      ...(decisionSearchParams.chamber && {
+        $or: [
+          { chamberId: decisionSearchParams.chamber },
+          { chamberName: decisionSearchParams.chamber }
+        ]
+      }),
+      ...(decisionSearchParams.dateDecision && {
+        dateDecision: decisionSearchParams.dateDecision
+      }),
       ...(decisionSearchParams.startDate && {
         dateCreation: { $gte: decisionSearchParams.startDate, $lte: todayDate }
       }),

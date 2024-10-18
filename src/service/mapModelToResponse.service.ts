@@ -10,7 +10,7 @@ export class MapModelToResponseService {
       decisionsListModel.map((decision) => ({
         _id: decision._id.toString(),
         status: decision.labelStatus,
-        source: decision.sourceName,
+        sourceName: decision.sourceName,
         dateCreation: decision.dateCreation
       }))
     )
@@ -20,14 +20,32 @@ export class MapModelToResponseService {
     return Promise.resolve({ ...getDecisionByIdModel, _id: getDecisionByIdModel._id.toString() })
   }
 
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   mapGetDecisionPseudonymiseeByIdToResponse(
-    getDecisionByIdModel: Decision
+    getDecisionByIdModel: Decision,
+    withPersonalData: boolean
   ): Promise<GetDecisionByIdResponse> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { originalText, sommaire, parties, ...decisionWithoutProperties } = getDecisionByIdModel
-    return Promise.resolve({
-      ...decisionWithoutProperties,
-      _id: getDecisionByIdModel._id.toString()
-    })
+    if (withPersonalData) {
+      const { originalText, sommaire, parties, ...decisionWithoutProperties } = getDecisionByIdModel
+      return Promise.resolve({
+        ...decisionWithoutProperties,
+        _id: getDecisionByIdModel._id.toString()
+      })
+    } else {
+      const {
+        originalText,
+        sommaire,
+        parties,
+        analysis,
+        occultation,
+        pseudoText,
+        ...decisionWithoutProperties
+      } = getDecisionByIdModel
+      return Promise.resolve({
+        ...decisionWithoutProperties,
+        _id: getDecisionByIdModel._id.toString()
+      })
+    }
   }
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 }

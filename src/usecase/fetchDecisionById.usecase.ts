@@ -4,13 +4,16 @@ import { InterfaceDecisionsRepository } from '../domain/decisions.repository.int
 import { GetDecisionByIdResponse } from '../infrastructure/controllers/responses/getDecisionById.response'
 
 export class FetchDecisionByIdUsecase {
-  constructor(private decisionsRepository: InterfaceDecisionsRepository) {}
+  constructor(
+    private decisionsRepository: InterfaceDecisionsRepository,
+    private mapModelToResponseService: MapModelToResponseService
+  ) {}
 
   async execute(id: string): Promise<GetDecisionByIdResponse> {
     const decision = await this.decisionsRepository.getById(id)
     if (!decision) {
       throw new DecisionNotFoundError()
     }
-    return new MapModelToResponseService().mapGetDecisionByIdToResponse(decision)
+    return this.mapModelToResponseService.mapGetDecisionByIdToResponse(decision)
   }
 }
