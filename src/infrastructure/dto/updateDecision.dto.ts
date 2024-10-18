@@ -32,25 +32,7 @@ export class UpdateDecisionPseudonymiseeDTO {
   })
   @IsOptional()
   @IsEnum(PublishStatus)
-  publishStatus?: PublishStatus
-
-  @ApiProperty({
-    description: 'Statut de la décision dans Judilibre',
-    enum: LabelStatus,
-    example: mockUtils.createDecisionDTO.labelStatus
-  })
-  @IsOptional()
-  @IsEnum(LabelStatus)
-  labelStatus?: LabelStatus
-
-  @ApiProperty({
-    description: 'Traitements appliqués par Label',
-    type: [LabelTreatmentDto]
-  })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => LabelTreatmentDto)
-  labelTreatments: LabelTreatment[]
+  publishStatus: PublishStatus
 }
 
 export class UpdateDecisionRapportsOccultationsDTO {
@@ -64,23 +46,6 @@ export class UpdateDecisionRapportsOccultationsDTO {
   @Type(() => RapportOccultation)
   rapportsOccultations: RapportOccultation[]
 
-  @ApiProperty({
-    description: 'Statut de la publication de la décision sur Judilibre',
-    enum: PublishStatus,
-    example: mockUtils.createDecisionDTO.publishStatus
-  })
-  @IsOptional()
-  @IsEnum(PublishStatus)
-  publishStatus?: PublishStatus
-
-  @ApiProperty({
-    description: 'Statut de la décision dans Judilibre',
-    enum: LabelStatus,
-    example: mockUtils.createDecisionDTO.labelStatus
-  })
-  @IsOptional()
-  @IsEnum(LabelStatus)
-  labelStatus?: LabelStatus
 }
 
 export class RapportOccultation {

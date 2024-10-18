@@ -338,9 +338,7 @@ describe('DecisionsRepository', () => {
       const result = await decisionsRepository.updateDecisionPseudonymisee(
         validId,
         decisionPseudonymizedDecision,
-        labelTreatments,
         publishStatus,
-        labelStatus
       )
 
       // THEN
@@ -362,9 +360,7 @@ describe('DecisionsRepository', () => {
       const result = await decisionsRepository.updateDecisionPseudonymisee(
         validId,
         decisionPseudonymizedDecision,
-        labelTreatments,
         publishStatus,
-        labelStatus
       )
 
       // THEN
@@ -384,9 +380,8 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision, labelTreatments,
-          publishStatus,
-          labelStatus)
+        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision,
+          publishStatus,)
       )
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
@@ -405,9 +400,8 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision, labelTreatments,
-          publishStatus,
-          labelStatus)
+        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision,
+          publishStatus)
       )
         // THEN
         .rejects.toThrow(UpdateFailedError)
@@ -419,9 +413,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision, labelTreatments,
-          publishStatus,
-          labelStatus)
+        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision, publishStatus)
       )
         // THEN
         .rejects.toThrow(DatabaseError)
@@ -447,9 +439,7 @@ describe('DecisionsRepository', () => {
       // WHEN
       const result = await decisionsRepository.updateRapportsOccultations(
         validId,
-        decisionConcealmentReports,
-        publishStatus,
-        labelStatus
+        decisionConcealmentReports
       )
 
       // THEN
@@ -470,9 +460,7 @@ describe('DecisionsRepository', () => {
       // WHEN
       const result = await decisionsRepository.updateRapportsOccultations(
         validId,
-        decisionConcealmentReports,
-        publishStatus,
-        labelStatus
+        decisionConcealmentReports
       )
 
       // THEN
@@ -492,7 +480,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports, publishStatus, labelStatus)
+        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports)
       )
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
@@ -511,7 +499,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports, publishStatus, labelStatus)
+        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports)
       )
         // THEN
         .rejects.toThrow(UpdateFailedError)
@@ -523,7 +511,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports, publishStatus, labelStatus)
+        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports)
       )
         // THEN
         .rejects.toThrow(DatabaseError)

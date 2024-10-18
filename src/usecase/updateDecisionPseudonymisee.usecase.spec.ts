@@ -28,7 +28,7 @@ describe('UpdateDecisionPseudonymiseeUsecase', () => {
       .mockImplementationOnce(() => Promise.resolve(decisionId))
 
     // WHEN
-    const result = await usecase.execute(decisionId, decisionPseudonymisedDecision, publishStatus, labelTreatments, labelStatus)
+    const result = await usecase.execute(decisionId, decisionPseudonymisedDecision, publishStatus,)
 
     // THEN
     expect(result).toEqual(decisionId)
@@ -43,7 +43,7 @@ describe('UpdateDecisionPseudonymiseeUsecase', () => {
       })
 
     // WHEN
-    await expect(usecase.execute(decisionId, decisionPseudonymisedDecision, publishStatus, labelTreatments, labelStatus))
+    await expect(usecase.execute(decisionId, decisionPseudonymisedDecision, publishStatus,))
       // THEN
       .rejects.toThrowError(Error)
   })

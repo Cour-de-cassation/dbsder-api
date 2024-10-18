@@ -30,7 +30,7 @@ describe('UpdateRapportsOccultationsUsecase', () => {
       .mockImplementationOnce(() => Promise.resolve(decisionId))
 
     // WHEN
-    const result = await usecase.execute(decisionId, decisionConcealmentReports,publishStatus,labelStatus)
+    const result = await usecase.execute(decisionId, decisionConcealmentReports,)
 
     // THEN
     expect(result).toEqual(decisionId)
@@ -43,7 +43,7 @@ describe('UpdateRapportsOccultationsUsecase', () => {
     })
 
     // WHEN
-    await expect(usecase.execute(decisionId, decisionConcealmentReports,publishStatus,labelStatus))
+    await expect(usecase.execute(decisionId, decisionConcealmentReports))
       // THEN
       .rejects.toThrowError(Error)
   })
