@@ -38,3 +38,5 @@ lerna-debug.log*
 # Environement 
 .env
 docker.env
+.open-gitlab-ci.yml
+/ci
