@@ -2,8 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsArray, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { MockUtils } from '../utils/mock.utils'
 import { Type } from 'class-transformer'
-import { Annotation, LabelStatus, LabelTreatment, PublishStatus } from 'dbsder-api-types'
-import { LabelTreatmentDto } from './createDecision.dto'
+import { Annotation, LabelStatus, PublishStatus } from 'dbsder-api-types'
 
 const mockUtils = new MockUtils()
 
@@ -45,7 +44,6 @@ export class UpdateDecisionRapportsOccultationsDTO {
   @ValidateNested({ each: true })
   @Type(() => RapportOccultation)
   rapportsOccultations: RapportOccultation[]
-
 }
 
 export class RapportOccultation {
@@ -78,7 +76,7 @@ export class RapportOccultation {
 
 export class AnnotationDto {
   @ApiProperty({
-    description: 'Categorie de l\'annotation',
+    description: "Categorie de l'annotation",
     type: String,
     example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].category
   })
@@ -102,7 +100,7 @@ export class AnnotationDto {
   start: number
 
   @ApiProperty({
-    description: 'Texte de l\'annotation',
+    description: "Texte de l'annotation",
     type: String,
     example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].text
   })
@@ -113,7 +111,7 @@ export class AnnotationDto {
     description: 'Score de certitude',
     type: Number,
     example:
-    mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].certaintyScore
+      mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].certaintyScore
   })
   @IsNumber()
   certaintyScore: number

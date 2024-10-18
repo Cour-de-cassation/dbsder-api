@@ -10,7 +10,10 @@ describe('FetchDecisionPseudomymiseeByIdUsecase', () => {
   const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
     mock<InterfaceDecisionsRepository>()
   const mockUtils = new MockUtils()
-  const usecase = new FetchDecisionPseudonymiseeByIdUsecase(mockDecisionsRepository, new MapModelToResponseService())
+  const usecase = new FetchDecisionPseudonymiseeByIdUsecase(
+    mockDecisionsRepository,
+    new MapModelToResponseService()
+  )
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -33,7 +36,7 @@ describe('FetchDecisionPseudomymiseeByIdUsecase', () => {
 
   describe('Fail cases', () => {
     const id = 'id'
-    it('returns a service unavailable when the respository don\'t respond', async () => {
+    it("returns a service unavailable when the respository don't respond", async () => {
       // GIVEN
       jest.spyOn(mockDecisionsRepository, 'getById').mockImplementationOnce(() => {
         throw new DatabaseError('')

@@ -23,7 +23,10 @@ import { MapModelToResponseService } from '../../service/mapModelToResponse.serv
 @ApiTags('DbSder')
 @Controller('decisions')
 export class GetDecisionByIdController {
-  constructor(private readonly decisionsRepository: DecisionsRepository,private readonly mapModelToResponseService: MapModelToResponseService) {}
+  constructor(
+    private readonly decisionsRepository: DecisionsRepository,
+    private readonly mapModelToResponseService: MapModelToResponseService
+  ) {}
 
   private readonly logger = new Logger()
 
@@ -58,7 +61,10 @@ export class GetDecisionByIdController {
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ClientNotAuthorizedException()
     }
-    const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(this.decisionsRepository,this.mapModelToResponseService)
+    const fetchDecisionByIdUsecase = new FetchDecisionByIdUsecase(
+      this.decisionsRepository,
+      this.mapModelToResponseService
+    )
 
     const foundDecision = await fetchDecisionByIdUsecase.execute(id).catch((error) => {
       if (error instanceof DecisionNotFoundError) {

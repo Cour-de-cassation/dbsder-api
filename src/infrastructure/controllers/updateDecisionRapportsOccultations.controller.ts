@@ -87,7 +87,6 @@ export class UpdateDecisionRapportsOccultationsController {
     if (!ApiKeyValidation.isValidApiKey(authorizedApiKeys, apiKey)) {
       throw new ClientNotAuthorizedException()
     }
-    
 
     const updateDecisionUsecase = new UpdateRapportsOccultationsUsecase(this.decisionsRepository)
     await updateDecisionUsecase.execute(id, body.rapportsOccultations).catch((error) => {

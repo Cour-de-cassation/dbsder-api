@@ -50,7 +50,7 @@ import { MapModelToResponseService } from './service/mapModelToResponse.service'
     UpdateDecisionStatutController,
     DeleteDecisionByIdController
   ],
-  providers: [DecisionsRepository, CodeNACsRepository, ZoningApiService,MapModelToResponseService]
+  providers: [DecisionsRepository, CodeNACsRepository, ZoningApiService, MapModelToResponseService]
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

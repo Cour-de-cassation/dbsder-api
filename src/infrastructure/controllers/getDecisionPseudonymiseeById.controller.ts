@@ -33,8 +33,10 @@ import { MapModelToResponseService } from '../../service/mapModelToResponse.serv
 @ApiTags('DbSder')
 @Controller('decisions-pseudonymisees')
 export class GetDecisionPseudonymiseesController {
-  constructor(private readonly decisionsRepository: DecisionsRepository, private readonly mapModelToResponseService: MapModelToResponseService) {
-  }
+  constructor(
+    private readonly decisionsRepository: DecisionsRepository,
+    private readonly mapModelToResponseService: MapModelToResponseService
+  ) {}
 
   private readonly logger = new Logger()
 
@@ -49,10 +51,10 @@ export class GetDecisionPseudonymiseesController {
   })
   @ApiOkResponse({ description: 'La décision', type: GetDecisionByIdResponse })
   @ApiNotFoundResponse({
-    description: 'La decision n\'a pas été trouvée'
+    description: "La decision n'a pas été trouvée"
   })
   @ApiUnauthorizedResponse({
-    description: 'Vous n\'êtes pas autorisé à appeler cette route'
+    description: "Vous n'êtes pas autorisé à appeler cette route"
   })
   async getDecisionById(
     @Param('id') id: string,
@@ -83,7 +85,8 @@ export class GetDecisionPseudonymiseesController {
       }
     }
     const fetchDecisionPseudonymiseeByIdUsecase = new FetchDecisionPseudonymiseeByIdUsecase(
-      this.decisionsRepository, this.mapModelToResponseService
+      this.decisionsRepository,
+      this.mapModelToResponseService
     )
 
     const foundDecision = await fetchDecisionPseudonymiseeByIdUsecase

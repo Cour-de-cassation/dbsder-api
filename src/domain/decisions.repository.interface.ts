@@ -2,7 +2,7 @@ import { Decision } from '../infrastructure/db/models/decision.model'
 import { CreateDecisionDTO } from '../infrastructure/dto/createDecision.dto'
 import { RapportOccultation } from '../infrastructure/dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../infrastructure/dto/getDecisionsList.dto'
-import { LabelStatus, LabelTreatment, PublishStatus } from 'dbsder-api-types'
+import { PublishStatus } from 'dbsder-api-types'
 
 export interface InterfaceDecisionsRepository {
   create(decision: CreateDecisionDTO): Promise<string>
@@ -13,7 +13,11 @@ export interface InterfaceDecisionsRepository {
 
   updateStatut(id: string, status: string): Promise<string>
 
-  updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string, publishStatus: PublishStatus): Promise<string>
+  updateDecisionPseudonymisee(
+    id: string,
+    decisionPseudonymisee: string,
+    publishStatus: PublishStatus
+  ): Promise<string>
 
   updateRapportsOccultations(
     id: string,

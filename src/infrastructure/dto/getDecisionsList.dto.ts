@@ -1,21 +1,21 @@
-import {LabelStatus, Sources} from 'dbsder-api-types'
+import { LabelStatus, Sources } from 'dbsder-api-types'
 
 export class GetDecisionsListDto {
-    sourceName?: Sources
+  sourceName?: Sources
 
-    status?: LabelStatus
+  status?: LabelStatus
 
-    startDate?: string
+  startDate?: string
 
-    endDate?: string
+  endDate?: string
 
-    dateDecision?: string
+  dateDecision?: string
 
-    number?: string
+  number?: string
 
-    sourceId?: number
+  sourceId?: number
 
-    chamber?: string
+  chamber?: string
 
-    jurisdiction?: string
+  jurisdiction?: string
 }

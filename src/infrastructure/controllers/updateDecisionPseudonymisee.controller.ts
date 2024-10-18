@@ -36,8 +36,7 @@ import { LogsFormat } from '../utils/logsFormat.utils'
 @ApiTags('DbSder')
 @Controller('decisions')
 export class UpdateDecisionPseudonymiseeController {
-  constructor(private readonly decisionsRepository: DecisionsRepository) {
-  }
+  constructor(private readonly decisionsRepository: DecisionsRepository) {}
 
   private readonly logger = new Logger()
 
@@ -60,10 +59,10 @@ export class UpdateDecisionPseudonymiseeController {
     description: 'Statut manquant ou invalide'
   })
   @ApiNotFoundResponse({
-    description: 'La decision n\'a pas été trouvée'
+    description: "La decision n'a pas été trouvée"
   })
   @ApiUnauthorizedResponse({
-    description: 'Vous n\'êtes pas autorisé à appeler cette route'
+    description: "Vous n'êtes pas autorisé à appeler cette route"
   })
   @UsePipes()
   async updateDecisionPseudonymisee(
@@ -90,34 +89,36 @@ export class UpdateDecisionPseudonymiseeController {
     }
 
     const updateDecisionUsecase = new UpdateDecisionPseudonymiseeUsecase(this.decisionsRepository)
-    await updateDecisionUsecase.execute(id, body.decisionPseudonymisee, body.publishStatus).catch((error) => {
-      if (error instanceof DecisionNotFoundError) {
-        this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
-        throw new DecisionNotFoundException()
-      }
-      if (error instanceof UpdateFailedError) {
+    await updateDecisionUsecase
+      .execute(id, body.decisionPseudonymisee, body.publishStatus)
+      .catch((error) => {
+        if (error instanceof DecisionNotFoundError) {
+          this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
+          throw new DecisionNotFoundException()
+        }
+        if (error instanceof UpdateFailedError) {
+          this.logger.error({
+            ...formatLogs,
+            msg: error.message,
+            statusCode: HttpStatus.UNPROCESSABLE_ENTITY
+          })
+          throw new UnprocessableException(id, error.message)
+        }
+        if (error instanceof DatabaseError) {
+          this.logger.error({
+            ...formatLogs,
+            msg: error.message,
+            statusCode: HttpStatus.SERVICE_UNAVAILABLE
+          })
+          throw new DependencyException(error.message)
+        }
         this.logger.error({
           ...formatLogs,
           msg: error.message,
-          statusCode: HttpStatus.UNPROCESSABLE_ENTITY
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR
         })
-        throw new UnprocessableException(id, error.message)
-      }
-      if (error instanceof DatabaseError) {
-        this.logger.error({
-          ...formatLogs,
-          msg: error.message,
-          statusCode: HttpStatus.SERVICE_UNAVAILABLE
-        })
-        throw new DependencyException(error.message)
-      }
-      this.logger.error({
-        ...formatLogs,
-        msg: error.message,
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+        throw new UnexpectedException(error)
       })
-      throw new UnexpectedException(error)
-    })
 
     this.logger.log({
       ...formatLogs,

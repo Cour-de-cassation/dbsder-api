@@ -10,7 +10,7 @@ import {
   UpdateFailedError
 } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
-import { Sources, LabelStatus, PublishStatus, LabelTreatment } from 'dbsder-api-types'
+import { Sources, LabelStatus, PublishStatus } from 'dbsder-api-types'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 
 const mockDecisionModel = () => ({
@@ -320,8 +320,6 @@ describe('DecisionsRepository', () => {
   describe('updateDecisionPseudonymisee', () => {
     const decisionPseudonymizedDecision = 'some pseudonymized decision'
     const publishStatus = PublishStatus.PENDING
-    const labelStatus = LabelStatus.BLOCKED
-    const labelTreatments: LabelTreatment[] = mockUtils.decisionRapportsOccultations.rapportsOccultations
 
     it('returns updated decision ID when pseudonymized-decision is successfully updated', async () => {
       // GIVEN
@@ -338,7 +336,7 @@ describe('DecisionsRepository', () => {
       const result = await decisionsRepository.updateDecisionPseudonymisee(
         validId,
         decisionPseudonymizedDecision,
-        publishStatus,
+        publishStatus
       )
 
       // THEN
@@ -360,7 +358,7 @@ describe('DecisionsRepository', () => {
       const result = await decisionsRepository.updateDecisionPseudonymisee(
         validId,
         decisionPseudonymizedDecision,
-        publishStatus,
+        publishStatus
       )
 
       // THEN
@@ -380,8 +378,11 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision,
-          publishStatus,)
+        decisionsRepository.updateDecisionPseudonymisee(
+          validId,
+          decisionPseudonymizedDecision,
+          publishStatus
+        )
       )
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
@@ -400,8 +401,11 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision,
-          publishStatus)
+        decisionsRepository.updateDecisionPseudonymisee(
+          validId,
+          decisionPseudonymizedDecision,
+          publishStatus
+        )
       )
         // THEN
         .rejects.toThrow(UpdateFailedError)
@@ -413,7 +417,11 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision, publishStatus)
+        decisionsRepository.updateDecisionPseudonymisee(
+          validId,
+          decisionPseudonymizedDecision,
+          publishStatus
+        )
       )
         // THEN
         .rejects.toThrow(DatabaseError)
@@ -422,8 +430,6 @@ describe('DecisionsRepository', () => {
 
   describe('updateRapportsOccultations', () => {
     const decisionConcealmentReports = mockUtils.decisionRapportsOccultations.rapportsOccultations
-    const publishStatus = PublishStatus.PENDING
-    const labelStatus = LabelStatus.BLOCKED
 
     it('returns updated decision ID when concealment reports are successfully updated', async () => {
       // GIVEN

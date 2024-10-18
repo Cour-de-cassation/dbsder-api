@@ -2,8 +2,6 @@ import { mock, MockProxy } from 'jest-mock-extended'
 import { RapportOccultation } from '../infrastructure/dto/updateDecision.dto'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { UpdateRapportsOccultationsUsecase } from './updateRapportsOccultations.usecase'
-import { MockUtils } from '../infrastructure/utils/mock.utils'
-import { LabelStatus, LabelTreatment, PublishStatus } from 'dbsder-api-types'
 
 describe('UpdateRapportsOccultationsUsecase', () => {
   const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
@@ -13,9 +11,6 @@ describe('UpdateRapportsOccultationsUsecase', () => {
   )
   const decisionId = 'some-id'
 
-  const mockUtils = new MockUtils()
-  const publishStatus = PublishStatus.PENDING
-  const labelStatus = LabelStatus.BLOCKED
   const decisionConcealmentReports: RapportOccultation[] = mock<RapportOccultation[]>()
 
   beforeEach(() => {
@@ -30,7 +25,7 @@ describe('UpdateRapportsOccultationsUsecase', () => {
       .mockImplementationOnce(() => Promise.resolve(decisionId))
 
     // WHEN
-    const result = await usecase.execute(decisionId, decisionConcealmentReports,)
+    const result = await usecase.execute(decisionId, decisionConcealmentReports)
 
     // THEN
     expect(result).toEqual(decisionId)

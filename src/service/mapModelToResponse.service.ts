@@ -20,9 +20,10 @@ export class MapModelToResponseService {
     return Promise.resolve({ ...getDecisionByIdModel, _id: getDecisionByIdModel._id.toString() })
   }
 
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   mapGetDecisionPseudonymiseeByIdToResponse(
     getDecisionByIdModel: Decision,
-    withPersonalData: Boolean
+    withPersonalData: boolean
   ): Promise<GetDecisionByIdResponse> {
     if (withPersonalData) {
       const { originalText, sommaire, parties, ...decisionWithoutProperties } = getDecisionByIdModel
@@ -45,6 +46,6 @@ export class MapModelToResponseService {
         _id: getDecisionByIdModel._id.toString()
       })
     }
-
   }
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 }

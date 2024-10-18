@@ -18,8 +18,7 @@ import { PublishStatus } from 'dbsder-api-types'
 export class DecisionsRepository implements InterfaceDecisionsRepository {
   private readonly logger = new Logger()
 
-  constructor(@InjectModel('Decision') private decisionModel: Model<Decision>) {
-  }
+  constructor(@InjectModel('Decision') private decisionModel: Model<Decision>) {}
 
   async list(decisionSearchParams: GetDecisionsListDto): Promise<Decision[]> {
     try {
@@ -114,18 +113,25 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return id
   }
 
-  async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string, publishStatus: PublishStatus): Promise<string> {
+  async updateDecisionPseudonymisee(
+    id: string,
+    decisionPseudonymisee: string,
+    publishStatus: PublishStatus
+  ): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ _id: new Types.ObjectId(id) }, {
-        $set: {
-          pseudoText: decisionPseudonymisee,
-          publishStatus: publishStatus
-        }
-      }, { new: true })
+      .updateOne(
+        { _id: new Types.ObjectId(id) },
+        {
+          $set: {
+            pseudoText: decisionPseudonymisee,
+            publishStatus: publishStatus
+          }
+        },
+        { new: true }
+      )
       .catch((error) => {
         throw new DatabaseError(error)
       })
-
 
     if (result.matchedCount === 0 && result.acknowledged) {
       throw new DecisionNotFoundError()
@@ -152,7 +158,6 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
         throw new DatabaseError(error)
       })
 
-
     if (result.matchedCount === 0 && result.acknowledged) {
       throw new DecisionNotFoundError()
     }
@@ -173,20 +178,18 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       ...(decisionSearchParams.sourceName && { sourceName: decisionSearchParams.sourceName }),
       ...(decisionSearchParams.sourceId && { sourceId: decisionSearchParams.sourceId }),
       ...(decisionSearchParams.jurisdiction && {
-          $or: [
-            { jurisdictionCode: decisionSearchParams.jurisdiction },
-            { jurisdictionName: decisionSearchParams.jurisdiction },
-            { jurisdictionId: decisionSearchParams.jurisdiction }
-          ]
-        }
-      ),
+        $or: [
+          { jurisdictionCode: decisionSearchParams.jurisdiction },
+          { jurisdictionName: decisionSearchParams.jurisdiction },
+          { jurisdictionId: decisionSearchParams.jurisdiction }
+        ]
+      }),
       ...(decisionSearchParams.chamber && {
-          $or: [
-            { chamberId: decisionSearchParams.chamber },
-            { chamberName: decisionSearchParams.chamber }
-          ]
-        }
-      ),
+        $or: [
+          { chamberId: decisionSearchParams.chamber },
+          { chamberName: decisionSearchParams.chamber }
+        ]
+      }),
       ...(decisionSearchParams.dateDecision && {
         dateDecision: decisionSearchParams.dateDecision
       }),

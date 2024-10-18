@@ -1,8 +1,7 @@
 import { mock, MockProxy } from 'jest-mock-extended'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { UpdateDecisionPseudonymiseeUsecase } from './updateDecisionPseudonymisee.usecase'
-import { LabelStatus, LabelTreatment, PublishStatus } from 'dbsder-api-types'
-import { MockUtils } from '../infrastructure/utils/mock.utils'
+import { PublishStatus } from 'dbsder-api-types'
 
 describe('UpdateDecisionPseudonymiseeUsecase', () => {
   const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
@@ -10,12 +9,10 @@ describe('UpdateDecisionPseudonymiseeUsecase', () => {
   const usecase: UpdateDecisionPseudonymiseeUsecase = new UpdateDecisionPseudonymiseeUsecase(
     mockDecisionsRepository
   )
-  const mockUtils = new MockUtils()
+
   const decisionId = 'some-id'
   const decisionPseudonymisedDecision = 'some-PseudonymisedDecision'
   const publishStatus = PublishStatus.PENDING
-  const labelStatus = LabelStatus.BLOCKED
-  const labelTreatments: LabelTreatment[] =  mockUtils.decisionRapportsOccultations.rapportsOccultations
   beforeEach(() => {
     jest.resetAllMocks()
   })
@@ -28,7 +25,7 @@ describe('UpdateDecisionPseudonymiseeUsecase', () => {
       .mockImplementationOnce(() => Promise.resolve(decisionId))
 
     // WHEN
-    const result = await usecase.execute(decisionId, decisionPseudonymisedDecision, publishStatus,)
+    const result = await usecase.execute(decisionId, decisionPseudonymisedDecision, publishStatus)
 
     // THEN
     expect(result).toEqual(decisionId)
@@ -43,7 +40,7 @@ describe('UpdateDecisionPseudonymiseeUsecase', () => {
       })
 
     // WHEN
-    await expect(usecase.execute(decisionId, decisionPseudonymisedDecision, publishStatus,))
+    await expect(usecase.execute(decisionId, decisionPseudonymisedDecision, publishStatus))
       // THEN
       .rejects.toThrowError(Error)
   })
