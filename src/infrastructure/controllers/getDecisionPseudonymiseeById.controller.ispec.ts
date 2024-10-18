@@ -34,7 +34,7 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
   describe('Success case', () => {
     it('returns a 200 OK with found decision when given a valid ID with personal data', async () => {
       // GIVEN
-      const decisionToSave = { ...mockUtils.decisionModel }
+      const decisionToSave = mockUtils.createDecisionDTO
       const decisionId = await decisionsRepository.create(decisionToSave)
       const opensderApiKey = process.env.OPENSDER_API_KEY
 
@@ -48,7 +48,7 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
     })
     it('returns a 200 OK with found decision when given a valid ID without personal data', async () => {
       // GIVEN
-      const decisionToSave = { ...mockUtils.decisionModel }
+      const decisionToSave = mockUtils.createDecisionDTO
       const decisionId = await decisionsRepository.create(decisionToSave)
       const indexApiKey = process.env.INDEX_API_KEY
 
@@ -79,7 +79,7 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
 
     it('throws a 401 Unauthorized error if the Api Key is not allowed to use this filter', async () => {
       // GIVEN
-      const decisionToSave = { ...mockUtils.decisionModel }
+      const decisionToSave = mockUtils.createDecisionDTO
       const decisionId = await decisionsRepository.create(decisionToSave)
       const indexApiKey = process.env.INDEX_API_KEY
 
@@ -94,9 +94,7 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
 
     it('throws a 401 Unauthorized error when the apiKey is not valid', async () => {
       // GIVEN
-      const decisionToSave = {
-        ...mockUtils.decisionModel
-      }
+      const decisionToSave = mockUtils.createDecisionDTO
       const decisionId = await decisionsRepository.create(decisionToSave)
 
       // WHEN
@@ -110,9 +108,7 @@ describe('GetDecisionPseudonymiseeByIdController', () => {
 
     it('throws a 401 Unauthorized error when the apiKey is not present', async () => {
       // GIVEN
-      const decisionToSave = {
-        ...mockUtils.decisionModel
-      }
+      const decisionToSave = mockUtils.createDecisionDTO
       const decisionId = await decisionsRepository.create(decisionToSave)
 
       // WHEN

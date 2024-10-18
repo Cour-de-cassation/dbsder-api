@@ -31,51 +31,32 @@ describe('createDecisionUsecase', () => {
     it('when decision is from TJ, creates decision and add occultation based on codeNAC successfully', async () => {
       // GIVEN
       const providedCodeNAC = mockUtils.codeNACMock
-      const expectedDecision = {
-        ...mockUtils.decisionModel,
+
+      const providedDecision = {
+        ...mockUtils.createDecisionDTO,
+        sourceName: Sources.TJ,
+        labelStatus: LabelStatus.TOBETREATED,
         debatPublic: false,
         recommandationOccultation: Occultation.CONFORME,
-        sourceName: Sources.TJ
+        NACCode: 'whatever'
       }
-      const providedDecision = { ...expectedDecision, _id: expectedDecision._id.toString() }
-
-      jest
-        .spyOn(mockDecisionsRepository, 'create')
-        .mockImplementationOnce(async () => expectedDecision._id.toString())
-
-      jest
-        .spyOn(mockCodeNACsRepository, 'getByCodeNac')
-        .mockImplementationOnce(async () => providedCodeNAC)
-
-      // WHEN
-      const result = await usecase.execute(providedDecision)
-
-      // THEN
-      expect(result).toEqual(expectedDecision._id.toString())
-      expect(mockDecisionsRepository.create).toHaveBeenCalledWith({
+      const calledDecision = {
         ...providedDecision,
+        sourceName: Sources.TJ,
         blocOccultation: providedCodeNAC.blocOccultationTJ,
         occultation: {
           ...providedDecision.occultation,
           categoriesToOmit:
             providedCodeNAC.categoriesToOmitTJ[providedDecision.recommandationOccultation]
+        },
+        originalTextZoning: {
+          arret_id: 0
         }
-      })
-    })
-
-    it('When decision is from CA or CC, creates decision successfully with no added occultation', async () => {
-      // GIVEN
-      const expectedDecision = mockUtils.decisionModel
-      const providedDecision = {
-        ...expectedDecision,
-        _id: expectedDecision._id.toString(),
-        sourceName: Sources.CC
       }
-      const providedCodeNAC = mockUtils.codeNACMock
 
       jest
         .spyOn(mockDecisionsRepository, 'create')
-        .mockImplementationOnce(async () => expectedDecision._id.toString())
+        .mockImplementationOnce(async () => mockUtils.decisionModel._id.toString())
 
       jest
         .spyOn(mockCodeNACsRepository, 'getByCodeNac')
@@ -85,55 +66,82 @@ describe('createDecisionUsecase', () => {
       const result = await usecase.execute(providedDecision)
 
       // THEN
-      expect(result).toEqual(expectedDecision._id.toString())
+      expect(result).toEqual(mockUtils.decisionModel._id.toString())
+      expect(mockDecisionsRepository.create).toHaveBeenCalledWith(calledDecision)
     })
 
-    it('Creates decision without added occultation when decision is not from TJ and tobeTreated', async () => {
+    it('When decision is from CA or CC, creates decision successfully with no added occultation', async () => {
       // GIVEN
-      const nonPublicCodeNAC = '11A'
-      const expectedDecision = {
-        ...mockUtils.decisionModel,
-        NACCode: nonPublicCodeNAC
-      }
       const providedDecision = {
-        ...expectedDecision,
-        _id: expectedDecision._id.toString(),
-        labelStatus: LabelStatus.IGNORED_CODE_NAC_DECISION_NON_PUBLIQUE
+        ...mockUtils.createDecisionDTO,
+        sourceName: Sources.CC
       }
+      const calledDecision = providedDecision
+      const providedCodeNAC = mockUtils.codeNACMock
 
       jest
         .spyOn(mockDecisionsRepository, 'create')
-        .mockImplementationOnce(async () => expectedDecision._id.toString())
+        .mockImplementationOnce(async () => mockUtils.decisionModel._id.toString())
+
+      jest
+        .spyOn(mockCodeNACsRepository, 'getByCodeNac')
+        .mockImplementationOnce(async () => providedCodeNAC)
 
       // WHEN
       const result = await usecase.execute(providedDecision)
 
       // THEN
-      expect(result).toEqual(expectedDecision._id.toString())
+      expect(result).toEqual(mockUtils.decisionModel._id.toString())
+      expect(mockDecisionsRepository.create.mock.calls[0][0].occultation).toEqual(
+        calledDecision.occultation
+      )
+    })
+
+    it('Creates decision without added occultation when decision is not from TJ and tobeTreated', async () => {
+      // GIVEN
+      const providedDecision = {
+        ...mockUtils.createDecisionDTO,
+        labelStatus: LabelStatus.IGNORED_CODE_NAC_DECISION_NON_PUBLIQUE
+      }
+      const calledDecision = mockUtils.createDecisionDTO
+
+      jest
+        .spyOn(mockDecisionsRepository, 'create')
+        .mockImplementationOnce(async () => mockUtils.decisionModel._id.toString())
+
+      // WHEN
+      const result = await usecase.execute(providedDecision)
+
+      // THEN
+      expect(result).toEqual(mockUtils.decisionModel._id.toString())
+      expect(mockDecisionsRepository.create.mock.calls[0][0].occultation).toEqual(
+        calledDecision.occultation
+      )
     })
   })
 
   describe('Error cases', () => {
     it('When decision is from TJ and codeNAC is not found inside codenacs collection in database, it is saved with an ignored labelStatus', async () => {
       // GIVEN
-      const expectedDecision = {
-        ...mockUtils.decisionModel,
-        recommandationOccultation: Occultation.CONFORME,
+      const providedDecision = {
+        ...mockUtils.createDecisionDTO,
         sourceName: Sources.TJ,
-        NACCode: 'XX0'
+        labelStatus: LabelStatus.TOBETREATED,
+        debatPublic: false,
+        recommandationOccultation: Occultation.CONFORME,
+        NACCode: 'whatever'
       }
-      const providedDecision = { ...expectedDecision, _id: expectedDecision._id.toString() }
 
       jest.spyOn(mockCodeNACsRepository, 'getByCodeNac').mockImplementationOnce(async () => null)
       jest
         .spyOn(mockDecisionsRepository, 'create')
-        .mockImplementationOnce(async () => expectedDecision._id.toString())
+        .mockImplementationOnce(async () => mockUtils.decisionModel._id.toString())
 
       // WHEN
       const result = await usecase.execute(providedDecision)
 
       // THEN
-      expect(result).toEqual(expectedDecision._id.toString())
+      expect(result).toEqual(mockUtils.decisionModel._id.toString())
       expect(mockDecisionsRepository.create).toHaveBeenCalledWith({
         ...providedDecision,
         labelStatus: LabelStatus.IGNORED_CODE_NAC_INCONNU
@@ -143,6 +151,7 @@ describe('createDecisionUsecase', () => {
     it('propagates an Error when repository returns an error', async () => {
       // GIVEN
       const rejectedDecision = mockUtils.createDecisionDTO
+
       jest.spyOn(mockDecisionsRepository, 'create').mockImplementationOnce(() => {
         throw new Error()
       })

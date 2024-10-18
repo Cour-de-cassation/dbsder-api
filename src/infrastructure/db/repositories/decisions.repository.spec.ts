@@ -76,6 +76,31 @@ describe('DecisionsRepository', () => {
         // THEN
         expect(result).toEqual(expectedDecisionId)
       })
+
+      it('returns updated decision with dates when decision is successfully updated in DB', async () => {
+        // GIVEN
+        const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString()
+
+        const decision = mockUtils.createDecisionDTO
+        const oldDecision = {
+          ...decision,
+          firstImportDate: yesterday,
+          lastImportDate: yesterday,
+          _id: validId
+        }
+
+        jest.spyOn(decisionModel, 'findOne').mockResolvedValueOnce(oldDecision)
+        const callToUpdate = jest
+          .spyOn(decisionModel, 'findOneAndUpdate')
+          .mockResolvedValue({ _id: validId })
+
+        // WHEN
+        await decisionsRepository.create(decision)
+
+        // THEN
+        expect(callToUpdate.mock.calls[0][1].firstImportDate).toEqual(yesterday)
+        expect(callToUpdate.mock.calls[0][1].lastImportDate).not.toEqual(yesterday)
+      })
     })
 
     describe('error cases', () => {
