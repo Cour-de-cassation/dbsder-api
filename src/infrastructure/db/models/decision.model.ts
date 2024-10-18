@@ -38,10 +38,10 @@ export class Decision {
   dateDecision: string
 
   @Prop()
-  importDate: string
+  firstImportDate: string
 
   @Prop()
-  updateDate: string
+  lastImportDate: string
 
   @Prop()
   publishDate: string

@@ -174,8 +174,8 @@ export class MockUtils {
     sourceId: 1,
     sourceName: Sources.TJ,
     originalTextZoning: this.zoningModel,
-    importDate: TODAY,
-    updateDate: TODAY,
+    firstImportDate: TODAY,
+    lastImportDate: TODAY,
     publishDate: null,
     unpublishDate: null
   }
@@ -254,8 +254,8 @@ export class MockUtils {
     sourceId: 1,
     sourceName: Sources.TJ,
     originalTextZoning: this.zoningModel,
-    importDate: TODAY,
-    updateDate: TODAY,
+    firstImportDate: TODAY,
+    lastImportDate: TODAY,
     publishDate: null,
     unpublishDate: null
   }

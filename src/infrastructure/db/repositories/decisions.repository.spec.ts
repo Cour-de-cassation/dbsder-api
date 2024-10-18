@@ -84,22 +84,22 @@ describe('DecisionsRepository', () => {
         const decision = mockUtils.createDecisionDTO
         const oldDecision = {
           ...decision,
-          importDate: yesterday,
-          doctrine: 'otherDoctrine',
+          firstImportDate: yesterday,
+          lastImportDate: yesterday,
           _id: validId
         }
-        const newDecision = { ...decision, importDate: yesterday, _id: validId }
 
         jest.spyOn(decisionModel, 'findOne').mockResolvedValueOnce(oldDecision)
         const callToUpdate = jest
           .spyOn(decisionModel, 'findOneAndUpdate')
-          .mockResolvedValue(newDecision)
+          .mockResolvedValue({ _id: validId })
 
         // WHEN
         await decisionsRepository.create(decision)
 
         // THEN
-        expect(callToUpdate.mock.calls[0][1].importDate).toEqual(yesterday)
+        expect(callToUpdate.mock.calls[0][1].firstImportDate).toEqual(yesterday)
+        expect(callToUpdate.mock.calls[0][1].lastImportDate).not.toEqual(yesterday)
       })
     })
 

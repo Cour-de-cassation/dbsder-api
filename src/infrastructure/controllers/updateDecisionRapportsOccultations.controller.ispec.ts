@@ -69,7 +69,7 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.createDecisionDTO,
-          rapportsOccultations,
+          rapportsOccultations
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -91,7 +91,7 @@ describe('DecisionsController', () => {
 
           const decisionToSave = {
             ...mockUtils.createDecisionDTO,
-            rapportsOccultations,
+            rapportsOccultations
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -109,7 +109,7 @@ describe('DecisionsController', () => {
           const unknownApiKey = 'unknownApiKey'
           const decisionToSave = {
             ...mockUtils.createDecisionDTO,
-            rapportsOccultations,
+            rapportsOccultations
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -128,7 +128,7 @@ describe('DecisionsController', () => {
           const unauthorizedApiKey = process.env.NORMALIZATION_API_KEY
           const decisionToSave = {
             ...mockUtils.createDecisionDTO,
-            rapportsOccultations,
+            rapportsOccultations
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -148,7 +148,7 @@ describe('DecisionsController', () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.createDecisionDTO,
-            rapportsOccultations,
+            rapportsOccultations
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -166,7 +166,7 @@ describe('DecisionsController', () => {
           const wrongConcealmentReportsFormat = 'some report'
           const decisionToSave = {
             ...mockUtils.createDecisionDTO,
-            rapportsOccultations,
+            rapportsOccultations
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 

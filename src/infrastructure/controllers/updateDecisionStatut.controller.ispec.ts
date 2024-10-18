@@ -58,7 +58,7 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.createDecisionDTO,
-          labelStatus: LabelStatus.TOBETREATED,
+          labelStatus: LabelStatus.TOBETREATED
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -78,7 +78,7 @@ describe('DecisionsController', () => {
         it('when apiKey is not provided', async () => {
           const decisionToSave = {
             ...mockUtils.createDecisionDTO,
-            labelStatus: LabelStatus.TOBETREATED,
+            labelStatus: LabelStatus.TOBETREATED
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -95,7 +95,7 @@ describe('DecisionsController', () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.createDecisionDTO,
-            labelStatus: LabelStatus.TOBETREATED,
+            labelStatus: LabelStatus.TOBETREATED
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -115,7 +115,7 @@ describe('DecisionsController', () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.createDecisionDTO,
-            labelStatus: LabelStatus.TOBETREATED,
+            labelStatus: LabelStatus.TOBETREATED
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -136,7 +136,7 @@ describe('DecisionsController', () => {
         it('when status is not provided', async () => {
           const decisionToSave = {
             ...mockUtils.createDecisionDTO,
-            labelStatus: LabelStatus.TOBETREATED,
+            labelStatus: LabelStatus.TOBETREATED
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -153,7 +153,7 @@ describe('DecisionsController', () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.createDecisionDTO,
-            labelStatus: LabelStatus.TOBETREATED,
+            labelStatus: LabelStatus.TOBETREATED
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
