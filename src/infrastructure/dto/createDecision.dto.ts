@@ -116,7 +116,7 @@ class PresidentDto {
   civilite?: string
 }
 
-class LabelTreatmentDto {
+export class LabelTreatmentDto {
   @ApiPropertyOptional({
     description: "Liste d'annotations",
     type: [AnnotationDto],

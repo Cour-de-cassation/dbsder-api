@@ -10,7 +10,7 @@ import {
   UpdateFailedError
 } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
-import { Sources, LabelStatus } from 'dbsder-api-types'
+import { Sources, LabelStatus, PublishStatus } from 'dbsder-api-types'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 
 const mockDecisionModel = () => ({
@@ -319,6 +319,7 @@ describe('DecisionsRepository', () => {
 
   describe('updateDecisionPseudonymisee', () => {
     const decisionPseudonymizedDecision = 'some pseudonymized decision'
+    const publishStatus = PublishStatus.PENDING
 
     it('returns updated decision ID when pseudonymized-decision is successfully updated', async () => {
       // GIVEN
@@ -334,7 +335,8 @@ describe('DecisionsRepository', () => {
       // WHEN
       const result = await decisionsRepository.updateDecisionPseudonymisee(
         validId,
-        decisionPseudonymizedDecision
+        decisionPseudonymizedDecision,
+        publishStatus
       )
 
       // THEN
@@ -355,7 +357,8 @@ describe('DecisionsRepository', () => {
       // WHEN
       const result = await decisionsRepository.updateDecisionPseudonymisee(
         validId,
-        decisionPseudonymizedDecision
+        decisionPseudonymizedDecision,
+        publishStatus
       )
 
       // THEN
@@ -375,7 +378,11 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
+        decisionsRepository.updateDecisionPseudonymisee(
+          validId,
+          decisionPseudonymizedDecision,
+          publishStatus
+        )
       )
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
@@ -394,7 +401,11 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
+        decisionsRepository.updateDecisionPseudonymisee(
+          validId,
+          decisionPseudonymizedDecision,
+          publishStatus
+        )
       )
         // THEN
         .rejects.toThrow(UpdateFailedError)
@@ -406,7 +417,11 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
+        decisionsRepository.updateDecisionPseudonymisee(
+          validId,
+          decisionPseudonymizedDecision,
+          publishStatus
+        )
       )
         // THEN
         .rejects.toThrow(DatabaseError)
@@ -515,7 +530,7 @@ describe('DecisionsRepository', () => {
     it('should map decision search params to findCriterias with correct parameters', () => {
       // GIVEN
       const decisionSearchParams: GetDecisionsListDto = {
-        source: Sources.CA,
+        sourceName: Sources.CA,
         status: LabelStatus.TOBETREATED,
         startDate: '2020-01-01',
         number: '123'
@@ -547,7 +562,7 @@ describe('DecisionsRepository', () => {
     it('should map decision search params to findCriterias without all parameters', () => {
       // GIVEN
       const decisionSearchParams: GetDecisionsListDto = {
-        source: Sources.CA,
+        sourceName: Sources.CA,
         status: LabelStatus.TOBETREATED,
         number: '123'
       }

@@ -10,6 +10,7 @@ describe('UpdateRapportsOccultationsUsecase', () => {
     mockDecisionsRepository
   )
   const decisionId = 'some-id'
+
   const decisionConcealmentReports: RapportOccultation[] = mock<RapportOccultation[]>()
 
   beforeEach(() => {
