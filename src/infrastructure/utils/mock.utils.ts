@@ -43,7 +43,7 @@ export class MockUtils {
 
   decisionQueryWithUnknownSourceDTO = {
     status: LabelStatus.TOBETREATED,
-    source: 'unknownSource',
+    sourceName: 'unknownSource',
     startDate: YESTERDAY_YYYY_MM_DD,
     endDate: TOMORROW_YYYY_MM_DD
   }
