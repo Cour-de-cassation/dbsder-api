@@ -41,8 +41,8 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       ...decision,
       firstImportDate: oldDecision?.firstImportDate ?? now.toISOString(),
       lastImportDate: now.toISOString(),
-      publishDate: null,
-      unpublishDate: null
+      publishDate: oldDecision?.publishDate ?? null,
+      unpublishDate: oldDecision?.unpublishDate ?? null,
     }
 
     const savedDecision = await this.decisionModel
