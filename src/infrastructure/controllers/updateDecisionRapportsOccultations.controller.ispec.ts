@@ -52,9 +52,7 @@ describe('DecisionsController', () => {
     describe('Success case', () => {
       it('returns 204 No Content when decision is updated with valid API Key and concealment reports', async () => {
         // GIVEN
-        const decisionToSave = {
-          ...mockUtils.decisionModel
-        }
+        const decisionToSave = mockUtils.createDecisionDTO
         const decisionId = await decisionsRepository.create(decisionToSave)
 
         // WHEN
@@ -70,7 +68,7 @@ describe('DecisionsController', () => {
       it('returns 204 No Content when decision is updated with concealment reports already in database', async () => {
         // GIVEN
         const decisionToSave = {
-          ...mockUtils.decisionModel,
+          ...mockUtils.createDecisionDTO,
           rapportsOccultations
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
@@ -92,7 +90,7 @@ describe('DecisionsController', () => {
           // GIVEN
 
           const decisionToSave = {
-            ...mockUtils.decisionModel,
+            ...mockUtils.createDecisionDTO,
             rapportsOccultations
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
@@ -110,7 +108,7 @@ describe('DecisionsController', () => {
           // GIVEN
           const unknownApiKey = 'unknownApiKey'
           const decisionToSave = {
-            ...mockUtils.decisionModel,
+            ...mockUtils.createDecisionDTO,
             rapportsOccultations
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
@@ -129,7 +127,7 @@ describe('DecisionsController', () => {
           // GIVEN
           const unauthorizedApiKey = process.env.NORMALIZATION_API_KEY
           const decisionToSave = {
-            ...mockUtils.decisionModel,
+            ...mockUtils.createDecisionDTO,
             rapportsOccultations
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
@@ -149,7 +147,7 @@ describe('DecisionsController', () => {
         it('when concealment reports are not provided', async () => {
           // GIVEN
           const decisionToSave = {
-            ...mockUtils.decisionModel,
+            ...mockUtils.createDecisionDTO,
             rapportsOccultations
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
@@ -167,7 +165,7 @@ describe('DecisionsController', () => {
           // GIVEN
           const wrongConcealmentReportsFormat = 'some report'
           const decisionToSave = {
-            ...mockUtils.decisionModel,
+            ...mockUtils.createDecisionDTO,
             rapportsOccultations
           }
           const decisionId = await decisionsRepository.create(decisionToSave)

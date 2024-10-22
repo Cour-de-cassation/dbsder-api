@@ -31,10 +31,27 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
   }
 
   async create(decision: CreateDecisionDTO): Promise<string> {
+    const now = new Date()
+    const oldDecision = await this.decisionModel.findOne({
+      sourceId: decision.sourceId,
+      sourceName: decision.sourceName
+    })
+
+    const decisionModel = {
+      ...decision,
+      firstImportDate: oldDecision?.firstImportDate ?? now.toISOString(),
+      lastImportDate: now.toISOString(),
+      publishDate: null,
+      unpublishDate: null
+    }
+
     const savedDecision = await this.decisionModel
       .findOneAndUpdate(
-        { sourceId: decision.sourceId, sourceName: decision.sourceName },
-        decision,
+        {
+          sourceId: decision.sourceId,
+          sourceName: decision.sourceName
+        },
+        decisionModel,
         {
           upsert: true,
           new: true,
