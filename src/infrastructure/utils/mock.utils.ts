@@ -197,7 +197,8 @@ export class MockUtils {
         source: 'some-source',
         order: 1
       }
-    ]
+    ],
+    publishStatus: PublishStatus.TOBEPUBLISHED
   }
 
   decisionPseudonymisee = {

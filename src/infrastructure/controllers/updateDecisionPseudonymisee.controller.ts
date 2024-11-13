@@ -89,36 +89,34 @@ export class UpdateDecisionPseudonymiseeController {
     }
 
     const updateDecisionUsecase = new UpdateDecisionPseudonymiseeUsecase(this.decisionsRepository)
-    await updateDecisionUsecase
-      .execute(id, body.decisionPseudonymisee, body.publishStatus)
-      .catch((error) => {
-        if (error instanceof DecisionNotFoundError) {
-          this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
-          throw new DecisionNotFoundException()
-        }
-        if (error instanceof UpdateFailedError) {
-          this.logger.error({
-            ...formatLogs,
-            msg: error.message,
-            statusCode: HttpStatus.UNPROCESSABLE_ENTITY
-          })
-          throw new UnprocessableException(id, error.message)
-        }
-        if (error instanceof DatabaseError) {
-          this.logger.error({
-            ...formatLogs,
-            msg: error.message,
-            statusCode: HttpStatus.SERVICE_UNAVAILABLE
-          })
-          throw new DependencyException(error.message)
-        }
+    await updateDecisionUsecase.execute(id, body.decisionPseudonymisee).catch((error) => {
+      if (error instanceof DecisionNotFoundError) {
+        this.logger.error({ ...formatLogs, msg: error.message, statusCode: HttpStatus.NOT_FOUND })
+        throw new DecisionNotFoundException()
+      }
+      if (error instanceof UpdateFailedError) {
         this.logger.error({
           ...formatLogs,
           msg: error.message,
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+          statusCode: HttpStatus.UNPROCESSABLE_ENTITY
         })
-        throw new UnexpectedException(error)
+        throw new UnprocessableException(id, error.message)
+      }
+      if (error instanceof DatabaseError) {
+        this.logger.error({
+          ...formatLogs,
+          msg: error.message,
+          statusCode: HttpStatus.SERVICE_UNAVAILABLE
+        })
+        throw new DependencyException(error.message)
+      }
+      this.logger.error({
+        ...formatLogs,
+        msg: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR
       })
+      throw new UnexpectedException(error)
+    })
 
     this.logger.log({
       ...formatLogs,

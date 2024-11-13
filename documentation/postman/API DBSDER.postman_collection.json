@@ -1860,7 +1860,102 @@
 					"response": []
 				},
 				{
+					"name": "204 - Met à jour les rapports d'occultations d'une décision et le publishStatus",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 80\n          }\n        ],\n        \"source\": \"some-source\",\n        \"order\": 1\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"rapports-occultations"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{ID_DECISION}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "400 - Met à jour les rapports d'occultations d'une décision avec un format incorrect",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": \"80\"\n          }\n        ],\n        \"order\": 1\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"rapports-occultations"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "507f1f77bcf86cd799439011"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400 - Met à jour les rapports d'occultations d'une décision avec un format publishStatus inexistant",
 					"request": {
 						"method": "PUT",
 						"header": [

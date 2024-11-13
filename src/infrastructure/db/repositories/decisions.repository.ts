@@ -2,7 +2,7 @@ import { Model, Types } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { Decision } from '../models/decision.model'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
-import { RapportOccultation } from '../../dto/updateDecision.dto'
+import { UpdateDecisionRapportsOccultationsDTO } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { InterfaceDecisionsRepository } from '../../../domain/decisions.repository.interface'
 import {
@@ -114,18 +114,13 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return id
   }
 
-  async updateDecisionPseudonymisee(
-    id: string,
-    decisionPseudonymisee: string,
-    publishStatus: PublishStatus
-  ): Promise<string> {
+  async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<string> {
     const result = await this.decisionModel
       .updateOne(
         { _id: new Types.ObjectId(id) },
         {
           $set: {
-            pseudoText: decisionPseudonymisee,
-            publishStatus: publishStatus
+            pseudoText: decisionPseudonymisee
           }
         },
         { new: true }
@@ -148,12 +143,22 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   async updateRapportsOccultations(
     id: string,
-    rapportsOccultations: RapportOccultation[]
+    body: UpdateDecisionRapportsOccultationsDTO
   ): Promise<string> {
+    if (body.publishStatus !== PublishStatus.BLOCKED) {
+      body.publishStatus =
+        body.publishStatus !== undefined ? body.publishStatus : PublishStatus.TOBEPUBLISHED
+    }
+
     const result = await this.decisionModel
       .updateOne(
         { _id: new Types.ObjectId(id) },
-        { $set: { labelTreatments: rapportsOccultations } }
+        {
+          $set: {
+            labelTreatments: body.rapportsOccultations,
+            publishStatus: body.publishStatus
+          }
+        }
       )
       .catch((error) => {
         throw new DatabaseError(error)
