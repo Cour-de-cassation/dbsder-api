@@ -3,6 +3,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger'
 import { IsDateString, IsEnum, IsOptional, IsString, Matches } from 'class-validator'
 import { MockUtils } from '../infrastructure/utils/mock.utils'
 import { LabelStatus, Sources } from 'dbsder-api-types'
+import { DateType } from '../infrastructure/utils/dateType.utils'
 
 const mockUtils = new MockUtils()
 
@@ -46,14 +47,13 @@ export class DecisionSearchCriteria {
   endDate?: string
 
   @ApiPropertyOptional({
-    description: 'Date de la décision',
-    example: mockUtils.decisionTJToBeTreated.dateCreation
+    description: 'Type de date de décision ou de création',
+    enum: DateType,
+    example: mockUtils.dateTypeMock.dateType
   })
   @IsOptional()
-  @IsString()
-  @Matches('^(?:[0-9]{4})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])$')
-  @IsDateString()
-  dateDecision?: string
+  @IsEnum(DateType)
+  dateType?: DateType
 
   @ApiPropertyOptional({
     description: "NumeroRoleGeneral ou d'appel de la décision",
@@ -97,7 +97,7 @@ export function mapDecisionSearchCriteriaToDTO(
     startDate: decisionSearchCriteria.startDate,
     endDate: decisionSearchCriteria.endDate,
     number: decisionSearchCriteria.numero,
-    dateDecision: decisionSearchCriteria.dateDecision,
+    dateType: decisionSearchCriteria.dateType || DateType.DATEDECISION,
     sourceId: decisionSearchCriteria.sourceId,
     chamber: decisionSearchCriteria.chamber,
     jurisdiction: decisionSearchCriteria.jurisdiction

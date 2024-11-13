@@ -14,6 +14,7 @@ import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.e
 import { Logger } from '@nestjs/common'
 import { LogsFormat } from '../../utils/logsFormat.utils'
 import { PublishStatus } from 'dbsder-api-types'
+import { DateType } from '../../utils/dateType.utils'
 
 export class DecisionsRepository implements InterfaceDecisionsRepository {
   private readonly logger = new Logger()
@@ -178,29 +179,42 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       ...(decisionSearchParams.sourceName && { sourceName: decisionSearchParams.sourceName }),
       ...(decisionSearchParams.sourceId && { sourceId: decisionSearchParams.sourceId }),
       ...(decisionSearchParams.jurisdiction && {
-        $or: [
-          { jurisdictionCode: decisionSearchParams.jurisdiction },
-          { jurisdictionName: decisionSearchParams.jurisdiction },
-          { jurisdictionId: decisionSearchParams.jurisdiction }
-        ]
+        jurisdictionName: decisionSearchParams.jurisdiction
       }),
-      ...(decisionSearchParams.chamber && {
-        $or: [
-          { chamberId: decisionSearchParams.chamber },
-          { chamberName: decisionSearchParams.chamber }
-        ]
-      }),
-      ...(decisionSearchParams.dateDecision && {
-        dateDecision: decisionSearchParams.dateDecision
-      }),
-      ...(decisionSearchParams.startDate && {
-        dateCreation: { $gte: decisionSearchParams.startDate, $lte: todayDate }
-      }),
-      ...(decisionSearchParams.endDate && {
-        dateCreation: { $lte: decisionSearchParams.endDate, $gte: todayDate }
-      }),
+      ...(decisionSearchParams.chamber && { chamberName: decisionSearchParams.chamber }),
       ...(decisionSearchParams.startDate &&
-        decisionSearchParams.endDate && {
+        decisionSearchParams.dateType &&
+        decisionSearchParams.dateType === DateType.DATEDECISION && {
+          dateDecision: { $gte: decisionSearchParams.startDate, $lte: todayDate }
+        }),
+      ...(decisionSearchParams.endDate &&
+        decisionSearchParams.dateType &&
+        decisionSearchParams.dateType === DateType.DATEDECISION && {
+          dateDecision: { $lte: decisionSearchParams.endDate, $gte: todayDate }
+        }),
+      ...(decisionSearchParams.startDate &&
+        decisionSearchParams.dateType &&
+        decisionSearchParams.dateType === DateType.DATECREATION && {
+          dateCreation: { $gte: decisionSearchParams.startDate, $lte: todayDate }
+        }),
+      ...(decisionSearchParams.endDate &&
+        decisionSearchParams.dateType &&
+        decisionSearchParams.dateType === DateType.DATECREATION && {
+          dateCreation: { $lte: decisionSearchParams.endDate, $gte: todayDate }
+        }),
+      ...(decisionSearchParams.startDate &&
+        decisionSearchParams.endDate &&
+        decisionSearchParams.dateType &&
+        decisionSearchParams.dateType === DateType.DATEDECISION && {
+          dateDecision: {
+            $gte: decisionSearchParams.startDate,
+            $lte: decisionSearchParams.endDate
+          }
+        }),
+      ...(decisionSearchParams.startDate &&
+        decisionSearchParams.endDate &&
+        decisionSearchParams.dateType &&
+        decisionSearchParams.dateType === DateType.DATECREATION && {
           dateCreation: {
             $gte: decisionSearchParams.startDate,
             $lte: decisionSearchParams.endDate

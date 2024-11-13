@@ -346,6 +346,126 @@
 					"response": []
 				},
 				{
+					"name": "200 - Liste les décisions avec startDate et endDate de la dateDesion",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&sourceName=juritj&chamber=someChamberName&jurisdiction=someJurisdictionName&sourceId=1",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "toBeTreated"
+								},
+								{
+									"key": "sourceName",
+									"value": "juritj"
+								},
+								{
+									"key": "chamber",
+									"value": "someChamberName"
+								},
+								{
+									"key": "jurisdiction",
+									"value": "someJurisdictionName"
+								},
+								{
+									"key": "sourceId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400 - Liste les décisions avec dateType et sans startDate et endDate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&sourceName=juritj&chamber=someChamberName&jurisdiction=someJurisdictionName&sourceId=1",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "toBeTreated"
+								},
+								{
+									"key": "sourceName",
+									"value": "juritj"
+								},
+								{
+									"key": "chamber",
+									"value": "someChamberName"
+								},
+								{
+									"key": "jurisdiction",
+									"value": "someJurisdictionName"
+								},
+								{
+									"key": "sourceId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "200 - Liste les décisions toBeTreated avec numero",
 					"event": [
 						{

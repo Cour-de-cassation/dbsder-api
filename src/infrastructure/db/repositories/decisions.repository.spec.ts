@@ -10,8 +10,9 @@ import {
   UpdateFailedError
 } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
-import { Sources, LabelStatus, PublishStatus } from 'dbsder-api-types'
+import { LabelStatus, PublishStatus, Sources } from 'dbsder-api-types'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
+import { DateType } from '../../utils/dateType.utils'
 
 const mockDecisionModel = () => ({
   find: jest.fn(),
@@ -533,7 +534,8 @@ describe('DecisionsRepository', () => {
         sourceName: Sources.CA,
         status: LabelStatus.TOBETREATED,
         startDate: '2020-01-01',
-        number: '123'
+        number: '123',
+        dateType: DateType.DATECREATION
       }
 
       const expectedFindCriterias = {
