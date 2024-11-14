@@ -73,7 +73,8 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       labelStatus: decision.labelStatus,
       NACCode: decision.NACCode,
       recommandationOccultation: decision.recommandationOccultation,
-      occultation: { motivationOccultation: decision.occultation.motivationOccultation }
+      occultation: { motivationOccultation: decision.occultation.motivationOccultation },
+      selection: decision.selection
     }
 
     const formatLogs: LogsFormat = {
