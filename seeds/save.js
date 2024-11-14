@@ -15,13 +15,10 @@ async function exportCollection(collection) {
 }
 
 async function main() {
-  const client = new MongoClient(process.env.MONGO_DB_URL)
+  const client = new MongoClient(process.env.MONGO_DB_URL, { useUnifiedTopology: true })
   await client.connect()
 
-  const { databases } = await client.db().admin().listDatabases()
-  const dbNames = databases.map(({ name }) => name).filter((_) => _ != 'admin' && _ != 'config')
-
-  const dbCollections = await Promise.all(dbNames.map((_) => client.db(_).collections()))
+  const dbCollections = await client.db(process.env.MONGO_DATABASE).collections()
   const collections = dbCollections.flat()
 
   return Promise.all(collections.map(exportCollection))
