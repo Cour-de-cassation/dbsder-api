@@ -24,11 +24,11 @@ async function saveCollections(client, { dbName, collectionName, path }) {
   const saveParse = JSON.parse(save)
 
   if (saveParse.length <= 0) return
-  return collection.insertMany(saveParse)
+  return collection.insertMany(saveParse, (key, value) => key === "_id" ? ObjectId(value) : value)
 }
 
 async function main() {
-  const client = new MongoClient(process.env.MONGO_DB_URL)
+  const client = new MongoClient(process.env.MONGO_DB_URL, { useUnifiedTopology: true })
   await client.connect()
 
   const dbNames = await readDbNames()
