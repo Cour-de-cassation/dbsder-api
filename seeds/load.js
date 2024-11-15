@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongoose/node_modules/mongodb')
+const { MongoClient, ObjectId } = require('mongoose/node_modules/mongodb')
 const { readFile, readdir } = require('fs/promises')
 const { statSync } = require('fs')
 const { resolve } = require('path')
@@ -21,10 +21,13 @@ async function readCollectionNames(dbName) {
 async function saveCollections(client, { dbName, collectionName, path }) {
   const collection = await client.db(dbName).createCollection(collectionName)
   const save = await readFile(path, 'utf8')
-  const saveParse = JSON.parse(save)
+  const saveParse = JSON.parse(save, (key, value) => {
+    if (key === '_id') return new ObjectId(value)
+    return value
+  })
 
   if (saveParse.length <= 0) return
-  return collection.insertMany(saveParse, (key, value) => key === "_id" ? ObjectId(value) : value)
+  return collection.insertMany(saveParse)
 }
 
 async function main() {
@@ -34,7 +37,7 @@ async function main() {
   const dbNames = await readDbNames()
   const collections = (await Promise.all(dbNames.map(readCollectionNames))).flat()
 
-  return Promise.all(collections.map(_ => saveCollections(client, _)))
+  return Promise.all(collections.map((_) => saveCollections(client, _)))
 }
 
 main()
