@@ -3,11 +3,9 @@ import {
   ApiBadRequestResponse,
   ApiHeader,
   ApiOkResponse,
-  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { LabelStatus } from 'dbsder-api-types'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { DatabaseError } from '../../domain/errors/database.error'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
@@ -31,19 +29,6 @@ export class ListDecisionsController {
   @ApiHeader({
     name: 'x-api-key',
     description: 'Clé API'
-  })
-  @ApiQuery({
-    name: 'status',
-    description: 'Décision intègre au format wordperfect et metadonnées associées.',
-    enum: LabelStatus
-  })
-  @ApiQuery({
-    name: 'startDate',
-    description: 'date de début de la période de recherche'
-  })
-  @ApiQuery({
-    name: 'endDate',
-    description: 'date de fin de la période de recherche'
   })
   @ApiOkResponse({ description: 'Une liste de décisions', type: [GetDecisionsListResponse] })
   @ApiBadRequestResponse({
