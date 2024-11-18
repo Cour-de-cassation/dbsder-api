@@ -10,8 +10,9 @@ import {
   UpdateFailedError
 } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
-import { Sources, LabelStatus, PublishStatus } from 'dbsder-api-types'
+import { LabelStatus, PublishStatus, Sources } from 'dbsder-api-types'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
+import { DateType } from '../../utils/dateType.utils'
 
 const mockDecisionModel = () => ({
   find: jest.fn(),
@@ -319,7 +320,6 @@ describe('DecisionsRepository', () => {
 
   describe('updateDecisionPseudonymisee', () => {
     const decisionPseudonymizedDecision = 'some pseudonymized decision'
-    const publishStatus = PublishStatus.PENDING
 
     it('returns updated decision ID when pseudonymized-decision is successfully updated', async () => {
       // GIVEN
@@ -335,8 +335,7 @@ describe('DecisionsRepository', () => {
       // WHEN
       const result = await decisionsRepository.updateDecisionPseudonymisee(
         validId,
-        decisionPseudonymizedDecision,
-        publishStatus
+        decisionPseudonymizedDecision
       )
 
       // THEN
@@ -357,8 +356,7 @@ describe('DecisionsRepository', () => {
       // WHEN
       const result = await decisionsRepository.updateDecisionPseudonymisee(
         validId,
-        decisionPseudonymizedDecision,
-        publishStatus
+        decisionPseudonymizedDecision
       )
 
       // THEN
@@ -378,11 +376,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(
-          validId,
-          decisionPseudonymizedDecision,
-          publishStatus
-        )
+        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
       )
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
@@ -401,11 +395,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(
-          validId,
-          decisionPseudonymizedDecision,
-          publishStatus
-        )
+        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
       )
         // THEN
         .rejects.toThrow(UpdateFailedError)
@@ -417,11 +407,7 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(
-          validId,
-          decisionPseudonymizedDecision,
-          publishStatus
-        )
+        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
       )
         // THEN
         .rejects.toThrow(DatabaseError)
@@ -443,10 +429,10 @@ describe('DecisionsRepository', () => {
       jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoSuccessfulResponse)
 
       // WHEN
-      const result = await decisionsRepository.updateRapportsOccultations(
-        validId,
-        decisionConcealmentReports
-      )
+      const result = await decisionsRepository.updateRapportsOccultations(validId, {
+        rapportsOccultations: decisionConcealmentReports,
+        publishStatus: PublishStatus.TOBEPUBLISHED
+      })
 
       // THEN
       expect(result).toEqual(validId)
@@ -464,10 +450,10 @@ describe('DecisionsRepository', () => {
       jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithoutUpdate)
 
       // WHEN
-      const result = await decisionsRepository.updateRapportsOccultations(
-        validId,
-        decisionConcealmentReports
-      )
+      const result = await decisionsRepository.updateRapportsOccultations(validId, {
+        rapportsOccultations: decisionConcealmentReports,
+        publishStatus: PublishStatus.BLOCKED
+      })
 
       // THEN
       expect(result).toEqual(validId)
@@ -486,7 +472,10 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports)
+        decisionsRepository.updateRapportsOccultations(validId, {
+          rapportsOccultations: decisionConcealmentReports,
+          publishStatus: PublishStatus.PENDING
+        })
       )
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
@@ -505,7 +494,10 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports)
+        decisionsRepository.updateRapportsOccultations(validId, {
+          rapportsOccultations: decisionConcealmentReports,
+          publishStatus: PublishStatus.FAILURE_INDEXING
+        })
       )
         // THEN
         .rejects.toThrow(UpdateFailedError)
@@ -517,7 +509,10 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports)
+        decisionsRepository.updateRapportsOccultations(validId, {
+          rapportsOccultations: decisionConcealmentReports,
+          publishStatus: PublishStatus.FAILURE_PREPARING
+        })
       )
         // THEN
         .rejects.toThrow(DatabaseError)
@@ -533,7 +528,8 @@ describe('DecisionsRepository', () => {
         sourceName: Sources.CA,
         status: LabelStatus.TOBETREATED,
         startDate: '2020-01-01',
-        number: '123'
+        number: '123',
+        dateType: DateType.DATECREATION
       }
 
       const expectedFindCriterias = {

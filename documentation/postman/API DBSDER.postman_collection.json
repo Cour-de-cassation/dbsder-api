@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "ea78bda9-f00b-401c-a02b-eda84177caf8",
+		"_postman_id": "31167e2d-24ed-402b-be93-504da771a58b",
 		"name": "API DBSDER",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "14689636"
+		"_exporter_id": "9895032",
+		"_collection_link": "https://restless-eclipse-645507.postman.co/workspace/Team-Workspace~9e52d1d6-21cf-4ac6-8fe8-34bea4b9d1d3/collection/9895032-31167e2d-24ed-402b-be93-504da771a58b?action=share&source=collection_link&creator=9895032"
 	},
 	"item": [
 		{
@@ -293,7 +294,8 @@
 									"    pm.response.to.have.status(200);",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -307,7 +309,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&source=juritj&startDate=2023-06-11&endDate=2023-06-11",
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&sourceName=juritj&startDate=2023-06-11&endDate=2023-06-11",
 							"host": [
 								"{{HOSTNAME}}"
 							],
@@ -321,7 +323,7 @@
 									"value": "toBeTreated"
 								},
 								{
-									"key": "source",
+									"key": "sourceName",
 									"value": "juritj"
 								},
 								{
@@ -331,6 +333,166 @@
 								{
 									"key": "endDate",
 									"value": "2023-06-11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "200 - Liste les décisions toBeTreated avec chamber et jurisdiction et sourceId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&sourceName=juritj&chamber=someChamberName&jurisdiction=someJurisdictionName&sourceId=1",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "toBeTreated"
+								},
+								{
+									"key": "sourceName",
+									"value": "juritj"
+								},
+								{
+									"key": "chamber",
+									"value": "someChamberName"
+								},
+								{
+									"key": "jurisdiction",
+									"value": "someJurisdictionName"
+								},
+								{
+									"key": "sourceId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "200 - Liste les décisions avec startDate et endDate de la dateDesion",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?startDate=2023-06-11&endDate=2024-06-30&dateType=dateDecision",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2023-06-11"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-06-30"
+								},
+								{
+									"key": "dateType",
+									"value": "dateDecision"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400 - Liste les décisions avec dateType et sans startDate et endDate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&dateType=dateCreation",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "toBeTreated"
+								},
+								{
+									"key": "dateType",
+									"value": "dateCreation"
 								}
 							]
 						}
@@ -1732,6 +1894,61 @@
 					"response": []
 				},
 				{
+					"name": "204 - Met à jour les rapports d'occultations d'une décision et le publishStatus",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 80\n          }\n        ],\n        \"source\": \"some-source\",\n        \"order\": 1\n    }],\n    \"publishStatus\": \"toBePublished\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"rapports-occultations"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{ID_DECISION}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "400 - Met à jour les rapports d'occultations d'une décision avec un format incorrect",
 					"request": {
 						"method": "PUT",
@@ -1745,6 +1962,47 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": \"80\"\n          }\n        ],\n        \"order\": 1\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions",
+								":id",
+								"rapports-occultations"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "507f1f77bcf86cd799439011"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400 - Met à jour les rapports d'occultations d'une décision avec un format publishStatus inexistant",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": \"80\"\n          }\n        ],\n        \"order\": 1\n    }],\n    \"publishStatus\": \"publish\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

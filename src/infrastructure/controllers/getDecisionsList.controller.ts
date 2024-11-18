@@ -19,6 +19,8 @@ import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { LogsFormat } from '../utils/logsFormat.utils'
+import { DateTypeValidation } from '../utils/dateType.utils'
+import { MissingFieldException } from '../exceptions/missingField.exception'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -38,8 +40,8 @@ export class ListDecisionsController {
     enum: LabelStatus
   })
   @ApiQuery({
-    name: 'dateDecision',
-    description: 'Date de la décision'
+    name: 'dateType',
+    description: 'Date de la décision ou de création'
   })
   @ApiQuery({
     name: 'startDate',
@@ -80,6 +82,15 @@ export class ListDecisionsController {
       throw new ClientNotAuthorizedException()
     }
 
+    // throw error if dateType defined and startDate and endDate not defined
+    if (
+      getDecisionListCriteria &&
+      DateTypeValidation.isValidDateType(getDecisionListCriteria.dateType)
+    ) {
+      if (!getDecisionListCriteria.startDate && !getDecisionListCriteria.endDate) {
+        throw new MissingFieldException('dateType avec startDate ou endDate')
+      }
+    }
     const listDecisionUsecase = new ListDecisionsUsecase(this.decisionsRepository)
 
     const decisionList = await listDecisionUsecase

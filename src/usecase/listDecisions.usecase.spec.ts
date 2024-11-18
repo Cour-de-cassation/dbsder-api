@@ -2,6 +2,8 @@ import { mock, MockProxy } from 'jest-mock-extended'
 import { MockUtils } from '../infrastructure/utils/mock.utils'
 import { ListDecisionsUsecase } from './listDecisions.usecase'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
+import { mapDecisionSearchCriteriaToDTO } from '../domain/decisionSearchCriteria'
+import { DateType } from '../infrastructure/utils/dateType.utils'
 
 describe('listDecisionUsecase', () => {
   const mockDecisionsRepository: MockProxy<InterfaceDecisionsRepository> =
@@ -36,5 +38,15 @@ describe('listDecisionUsecase', () => {
     await expect(usecase.execute(listCriteria))
       // THEN
       .rejects.toThrow(Error)
+  })
+
+  it('When mapDecisionSearchCriteriaToDTO return given dateType', () => {
+    expect(
+      mapDecisionSearchCriteriaToDTO({ ...listCriteria, dateType: DateType.DATECREATION }).dateType
+    ).toEqual(DateType.DATECREATION)
+  })
+
+  it('When mapDecisionSearchCriteriaToDTO return default dateType', () => {
+    expect(mapDecisionSearchCriteriaToDTO(listCriteria).dateType).toEqual(DateType.DATEDECISION)
   })
 })

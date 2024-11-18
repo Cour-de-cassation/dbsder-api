@@ -23,15 +23,6 @@ export class UpdateDecisionPseudonymiseeDTO {
   })
   @IsString()
   decisionPseudonymisee: string
-
-  @ApiProperty({
-    description: 'Statut de la publication de la décision sur Judilibre',
-    enum: PublishStatus,
-    example: mockUtils.createDecisionDTO.publishStatus
-  })
-  @IsOptional()
-  @IsEnum(PublishStatus)
-  publishStatus: PublishStatus
 }
 
 export class UpdateDecisionRapportsOccultationsDTO {
@@ -44,6 +35,15 @@ export class UpdateDecisionRapportsOccultationsDTO {
   @ValidateNested({ each: true })
   @Type(() => RapportOccultation)
   rapportsOccultations: RapportOccultation[]
+
+  @ApiProperty({
+    description: 'Statut de la publication de la décision sur Judilibre',
+    enum: PublishStatus,
+    example: mockUtils.createDecisionDTO.publishStatus
+  })
+  @IsOptional()
+  @IsEnum(PublishStatus)
+  publishStatus: PublishStatus
 }
 
 export class RapportOccultation {
