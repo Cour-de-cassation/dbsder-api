@@ -65,11 +65,11 @@ export class CreateDecisionsController {
     const decisionToLog = {
       sourceId: decision.sourceId,
       sourceName: decision.sourceName,
-      idDecision: decision.idDecisionWinci,
+      idDecisionWinci: decision.idDecisionWinci,
       jurisdictionCode: decision.jurisdictionCode,
       dateDecision: decision.dateDecision,
       numeroRoleGeneral: decision.numeroRoleGeneral,
-      numeroRegistre: decision.registerNumber,
+      registerNumber: decision.registerNumber,
       publishStatus: decision.publishStatus,
       labelStatus: decision.labelStatus
     }

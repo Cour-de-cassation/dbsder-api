@@ -65,11 +65,12 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     const decisionToLog = {
       sourceId: decision.sourceId,
       sourceName: decision.sourceName,
-      idDecision: decision.idDecisionWinci,
+      idDecisionWinci: decision.idDecisionWinci,
       jurisdictionCode: decision.jurisdictionCode,
       jurisdictionName: decision.jurisdictionName,
       dateDecision: decision.dateDecision,
       numeroRoleGeneral: decision.numeroRoleGeneral,
+      registerNumber: decision.registerNumber,
       labelStatus: decision.labelStatus,
       NACCode: decision.NACCode,
       recommandationOccultation: decision.recommandationOccultation,
