@@ -427,6 +427,12 @@ describe('DecisionsRepository', () => {
         upsertedId: null
       }
       jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoSuccessfulResponse)
+      jest.spyOn(decisionModel, 'findOne').mockImplementation(
+        () =>
+          ({
+            lean: jest.fn().mockResolvedValue(mongoSuccessfulResponse)
+          }) as any
+      )
 
       // WHEN
       const result = await decisionsRepository.updateRapportsOccultations(validId, {
@@ -448,6 +454,12 @@ describe('DecisionsRepository', () => {
         upsertedId: null
       }
       jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithoutUpdate)
+      jest.spyOn(decisionModel, 'findOne').mockImplementation(
+        () =>
+          ({
+            lean: jest.fn().mockResolvedValue(mongoResponseWithoutUpdate)
+          }) as any
+      )
 
       // WHEN
       const result = await decisionsRepository.updateRapportsOccultations(validId, {
@@ -469,7 +481,12 @@ describe('DecisionsRepository', () => {
         upsertedId: null
       }
       jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseNotFound)
-
+      jest.spyOn(decisionModel, 'findOne').mockImplementation(
+        () =>
+          ({
+            lean: jest.fn().mockResolvedValue(DecisionNotFoundError)
+          }) as any
+      )
       // WHEN
       await expect(
         decisionsRepository.updateRapportsOccultations(validId, {
@@ -491,7 +508,12 @@ describe('DecisionsRepository', () => {
         upsertedId: null
       }
       jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithError)
-
+      jest.spyOn(decisionModel, 'findOne').mockImplementation(
+        () =>
+          ({
+            lean: jest.fn().mockResolvedValue(mongoResponseWithError)
+          }) as any
+      )
       // WHEN
       await expect(
         decisionsRepository.updateRapportsOccultations(validId, {
@@ -506,7 +528,12 @@ describe('DecisionsRepository', () => {
     it('throws a DatabaseError when database is unavailable', async () => {
       // GIVEN
       jest.spyOn(decisionModel, 'updateOne').mockRejectedValueOnce(new Error())
-
+      jest.spyOn(decisionModel, 'findOne').mockImplementation(
+        () =>
+          ({
+            lean: jest.fn().mockResolvedValue(DecisionNotFoundError)
+          }) as any
+      )
       // WHEN
       await expect(
         decisionsRepository.updateRapportsOccultations(validId, {

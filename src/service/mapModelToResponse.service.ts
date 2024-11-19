@@ -20,18 +20,19 @@ export class MapModelToResponseService {
     return Promise.resolve({ ...getDecisionByIdModel, _id: getDecisionByIdModel._id.toString() })
   }
 
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   mapGetDecisionPseudonymiseeByIdToResponse(
     getDecisionByIdModel: Decision,
     withPersonalData: boolean
   ): Promise<GetDecisionByIdResponse> {
     if (withPersonalData) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { originalText, sommaire, parties, ...decisionWithoutProperties } = getDecisionByIdModel
       return Promise.resolve({
         ...decisionWithoutProperties,
         _id: getDecisionByIdModel._id.toString()
       })
     } else {
+      /* eslint-disable @typescript-eslint/no-unused-vars */
       const {
         originalText,
         sommaire,
@@ -41,11 +42,11 @@ export class MapModelToResponseService {
         pseudoText,
         ...decisionWithoutProperties
       } = getDecisionByIdModel
+      /* eslint-enable @typescript-eslint/no-unused-vars */
       return Promise.resolve({
         ...decisionWithoutProperties,
         _id: getDecisionByIdModel._id.toString()
       })
     }
   }
-  /* eslint-enable @typescript-eslint/no-unused-vars */
 }

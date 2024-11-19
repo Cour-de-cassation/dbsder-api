@@ -145,6 +145,15 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     id: string,
     body: UpdateDecisionRapportsOccultationsDTO
   ): Promise<string> {
+    const decision = await this.getById(id)
+    let updatedLabelTreatments = undefined
+    if (decision && decision.labelTreatments && decision.labelTreatments.length > 0) {
+      body.rapportsOccultations.forEach((labelTreatment) => {
+        labelTreatment.order += decision.labelTreatments.length
+      })
+      updatedLabelTreatments = decision.labelTreatments.concat(body.rapportsOccultations)
+    }
+
     if (body.publishStatus !== PublishStatus.BLOCKED) {
       body.publishStatus =
         body.publishStatus !== undefined ? body.publishStatus : PublishStatus.TOBEPUBLISHED
@@ -155,7 +164,9 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
         { _id: new Types.ObjectId(id) },
         {
           $set: {
-            labelTreatments: body.rapportsOccultations,
+            labelTreatments: updatedLabelTreatments
+              ? updatedLabelTreatments
+              : body.rapportsOccultations,
             publishStatus: body.publishStatus
           }
         }

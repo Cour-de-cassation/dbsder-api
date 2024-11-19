@@ -6,6 +6,7 @@ import { MockUtils } from '../utils/mock.utils'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
 import { LabelStatus, PublishStatus } from 'dbsder-api-types'
+import { DecisionNotFoundError } from '../../domain/errors/decisionNotFound.error'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -189,7 +190,12 @@ describe('DecisionsController', () => {
       it('returns 404 Not Found when provided ID does not exist', async () => {
         // GIVEN
         const unknownDecisionId = '007f1f77bcf86cd799439011'
-
+        jest.spyOn(decisionsRepository, 'getById').mockImplementation(
+          () =>
+            ({
+              lean: jest.fn().mockResolvedValue(DecisionNotFoundError)
+            }) as any
+        )
         // WHEN
         const result = await request(app.getHttpServer())
           .put(`/decisions/${unknownDecisionId}/rapports-occultations`)
