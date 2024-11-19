@@ -1,5 +1,6 @@
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsList.response'
 import { CodeNAC } from '../db/models/codeNAC.model'
+import { CreateDecisionDTO } from '../dto/createDecision.dto'
 import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
 import {
   LabelStatus,
@@ -49,7 +50,7 @@ export class MockUtils {
 
   validId = '507f1f77bcf86cd799439011'
 
-  createDecisionDTO = {
+  createDecisionDTO: CreateDecisionDTO = {
     analysis: {
       analyse: ['someAnalyse'],
       doctrine: 'someDoctrine',
@@ -103,8 +104,7 @@ export class MockUtils {
     NAOCode: 'someNAOCode',
     natureAffaireCivil: 'someNatureAffaireCivil',
     natureAffairePenal: 'someNatureAffairePenal',
-    codeMatiereCivil: 'someCodeMatiereCivil',
-    idDecisionTJ: 'TJ00001A01-1234520221121'
+    codeMatiereCivil: 'someCodeMatiereCivil'
   }
 
   zoningModel = {
@@ -173,7 +173,11 @@ export class MockUtils {
     solution: 'someSolution',
     sourceId: 1,
     sourceName: Sources.TJ,
-    originalTextZoning: this.zoningModel
+    originalTextZoning: this.zoningModel,
+    firstImportDate: TODAY,
+    lastImportDate: TODAY,
+    publishDate: null,
+    unpublishDate: null
   }
 
   decisionRapportsOccultations: UpdateDecisionRapportsOccultationsDTO = {
@@ -249,7 +253,11 @@ export class MockUtils {
     solution: 'someSolution',
     sourceId: 1,
     sourceName: Sources.TJ,
-    originalTextZoning: this.zoningModel
+    originalTextZoning: this.zoningModel,
+    firstImportDate: TODAY,
+    lastImportDate: TODAY,
+    publishDate: null,
+    unpublishDate: null
   }
 
   createDecisionTJDto = {

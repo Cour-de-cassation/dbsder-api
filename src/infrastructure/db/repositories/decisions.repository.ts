@@ -17,7 +17,7 @@ import { LogsFormat } from '../../utils/logsFormat.utils'
 export class DecisionsRepository implements InterfaceDecisionsRepository {
   private readonly logger = new Logger()
 
-  constructor(@InjectModel('Decision') private decisionModel: Model<Decision>) { }
+  constructor(@InjectModel('Decision') private decisionModel: Model<Decision>) {}
 
   async list(decisionSearchParams: GetDecisionsListDto): Promise<Decision[]> {
     try {
@@ -31,10 +31,27 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
   }
 
   async create(decision: CreateDecisionDTO): Promise<string> {
+    const now = new Date()
+    const oldDecision = await this.decisionModel.findOne({
+      sourceId: decision.sourceId,
+      sourceName: decision.sourceName
+    })
+
+    const decisionModel = {
+      ...decision,
+      firstImportDate: oldDecision?.firstImportDate ?? now.toISOString(),
+      lastImportDate: now.toISOString(),
+      publishDate: oldDecision?.publishDate ?? null,
+      unpublishDate: oldDecision?.unpublishDate ?? null
+    }
+
     const savedDecision = await this.decisionModel
       .findOneAndUpdate(
-        { sourceId: decision.sourceId, sourceName: decision.sourceName },
-        decision,
+        {
+          sourceId: decision.sourceId,
+          sourceName: decision.sourceName
+        },
+        decisionModel,
         {
           upsert: true,
           new: true,
@@ -57,7 +74,8 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       NACCode: decision.NACCode,
       recommandationOccultation: decision.recommandationOccultation,
       occultation: { motivationOccultation: decision.occultation.motivationOccultation },
-      idMongoDecision: savedDecision._id.toString()
+      _id: savedDecision._id.toString(),
+      selection: decision.selection
     }
 
     const formatLogs: LogsFormat = {
@@ -171,11 +189,11 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       }),
       ...(decisionSearchParams.startDate &&
         decisionSearchParams.endDate && {
-        dateCreation: {
-          $gte: decisionSearchParams.startDate,
-          $lte: decisionSearchParams.endDate
-        }
-      }),
+          dateCreation: {
+            $gte: decisionSearchParams.startDate,
+            $lte: decisionSearchParams.endDate
+          }
+        }),
       ...(decisionSearchParams.number && {
         $or: [
           {
