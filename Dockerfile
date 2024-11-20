@@ -35,6 +35,7 @@ RUN npm ci
 
 COPY --chown=node:node . .
 
+
 RUN npm run build
 
 
@@ -61,6 +62,7 @@ FROM shared as api
 
 USER node
 COPY --from=prod --chown=node:node /home/node/dist ./dist
+COPY --from=prod --chown=node:node /home/node/seeds ./seeds
 
 CMD ["node", "dist/main"]
 
