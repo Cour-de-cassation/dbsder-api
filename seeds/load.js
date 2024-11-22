@@ -23,7 +23,7 @@ async function saveCollections(client, { dbName, collectionName, path }) {
   const save = await readFile(path, 'utf8')
   const saveParse = JSON.parse(save, (_, value) => {
     if (value && typeof value["$oid"] === "string" && value["$oid"].length > 0)
-      return ObjectId(value["$oid"]);
+      return new ObjectId(value["$oid"]);
     return value;
   })
 
