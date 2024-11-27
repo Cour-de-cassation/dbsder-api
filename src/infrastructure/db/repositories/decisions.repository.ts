@@ -42,7 +42,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       firstImportDate: oldDecision?.firstImportDate ?? now.toISOString(),
       lastImportDate: now.toISOString(),
       publishDate: oldDecision?.publishDate ?? null,
-      unpublishDate: oldDecision?.unpublishDate ?? null,
+      unpublishDate: oldDecision?.unpublishDate ?? null
     }
 
     const savedDecision = await this.decisionModel
@@ -176,7 +176,14 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
 
   mapDecisionSearchParametersToFindCriteria(decisionSearchParams: GetDecisionsListDto) {
     const todayDate = new Date().toISOString().slice(0, 10)
-    // syntax :  https://medium.com/@slamflipstrom/conditional-object-properties-using-spread-in-javascript-714e0a12f496
+
+    // Nettoyer le numéro : supprimer tous les caractères non numériques
+    const cleanNumber = decisionSearchParams.number?.replace(/\D/g, '')
+
+    // Formater le numéro en numéro de RG s'il fait exactement 7 caractères
+    const formattedNumber =
+      cleanNumber?.length === 7 ? `${cleanNumber.slice(0, 2)}/${cleanNumber.slice(2)}` : null
+
     return {
       ...(decisionSearchParams.status && { labelStatus: decisionSearchParams.status }),
       ...(decisionSearchParams.source && { sourceName: decisionSearchParams.source }),
@@ -193,12 +200,15 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
             $lte: decisionSearchParams.endDate
           }
         }),
-      ...(decisionSearchParams.number && {
+      ...(cleanNumber && {
         $or: [
-          {
-            numeroRoleGeneral: decisionSearchParams.number
-          },
-          { appeals: decisionSearchParams.number }
+          { sourceId: parseInt(cleanNumber, 10) },
+          // Chercher par `numeroRoleGeneral` si le numéro est formaté
+          ...(formattedNumber ? [{ numeroRoleGeneral: formattedNumber }] : []),
+          // Chercher par `registerNumber` (format XX/XXXXX suivi d'un espace et autre chose)
+          ...(formattedNumber ? [{ registerNumber: { $regex: `^${formattedNumber}\\s` } }] : []),
+          // Chercher par `registerNumber` (format AXXXXXXX sans la lettre initiale)
+          { appeals: { $regex: `^.{1}${cleanNumber}$` } }
         ]
       })
     }

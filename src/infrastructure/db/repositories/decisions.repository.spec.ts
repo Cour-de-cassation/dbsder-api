@@ -553,12 +553,7 @@ describe('DecisionsRepository', () => {
           $gte: '2020-01-01',
           $lte: todayDate
         },
-        $or: [
-          {
-            numeroRoleGeneral: '123'
-          },
-          { appeals: '123' }
-        ]
+        $or: [{ sourceId: 123 }, { appeals: { $regex: '^.{1}123$' } }]
       }
 
       // WHEN
@@ -574,17 +569,19 @@ describe('DecisionsRepository', () => {
       const decisionSearchParams: GetDecisionsListDto = {
         source: Sources.CA,
         status: LabelStatus.TOBETREATED,
-        number: '123'
+        number: '1234567'
       }
 
       const expectedFindCriterias = {
         sourceName: Sources.CA,
         labelStatus: LabelStatus.TOBETREATED,
         $or: [
+          { sourceId: 1234567 },
           {
-            numeroRoleGeneral: '123'
+            numeroRoleGeneral: '12/34567'
           },
-          { appeals: '123' }
+          { registerNumber: { $regex: `^12/34567\\s` } },
+          { appeals: { $regex: '^.{1}1234567$' } }
         ]
       }
 
