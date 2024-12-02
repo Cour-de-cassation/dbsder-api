@@ -1,5 +1,5 @@
 const { MongoClient } = require('mongoose/node_modules/mongodb')
-if (!process.env.NODE_ENV) require('dotenv')
+if (!process.env.NODE_ENV) require('dotenv').config()
 
 async function main() {
   const client = new MongoClient(process.env.MONGO_DB_URL, { useUnifiedTopology: true })
