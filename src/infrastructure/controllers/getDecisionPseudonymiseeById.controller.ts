@@ -26,7 +26,7 @@ import { DecisionNotFoundException } from '../exceptions/decisionNotFound.except
 import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.exception'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { LogsFormat } from '../utils/logsFormat.utils'
-import { FetchDecisionPseudonymiseeByIdUsecase } from '../../usecase/fetchDecisionPseudonymiseeByIdUsecase'
+import { FetchDecisionPseudonymiseeByIdUsecase } from '../../usecase/fetchDecisionPseudonymiseeById.usecase'
 import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
 import { MapModelToResponseService } from '../../service/mapModelToResponse.service'
 

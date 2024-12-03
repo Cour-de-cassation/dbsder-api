@@ -1,6 +1,6 @@
 import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsList.response'
 import { CodeNAC } from '../db/models/codeNAC.model'
-import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
+import { LabelTreatmentDto } from '../dto/updateDecision.dto'
 import {
   LabelStatus,
   Occultation,
@@ -179,26 +179,36 @@ export class MockUtils {
     solution: 'someSolution',
     sourceId: 1,
     sourceName: Sources.TJ,
-    originalTextZoning: this.zoningModel
+    originalTextZoning: this.zoningModel,
+    pseudoText: 'My decision pseudo text'
   }
 
-  decisionRapportsOccultations: UpdateDecisionRapportsOccultationsDTO = {
-    rapportsOccultations: [
+  labelTreatment: LabelTreatmentDto = {
+    annotations: [
       {
-        annotations: [
-          {
-            category: 'some-category',
-            entityId: 'some-entity-id',
-            start: 1,
-            text: 'some-text',
-            certaintyScore: 80
-          }
-        ],
-        source: 'some-source',
-        order: 1
+        category: 'some-category',
+        entityId: 'some-entity-id',
+        start: 1,
+        text: 'some-text',
+        certaintyScore: 1
+      },
+      {
+        category: 'other-category',
+        entityId: 'other-entity-id',
+        start: 5,
+        text: 'other-text',
+        certaintyScore: 0.5
       }
     ],
-    publishStatus: PublishStatus.TOBEPUBLISHED
+    source: 'some-source',
+    order: 1,
+    version: {
+      juriSpacyTokenizer: { date: '2000-06-18', version: '1.2.3' },
+      juritools: { date: '2000-06-18', version: '1.2.3' },
+      pseudonymisationApi: { date: '2000-06-18', version: '1.2.3' },
+      model: { name: 'MyModel' }
+    },
+    treatmentDate: '123456'
   }
 
   decisionPseudonymisee = {
@@ -256,7 +266,8 @@ export class MockUtils {
     solution: 'someSolution',
     sourceId: 1,
     sourceName: Sources.TJ,
-    originalTextZoning: this.zoningModel
+    originalTextZoning: this.zoningModel,
+    pseudoText: 'My decision pseudo text'
   }
 
   createDecisionTJDto = {

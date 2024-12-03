@@ -2,7 +2,7 @@ import { Model, Types } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { Decision } from '../models/decision.model'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
-import { UpdateDecisionRapportsOccultationsDTO } from '../../dto/updateDecision.dto'
+import { LabelTreatmentDto } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { InterfaceDecisionsRepository } from '../../../domain/decisions.repository.interface'
 import {
@@ -13,8 +13,8 @@ import {
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
 import { Logger } from '@nestjs/common'
 import { LogsFormat } from '../../utils/logsFormat.utils'
-import { PublishStatus } from 'dbsder-api-types'
 import { DateType } from '../../utils/dateType.utils'
+import { LabelStatus, PublishStatus } from 'dbsder-api-types'
 
 export class DecisionsRepository implements InterfaceDecisionsRepository {
   private readonly logger = new Logger()
@@ -114,13 +114,22 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return id
   }
 
-  async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<string> {
+  async updateDecisionPseudonymisee(
+    id: string,
+    pseudoText: string,
+    labelTreatments: LabelTreatmentDto[],
+    labelStatus: LabelStatus,
+    publishStatus: PublishStatus
+  ): Promise<string> {
     const result = await this.decisionModel
       .updateOne(
         { _id: new Types.ObjectId(id) },
         {
           $set: {
-            pseudoText: decisionPseudonymisee
+            pseudoText,
+            labelTreatments,
+            labelStatus,
+            publishStatus
           }
         },
         { new: true }
@@ -136,52 +145,6 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     // Acknowledged peut être à false si Mongoose est incapable d'exécuter la requête
     if (!result.acknowledged) {
       throw new UpdateFailedError('Mongoose error while updating decision pseudonymised decision')
-    }
-
-    return id
-  }
-
-  async updateRapportsOccultations(
-    id: string,
-    body: UpdateDecisionRapportsOccultationsDTO
-  ): Promise<string> {
-    const decision = await this.getById(id)
-    let updatedLabelTreatments = undefined
-    if (decision && decision.labelTreatments && decision.labelTreatments.length > 0) {
-      body.rapportsOccultations.forEach((labelTreatment) => {
-        labelTreatment.order += decision.labelTreatments.length
-      })
-      updatedLabelTreatments = decision.labelTreatments.concat(body.rapportsOccultations)
-    }
-
-    if (body.publishStatus !== PublishStatus.BLOCKED) {
-      body.publishStatus =
-        body.publishStatus !== undefined ? body.publishStatus : PublishStatus.TOBEPUBLISHED
-    }
-
-    const result = await this.decisionModel
-      .updateOne(
-        { _id: new Types.ObjectId(id) },
-        {
-          $set: {
-            labelTreatments: updatedLabelTreatments
-              ? updatedLabelTreatments
-              : body.rapportsOccultations,
-            publishStatus: body.publishStatus
-          }
-        }
-      )
-      .catch((error) => {
-        throw new DatabaseError(error)
-      })
-
-    if (result.matchedCount === 0 && result.acknowledged) {
-      throw new DecisionNotFoundError()
-    }
-
-    // Acknowledged peut être à false si Mongoose est incapable d'exécuter la requête
-    if (!result.acknowledged) {
-      throw new UpdateFailedError('Mongoose error while updating decision concealment reports')
     }
 
     return id

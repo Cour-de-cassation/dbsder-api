@@ -17,7 +17,6 @@ import { CreateDecisionsController } from './infrastructure/controllers/createDe
 import { UpdateDecisionStatutController } from './infrastructure/controllers/updateDecisionStatut.controller'
 import { GetDecisionPseudonymiseesController } from './infrastructure/controllers/getDecisionPseudonymiseeById.controller'
 import { UpdateDecisionPseudonymiseeController } from './infrastructure/controllers/updateDecisionPseudonymisee.controller'
-import { UpdateDecisionRapportsOccultationsController } from './infrastructure/controllers/updateDecisionRapportsOccultations.controller'
 import { DeleteDecisionByIdController } from './infrastructure/controllers/deleteDecisionById.controller'
 import { CodeNAC, CodeNACSchema } from './infrastructure/db/models/codeNAC.model'
 import { CodeNACsRepository } from './infrastructure/db/repositories/codeNACs.repository'
@@ -46,7 +45,6 @@ import { MapModelToResponseService } from './service/mapModelToResponse.service'
     ListDecisionsController,
     CreateDecisionsController,
     UpdateDecisionPseudonymiseeController,
-    UpdateDecisionRapportsOccultationsController,
     UpdateDecisionStatutController,
     DeleteDecisionByIdController
   ],

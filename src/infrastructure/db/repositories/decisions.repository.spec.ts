@@ -319,7 +319,10 @@ describe('DecisionsRepository', () => {
   })
 
   describe('updateDecisionPseudonymisee', () => {
-    const decisionPseudonymizedDecision = 'some pseudonymized decision'
+    const pseudoText = 'some pseudonymized decision'
+    const labelStatus = LabelStatus.TOBETREATED
+    const publishStatus = PublishStatus.TOBEPUBLISHED
+    const labelTreatments = [mockUtils.labelTreatment]
 
     it('returns updated decision ID when pseudonymized-decision is successfully updated', async () => {
       // GIVEN
@@ -335,7 +338,10 @@ describe('DecisionsRepository', () => {
       // WHEN
       const result = await decisionsRepository.updateDecisionPseudonymisee(
         validId,
-        decisionPseudonymizedDecision
+        pseudoText,
+        labelTreatments,
+        labelStatus,
+        publishStatus
       )
 
       // THEN
@@ -356,7 +362,10 @@ describe('DecisionsRepository', () => {
       // WHEN
       const result = await decisionsRepository.updateDecisionPseudonymisee(
         validId,
-        decisionPseudonymizedDecision
+        pseudoText,
+        labelTreatments,
+        labelStatus,
+        publishStatus
       )
 
       // THEN
@@ -376,7 +385,13 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
+        decisionsRepository.updateDecisionPseudonymisee(
+          validId,
+          pseudoText,
+          labelTreatments,
+          labelStatus,
+          publishStatus
+        )
       )
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
@@ -395,7 +410,13 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
+        decisionsRepository.updateDecisionPseudonymisee(
+          validId,
+          pseudoText,
+          labelTreatments,
+          labelStatus,
+          publishStatus
+        )
       )
         // THEN
         .rejects.toThrow(UpdateFailedError)
@@ -407,139 +428,13 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
-      )
-        // THEN
-        .rejects.toThrow(DatabaseError)
-    })
-  })
-
-  describe('updateRapportsOccultations', () => {
-    const decisionConcealmentReports = mockUtils.decisionRapportsOccultations.rapportsOccultations
-
-    it('returns updated decision ID when concealment reports are successfully updated', async () => {
-      // GIVEN
-      const mongoSuccessfulResponse: UpdateWriteOpResult = {
-        acknowledged: true,
-        matchedCount: 1,
-        modifiedCount: 1,
-        upsertedCount: 0,
-        upsertedId: null
-      }
-      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoSuccessfulResponse)
-      jest.spyOn(decisionModel, 'findOne').mockImplementation(
-        () =>
-          ({
-            lean: jest.fn().mockResolvedValue(mongoSuccessfulResponse)
-          }) as any
-      )
-
-      // WHEN
-      const result = await decisionsRepository.updateRapportsOccultations(validId, {
-        rapportsOccultations: decisionConcealmentReports,
-        publishStatus: PublishStatus.TOBEPUBLISHED
-      })
-
-      // THEN
-      expect(result).toEqual(validId)
-    })
-
-    it('returns decision ID when decision was found but update failed because it already has the provided concealment reports', async () => {
-      // GIVEN
-      const mongoResponseWithoutUpdate: UpdateWriteOpResult = {
-        acknowledged: true,
-        matchedCount: 1,
-        modifiedCount: 0,
-        upsertedCount: 0,
-        upsertedId: null
-      }
-      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithoutUpdate)
-      jest.spyOn(decisionModel, 'findOne').mockImplementation(
-        () =>
-          ({
-            lean: jest.fn().mockResolvedValue(mongoResponseWithoutUpdate)
-          }) as any
-      )
-
-      // WHEN
-      const result = await decisionsRepository.updateRapportsOccultations(validId, {
-        rapportsOccultations: decisionConcealmentReports,
-        publishStatus: PublishStatus.BLOCKED
-      })
-
-      // THEN
-      expect(result).toEqual(validId)
-    })
-
-    it('throws a DecisionNotFoundError when decision is not found', async () => {
-      // GIVEN
-      const mongoResponseNotFound: UpdateWriteOpResult = {
-        acknowledged: true,
-        matchedCount: 0,
-        modifiedCount: 0,
-        upsertedCount: 0,
-        upsertedId: null
-      }
-      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseNotFound)
-      jest.spyOn(decisionModel, 'findOne').mockImplementation(
-        () =>
-          ({
-            lean: jest.fn().mockResolvedValue(DecisionNotFoundError)
-          }) as any
-      )
-      // WHEN
-      await expect(
-        decisionsRepository.updateRapportsOccultations(validId, {
-          rapportsOccultations: decisionConcealmentReports,
-          publishStatus: PublishStatus.PENDING
-        })
-      )
-        // THEN
-        .rejects.toThrow(DecisionNotFoundError)
-    })
-
-    it('throws a UpdateFailedError when updating with mongoose fails', async () => {
-      // GIVEN
-      const mongoResponseWithError: UpdateWriteOpResult = {
-        acknowledged: false,
-        matchedCount: 0,
-        modifiedCount: 0,
-        upsertedCount: 0,
-        upsertedId: null
-      }
-      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithError)
-      jest.spyOn(decisionModel, 'findOne').mockImplementation(
-        () =>
-          ({
-            lean: jest.fn().mockResolvedValue(mongoResponseWithError)
-          }) as any
-      )
-      // WHEN
-      await expect(
-        decisionsRepository.updateRapportsOccultations(validId, {
-          rapportsOccultations: decisionConcealmentReports,
-          publishStatus: PublishStatus.FAILURE_INDEXING
-        })
-      )
-        // THEN
-        .rejects.toThrow(UpdateFailedError)
-    })
-
-    it('throws a DatabaseError when database is unavailable', async () => {
-      // GIVEN
-      jest.spyOn(decisionModel, 'updateOne').mockRejectedValueOnce(new Error())
-      jest.spyOn(decisionModel, 'findOne').mockImplementation(
-        () =>
-          ({
-            lean: jest.fn().mockResolvedValue(DecisionNotFoundError)
-          }) as any
-      )
-      // WHEN
-      await expect(
-        decisionsRepository.updateRapportsOccultations(validId, {
-          rapportsOccultations: decisionConcealmentReports,
-          publishStatus: PublishStatus.FAILURE_PREPARING
-        })
+        decisionsRepository.updateDecisionPseudonymisee(
+          validId,
+          pseudoText,
+          labelTreatments,
+          labelStatus,
+          publishStatus
+        )
       )
         // THEN
         .rejects.toThrow(DatabaseError)
