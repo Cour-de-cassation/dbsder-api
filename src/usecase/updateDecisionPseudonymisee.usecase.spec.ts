@@ -8,7 +8,6 @@ describe('UpdateDecisionPseudonymiseeUsecase', () => {
   const usecase: UpdateDecisionPseudonymiseeUsecase = new UpdateDecisionPseudonymiseeUsecase(
     mockDecisionsRepository
   )
-
   const decisionId = 'some-id'
   const decisionPseudonymisedDecision = 'some-PseudonymisedDecision'
 
