@@ -33,10 +33,27 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
   }
 
   async create(decision: CreateDecisionDTO): Promise<string> {
+    const now = new Date()
+    const oldDecision = await this.decisionModel.findOne({
+      sourceId: decision.sourceId,
+      sourceName: decision.sourceName
+    })
+
+    const decisionModel = {
+      ...decision,
+      firstImportDate: oldDecision?.firstImportDate ?? now.toISOString(),
+      lastImportDate: now.toISOString(),
+      publishDate: oldDecision?.publishDate ?? null,
+      unpublishDate: oldDecision?.unpublishDate ?? null
+    }
+
     const savedDecision = await this.decisionModel
       .findOneAndUpdate(
-        { sourceId: decision.sourceId, sourceName: decision.sourceName },
-        decision,
+        {
+          sourceId: decision.sourceId,
+          sourceName: decision.sourceName
+        },
+        decisionModel,
         {
           upsert: true,
           new: true,
@@ -50,15 +67,18 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     const decisionToLog = {
       sourceId: decision.sourceId,
       sourceName: decision.sourceName,
-      idDecision: decision.idDecisionWinci,
+      idDecisionWinci: decision.idDecisionWinci,
       jurisdictionCode: decision.jurisdictionCode,
       jurisdictionName: decision.jurisdictionName,
       dateDecision: decision.dateDecision,
       numeroRoleGeneral: decision.numeroRoleGeneral,
+      registerNumber: decision.registerNumber,
       labelStatus: decision.labelStatus,
       NACCode: decision.NACCode,
       recommandationOccultation: decision.recommandationOccultation,
-      occultation: { motivationOccultation: decision.occultation.motivationOccultation }
+      occultation: { motivationOccultation: decision.occultation.motivationOccultation },
+      _id: savedDecision._id.toString(),
+      selection: decision.selection
     }
 
     const formatLogs: LogsFormat = {

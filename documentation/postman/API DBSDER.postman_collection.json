@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bb963010-83f0-4f44-8919-f64959ae81fd",
+		"_postman_id": "e6e9d9ab-03d7-4a04-8f4d-c577e4ca1054",
 		"name": "API DBSDER",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "30931917"
@@ -1930,6 +1930,47 @@
 									"key": "id",
 									"value": "ffffffffffffffffffffffff"
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET /decision-route",
+			"item": [
+				{
+					"name": "200 - Renvoie la route de la décision",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"codeNac\":\"12A\",\n    \"codeDecision\":\"09\",\n    \"source\":\"juritj\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decision-route",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decision-route"
 							]
 						}
 					},

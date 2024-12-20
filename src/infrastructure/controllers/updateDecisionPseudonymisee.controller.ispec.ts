@@ -39,9 +39,7 @@ describe('DecisionsController', () => {
     describe('Success case', () => {
       it('returns 204 No Content when decision pseudonymised-decision is updated with valid API Key and pseudonymised-decision', async () => {
         // GIVEN
-        const decisionToSave = {
-          ...mockUtils.decisionModel
-        }
+        const decisionToSave = mockUtils.decisionModel
         const decisionId = await decisionsRepository.create(decisionToSave)
 
         // WHEN

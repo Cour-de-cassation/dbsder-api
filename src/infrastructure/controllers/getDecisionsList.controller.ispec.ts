@@ -11,9 +11,7 @@ describe('DecisionsController', () => {
   let app: INestApplication
   const mockUtils = new MockUtils()
   const labelApiKey = process.env.LABEL_API_KEY
-  const providedDecisionModel = {
-    ...mockUtils.decisionModel
-  }
+  const providedDecisionModel = mockUtils.decisionModel
 
   let decisionsRepository: DecisionsRepository
 

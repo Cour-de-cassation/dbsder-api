@@ -17,7 +17,7 @@ export const pinoConfig = {
         }
       }
     },
-    timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
+    timestamp: () => `,"timestamp":"${new Date().toISOString()}"`,
     redact: {
       paths: ['req', 'res', 'headers', 'ip', 'responseTime', 'hostname', 'pid', 'level'],
       censor: '',
