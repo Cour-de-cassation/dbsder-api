@@ -22,6 +22,9 @@ import { DeleteDecisionByIdController } from './infrastructure/controllers/delet
 import { CodeNAC, CodeNACSchema } from './infrastructure/db/models/codeNAC.model'
 import { CodeNACsRepository } from './infrastructure/db/repositories/codeNACs.repository'
 import { ZoningApiService } from './service/zoningApi.service'
+import { CodeDecision, CodeDecisionSchema } from './infrastructure/db/models/codeDecision.model'
+import { CodeDecisionRepository } from './infrastructure/db/repositories/codeDecision.repository'
+import { GetDecisionRouteController } from './infrastructure/controllers/getDecisionRoute.controller'
 
 @Module({
   imports: [
@@ -33,7 +36,8 @@ import { ZoningApiService } from './service/zoningApi.service'
     MongooseModule.forRoot(process.env.MONGO_DB_URL),
     MongooseModule.forFeature([
       { name: Decision.name, schema: DecisionSchema },
-      { name: CodeNAC.name, schema: CodeNACSchema }
+      { name: CodeNAC.name, schema: CodeNACSchema },
+      { name: CodeDecision.name, schema: CodeDecisionSchema }
     ]),
     LoggerModule.forRoot(pinoConfig)
   ],
@@ -47,9 +51,10 @@ import { ZoningApiService } from './service/zoningApi.service'
     UpdateDecisionPseudonymiseeController,
     UpdateDecisionRapportsOccultationsController,
     UpdateDecisionStatutController,
-    DeleteDecisionByIdController
+    DeleteDecisionByIdController,
+    GetDecisionRouteController
   ],
-  providers: [DecisionsRepository, CodeNACsRepository, ZoningApiService]
+  providers: [DecisionsRepository, CodeNACsRepository, ZoningApiService, CodeDecisionRepository]
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
