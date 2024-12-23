@@ -154,7 +154,7 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
       updatedLabelTreatments = decision.labelTreatments.concat(body.rapportsOccultations)
     }
 
-    if (body.publishStatus !== PublishStatus.BLOCKED) {
+    if (decision.publishStatus !== PublishStatus.BLOCKED) {
       body.publishStatus =
         body.publishStatus !== undefined ? body.publishStatus : PublishStatus.TOBEPUBLISHED
     }
