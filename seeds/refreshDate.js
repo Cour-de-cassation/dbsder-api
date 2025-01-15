@@ -1,6 +1,13 @@
 const { MongoClient } = require('mongoose/node_modules/mongodb')
 if (!process.env.NODE_ENV) require('dotenv').config()
 
+function setDate(dateRef, day, month) {
+  const date = new Date(dateRef.toISOString())
+  date.setDate(day > 28 ? 28: day)
+  date.setMonth(month)
+  return date
+}
+
 async function refreshDecisions(db, date) {
   const decisions = await db.collection('decisions').find()
 
@@ -20,9 +27,7 @@ async function refreshDecisions(db, date) {
           {
             $set: {
               dateCreation: dateCreation ? date.toISOString() : null,
-              dateDecision: `${dateDecision.slice(0, 4)}-${
-                date.toISOString().slice(5, 7) - 1
-              }-${date.toISOString().slice(8)}`,
+              dateDecision: setDate(date, (new Date(dateDecision)).getDate(), date.getMonth() - 1).toISOString(),
               firstImportDate: firstImportDate ? date.toISOString() : null,
               lastImportDate: lastImportDate ? date.toISOString() : null,
               publishDate: publishDate ? date.toISOString() : null,
@@ -43,9 +48,7 @@ async function refreshRawJurica(db, date) {
         { _id },
         {
           $set: {
-            JDEC_DATE: `${date.toISOString().slice(0, 4)}-${
-              date.toISOString().slice(5, 7) - 1
-            }-${JDEC_DATE.slice(8, 10)}`,
+            JDEC_DATE: setDate(date, new Date(JDEC_DATE).getDate(), date.getMonth() - 1).toISOString().slice(0, 10),
             JDEC_DATE_MAJ: JDEC_DATE_MAJ ? date.toISOString().slice(0, 10) : null,
             JDEC_DATE_CREATION: JDEC_DATE_CREATION
               ? date.toISOString().slice(0, 10).replaceAll('-', '')
@@ -68,11 +71,7 @@ async function refreshRawJurinet(db, date) {
         { _id },
         {
           $set: {
-            DT_DECISION: new Date(
-              `${date.toISOString().slice(0, 4)}-${
-                date.toISOString().slice(5, 7) - 1
-              }-${(new Date(DT_DECISION)).toISOString().slice(8)}`
-            ),
+            DT_DECISION: setDate(date, new Date(DT_DECISION).getDate(), date.getMonth() - 1),
             DT_CREATION: DT_CREATION ? date : null,
             DT_MODIF: DT_MODIF ? date : null,
             DT_ANO: DT_ANO ? date : null,
