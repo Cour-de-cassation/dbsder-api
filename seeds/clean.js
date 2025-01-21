@@ -5,7 +5,7 @@ async function main() {
   const client = new MongoClient(process.env.MONGO_DB_URL, { useUnifiedTopology: true })
   await client.connect()
 
-  const collections = await client.db(process.env.MONGO_DATABASE).collections()
+  const collections = await client.db().collections()
 
   return Promise.all(collections.map((_) => _.drop()))
 }

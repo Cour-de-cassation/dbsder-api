@@ -85,7 +85,7 @@ async function refreshRawJurinet(db, date) {
 
 async function main() {
   const client = new MongoClient(process.env.MONGO_DB_URL, { useUnifiedTopology: true })
-  const db = client.db(process.env.MONGO_DATABASE)
+  const db = client.db()
   await client.connect()
 
   const input = process.argv[2]

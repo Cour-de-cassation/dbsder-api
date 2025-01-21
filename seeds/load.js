@@ -1,25 +1,19 @@
 const { MongoClient, BSON } = require('mongoose/node_modules/mongodb')
 const { readFile, readdir } = require('fs/promises')
-const { statSync } = require('fs')
 const { resolve } = require('path')
 if (!process.env.NODE_ENV) require('dotenv').config()
 
-async function readDbNames() {
-  const pathes = await readdir(resolve(__dirname))
-  return pathes.filter((_) => statSync(resolve(__dirname, _)).isDirectory())
-}
-
-async function readCollectionNames(dbName) {
-  const files = await readdir(resolve(__dirname, dbName))
+async function readCollections() {
+  const path = resolve(__dirname, 'db')
+  const files = await readdir(path);
   return files.map((_) => ({
-    dbName,
     collectionName: _.slice(0, _.length - '.json'.length),
-    path: resolve(__dirname, dbName, _)
-  }))
+    path: resolve(path, _),
+  }));
 }
 
-async function saveCollections(client, { dbName, collectionName, path }) {
-  const collection = await client.db(dbName).createCollection(collectionName)
+async function saveCollections(client, { collectionName, path }) {
+  const collection = await client.db().createCollection(collectionName)
   const save = await readFile(path, 'utf8')
 
   const saveParse = BSON.EJSON.parse(save)
@@ -32,10 +26,9 @@ async function main() {
   const client = new MongoClient(process.env.MONGO_DB_URL, { useUnifiedTopology: true })
   await client.connect()
 
-  const dbNames = await readDbNames()
-  const collections = (await Promise.all(dbNames.map(readCollectionNames))).flat()
+  const collections = await readCollections()
 
-  return Promise.all(collections.map((_) => saveCollections(client, _)))
+  return Promise.all(collections.map(_ => saveCollections(client, _)));
 }
 
 main()
