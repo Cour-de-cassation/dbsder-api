@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { LabelRoute } from 'dbsder-api-types'
 import { Types } from 'mongoose'
 
 @Schema()
@@ -37,7 +38,7 @@ export class CodeNAC {
   indicateurAffaireSignalee: boolean
 
   @Prop()
-  routeRelecture?: string
+  routeRelecture?: LabelRoute
 
   @Prop({ type: Object })
   categoriesToOmitTJ: any
