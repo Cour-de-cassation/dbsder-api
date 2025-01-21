@@ -20,7 +20,7 @@ COPY --chown=node:node . .
 # Mongo-memory-server require to use an older image 
 # https://github.com/nodkz/mongodb-memory-server/issues/732 
 # https://nodkz.github.io/mongodb-memory-server/docs/guides/known-issues/#no-build-available-for-alpine-linux 
-FROM node:18-alpine as test
+FROM node:16 as test
 
 ENV NODE_ENV build
 
