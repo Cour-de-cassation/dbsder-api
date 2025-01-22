@@ -3,11 +3,9 @@ import {
   ApiBadRequestResponse,
   ApiHeader,
   ApiOkResponse,
-  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { LabelStatus } from 'dbsder-api-types'
 import { ApiKeyValidation } from '../auth/apiKeyValidation'
 import { DatabaseError } from '../../domain/errors/database.error'
 import { DecisionSearchCriteria } from '../../domain/decisionSearchCriteria'
@@ -19,6 +17,8 @@ import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { LogsFormat } from '../utils/logsFormat.utils'
+import { DateTypeValidation } from '../utils/dateType.utils'
+import { MissingFieldException } from '../exceptions/missingField.exception'
 
 @ApiTags('DbSder')
 @Controller('decisions')
@@ -31,19 +31,6 @@ export class ListDecisionsController {
   @ApiHeader({
     name: 'x-api-key',
     description: 'Clé API'
-  })
-  @ApiQuery({
-    name: 'status',
-    description: 'Décision intègre au format wordperfect et metadonnées associées.',
-    enum: LabelStatus
-  })
-  @ApiQuery({
-    name: 'startDate',
-    description: 'date de début de la période de recherche'
-  })
-  @ApiQuery({
-    name: 'endDate',
-    description: 'date de fin de la période de recherche'
   })
   @ApiOkResponse({ description: 'Une liste de décisions', type: [GetDecisionsListResponse] })
   @ApiBadRequestResponse({
@@ -76,6 +63,15 @@ export class ListDecisionsController {
       throw new ClientNotAuthorizedException()
     }
 
+    // throw error if dateType defined and startDate and endDate not defined
+    if (
+      getDecisionListCriteria &&
+      DateTypeValidation.isValidDateType(getDecisionListCriteria.dateType)
+    ) {
+      if (!getDecisionListCriteria.startDate && !getDecisionListCriteria.endDate) {
+        throw new MissingFieldException('dateType avec startDate ou endDate')
+      }
+    }
     const listDecisionUsecase = new ListDecisionsUsecase(this.decisionsRepository)
 
     const decisionList = await listDecisionUsecase

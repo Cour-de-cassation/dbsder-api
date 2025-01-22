@@ -5,6 +5,7 @@ import { AppModule } from '../../app.module'
 import { MockUtils } from '../utils/mock.utils'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { connectDatabase, dropCollections, dropDatabase } from '../utils/db-test.utils'
+import { DateType } from '../utils/dateType.utils'
 
 describe('DecisionsController', () => {
   let app: INestApplication
@@ -133,6 +134,17 @@ describe('DecisionsController', () => {
         const result = await request(app.getHttpServer())
           .get('/decisions')
           .query(getDecisionsListWithUnknownSourceDTO)
+          .set({ 'x-api-key': labelApiKey })
+
+        // THEN
+        expect(result.statusCode).toEqual(HttpStatus.BAD_REQUEST)
+      })
+
+      it('when dateType is given and startDate & endDate do not exist', async () => {
+        // WHEN
+        const result = await request(app.getHttpServer())
+          .get('/decisions')
+          .query({ dateType: DateType.DATECREATION })
           .set({ 'x-api-key': labelApiKey })
 
         // THEN

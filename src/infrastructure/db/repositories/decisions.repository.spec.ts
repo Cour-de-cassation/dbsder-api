@@ -10,8 +10,9 @@ import {
   UpdateFailedError
 } from '../../../domain/errors/database.error'
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
-import { Sources, LabelStatus } from 'dbsder-api-types'
+import { LabelStatus, PublishStatus, Sources } from 'dbsder-api-types'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
+import { DateType } from '../../utils/dateType.utils'
 
 const mockDecisionModel = () => ({
   find: jest.fn(),
@@ -343,7 +344,10 @@ describe('DecisionsRepository', () => {
   })
 
   describe('updateDecisionPseudonymisee', () => {
-    const decisionPseudonymizedDecision = 'some pseudonymized decision'
+    const pseudoText = 'some pseudonymized decision'
+    const labelStatus = LabelStatus.TOBETREATED
+    const publishStatus = PublishStatus.TOBEPUBLISHED
+    const labelTreatments = [mockUtils.labelTreatment]
 
     it('returns updated decision ID when pseudonymized-decision is successfully updated', async () => {
       // GIVEN
@@ -359,7 +363,10 @@ describe('DecisionsRepository', () => {
       // WHEN
       const result = await decisionsRepository.updateDecisionPseudonymisee(
         validId,
-        decisionPseudonymizedDecision
+        pseudoText,
+        labelTreatments,
+        labelStatus,
+        publishStatus
       )
 
       // THEN
@@ -380,7 +387,10 @@ describe('DecisionsRepository', () => {
       // WHEN
       const result = await decisionsRepository.updateDecisionPseudonymisee(
         validId,
-        decisionPseudonymizedDecision
+        pseudoText,
+        labelTreatments,
+        labelStatus,
+        publishStatus
       )
 
       // THEN
@@ -400,7 +410,13 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
+        decisionsRepository.updateDecisionPseudonymisee(
+          validId,
+          pseudoText,
+          labelTreatments,
+          labelStatus,
+          publishStatus
+        )
       )
         // THEN
         .rejects.toThrow(DecisionNotFoundError)
@@ -419,7 +435,13 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
+        decisionsRepository.updateDecisionPseudonymisee(
+          validId,
+          pseudoText,
+          labelTreatments,
+          labelStatus,
+          publishStatus
+        )
       )
         // THEN
         .rejects.toThrow(UpdateFailedError)
@@ -431,103 +453,13 @@ describe('DecisionsRepository', () => {
 
       // WHEN
       await expect(
-        decisionsRepository.updateDecisionPseudonymisee(validId, decisionPseudonymizedDecision)
-      )
-        // THEN
-        .rejects.toThrow(DatabaseError)
-    })
-  })
-
-  describe('updateRapportsOccultations', () => {
-    const decisionConcealmentReports = mockUtils.decisionRapportsOccultations.rapportsOccultations
-
-    it('returns updated decision ID when concealment reports are successfully updated', async () => {
-      // GIVEN
-      const mongoSuccessfulResponse: UpdateWriteOpResult = {
-        acknowledged: true,
-        matchedCount: 1,
-        modifiedCount: 1,
-        upsertedCount: 0,
-        upsertedId: null
-      }
-      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoSuccessfulResponse)
-
-      // WHEN
-      const result = await decisionsRepository.updateRapportsOccultations(
-        validId,
-        decisionConcealmentReports
-      )
-
-      // THEN
-      expect(result).toEqual(validId)
-    })
-
-    it('returns decision ID when decision was found but update failed because it already has the provided concealment reports', async () => {
-      // GIVEN
-      const mongoResponseWithoutUpdate: UpdateWriteOpResult = {
-        acknowledged: true,
-        matchedCount: 1,
-        modifiedCount: 0,
-        upsertedCount: 0,
-        upsertedId: null
-      }
-      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithoutUpdate)
-
-      // WHEN
-      const result = await decisionsRepository.updateRapportsOccultations(
-        validId,
-        decisionConcealmentReports
-      )
-
-      // THEN
-      expect(result).toEqual(validId)
-    })
-
-    it('throws a DecisionNotFoundError when decision is not found', async () => {
-      // GIVEN
-      const mongoResponseNotFound: UpdateWriteOpResult = {
-        acknowledged: true,
-        matchedCount: 0,
-        modifiedCount: 0,
-        upsertedCount: 0,
-        upsertedId: null
-      }
-      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseNotFound)
-
-      // WHEN
-      await expect(
-        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports)
-      )
-        // THEN
-        .rejects.toThrow(DecisionNotFoundError)
-    })
-
-    it('throws a UpdateFailedError when updating with mongoose fails', async () => {
-      // GIVEN
-      const mongoResponseWithError: UpdateWriteOpResult = {
-        acknowledged: false,
-        matchedCount: 0,
-        modifiedCount: 0,
-        upsertedCount: 0,
-        upsertedId: null
-      }
-      jest.spyOn(decisionModel, 'updateOne').mockResolvedValueOnce(mongoResponseWithError)
-
-      // WHEN
-      await expect(
-        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports)
-      )
-        // THEN
-        .rejects.toThrow(UpdateFailedError)
-    })
-
-    it('throws a DatabaseError when database is unavailable', async () => {
-      // GIVEN
-      jest.spyOn(decisionModel, 'updateOne').mockRejectedValueOnce(new Error())
-
-      // WHEN
-      await expect(
-        decisionsRepository.updateRapportsOccultations(validId, decisionConcealmentReports)
+        decisionsRepository.updateDecisionPseudonymisee(
+          validId,
+          pseudoText,
+          labelTreatments,
+          labelStatus,
+          publishStatus
+        )
       )
         // THEN
         .rejects.toThrow(DatabaseError)
@@ -540,10 +472,11 @@ describe('DecisionsRepository', () => {
     it('should map decision search params to findCriterias with correct parameters', () => {
       // GIVEN
       const decisionSearchParams: GetDecisionsListDto = {
-        source: Sources.CA,
+        sourceName: Sources.CA,
         status: LabelStatus.TOBETREATED,
         startDate: '2020-01-01',
-        number: '123'
+        number: '123',
+        dateType: DateType.DATECREATION
       }
 
       const expectedFindCriterias = {
@@ -572,7 +505,7 @@ describe('DecisionsRepository', () => {
     it('should map decision search params to findCriterias without all parameters', () => {
       // GIVEN
       const decisionSearchParams: GetDecisionsListDto = {
-        source: Sources.CA,
+        sourceName: Sources.CA,
         status: LabelStatus.TOBETREATED,
         number: '123'
       }

@@ -1,8 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsArray, IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator'
 import { MockUtils } from '../utils/mock.utils'
 import { Type } from 'class-transformer'
-import { Annotation, LabelStatus } from 'dbsder-api-types'
+import { Annotation, LabelStatus, LabelTreatment } from 'dbsder-api-types'
 
 const mockUtils = new MockUtils()
 
@@ -18,30 +18,29 @@ export class UpdateDecisionStatutDTO {
 
 export class UpdateDecisionPseudonymiseeDTO {
   @ApiProperty({
-    description: 'Décision pseudonymisée de la décision',
-    example: `Texte pseudonymisé d'une décision`
+    description: 'Texte pseudonymisé de la décision',
+    type: String,
+    example: mockUtils.decisionPseudonymisee.pseudoText
   })
   @IsString()
-  decisionPseudonymisee: string
-}
+  pseudoText: string
 
-export class UpdateDecisionRapportsOccultationsDTO {
   @ApiProperty({
-    description: `Rapport d'occultations de la décision`,
-    type: () => [RapportOccultation],
-    example: mockUtils.decisionRapportsOccultations.rapportsOccultations
+    description: `Label treatments de la décision`,
+    example: [mockUtils.labelTreatment],
+    type: () => [LabelTreatmentDto]
   })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => RapportOccultation)
-  rapportsOccultations: RapportOccultation[]
+  @Type(() => LabelTreatmentDto)
+  labelTreatments: LabelTreatmentDto[]
 }
 
-export class RapportOccultation {
+export class LabelTreatmentDto {
   @ApiProperty({
-    description: 'Annotations',
+    description: 'Liste des annotations',
     type: () => [AnnotationDto],
-    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations
+    example: mockUtils.labelTreatment.annotations
   })
   @IsArray()
   @ValidateNested({ each: true })
@@ -49,27 +48,41 @@ export class RapportOccultation {
   annotations: Annotation[]
 
   @ApiProperty({
-    description: 'Source',
+    description: 'Source du traitement',
     type: String,
-    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].source
+    example: mockUtils.labelTreatment.source
   })
   @IsString()
   source: string
 
   @ApiProperty({
-    description: 'Ordre',
+    description: 'Ordre du traitement',
     type: Number,
-    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].order
+    example: mockUtils.labelTreatment.order
   })
   @IsNumber()
   order: number
+
+  @ApiPropertyOptional({
+    description: 'Version utilisées pour créer le traitement',
+    type: Object,
+    example: mockUtils.labelTreatment.version
+  })
+  version?: LabelTreatment['version']
+
+  @ApiPropertyOptional({
+    description: 'Date du traitement',
+    type: String,
+    example: mockUtils.labelTreatment.treatmentDate
+  })
+  treatmentDate?: string
 }
 
 export class AnnotationDto {
   @ApiProperty({
     description: "Categorie de l'annotation",
     type: String,
-    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].category
+    example: mockUtils.labelTreatment
   })
   @IsString()
   category: string
@@ -77,7 +90,7 @@ export class AnnotationDto {
   @ApiProperty({
     description: `ID de l'entité`,
     type: String,
-    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].entityId
+    example: mockUtils.labelTreatment.annotations[0].entityId
   })
   @IsString()
   entityId: string
@@ -85,7 +98,7 @@ export class AnnotationDto {
   @ApiProperty({
     description: 'Démarre à la position',
     type: Number,
-    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].start
+    example: mockUtils.labelTreatment.annotations[0].start
   })
   @IsNumber()
   start: number
@@ -93,7 +106,7 @@ export class AnnotationDto {
   @ApiProperty({
     description: "Texte de l'annotation",
     type: String,
-    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].text
+    example: mockUtils.labelTreatment.annotations[0].text
   })
   @IsString()
   text: string
@@ -101,8 +114,7 @@ export class AnnotationDto {
   @ApiProperty({
     description: 'Score de certitude',
     type: Number,
-    example:
-      mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations[0].certaintyScore
+    example: mockUtils.labelTreatment.annotations[0].certaintyScore
   })
   @IsNumber()
   certaintyScore: number

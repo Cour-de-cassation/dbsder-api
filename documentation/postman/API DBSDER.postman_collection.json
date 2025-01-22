@@ -293,7 +293,8 @@
 									"    pm.response.to.have.status(200);",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -307,7 +308,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&source=juritj&startDate=2023-06-11&endDate=2023-06-11",
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&sourceName=juritj&startDate=2023-06-11&endDate=2023-06-11",
 							"host": [
 								"{{HOSTNAME}}"
 							],
@@ -321,7 +322,7 @@
 									"value": "toBeTreated"
 								},
 								{
-									"key": "source",
+									"key": "sourceName",
 									"value": "juritj"
 								},
 								{
@@ -331,6 +332,166 @@
 								{
 									"key": "endDate",
 									"value": "2023-06-11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "200 - Liste les décisions toBeTreated avec chamber et jurisdiction et sourceId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&sourceName=juritj&chamber=someChamberName&jurisdiction=someJurisdictionName&sourceId=1",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "toBeTreated"
+								},
+								{
+									"key": "sourceName",
+									"value": "juritj"
+								},
+								{
+									"key": "chamber",
+									"value": "someChamberName"
+								},
+								{
+									"key": "jurisdiction",
+									"value": "someJurisdictionName"
+								},
+								{
+									"key": "sourceId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "200 - Liste les décisions avec startDate et endDate de la dateDesion",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?startDate=2023-06-11&endDate=2024-06-30&dateType=dateDecision",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2023-06-11"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-06-30"
+								},
+								{
+									"key": "dateType",
+									"value": "dateDecision"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400 - Liste les décisions avec dateType et sans startDate et endDate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"statusCode\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{LABEL_API_KEY}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions?status=toBeTreated&dateType=dateCreation",
+							"host": [
+								"{{HOSTNAME}}"
+							],
+							"path": [
+								"{{VERSION}}",
+								"decisions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "toBeTreated"
+								},
+								{
+									"key": "dateType",
+									"value": "dateCreation"
 								}
 							]
 						}
@@ -1338,7 +1499,8 @@
 									"    pm.response.to.have.status(204);",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1353,7 +1515,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"decisionPseudonymisee\": \"contenu de la décision pseudonymisée\"\n}",
+							"raw": "{\n    \"pseudoText\": \"Texte de la décision pseudonymisée\",\n    \"labelTreatments\": [\n        {\n        \"annotations\": [\n            {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 1\n            },\n            {\n            \"category\": \"other-category\",\n            \"entityId\": \"other-entity-id\",\n            \"start\": 5,\n            \"text\": \"other-text\",\n            \"certaintyScore\": 0.5\n            }\n        ],\n        \"source\": \"some-sourcesssss\",\n        \"order\": 1,\n        \"version\": {\n            \"juriSpacyTokenizer\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"juritools\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"pseudonymisationApi\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"model\": {\n            \"name\": \"MyModel\"\n            }\n        },\n        \"treatmentDate\": \"123456\"\n        }\n  ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1396,7 +1558,8 @@
 									"    pm.expect(pm.response.json().message).to.eql(\"Une ou plusieurs erreurs ont été trouvées sur les propriétés suivantes : decisionPseudonymisee\");",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1411,7 +1574,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"decisionPseudonymisee\": 1234\n}",
+							"raw": "{\n    \"pseudoText\": 1234,\n    \"labelTreatments\": [\n        {\n        \"annotations\": [\n            {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 1\n            },\n            {\n            \"category\": \"other-category\",\n            \"entityId\": \"other-entity-id\",\n            \"start\": 5,\n            \"text\": \"other-text\",\n            \"certaintyScore\": 0.5\n            }\n        ],\n        \"source\": \"some-sourcesssss\",\n        \"order\": 1,\n        \"version\": {\n            \"juriSpacyTokenizer\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"juritools\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"pseudonymisationApi\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"model\": {\n            \"name\": \"MyModel\"\n            }\n        },\n        \"treatmentDate\": \"123456\"\n        }\n  ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1432,7 +1595,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "507f1f77bcf86cd799439011"
+									"value": "{{ID_DECISION}}"
 								}
 							]
 						}
@@ -1454,7 +1617,8 @@
 									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1469,7 +1633,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"decisionPseudonymisee\": \"contenu de la décision pseudonymisée\"\n}",
+							"raw": "{\n    \"pseudoText\": \"Texte de la décision pseudonymisée\",\n    \"labelTreatments\": [\n        {\n        \"annotations\": [\n            {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 1\n            },\n            {\n            \"category\": \"other-category\",\n            \"entityId\": \"other-entity-id\",\n            \"start\": 5,\n            \"text\": \"other-text\",\n            \"certaintyScore\": 0.5\n            }\n        ],\n        \"source\": \"some-sourcesssss\",\n        \"order\": 1,\n        \"version\": {\n            \"juriSpacyTokenizer\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"juritools\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"pseudonymisationApi\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"model\": {\n            \"name\": \"MyModel\"\n            }\n        },\n        \"treatmentDate\": \"123456\"\n        }\n  ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1490,7 +1654,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "507f1f77bcf86cd799439011"
+									"value": "{{ID_DECISION}}"
 								}
 							]
 						}
@@ -1512,7 +1676,8 @@
 									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1528,7 +1693,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"decisionPseudonymisee\": \"contenu de la décision pseudonymisée\"\n}",
+							"raw": "{\n    \"pseudoText\": \"Texte de la décision pseudonymisée\",\n    \"labelTreatments\": [\n        {\n        \"annotations\": [\n            {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 1\n            },\n            {\n            \"category\": \"other-category\",\n            \"entityId\": \"other-entity-id\",\n            \"start\": 5,\n            \"text\": \"other-text\",\n            \"certaintyScore\": 0.5\n            }\n        ],\n        \"source\": \"some-sourcesssss\",\n        \"order\": 1,\n        \"version\": {\n            \"juriSpacyTokenizer\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"juritools\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"pseudonymisationApi\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"model\": {\n            \"name\": \"MyModel\"\n            }\n        },\n        \"treatmentDate\": \"123456\"\n        }\n  ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1549,7 +1714,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "507f1f77bcf86cd799439011"
+									"value": "{{ID_DECISION}}"
 								}
 							]
 						}
@@ -1571,7 +1736,8 @@
 									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
 									"}); "
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1586,7 +1752,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"decisionPseudonymisee\": \"contenu de la décision pseudonymisée\"\n}",
+							"raw": "{\n    \"pseudoText\": \"Texte de la décision pseudonymisée\",\n    \"labelTreatments\": [\n        {\n        \"annotations\": [\n            {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 1\n            },\n            {\n            \"category\": \"other-category\",\n            \"entityId\": \"other-entity-id\",\n            \"start\": 5,\n            \"text\": \"other-text\",\n            \"certaintyScore\": 0.5\n            }\n        ],\n        \"source\": \"some-sourcesssss\",\n        \"order\": 1,\n        \"version\": {\n            \"juriSpacyTokenizer\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"juritools\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"pseudonymisationApi\": {\n            \"date\": \"2000-06-18\",\n            \"version\": \"1.2.3\"\n            },\n            \"model\": {\n            \"name\": \"MyModel\"\n            }\n        },\n        \"treatmentDate\": \"123456\"\n        }\n  ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1607,7 +1773,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "507f1f77bcf86cd799439011"
+									"value": "{{ID_DECISION}}"
 								}
 							]
 						}
@@ -1661,305 +1827,6 @@
 								"decisions",
 								":id",
 								"decision-pseudonymisee"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "ffffffffffffffffffffffff"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "PUT /decisions/:id/rapports-occultations",
-			"item": [
-				{
-					"name": "204 - Met à jour les rapports d'occultations d'une décision",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"statusCode\", function(){",
-									"    pm.response.to.have.status(204);",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "x-api-key",
-								"value": "{{LABEL_API_KEY}}",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 80\n          }\n        ],\n        \"source\": \"some-source\",\n        \"order\": 1\n    }]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
-							"host": [
-								"{{HOSTNAME}}"
-							],
-							"path": [
-								"{{VERSION}}",
-								"decisions",
-								":id",
-								"rapports-occultations"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "{{ID_DECISION}}"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "400 - Met à jour les rapports d'occultations d'une décision avec un format incorrect",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "x-api-key",
-								"value": "{{LABEL_API_KEY}}",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": \"80\"\n          }\n        ],\n        \"order\": 1\n    }]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
-							"host": [
-								"{{HOSTNAME}}"
-							],
-							"path": [
-								"{{VERSION}}",
-								"decisions",
-								":id",
-								"rapports-occultations"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799439011"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "401 - Met à jour avec une API Key inexistante",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "x-api-key",
-								"value": "wrongAPIKey",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 80\n          }\n        ],\n        \"source\": \"some-source\",\n        \"order\": 1\n    }]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
-							"host": [
-								"{{HOSTNAME}}"
-							],
-							"path": [
-								"{{VERSION}}",
-								"decisions",
-								":id",
-								"rapports-occultations"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799439011"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "401 - Met à jour sans API Key",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "",
-								"value": "",
-								"type": "default",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 80\n          }\n        ],\n        \"source\": \"some-source\",\n        \"order\": 1\n    }]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
-							"host": [
-								"{{HOSTNAME}}"
-							],
-							"path": [
-								"{{VERSION}}",
-								"decisions",
-								":id",
-								"rapports-occultations"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799439011"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "401 - Met à jour avec une API Key non autorisée",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"statusCode\", function(){",
-									"    pm.response.to.have.status(401);",
-									"});",
-									"",
-									"pm.test(\"message\", function(){",
-									"    pm.expect(pm.response.json().message).to.eql(\"Vous n'êtes pas autorisé à appeler cette route\");",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "x-api-key",
-								"value": "{{OPS_API_KEY}}",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 80\n          }\n        ],\n        \"source\": \"some-source\",\n        \"order\": 1\n    }]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
-							"host": [
-								"{{HOSTNAME}}"
-							],
-							"path": [
-								"{{VERSION}}",
-								"decisions",
-								":id",
-								"rapports-occultations"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "507f1f77bcf86cd799439011"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "404 - Met à jour les rapports d'occultations d'une décision avec ID inexistant",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"statusCode\", function(){",
-									"    pm.response.to.have.status(404);",
-									"});",
-									"",
-									"pm.test(\"message\", function(){",
-									"    pm.expect(pm.response.json().message).to.eql(\"La decision n'a pas été trouvée\");",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "x-api-key",
-								"value": "{{LABEL_API_KEY}}",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"rapportsOccultations\": [{\n        \"annotations\": [\n          {\n            \"category\": \"some-category\",\n            \"entityId\": \"some-entity-id\",\n            \"start\": 1,\n            \"text\": \"some-text\",\n            \"certaintyScore\": 80\n          }\n        ],\n        \"source\": \"some-source\",\n        \"order\": 1\n    }]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decisions/:id/rapports-occultations",
-							"host": [
-								"{{HOSTNAME}}"
-							],
-							"path": [
-								"{{VERSION}}",
-								"decisions",
-								":id",
-								"rapports-occultations"
 							],
 							"variable": [
 								{

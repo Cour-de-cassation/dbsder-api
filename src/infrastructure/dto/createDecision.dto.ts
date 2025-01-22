@@ -1,5 +1,4 @@
 import {
-  IsArray,
   IsBoolean,
   IsDateString,
   IsDefined,
@@ -20,13 +19,10 @@ import {
   LabelStatus,
   PublishStatus,
   Occultation,
-  LabelTreatment,
-  Annotation,
   PartieTJ,
   Sources,
   Zoning
 } from 'dbsder-api-types'
-import { AnnotationDto } from './updateDecision.dto'
 
 const mockUtils = new MockUtils()
 
@@ -114,34 +110,6 @@ class PresidentDto {
   @IsString()
   @IsOptional()
   civilite?: string
-}
-
-class LabelTreatmentDto {
-  @ApiPropertyOptional({
-    description: "Liste d'annotations",
-    type: [AnnotationDto],
-    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].annotations
-  })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => AnnotationDto)
-  annotations: Annotation[]
-
-  @ApiProperty({
-    description: 'Source',
-    type: String,
-    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].source
-  })
-  @IsString()
-  source: string
-
-  @ApiProperty({
-    description: 'Ordre',
-    type: Number,
-    example: mockUtils.decisionRapportsOccultations.rapportsOccultations[0].order
-  })
-  @IsNumber()
-  order: number
 }
 
 export class DecisionOccultation {
@@ -362,16 +330,6 @@ export class CreateDecisionDTO {
   }
 
   @ApiProperty({
-    description: 'Traitements appliqués par Label',
-    type: [LabelTreatmentDto]
-  })
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => LabelTreatmentDto)
-  labelTreatments?: LabelTreatment[]
-
-  @ApiProperty({
     description: 'Le texte original de la décision',
     type: String,
     example: mockUtils.createDecisionDTO.originalText
@@ -445,29 +403,12 @@ export class CreateDecisionDTO {
   sourceName: Sources
 
   @ApiPropertyOptional({
-    description: '(interne) Mise en page des décisions diffusées par extrait',
-    type: Object,
-    deprecated: true
-  })
-  @IsObject()
-  @IsOptional()
-  zoning?: object
-
-  @ApiPropertyOptional({
     description: 'Zonage de la décision sur le texte intègre',
     type: Object,
     example: mockUtils.createDecisionDTO.blocOccultation
   })
   @IsOptional()
   originalTextZoning?: Zoning
-
-  @ApiPropertyOptional({
-    description: 'Zonage de la décision sur le texte pseudonymisé',
-    type: Object,
-    example: mockUtils.createDecisionDTO.blocOccultation
-  })
-  @IsOptional()
-  pseudoTextZoning?: Zoning
 
   @ApiProperty({
     description:

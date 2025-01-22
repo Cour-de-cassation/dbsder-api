@@ -12,7 +12,8 @@ describe('DecisionsController', () => {
 
   const mockUtils = new MockUtils()
   const validApiKey = process.env.LABEL_API_KEY
-  const decisionPseudonymisee = 'some pseudonymised decision'
+  const pseudoText = 'some pseudonymised decision'
+  const labelTreatments = [mockUtils.labelTreatment]
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -45,7 +46,7 @@ describe('DecisionsController', () => {
         const result = await request(app.getHttpServer())
           .put(`/decisions/${decisionId}/decision-pseudonymisee`)
           .set({ 'x-api-key': validApiKey })
-          .send({ decisionPseudonymisee })
+          .send({ pseudoText, labelTreatments })
 
         // THEN
         expect(result.status).toEqual(HttpStatus.NO_CONTENT)
@@ -55,7 +56,8 @@ describe('DecisionsController', () => {
         // GIVEN
         const decisionToSave = {
           ...mockUtils.decisionModel,
-          decisionPseudonymisee
+          pseudoText,
+          labelTreatments
         }
         const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -63,7 +65,7 @@ describe('DecisionsController', () => {
         const result = await request(app.getHttpServer())
           .put(`/decisions/${decisionId}/decision-pseudonymisee`)
           .set({ 'x-api-key': validApiKey })
-          .send({ decisionPseudonymisee })
+          .send({ pseudoText, labelTreatments })
 
         // THEN
         expect(result.status).toEqual(HttpStatus.NO_CONTENT)
@@ -76,14 +78,15 @@ describe('DecisionsController', () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            decisionPseudonymisee
+            pseudoText,
+            labelTreatments
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
           // WHEN
           const result = await request(app.getHttpServer())
             .put(`/decisions/${decisionId}/decision-pseudonymisee`)
-            .send({ decisionPseudonymisee })
+            .send({ pseudoText, labelTreatments })
 
           // THEN
           expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
@@ -93,7 +96,8 @@ describe('DecisionsController', () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            decisionPseudonymisee
+            pseudoText,
+            labelTreatments
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -103,7 +107,7 @@ describe('DecisionsController', () => {
           const result = await request(app.getHttpServer())
             .put(`/decisions/${decisionId}/decision-pseudonymisee`)
             .set({ 'x-api-key': unknownApiKey })
-            .send({ decisionPseudonymisee })
+            .send({ pseudoText, labelTreatments })
 
           // THEN
           expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
@@ -113,7 +117,8 @@ describe('DecisionsController', () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            decisionPseudonymisee
+            pseudoText,
+            labelTreatments
           }
 
           const decisionId = await decisionsRepository.create(decisionToSave)
@@ -123,7 +128,7 @@ describe('DecisionsController', () => {
           const result = await request(app.getHttpServer())
             .put(`/decisions/${decisionId}/decision-pseudonymisee`)
             .set({ 'x-api-key': unauthorizedApiKey })
-            .send({ decisionPseudonymisee })
+            .send({ pseudoText, labelTreatments })
 
           // THEN
           expect(result.status).toEqual(HttpStatus.UNAUTHORIZED)
@@ -131,11 +136,12 @@ describe('DecisionsController', () => {
       })
 
       describe('returns 400 Bad Request', () => {
-        it('when pseudonymised-decision is not provided', async () => {
+        it('when pseudoText is not provided', async () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            decisionPseudonymisee
+            pseudoText,
+            labelTreatments
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
@@ -143,26 +149,46 @@ describe('DecisionsController', () => {
           const result = await request(app.getHttpServer())
             .put(`/decisions/${decisionId}/decision-pseudonymisee`)
             .set({ 'x-api-key': validApiKey })
+            .send({ labelTreatments })
 
           // THEN
           expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
         })
 
-        it('when pseudonymised-decision is not a string', async () => {
+        it('when pseudoText is not a string', async () => {
           // GIVEN
           const decisionToSave = {
             ...mockUtils.decisionModel,
-            decisionPseudonymisee
+            pseudoText
           }
           const decisionId = await decisionsRepository.create(decisionToSave)
 
-          const wrongFormatDecisionPseudonymisee = 123
+          const wrongFormatpseudoText = 123
 
           // WHEN
           const result = await request(app.getHttpServer())
             .put(`/decisions/${decisionId}/decision-pseudonymisee`)
             .set({ 'x-api-key': validApiKey })
-            .send({ decisionPseudonymisee: wrongFormatDecisionPseudonymisee })
+            .send({ pseudoText: wrongFormatpseudoText })
+
+          // THEN
+          expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
+        })
+
+        it('when labelTreatments is not provided', async () => {
+          // GIVEN
+          const decisionToSave = {
+            ...mockUtils.decisionModel,
+            pseudoText,
+            labelTreatments
+          }
+          const decisionId = await decisionsRepository.create(decisionToSave)
+
+          // WHEN
+          const result = await request(app.getHttpServer())
+            .put(`/decisions/${decisionId}/decision-pseudonymisee`)
+            .set({ 'x-api-key': validApiKey })
+            .send({ pseudoText })
 
           // THEN
           expect(result.status).toEqual(HttpStatus.BAD_REQUEST)
@@ -177,7 +203,7 @@ describe('DecisionsController', () => {
         const result = await request(app.getHttpServer())
           .put(`/decisions/${unknownDecisionId}/decision-pseudonymisee`)
           .set({ 'x-api-key': validApiKey })
-          .send({ decisionPseudonymisee })
+          .send({ pseudoText, labelTreatments })
 
         // THEN
         expect(result.status).toEqual(HttpStatus.NOT_FOUND)

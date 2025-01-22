@@ -3,7 +3,7 @@ import { FindDecisionRouteUseCase } from './findDecisionRoute.usecase'
 import { CodeNACsRepository } from '../infrastructure/db/repositories/codeNACs.repository'
 import { CodeDecisionRepository } from '../infrastructure/db/repositories/codeDecision.repository'
 import { mock, MockProxy } from 'jest-mock-extended'
-import { Sources } from 'dbsder-api-types'
+import { LabelRoute, Sources } from 'dbsder-api-types'
 
 describe('FindDecisionRouteUseCase', () => {
   const mockCodeNACsRepository: MockProxy<CodeNACsRepository> = mock<CodeNACsRepository>()
@@ -45,7 +45,7 @@ describe('FindDecisionRouteUseCase', () => {
       const codeNac = 'codeNac1'
       const codeDecision = 'codeDecision1'
       const source = Sources.CA
-      const givenCodeNAC = { ...mockUtils.codeNACMock, routeRelecture: 'routeNac' }
+      const givenCodeNAC = { ...mockUtils.codeNACMock, routeRelecture: LabelRoute.AUTOMATIC }
 
       jest.spyOn(mockCodeDecisionRepository, 'getByCodeDecision').mockResolvedValue(null)
       jest.spyOn(mockCodeNACsRepository, 'getByCodeNac').mockResolvedValue(givenCodeNAC)
@@ -54,7 +54,7 @@ describe('FindDecisionRouteUseCase', () => {
       const result = await usecase.execute(codeNac, codeDecision, source)
 
       // THEN
-      expect(result).toBe('routenac')
+      expect(result).toBe(LabelRoute.AUTOMATIC)
     })
 
     it('returns undefined when neither givenCodeDecision nor givenCodeNAC exist', async () => {

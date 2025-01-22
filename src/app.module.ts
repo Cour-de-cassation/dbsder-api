@@ -17,7 +17,6 @@ import { CreateDecisionsController } from './infrastructure/controllers/createDe
 import { UpdateDecisionStatutController } from './infrastructure/controllers/updateDecisionStatut.controller'
 import { GetDecisionPseudonymiseesController } from './infrastructure/controllers/getDecisionPseudonymiseeById.controller'
 import { UpdateDecisionPseudonymiseeController } from './infrastructure/controllers/updateDecisionPseudonymisee.controller'
-import { UpdateDecisionRapportsOccultationsController } from './infrastructure/controllers/updateDecisionRapportsOccultations.controller'
 import { DeleteDecisionByIdController } from './infrastructure/controllers/deleteDecisionById.controller'
 import { CodeNAC, CodeNACSchema } from './infrastructure/db/models/codeNAC.model'
 import { CodeNACsRepository } from './infrastructure/db/repositories/codeNACs.repository'
@@ -25,6 +24,7 @@ import { ZoningApiService } from './service/zoningApi.service'
 import { CodeDecision, CodeDecisionSchema } from './infrastructure/db/models/codeDecision.model'
 import { CodeDecisionRepository } from './infrastructure/db/repositories/codeDecision.repository'
 import { GetDecisionRouteController } from './infrastructure/controllers/getDecisionRoute.controller'
+import { MapModelToResponseService } from './service/mapModelToResponse.service'
 
 @Module({
   imports: [
@@ -49,12 +49,17 @@ import { GetDecisionRouteController } from './infrastructure/controllers/getDeci
     ListDecisionsController,
     CreateDecisionsController,
     UpdateDecisionPseudonymiseeController,
-    UpdateDecisionRapportsOccultationsController,
     UpdateDecisionStatutController,
     DeleteDecisionByIdController,
     GetDecisionRouteController
   ],
-  providers: [DecisionsRepository, CodeNACsRepository, ZoningApiService, CodeDecisionRepository]
+  providers: [
+    DecisionsRepository,
+    CodeNACsRepository,
+    ZoningApiService,
+    CodeDecisionRepository,
+    MapModelToResponseService
+  ]
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

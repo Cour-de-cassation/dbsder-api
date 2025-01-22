@@ -3,6 +3,7 @@ import { LabelStatus, Sources } from 'dbsder-api-types'
 import { MockUtils } from '../../utils/mock.utils'
 
 const mockUtils = new MockUtils()
+
 export class GetDecisionsListResponse {
   @ApiProperty({
     description: 'Identifiant de la décision',
@@ -18,9 +19,9 @@ export class GetDecisionsListResponse {
 
   @ApiProperty({
     description: 'Source de la décision',
-    example: mockUtils.decisionTJToBeTreated.source
+    example: mockUtils.decisionTJToBeTreated.sourceName
   })
-  source: Sources
+  sourceName: Sources
 
   @ApiProperty({
     description: 'Date de création de la décision au format ISO 8601',

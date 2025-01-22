@@ -2,7 +2,7 @@ import { Model, Types } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { Decision } from '../models/decision.model'
 import { CreateDecisionDTO } from '../../dto/createDecision.dto'
-import { RapportOccultation } from '../../dto/updateDecision.dto'
+import { LabelTreatmentDto } from '../../dto/updateDecision.dto'
 import { GetDecisionsListDto } from '../../dto/getDecisionsList.dto'
 import { InterfaceDecisionsRepository } from '../../../domain/decisions.repository.interface'
 import {
@@ -13,6 +13,8 @@ import {
 import { DecisionNotFoundError } from '../../../domain/errors/decisionNotFound.error'
 import { Logger } from '@nestjs/common'
 import { LogsFormat } from '../../utils/logsFormat.utils'
+import { DateType } from '../../utils/dateType.utils'
+import { LabelStatus, PublishStatus } from 'dbsder-api-types'
 
 export class DecisionsRepository implements InterfaceDecisionsRepository {
   private readonly logger = new Logger()
@@ -132,9 +134,26 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return id
   }
 
-  async updateDecisionPseudonymisee(id: string, decisionPseudonymisee: string): Promise<string> {
+  async updateDecisionPseudonymisee(
+    id: string,
+    pseudoText: string,
+    labelTreatments: LabelTreatmentDto[],
+    labelStatus: LabelStatus,
+    publishStatus: PublishStatus
+  ): Promise<string> {
     const result = await this.decisionModel
-      .updateOne({ _id: new Types.ObjectId(id) }, { $set: { pseudoText: decisionPseudonymisee } })
+      .updateOne(
+        { _id: new Types.ObjectId(id) },
+        {
+          $set: {
+            pseudoText,
+            labelTreatments,
+            labelStatus,
+            publishStatus
+          }
+        },
+        { new: true }
+      )
       .catch((error) => {
         throw new DatabaseError(error)
       })
@@ -151,45 +170,50 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return id
   }
 
-  async updateRapportsOccultations(
-    id: string,
-    rapportsOccultations: RapportOccultation[]
-  ): Promise<string> {
-    const result = await this.decisionModel
-      .updateOne(
-        { _id: new Types.ObjectId(id) },
-        { $set: { labelTreatments: rapportsOccultations } }
-      )
-      .catch((error) => {
-        throw new DatabaseError(error)
-      })
-
-    if (result.matchedCount === 0 && result.acknowledged) {
-      throw new DecisionNotFoundError()
-    }
-
-    // Acknowledged peut être à false si Mongoose est incapable d'exécuter la requête
-    if (!result.acknowledged) {
-      throw new UpdateFailedError('Mongoose error while updating decision concealment reports')
-    }
-
-    return id
-  }
-
   mapDecisionSearchParametersToFindCriteria(decisionSearchParams: GetDecisionsListDto) {
     const todayDate = new Date().toISOString().slice(0, 10)
     // syntax :  https://medium.com/@slamflipstrom/conditional-object-properties-using-spread-in-javascript-714e0a12f496
     return {
       ...(decisionSearchParams.status && { labelStatus: decisionSearchParams.status }),
-      ...(decisionSearchParams.source && { sourceName: decisionSearchParams.source }),
-      ...(decisionSearchParams.startDate && {
-        dateCreation: { $gte: decisionSearchParams.startDate, $lte: todayDate }
+      ...(decisionSearchParams.sourceName && { sourceName: decisionSearchParams.sourceName }),
+      ...(decisionSearchParams.sourceId && { sourceId: decisionSearchParams.sourceId }),
+      ...(decisionSearchParams.jurisdiction && {
+        jurisdictionName: decisionSearchParams.jurisdiction
       }),
-      ...(decisionSearchParams.endDate && {
-        dateCreation: { $lte: decisionSearchParams.endDate, $gte: todayDate }
-      }),
+      ...(decisionSearchParams.chamber && { chamberName: decisionSearchParams.chamber }),
       ...(decisionSearchParams.startDate &&
-        decisionSearchParams.endDate && {
+        decisionSearchParams.dateType &&
+        decisionSearchParams.dateType === DateType.DATEDECISION && {
+          dateDecision: { $gte: decisionSearchParams.startDate, $lte: todayDate }
+        }),
+      ...(decisionSearchParams.endDate &&
+        decisionSearchParams.dateType &&
+        decisionSearchParams.dateType === DateType.DATEDECISION && {
+          dateDecision: { $lte: decisionSearchParams.endDate, $gte: todayDate }
+        }),
+      ...(decisionSearchParams.startDate &&
+        decisionSearchParams.dateType &&
+        decisionSearchParams.dateType === DateType.DATECREATION && {
+          dateCreation: { $gte: decisionSearchParams.startDate, $lte: todayDate }
+        }),
+      ...(decisionSearchParams.endDate &&
+        decisionSearchParams.dateType &&
+        decisionSearchParams.dateType === DateType.DATECREATION && {
+          dateCreation: { $lte: decisionSearchParams.endDate, $gte: todayDate }
+        }),
+      ...(decisionSearchParams.startDate &&
+        decisionSearchParams.endDate &&
+        decisionSearchParams.dateType &&
+        decisionSearchParams.dateType === DateType.DATEDECISION && {
+          dateDecision: {
+            $gte: decisionSearchParams.startDate,
+            $lte: decisionSearchParams.endDate
+          }
+        }),
+      ...(decisionSearchParams.startDate &&
+        decisionSearchParams.endDate &&
+        decisionSearchParams.dateType &&
+        decisionSearchParams.dateType === DateType.DATECREATION && {
           dateCreation: {
             $gte: decisionSearchParams.startDate,
             $lte: decisionSearchParams.endDate

@@ -26,13 +26,17 @@ import { DecisionNotFoundException } from '../exceptions/decisionNotFound.except
 import { ClientNotAuthorizedException } from '../exceptions/clientNotAuthorized.exception'
 import { DecisionsRepository } from '../db/repositories/decisions.repository'
 import { LogsFormat } from '../utils/logsFormat.utils'
-import { FetchDecisionPseudonymiseeByIdUsecase } from '../../usecase/fetchDecisionPseudonymiseeByIdUsecase'
+import { FetchDecisionPseudonymiseeByIdUsecase } from '../../usecase/fetchDecisionPseudonymiseeById.usecase'
 import { GetDecisionByIdResponse } from './responses/getDecisionById.response'
+import { MapModelToResponseService } from '../../service/mapModelToResponse.service'
 
 @ApiTags('DbSder')
 @Controller('decisions-pseudonymisees')
 export class GetDecisionPseudonymiseesController {
-  constructor(private readonly decisionsRepository: DecisionsRepository) {}
+  constructor(
+    private readonly decisionsRepository: DecisionsRepository,
+    private readonly mapModelToResponseService: MapModelToResponseService
+  ) {}
 
   private readonly logger = new Logger()
 
@@ -81,7 +85,8 @@ export class GetDecisionPseudonymiseesController {
       }
     }
     const fetchDecisionPseudonymiseeByIdUsecase = new FetchDecisionPseudonymiseeByIdUsecase(
-      this.decisionsRepository
+      this.decisionsRepository,
+      this.mapModelToResponseService
     )
 
     const foundDecision = await fetchDecisionPseudonymiseeByIdUsecase

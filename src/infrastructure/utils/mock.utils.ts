@@ -2,7 +2,7 @@ import { GetDecisionsListResponse } from '../controllers/responses/getDecisionsL
 import { CodeDecision } from '../db/models/codeDecision.model'
 import { CodeNAC } from '../db/models/codeNAC.model'
 import { CreateDecisionDTO } from '../dto/createDecision.dto'
-import { UpdateDecisionRapportsOccultationsDTO } from '../dto/updateDecision.dto'
+import { LabelTreatmentDto } from '../dto/updateDecision.dto'
 import {
   LabelStatus,
   Occultation,
@@ -12,6 +12,8 @@ import {
   TypePartie
 } from 'dbsder-api-types'
 import { Types } from 'mongoose'
+import { DateType } from './dateType.utils'
+
 const TODAY = new Date().toISOString()
 const YESTERDAY_YYYY_MM_DD = new Date(new Date().setDate(new Date().getDate() - 1))
   .toISOString()
@@ -24,13 +26,17 @@ export class MockUtils {
   decisionTJToBeTreated: GetDecisionsListResponse = {
     dateCreation: TODAY,
     _id: '507f1f77bcf86cd799439011',
-    source: Sources.TJ,
+    sourceName: Sources.TJ,
     status: LabelStatus.TOBETREATED
   }
 
   decisionQueryDTO = {
     status: LabelStatus.TOBETREATED,
-    source: Sources.TJ,
+    sourceName: Sources.TJ,
+    sourceId: 1,
+    jurisdition: 'someJurisdictionName',
+    chamber: 'someChamberName',
+    dateDecision: YESTERDAY_YYYY_MM_DD,
     startDate: YESTERDAY_YYYY_MM_DD,
     endDate: TOMORROW_YYYY_MM_DD
   }
@@ -40,7 +46,7 @@ export class MockUtils {
 
   decisionQueryWithUnknownSourceDTO = {
     status: LabelStatus.TOBETREATED,
-    source: 'unknownSource',
+    sourceName: 'unknownSource',
     startDate: YESTERDAY_YYYY_MM_DD,
     endDate: TOMORROW_YYYY_MM_DD
   }
@@ -175,28 +181,39 @@ export class MockUtils {
     sourceId: 1,
     sourceName: Sources.TJ,
     originalTextZoning: this.zoningModel,
+    pseudoText: 'My decision pseudo text',
     firstImportDate: TODAY,
     lastImportDate: TODAY,
     publishDate: null,
     unpublishDate: null
   }
 
-  decisionRapportsOccultations: UpdateDecisionRapportsOccultationsDTO = {
-    rapportsOccultations: [
+  labelTreatment: LabelTreatmentDto = {
+    annotations: [
       {
-        annotations: [
-          {
-            category: 'some-category',
-            entityId: 'some-entity-id',
-            start: 1,
-            text: 'some-text',
-            certaintyScore: 80
-          }
-        ],
-        source: 'some-source',
-        order: 1
+        category: 'some-category',
+        entityId: 'some-entity-id',
+        start: 1,
+        text: 'some-text',
+        certaintyScore: 1
+      },
+      {
+        category: 'other-category',
+        entityId: 'other-entity-id',
+        start: 5,
+        text: 'other-text',
+        certaintyScore: 0.5
       }
-    ]
+    ],
+    source: 'some-source',
+    order: 1,
+    version: {
+      juriSpacyTokenizer: { date: '2000-06-18', version: '1.2.3' },
+      juritools: { date: '2000-06-18', version: '1.2.3' },
+      pseudonymisationApi: { date: '2000-06-18', version: '1.2.3' },
+      model: { name: 'MyModel' }
+    },
+    treatmentDate: '123456'
   }
 
   decisionPseudonymisee = {
@@ -255,6 +272,7 @@ export class MockUtils {
     sourceId: 1,
     sourceName: Sources.TJ,
     originalTextZoning: this.zoningModel,
+    pseudoText: 'My decision pseudo text',
     firstImportDate: TODAY,
     lastImportDate: TODAY,
     publishDate: null,
@@ -373,5 +391,9 @@ export class MockUtils {
     routeCA: 'Automatic',
     routeTJ: 'Exhaustive',
     overwritesNAC: false
+  }
+
+  dateTypeMock = {
+    dateType: DateType.DATEDECISION
   }
 }
