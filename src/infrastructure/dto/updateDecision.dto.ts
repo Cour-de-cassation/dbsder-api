@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsArray, IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator'
 import { MockUtils } from '../utils/mock.utils'
 import { Type } from 'class-transformer'
-import { Annotation, LabelStatus, LabelTreatment } from 'dbsder-api-types'
+import { Annotation, LabelStatus, LabelTreatment, Check } from 'dbsder-api-types'
 
 const mockUtils = new MockUtils()
 
@@ -76,6 +76,13 @@ export class LabelTreatmentDto {
     example: mockUtils.labelTreatment.treatmentDate
   })
   treatmentDate?: string
+
+  @ApiPropertyOptional({
+    description: 'Checklist',
+    type: Object,
+    example: mockUtils.labelTreatment.checklist
+  })
+  checklist?: Check[]
 }
 
 export class AnnotationDto {
