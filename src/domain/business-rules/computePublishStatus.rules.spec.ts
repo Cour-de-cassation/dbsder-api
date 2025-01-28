@@ -29,9 +29,24 @@ describe('computePublishStatus', () => {
       expect(givenDecision.publishStatus).toEqual(expectedPublishStatus)
     })
 
+    it('when labelStatus is done', async () => {
+      // GIVEN
+      const givenDecision = {
+        ...mockUtils.decisionModel,
+        labelStatus: LabelStatus.DONE
+      }
+      const expectedPublishStatus = PublishStatus.TOBEPUBLISHED
+
+      // WHEN
+      givenDecision.publishStatus = computePublishStatus(givenDecision)
+
+      // THEN
+      expect(givenDecision.publishStatus).toEqual(expectedPublishStatus)
+    })
+
     Object.keys(LabelStatus).forEach((labelStatusKey) => {
       const labelStatusValue = LabelStatus[labelStatusKey as keyof typeof LabelStatus]
-      if (labelStatusValue !== LabelStatus.TOBETREATED) {
+      if (labelStatusValue !== LabelStatus.TOBETREATED && labelStatusValue !== LabelStatus.DONE) {
         it(`when labelStatus is ${labelStatusValue}`, async () => {
           // GIVEN
           const givenDecision = {

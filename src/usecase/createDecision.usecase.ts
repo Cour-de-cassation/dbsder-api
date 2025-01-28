@@ -1,10 +1,11 @@
 import { CreateDecisionDTO } from '../infrastructure/dto/createDecision.dto'
 import { InterfaceDecisionsRepository } from '../domain/decisions.repository.interface'
 import { CodeNACsRepository } from '../infrastructure/db/repositories/codeNACs.repository'
-import { LabelStatus, Sources, Zoning } from 'dbsder-api-types'
+import { LabelStatus, PublishStatus, Sources, Zoning } from 'dbsder-api-types'
 import { ZoningApiService } from '../service/zoningApi.service'
 import { computeLabelStatus } from '../domain/business-rules/computeLabelStatus.rules'
 import { computePublishStatus } from '../domain/business-rules/computePublishStatus.rules'
+import { isDecisionHasSensitiveChanges } from '../domain/business-rules/isDecisionHasSensitiveChanges.rules'
 
 export class CreateDecisionUsecase {
   constructor(
@@ -35,6 +36,17 @@ export class CreateDecisionUsecase {
           givenCodeNAC.categoriesToOmitTJ[decision.recommandationOccultation.toString()]
 
         decision.blocOccultation = givenCodeNAC.blocOccultationTJ
+      }
+
+      // Si la décision a déjà été reçue et publiée ne la renvoyer dans label que si les changement de métadonnées sont significatifs
+      const currentDecision = await this.decisionsRepository.getBySourceIdAndSourceName(
+        decision.sourceId,
+        decision.sourceName
+      )
+      if (currentDecision && currentDecision.publishStatus === PublishStatus.SUCCESS) {
+        decision.labelStatus = isDecisionHasSensitiveChanges(currentDecision, decision)
+          ? decision.labelStatus
+          : LabelStatus.DONE
       }
     }
 

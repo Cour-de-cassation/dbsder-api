@@ -100,6 +100,16 @@ export class DecisionsRepository implements InterfaceDecisionsRepository {
     return decision
   }
 
+  async getBySourceIdAndSourceName(sourceId: number, sourceName: string): Promise<Decision> {
+    const decision = await this.decisionModel
+      .findOne({ sourceId, sourceName })
+      .lean()
+      .catch((error) => {
+        throw new DatabaseError(error)
+      })
+    return decision
+  }
+
   async removeById(id: string): Promise<void> {
     const removalResponse = await this.decisionModel
       .deleteOne({ _id: new Types.ObjectId(id) })
