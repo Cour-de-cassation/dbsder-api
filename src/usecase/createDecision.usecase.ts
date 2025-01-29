@@ -43,7 +43,11 @@ export class CreateDecisionUsecase {
         decision.sourceId,
         decision.sourceName
       )
-      if (currentDecision && currentDecision.publishStatus === PublishStatus.SUCCESS) {
+      if (
+        currentDecision &&
+        currentDecision.publishStatus === PublishStatus.SUCCESS &&
+        currentDecision.labelStatus === LabelStatus.EXPORTED
+      ) {
         decision.labelStatus = isDecisionHasSensitiveChanges(currentDecision, decision)
           ? decision.labelStatus
           : LabelStatus.DONE
