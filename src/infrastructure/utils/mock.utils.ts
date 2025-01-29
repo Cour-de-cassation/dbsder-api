@@ -213,7 +213,32 @@ export class MockUtils {
       pseudonymisationApi: { date: '2000-06-18', version: '1.2.3' },
       model: { name: 'MyModel' }
     },
-    treatmentDate: '123456'
+    treatmentDate: '123456',
+    checklist: [
+      {
+        check_type: 'juridoute',
+        message: "L'annotation 'Fabien' est-elle une personne physique ?",
+        short_message: 'Fabien [personnePhysique] ?',
+        entities: [
+          {
+            category: 'personnePhysique',
+            entityId: 'personnePhysique_fabien',
+            start: 2732,
+            end: 2746,
+            text: 'Fabien',
+            source: '',
+            score: 0.5
+          }
+        ],
+        sentences: [
+          {
+            start: 2700,
+            end: 2747
+          }
+        ],
+        metadata_text: []
+      }
+    ]
   }
 
   decisionPseudonymisee = {
