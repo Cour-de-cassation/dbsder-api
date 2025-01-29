@@ -11,6 +11,8 @@ export interface InterfaceDecisionsRepository {
 
   getById(id: string): Promise<Decision>
 
+  getBySourceIdAndSourceName(sourceId: number, sourceName: string): Promise<Decision>
+
   updateStatut(id: string, status: string): Promise<string>
 
   updateDecisionPseudonymisee(
