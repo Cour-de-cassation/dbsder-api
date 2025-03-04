@@ -195,14 +195,16 @@ export class MockUtils {
         entityId: 'some-entity-id',
         start: 1,
         text: 'some-text',
-        certaintyScore: 1
+        score: 1,
+        source: 'mysource'
       },
       {
         category: 'other-category',
         entityId: 'other-entity-id',
         start: 5,
         text: 'other-text',
-        certaintyScore: 0.5
+        score: 0.5,
+        source: 'mysource'
       }
     ],
     source: 'some-source',
