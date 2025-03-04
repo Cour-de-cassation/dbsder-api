@@ -1,1333 +1,1970 @@
 {
-  "openapi": "3.0.0",
-  "paths": {
-    "/v1/health": {
-      "get": {
-        "operationId": "HealthController_check",
-        "parameters": [
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "description": "Clé API",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The Health Check is successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": { "type": "string", "example": "ok" },
-                    "info": {
-                      "type": "object",
-                      "example": { "database": { "status": "up" } },
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": { "status": { "type": "string" } },
-                        "additionalProperties": { "type": "string" }
-                      },
-                      "nullable": true
-                    },
-                    "error": {
-                      "type": "object",
-                      "example": {},
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": { "status": { "type": "string" } },
-                        "additionalProperties": { "type": "string" }
-                      },
-                      "nullable": true
-                    },
-                    "details": {
-                      "type": "object",
-                      "example": { "database": { "status": "up" } },
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": { "status": { "type": "string" } },
-                        "additionalProperties": { "type": "string" }
-                      }
+    "openapi": "3.0.0",
+    "paths": {
+        "/v1/health": {
+            "get": {
+                "operationId": "HealthController_check",
+                "parameters": [
+                    {
+                        "name": "x-api-key",
+                        "in": "header",
+                        "description": "Clé API",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                  }
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "The Health Check is not successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": { "type": "string", "example": "error" },
-                    "info": {
-                      "type": "object",
-                      "example": { "database": { "status": "up" } },
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": { "status": { "type": "string" } },
-                        "additionalProperties": { "type": "string" }
-                      },
-                      "nullable": true
-                    },
-                    "error": {
-                      "type": "object",
-                      "example": { "redis": { "status": "down", "message": "Could not connect" } },
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": { "status": { "type": "string" } },
-                        "additionalProperties": { "type": "string" }
-                      },
-                      "nullable": true
-                    },
-                    "details": {
-                      "type": "object",
-                      "example": {
-                        "database": { "status": "up" },
-                        "redis": { "status": "down", "message": "Could not connect" }
-                      },
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": { "status": { "type": "string" } },
-                        "additionalProperties": { "type": "string" }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/decisions/{id}": {
-      "get": {
-        "operationId": "GetDecisionByIdController_getDecisionById",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Identifiant de la décision",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "description": "Clé API",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Décision trouvée",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/GetDecisionByIdResponse" }
-              }
-            }
-          },
-          "401": { "description": "Vous n'êtes pas autorisé à appeler cette route" },
-          "404": { "description": "La decision n'a pas été trouvée" }
-        },
-        "tags": ["DbSder"]
-      },
-      "delete": {
-        "operationId": "DeleteDecisionByIdController_deleteDecisionById",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Identifiant de la décision",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "description": "Clé API",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "204": { "description": "La décision a bien été supprimée" },
-          "401": { "description": "Vous n'êtes pas autorisé à appeler cette route" },
-          "404": { "description": "La decision n'a pas été trouvée" },
-          "422": { "description": "Entité non processable" },
-          "503": { "description": "Service non disponible" }
-        },
-        "tags": ["DbSder"]
-      }
-    },
-    "/v1/decisions-pseudonymisees/{id}": {
-      "get": {
-        "operationId": "GetDecisionPseudonymiseesController_getDecisionById",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Identifiant de la décision",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "avecMetadonneesPersonnelles",
-            "required": true,
-            "in": "query",
-            "schema": { "type": "boolean" }
-          },
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "description": "Clé API",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "La décision",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/GetDecisionByIdResponse" }
-              }
-            }
-          },
-          "401": { "description": "Vous n'êtes pas autorisé à appeler cette route" },
-          "404": { "description": "La decision n'a pas été trouvée" }
-        },
-        "tags": ["DbSder"]
-      }
-    },
-    "/v1/decisions": {
-      "get": {
-        "operationId": "ListDecisionsController_getDecisions",
-        "parameters": [
-          {
-            "name": "source",
-            "required": false,
-            "in": "query",
-            "description": "Source de la décision",
-            "example": "juritj",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "status",
-            "required": true,
-            "in": "query",
-            "description": "Décision intègre au format wordperfect et metadonnées associées.",
-            "example": "toBeTreated",
-            "schema": {
-              "enum": [
-                "toBeTreated",
-                "loaded",
-                "done",
-                "exported",
-                "blocked",
-                "ignored_debatNonPublic",
-                "ignored_decisionNonPublique",
-                "ignored_codeDecisionBloqueCC",
-                "ignored_dateDecisionIncoherente",
-                "ignored_codeNACdeDecisionNonPublique",
-                "ignored_codeNACdeDecisionPartiellementPublique",
-                "ignored_codeNACInconnu",
-                "ignored_caractereInconnu",
-                "ignored_dateAvantMiseEnService",
-                "ignored_controleRequis"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "name": "startDate",
-            "required": true,
-            "in": "query",
-            "description": "date de début de la période de recherche",
-            "example": "2024-04-24T09:24:23.186Z",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "endDate",
-            "required": true,
-            "in": "query",
-            "description": "date de fin de la période de recherche",
-            "example": "2024-04-24T09:24:23.186Z",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "numero",
-            "required": false,
-            "in": "query",
-            "description": "NumeroRoleGeneral ou d'appel de la décision",
-            "example": "01/12345",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "description": "Clé API",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Une liste de décisions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/GetDecisionsListResponse" }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Le paramètre écrit n'est présent dans la liste des valeurs acceptées"
-          },
-          "401": { "description": "Vous n'êtes pas autorisé à appeler cette route" }
-        },
-        "tags": ["DbSder"]
-      },
-      "put": {
-        "operationId": "CreateDecisionsController_createDecisions",
-        "parameters": [
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "description": "Clé API",
-            "schema": { "type": "string" }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "description": "Décision intègre au format wordperfect et metadonnées associées.",
-          "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/CreateDecisionDTO" } }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Décision créée ou mise à jour",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/CreateDecisionResponse" }
-              }
-            }
-          },
-          "400": {
-            "description": "Il manque un ou plusieurs champs obligatoires dans la décision"
-          },
-          "401": { "description": "Vous n'êtes pas autorisé à appeler cette route" }
-        },
-        "tags": ["DbSder"]
-      }
-    },
-    "/v1/decisions/{id}/decision-pseudonymisee": {
-      "put": {
-        "operationId": "UpdateDecisionPseudonymiseeController_updateDecisionPseudonymisee",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Identifiant de la décision",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "description": "Clé API",
-            "schema": { "type": "string" }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "description": "Décision pseudonymisée de la décision",
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/UpdateDecisionPseudonymiseeDTO" }
-            }
-          }
-        },
-        "responses": {
-          "204": { "description": "" },
-          "400": { "description": "Statut manquant ou invalide" },
-          "401": { "description": "Vous n'êtes pas autorisé à appeler cette route" },
-          "404": { "description": "La decision n'a pas été trouvée" }
-        },
-        "tags": ["DbSder"]
-      }
-    },
-    "/v1/decisions/{id}/rapports-occultations": {
-      "put": {
-        "operationId": "UpdateDecisionRapportsOccultationsController_updateDecisionRapportsOccultations",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Identifiant de la décision",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "description": "Clé API",
-            "schema": { "type": "string" }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "description": "Rapport d'occultations de la décision",
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/UpdateDecisionRapportsOccultationsDTO" }
-            }
-          }
-        },
-        "responses": {
-          "204": { "description": "" },
-          "400": { "description": "Statut manquant ou invalide" },
-          "401": { "description": "Vous n'êtes pas autorisé à appeler cette route" },
-          "404": { "description": "La decision n'a pas été trouvée" }
-        },
-        "tags": ["DbSder"]
-      }
-    },
-    "/v1/decisions/{id}/statut": {
-      "put": {
-        "operationId": "UpdateDecisionStatutController_updateDecisionStatut",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Identifiant de la décision",
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "description": "Clé API",
-            "schema": { "type": "string" }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "description": "Statut de la décision",
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/UpdateDecisionStatutDTO" }
-            }
-          }
-        },
-        "responses": {
-          "204": { "description": "" },
-          "400": { "description": "Statut manquant ou invalide" },
-          "401": { "description": "Vous n'êtes pas autorisé à appeler cette route" },
-          "404": { "description": "La decision n'a pas été trouvée" }
-        },
-        "tags": ["DbSder"]
-      }
-    }
-  },
-  "info": {
-    "title": "DBSder API",
-    "description": "Documentation de DBSder API qui permet de fournir une interface aux appels de la DBSder",
-    "version": "1.0",
-    "contact": {}
-  },
-  "tags": [{ "name": "DbSder", "description": "" }],
-  "servers": [],
-  "components": {
-    "schemas": {
-      "GetDecisionByIdResponse": {
-        "type": "object",
-        "properties": {
-          "_id": {
-            "type": "string",
-            "description": "Identifiant de la décision",
-            "example": "507f1f77bcf86cd799439011"
-          },
-          "analysis": {
-            "type": "object",
-            "description": "Analyse de la décision",
-            "example": {
-              "analyse": ["someAnalyse"],
-              "doctrine": "someDoctrine",
-              "link": "someLink",
-              "reference": ["someReference"],
-              "source": "someSource",
-              "summary": "someSummary",
-              "target": "someTarget",
-              "title": ["someTitle"]
-            }
-          },
-          "appeals": {
-            "description": "Liste des pourvois",
-            "example": ["someAppeal"],
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "chamberId": {
-            "type": "string",
-            "description": "Identifiant de la chambre",
-            "example": "someChamberId"
-          },
-          "chamberName": {
-            "type": "string",
-            "description": "Nom de la chambre",
-            "example": "someChamberName"
-          },
-          "dateCreation": {
-            "type": "string",
-            "description": "Date de création de la décision au format ISO 8601",
-            "example": "2024-04-24T09:24:23.186Z"
-          },
-          "dateDecision": {
-            "type": "string",
-            "description": "Date de la décision au format AAAA-MM-JJ",
-            "example": "2024-04-23"
-          },
-          "decatt": {
-            "description": "Décision attaquée : une décision de la Cour de cassation qui attaque une décision de cour d'appel",
-            "example": [1, 2],
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "jurisdictionCode": {
-            "type": "string",
-            "description": "Code de la juridiction",
-            "example": "someJurisdictionCode"
-          },
-          "jurisdictionId": {
-            "type": "string",
-            "description": "Identifiant de la juridiction",
-            "example": "someJurisdictionId"
-          },
-          "jurisdictionName": {
-            "type": "string",
-            "description": "Nom de la juridiction",
-            "example": "someJurisdictionName"
-          },
-          "labelStatus": {
-            "type": "string",
-            "description": "Statut interne de la décision",
-            "example": "toBeTreated"
-          },
-          "occultation": {
-            "type": "object",
-            "description": "Instruction d'occultation de la décision (champ non communiqué pour les décisions pseudonymisées)",
-            "example": {
-              "additionalTerms": "someAdditionalTerms",
-              "categoriesToOmit": ["someCategoriesToOmit"]
-            }
-          },
-          "originalText": {
-            "type": "string",
-            "description": "Texte original de la décision (champ non communiqué pour les décisions pseudonymisées)",
-            "example": "someOriginalText"
-          },
-          "pseudoStatus": {
-            "type": "string",
-            "description": "Statut de la décision pseudonymisée",
-            "example": ""
-          },
-          "pseudoText": {
-            "type": "string",
-            "description": "Texte pseudonymisé de la décision",
-            "example": "texte pseudonymisé"
-          },
-          "public": {
-            "type": "boolean",
-            "description": "Indicateur de décision publique ",
-            "example": true
-          },
-          "registerNumber": {
-            "type": "string",
-            "description": "Numéro de registre de la décision",
-            "example": "someRegisterNumber"
-          },
-          "solution": {
-            "type": "string",
-            "description": "Solution de la décision",
-            "example": "someSolution"
-          },
-          "sourceId": {
-            "type": "number",
-            "description": "Identifiant de la décision depuis la source",
-            "example": 1
-          },
-          "sourceName": {
-            "type": "string",
-            "description": "Nom de la source de la décision",
-            "example": "juritj"
-          },
-          "zoning": {
-            "type": "object",
-            "description": "Données pour la mise en page d'une décision",
-            "example": "juritj"
-          },
-          "publication": {
-            "description": "Propriété interne nécessaire à la publication des décisions",
-            "example": ["somePublication"],
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "formation": {
-            "type": "string",
-            "description": "Propriété interne nécessaire à la publication des décisions",
-            "example": "someFormation"
-          },
-          "blocOccultation": {
-            "type": "number",
-            "description": "Bloc d'occultation à respecter pour la décision",
-            "example": 1
-          },
-          "NAOCode": {
-            "type": "string",
-            "description": "Cour de cassation : circuit de relecture",
-            "example": "someNAOCode"
-          },
-          "natureAffaireCivil": {
-            "type": "string",
-            "description": "Cour de cassation : circuit de relecture",
-            "example": "someNatureAffaireCivil"
-          },
-          "natureAffairePenal": {
-            "type": "string",
-            "description": "Cour de cassation : circuit de relecture",
-            "example": "someNatureAffairePenal"
-          },
-          "codeMatiereCivil": {
-            "type": "string",
-            "description": "Cour de cassation : circuit de relecture",
-            "example": "someCodeMatiereCivil"
-          },
-          "NACCode": {
-            "type": "string",
-            "description": "Cour de cassation : circuit de relecture"
-          },
-          "NPCode": { "type": "string", "description": "Code de nature particulière" },
-          "endCaseCode": { "type": "string", "description": "Code de fin d'affaire" },
-          "libelleEndCaseCode": {
-            "type": "string",
-            "description": "Libellé endCaseCode / codeDecision",
-            "example": "some libelle code decision / endCaseCode"
-          },
-          "filenameSource": {
-            "type": "string",
-            "description": "Nom du fichier source de la décision"
-          },
-          "labelTreatments": {
-            "description": "Résumé des traitements Label de la décision",
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "parties": { "type": "object", "description": "Liste des parties de la décision" },
-          "pubCategory": {
-            "type": "string",
-            "description": "Catégorie de publication de la décision"
-          },
-          "codeNature": {
-            "type": "string",
-            "description": "Code de la nature de la décision",
-            "example": "6C"
-          },
-          "codeService": {
-            "type": "string",
-            "description": "Identifiant du service de la juridiction",
-            "example": "0A"
-          },
-          "debatPublic": {
-            "type": "boolean",
-            "description": "Indicateur de débat public de la décision",
-            "example": true
-          },
-          "decisionAssociee": { "type": "object", "description": "Décision Associée" },
-          "indicateurQPC": {
-            "type": "boolean",
-            "description": "Indicateur QPC de décision ",
-            "example": true
-          },
-          "idDecisionWinci": {
-            "type": "string",
-            "description": "Identifiant de la décision Winci"
-          },
-          "libelleNAC": {
-            "type": "string",
-            "description": "Libellé du code NAC",
-            "example": "Demande en dommages-intérêts contre un organisme"
-          },
-          "libelleNatureParticuliere": {
-            "type": "string",
-            "description": "Libellé de la nature particulière",
-            "example": "Autres demandes en matière de frais et dépens"
-          },
-          "libelleService": {
-            "type": "string",
-            "description": "Libellé du service",
-            "example": "Libelle de service"
-          },
-          "matiereDeterminee": {
-            "type": "boolean",
-            "description": "Indicateur de matière déterminée",
-            "example": true
-          },
-          "numeroRoleGeneral": {
-            "type": "string",
-            "description": "Numéro de rôle général",
-            "example": "01/12345"
-          },
-          "pourvoiCourDeCassation": {
-            "type": "boolean",
-            "description": "Indicateur de pourvoi en cassation",
-            "example": false
-          },
-          "pourvoiLocal": {
-            "type": "boolean",
-            "description": "Indicateur de pourvoi local",
-            "example": false
-          },
-          "president": { "type": "object", "description": "Président de chambre de la décision" },
-          "recommandationOccultation": {
-            "type": "string",
-            "description": "Recommandation d'occultation",
-            "example": "aucune"
-          },
-          "sommaire": { "type": "string", "description": "Résumé de la décision" },
-          "selection": {
-            "type": "boolean",
-            "description": "Indicateur de sélection",
-            "example": false
-          },
-          "idDecisionTJ": {
-            "type": "string",
-            "description": "Identifiant technique TJ",
-            "example": "TJ00001A01-1234520221121"
-          }
-        },
-        "required": [
-          "_id",
-          "appeals",
-          "chamberId",
-          "chamberName",
-          "dateCreation",
-          "dateDecision",
-          "jurisdictionCode",
-          "jurisdictionId",
-          "jurisdictionName",
-          "labelStatus",
-          "originalText",
-          "public",
-          "registerNumber",
-          "sourceId",
-          "sourceName",
-          "zoning",
-          "blocOccultation"
-        ]
-      },
-      "GetDecisionsListResponse": {
-        "type": "object",
-        "properties": {
-          "_id": {
-            "type": "string",
-            "description": "Identifiant de la décision",
-            "example": "507f1f77bcf86cd799439011"
-          },
-          "status": {
-            "type": "string",
-            "description": "Statut de la décision",
-            "example": "toBeTreated"
-          },
-          "source": {
-            "type": "string",
-            "description": "Source de la décision",
-            "example": "juritj"
-          },
-          "dateCreation": {
-            "type": "string",
-            "description": "Date de création de la décision au format ISO 8601",
-            "example": "2024-04-24T09:24:23.186Z"
-          }
-        },
-        "required": ["_id", "status", "source", "dateCreation"]
-      },
-      "DecisionAnalyse": {
-        "type": "object",
-        "properties": {
-          "analyse": {
-            "description": "Eléments de titrage et d'analyse complémentaires",
-            "example": ["someAnalyse"],
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "doctrine": { "type": "string", "description": "Doctrine", "example": "someDoctrine" },
-          "link": {
-            "type": "string",
-            "description": "Rapprochements de jurisprudence",
-            "example": "someLink"
-          },
-          "reference": {
-            "description": "Eléments de titrage et d'analyse complémentaires",
-            "example": ["someReference"],
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "source": { "type": "string", "description": "Source", "example": "someSource" },
-          "summary": {
-            "type": "string",
-            "description": "Résumé de la décision",
-            "example": "someSummary"
-          },
-          "target": {
-            "type": "string",
-            "description": "Texte(s) visé(s)",
-            "example": "someTarget"
-          },
-          "title": {
-            "description": "Eléments de titrage",
-            "example": ["someTitle"],
-            "type": "array",
-            "items": { "type": "string" }
-          }
-        },
-        "required": [
-          "analyse",
-          "doctrine",
-          "link",
-          "reference",
-          "source",
-          "summary",
-          "target",
-          "title"
-        ]
-      },
-      "DecisionOccultation": {
-        "type": "object",
-        "properties": {
-          "additionalTerms": {
-            "type": "string",
-            "description": "Termes additionnels à ajouter lors de l'occultation",
-            "example": "someAdditionalTerms"
-          },
-          "categoriesToOmit": {
-            "description": "Catégories additionnels à omettre lors de l'occultation",
-            "example": ["someCategoriesToOmit"],
-            "type": "array",
-            "items": { "type": "string" }
-          }
-        },
-        "required": ["additionalTerms", "categoriesToOmit"]
-      },
-      "AnnotationDto": {
-        "type": "object",
-        "properties": {
-          "category": {
-            "type": "string",
-            "description": "Categorie de l'annotation",
-            "example": "some-category"
-          },
-          "entityId": {
-            "type": "string",
-            "description": "ID de l'entité",
-            "example": "some-entity-id"
-          },
-          "start": { "type": "number", "description": "Démarre à la position", "example": 1 },
-          "text": {
-            "type": "string",
-            "description": "Texte de l'annotation",
-            "example": "some-text"
-          },
-          "certaintyScore": { "type": "number", "description": "Score de certitude", "example": 80 }
-        },
-        "required": ["category", "entityId", "start", "text", "certaintyScore"]
-      },
-      "LabelTreatmentDto": {
-        "type": "object",
-        "properties": {
-          "annotations": {
-            "description": "Liste d'annotations",
-            "example": [
-              {
-                "category": "some-category",
-                "entityId": "some-entity-id",
-                "start": 1,
-                "text": "some-text",
-                "certaintyScore": 80
-              }
-            ],
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/AnnotationDto" }
-          },
-          "source": { "type": "string", "description": "Source", "example": "some-source" },
-          "order": { "type": "number", "description": "Ordre", "example": 1 }
-        },
-        "required": ["source", "order"]
-      },
-      "DecisionAssocieeDto": {
-        "type": "object",
-        "properties": {
-          "numeroRegistre": {
-            "type": "string",
-            "description": "Numéro de registre de la décision associée",
-            "example": "A"
-          },
-          "numeroRoleGeneral": {
-            "type": "string",
-            "description": "Numéro RG (Rôle Général) du dossier. Année sur deux chiffres séparé par un «/» d’un numéro à cinq chiffres (0 non significatifs présents). Au format : ^[0-9]{2}/[0-9]{5}$",
-            "example": "01/12345"
-          },
-          "idJuridiction": {
-            "type": "string",
-            "description": "Identifiant de la juridiction émettrice propre au système d’information originel pour la décision associée. Au format ^TJ[0-9]{5}$",
-            "example": "TJ00000"
-          },
-          "date": {
-            "type": "string",
-            "description": "Date de la décision associée. Au format AAAAMMJJ",
-            "example": "20221121"
-          },
-          "idDecisionWinci": {
-            "type": "string",
-            "description": "ID de la décision associée provenant de Winci TGI",
-            "example": "some-id"
-          }
-        },
-        "required": ["numeroRegistre", "numeroRoleGeneral", "idJuridiction", "date"]
-      },
-      "PresidentDto": {
-        "type": "object",
-        "properties": {
-          "fonction": {
-            "type": "string",
-            "description": "Fonction du président de jugement",
-            "example": "president"
-          },
-          "nom": {
-            "type": "string",
-            "description": "Nom du président de jugement",
-            "example": "Nom Presidente"
-          },
-          "prenom": {
-            "type": "string",
-            "description": "Prénom du président de jugement",
-            "example": "Prenom Presidente"
-          },
-          "civilite": {
-            "type": "string",
-            "description": "Civilité du président de jugement",
-            "example": "Mme."
-          }
-        },
-        "required": ["fonction", "nom"]
-      },
-      "CreateDecisionDTO": {
-        "type": "object",
-        "properties": {
-          "analysis": {
-            "description": "Analyse de la décision",
-            "example": {
-              "analyse": ["someAnalyse"],
-              "doctrine": "someDoctrine",
-              "link": "someLink",
-              "reference": ["someReference"],
-              "source": "someSource",
-              "summary": "someSummary",
-              "target": "someTarget",
-              "title": ["someTitle"]
-            },
-            "allOf": [{ "$ref": "#/components/schemas/DecisionAnalyse" }]
-          },
-          "appeals": {
-            "description": "Numéro(s) de pourvoi de la décision",
-            "example": ["someAppeal"],
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "chamberId": {
-            "type": "string",
-            "description": "Composante de chamberName afin de pouvoir etre lisible pour les agents",
-            "example": "someChamberId"
-          },
-          "chamberName": {
-            "type": "string",
-            "description": "Nom de la chambre à la Cour de cassation, en fonction du niveau de l'affaire ou du thème : 'Chambre sociale','Chambre commerciale',...",
-            "example": "someChamberName"
-          },
-          "dateCreation": {
-            "type": "string",
-            "description": "Date de la création (après réception) de la décision",
-            "example": "2024-04-24T09:24:23.186Z"
-          },
-          "dateDecision": {
-            "type": "string",
-            "description": "Date de la décision",
-            "example": "2024-04-23"
-          },
-          "decatt": {
-            "description": "Décision(s) attaquée(s)",
-            "example": [1, 2],
-            "type": "array",
-            "items": { "type": "number" }
-          },
-          "jurisdictionCode": {
-            "type": "string",
-            "description": "Manière de codifier et/ou identifier la juridiction émettrice",
-            "example": "someJurisdictionCode"
-          },
-          "jurisdictionId": {
-            "type": "string",
-            "description": "Manière de codifier et/ou identifier la juridiction émettrice",
-            "example": "someJurisdictionId"
-          },
-          "jurisdictionName": {
-            "type": "string",
-            "description": "le titre de la juridiction. Ex : 'Cour d'appel d'Angers', 'Tribunal judiciaire de Bobigny'",
-            "example": "someJurisdictionName"
-          },
-          "labelStatus": {
-            "type": "string",
-            "description": "Statut de la décision dans Judilibre",
-            "enum": [
-              "toBeTreated",
-              "loaded",
-              "done",
-              "exported",
-              "blocked",
-              "ignored_debatNonPublic",
-              "ignored_decisionNonPublique",
-              "ignored_codeDecisionBloqueCC",
-              "ignored_dateDecisionIncoherente",
-              "ignored_codeNACdeDecisionNonPublique",
-              "ignored_codeNACdeDecisionPartiellementPublique",
-              "ignored_codeNACInconnu",
-              "ignored_caractereInconnu",
-              "ignored_dateAvantMiseEnService",
-              "ignored_controleRequis"
-            ],
-            "example": "toBeTreated"
-          },
-          "occultation": {
-            "description": "Statut de la décision dans Judilibre",
-            "example": {
-              "additionalTerms": "someAdditionalTerms",
-              "categoriesToOmit": ["someCategoriesToOmit"]
-            },
-            "allOf": [{ "$ref": "#/components/schemas/DecisionOccultation" }]
-          },
-          "labelTreatments": {
-            "description": "Traitements appliqués par Label",
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/LabelTreatmentDto" }
-          },
-          "originalText": {
-            "type": "string",
-            "description": "Le texte original de la décision",
-            "example": "someOriginalText"
-          },
-          "parties": {
-            "description": "Parties",
-            "example": [
-              { "type": "PP", "nom": "nom", "prenom": "prenom", "civilite": "M.", "qualite": "I" },
-              { "type": "PP", "nom": "nom", "prenom": "prenom", "civilite": "Mme.", "qualite": "K" }
-            ],
-            "type": "array",
-            "items": { "type": "object" }
-          },
-          "pseudoStatus": {
-            "type": "string",
-            "description": "(interne) L'état de la pseudonymisation"
-          },
-          "pseudoText": { "type": "string", "description": "Le texte de la décision pseudonymisé" },
-          "public": { "type": "boolean", "description": "La décision est-elle publique ?" },
-          "registerNumber": {
-            "type": "boolean",
-            "description": "Numéro de registre",
-            "example": "someRegisterNumber"
-          },
-          "solution": {
-            "type": "string",
-            "description": "Circuit de relecture pour jurinet ex: 'Avis sur saisine', 'Non-admission', 'Déchéance',",
-            "example": "someSolution"
-          },
-          "sourceId": {
-            "type": "number",
-            "description": "ID de la décision (ID Oracle)",
-            "example": 1
-          },
-          "sourceName": {
-            "type": "string",
-            "description": "Nom de la source ex : 'jurica', 'jurinet', 'juritj'",
-            "example": "juritj"
-          },
-          "zoning": {
-            "type": "string",
-            "description": "(interne) Mise en page des décisions diffusées par extrait"
-          },
-          "publication": {
-            "description": "La propriété publication est alimenté par les nouveaux indicateurs positionnés en amont: IND_BULLETIN, IND_RAPPORT, IND_LETTRE et IND_COMMUNIQUE (CC only)",
-            "example": ["somePublication"],
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "formation": {
-            "description": "Champ session dans Label :circuit de relecture, pour la Cour de cassation ex: FRR -> formation restreinte",
-            "example": "someFormation",
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "blocOccultation": {
-            "type": "number",
-            "description": "Numéro du bloc d'occultation",
-            "example": 1
-          },
-          "NAOCode": {
-            "type": "string",
-            "description": "Cour de cassation : circuit de relecture"
-          },
-          "natureAffaireCivil": {
-            "type": "string",
-            "description": "Cour de cassation : circuit de relecture"
-          },
-          "natureAffairePenal": {
-            "type": "string",
-            "description": "Cour de cassation : circuit de relecture"
-          },
-          "codeMatiereCivil": {
-            "type": "string",
-            "description": "Cour de cassation : circuit de relecture"
-          },
-          "NACCode": { "type": "string", "description": "Utilisable pour les décisions CC" },
-          "NPCode": { "type": "string", "description": "Utilisable pour les décisions CC" },
-          "endCaseCode": {
-            "type": "string",
-            "description": "CodeDecision/endCaseCode. Au format : ^[0-9a-zA-Z]{3}$",
-            "example": "0aA"
-          },
-          "filenameSource": { "type": "string", "description": "Nom du fichier source" },
-          "pubCategory": { "type": "string", "description": "Utilisable pour les décisions CC" },
-          "codeService": {
-            "type": "string",
-            "description": "Identifiant du service de la juridiction. Au format: ^[\\S]{2}$$",
-            "example": "0A"
-          },
-          "debatPublic": {
-            "type": "boolean",
-            "description": "Débat public d'une décision",
-            "example": true
-          },
-          "decisionAssociee": {
-            "description": "Décision intègre chainée à la décision",
-            "example": {
-              "numeroRegistre": "A",
-              "numeroRoleGeneral": "01/12345",
-              "idJuridiction": "TJ00000",
-              "date": "20221121"
-            },
-            "allOf": [{ "$ref": "#/components/schemas/DecisionAssocieeDto" }]
-          },
-          "libelleEndCaseCode": {
-            "type": "string",
-            "description": "Libellé du type de décision",
-            "example": "some libelle code decision / endCaseCode"
-          },
-          "libelleNAC": {
-            "type": "string",
-            "description": "Libellé du code NAC de la décision",
-            "example": "Demande en dommages-intérêts contre un organisme"
-          },
-          "libelleService": {
-            "type": "string",
-            "description": "Libellé du service de la juridiction",
-            "example": "Libelle de service"
-          },
-          "matiereDeterminee": {
-            "type": "boolean",
-            "description": "Matière déterminée d'une décision",
-            "example": true
-          },
-          "numeroRoleGeneral": {
-            "type": "string",
-            "description": "Numéro RG (Rôle Général) du dossier. Année sur deux chiffres séparé par un «/» d’un numéro à cinq chiffres (0 non significatifs présents). Au format : ^[0-9]{2}/[0-9]{5}$",
-            "example": "01/12345"
-          },
-          "pourvoiCourDeCassation": {
-            "type": "boolean",
-            "description": "Pourvoi de Cour de Cassation d'une décision",
-            "example": false
-          },
-          "pourvoiLocal": {
-            "type": "boolean",
-            "description": "Pourvoi local d'une décision",
-            "example": false
-          },
-          "president": {
-            "description": "Information sur le président de la formation du jugement",
-            "example": {
-              "fonction": "president",
-              "nom": "Nom Presidente",
-              "prenom": "Prenom Presidente",
-              "civilite": "Mme."
-            },
-            "allOf": [{ "$ref": "#/components/schemas/PresidentDto" }]
-          },
-          "sommaire": {
-            "type": "string",
-            "description": "Résumé de la décision intègre",
-            "example": "Exemple de sommaire"
-          },
-          "selection": {
-            "type": "boolean",
-            "description": "Selection d'une décision",
-            "example": false
-          },
-          "libelleNatureParticuliere": {
-            "type": "string",
-            "description": "Libellé du code de nature particulière",
-            "example": "Autres demandes en matière de frais et dépens"
-          },
-          "indicateurQPC": { "type": "boolean", "description": "Indicateur QPC", "example": true },
-          "idDecisionWinci": {
-            "type": "string",
-            "description": "ID de la décision provenant de Winci TGI",
-            "example": "some-id"
-          }
-        },
-        "required": [
-          "analysis",
-          "appeals",
-          "chamberId",
-          "chamberName",
-          "dateCreation",
-          "dateDecision",
-          "decatt",
-          "jurisdictionCode",
-          "jurisdictionId",
-          "jurisdictionName",
-          "labelStatus",
-          "occultation",
-          "labelTreatments",
-          "originalText",
-          "parties",
-          "registerNumber",
-          "solution",
-          "sourceId",
-          "sourceName",
-          "publication",
-          "formation",
-          "blocOccultation",
-          "NAOCode",
-          "natureAffaireCivil",
-          "natureAffairePenal",
-          "codeMatiereCivil"
-        ]
-      },
-      "CreateDecisionResponse": {
-        "type": "object",
-        "properties": {
-          "_id": {
-            "type": "string",
-            "description": "Identifiant de la décision créée",
-            "example": "507f1f77bcf86cd799439011"
-          },
-          "message": {
-            "type": "string",
-            "description": "Réponse de la création de la décision",
-            "example": "Decision créée ou mise à jour"
-          }
-        },
-        "required": ["_id", "message"]
-      },
-      "UpdateDecisionPseudonymiseeDTO": {
-        "type": "object",
-        "properties": {
-          "decisionPseudonymisee": {
-            "type": "string",
-            "description": "Décision pseudonymisée de la décision",
-            "example": "Texte pseudonymisé d'une décision"
-          }
-        },
-        "required": ["decisionPseudonymisee"]
-      },
-      "RapportOccultation": {
-        "type": "object",
-        "properties": {
-          "annotations": {
-            "description": "Annotations",
-            "example": [
-              {
-                "category": "some-category",
-                "entityId": "some-entity-id",
-                "start": 1,
-                "text": "some-text",
-                "certaintyScore": 80
-              }
-            ],
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/AnnotationDto" }
-          },
-          "source": { "type": "string", "description": "Source", "example": "some-source" },
-          "order": { "type": "number", "description": "Ordre", "example": 1 }
-        },
-        "required": ["annotations", "source", "order"]
-      },
-      "UpdateDecisionRapportsOccultationsDTO": {
-        "type": "object",
-        "properties": {
-          "rapportsOccultations": {
-            "description": "Rapport d'occultations de la décision",
-            "example": [
-              {
-                "annotations": [
-                  {
-                    "category": "some-category",
-                    "entityId": "some-entity-id",
-                    "start": 1,
-                    "text": "some-text",
-                    "certaintyScore": 80
-                  }
                 ],
-                "source": "some-source",
-                "order": 1
-              }
-            ],
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/RapportOccultation" }
-          }
+                "responses": {
+                    "200": {
+                        "description": "The Health Check is successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "ok"
+                                        },
+                                        "info": {
+                                            "type": "object",
+                                            "example": {
+                                                "database": {
+                                                    "status": "up"
+                                                }
+                                            },
+                                            "additionalProperties": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "status": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "additionalProperties": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "nullable": true
+                                        },
+                                        "error": {
+                                            "type": "object",
+                                            "example": {},
+                                            "additionalProperties": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "status": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "additionalProperties": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "nullable": true
+                                        },
+                                        "details": {
+                                            "type": "object",
+                                            "example": {
+                                                "database": {
+                                                    "status": "up"
+                                                }
+                                            },
+                                            "additionalProperties": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "status": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "additionalProperties": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "The Health Check is not successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "info": {
+                                            "type": "object",
+                                            "example": {
+                                                "database": {
+                                                    "status": "up"
+                                                }
+                                            },
+                                            "additionalProperties": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "status": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "additionalProperties": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "nullable": true
+                                        },
+                                        "error": {
+                                            "type": "object",
+                                            "example": {
+                                                "redis": {
+                                                    "status": "down",
+                                                    "message": "Could not connect"
+                                                }
+                                            },
+                                            "additionalProperties": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "status": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "additionalProperties": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "nullable": true
+                                        },
+                                        "details": {
+                                            "type": "object",
+                                            "example": {
+                                                "database": {
+                                                    "status": "up"
+                                                },
+                                                "redis": {
+                                                    "status": "down",
+                                                    "message": "Could not connect"
+                                                }
+                                            },
+                                            "additionalProperties": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "status": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "additionalProperties": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         },
-        "required": ["rapportsOccultations"]
-      },
-      "UpdateDecisionStatutDTO": {
-        "type": "object",
-        "properties": {
-          "statut": {
-            "type": "string",
-            "description": "Statut de la décision dans Judilibre",
-            "enum": [
-              "toBeTreated",
-              "loaded",
-              "done",
-              "exported",
-              "blocked",
-              "ignored_debatNonPublic",
-              "ignored_decisionNonPublique",
-              "ignored_codeDecisionBloqueCC",
-              "ignored_dateDecisionIncoherente",
-              "ignored_codeNACdeDecisionNonPublique",
-              "ignored_codeNACdeDecisionPartiellementPublique",
-              "ignored_codeNACInconnu",
-              "ignored_caractereInconnu",
-              "ignored_dateAvantMiseEnService",
-              "ignored_controleRequis"
-            ],
-            "example": "toBeTreated"
-          }
+        "/v1/decisions/{id}": {
+            "get": {
+                "operationId": "GetDecisionByIdController_getDecisionById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Identifiant de la décision",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "x-api-key",
+                        "in": "header",
+                        "description": "Clé API",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Décision trouvée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetDecisionByIdResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Vous n'êtes pas autorisé à appeler cette route"
+                    },
+                    "404": {
+                        "description": "La decision n'a pas été trouvée"
+                    }
+                },
+                "tags": [
+                    "DbSder"
+                ]
+            },
+            "delete": {
+                "operationId": "DeleteDecisionByIdController_deleteDecisionById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Identifiant de la décision",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "x-api-key",
+                        "in": "header",
+                        "description": "Clé API",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "La décision a bien été supprimée"
+                    },
+                    "401": {
+                        "description": "Vous n'êtes pas autorisé à appeler cette route"
+                    },
+                    "404": {
+                        "description": "La decision n'a pas été trouvée"
+                    },
+                    "422": {
+                        "description": "Entité non processable"
+                    },
+                    "503": {
+                        "description": "Service non disponible"
+                    }
+                },
+                "tags": [
+                    "DbSder"
+                ]
+            }
         },
-        "required": ["statut"]
-      }
+        "/v1/decisions-pseudonymisees/{id}": {
+            "get": {
+                "operationId": "GetDecisionPseudonymiseesController_getDecisionById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Identifiant de la décision",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "avecMetadonneesPersonnelles",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "x-api-key",
+                        "in": "header",
+                        "description": "Clé API",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "La décision",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetDecisionByIdResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Vous n'êtes pas autorisé à appeler cette route"
+                    },
+                    "404": {
+                        "description": "La decision n'a pas été trouvée"
+                    }
+                },
+                "tags": [
+                    "DbSder"
+                ]
+            }
+        },
+        "/v1/decisions": {
+            "get": {
+                "operationId": "ListDecisionsController_getDecisions",
+                "parameters": [
+                    {
+                        "name": "sourceName",
+                        "required": false,
+                        "in": "query",
+                        "description": "Source de la décision",
+                        "schema": {
+                            "example": "juritj",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "required": false,
+                        "in": "query",
+                        "description": "Statut de la décision",
+                        "schema": {
+                            "example": "toBeTreated",
+                            "enum": [
+                                "toBeTreated",
+                                "loaded",
+                                "done",
+                                "exported",
+                                "blocked",
+                                "ignored_debatNonPublic",
+                                "ignored_decisionNonPublique",
+                                "ignored_codeDecisionBloqueCC",
+                                "ignored_dateDecisionIncoherente",
+                                "ignored_codeNACdeDecisionNonPublique",
+                                "ignored_codeNACdeDecisionPartiellementPublique",
+                                "ignored_codeNACInconnu",
+                                "ignored_caractereInconnu",
+                                "ignored_dateAvantMiseEnService",
+                                "ignored_controleRequis",
+                                "ignored_decisionNonPubliqueParZonage",
+                                "ignored_decisionPartiellementPubliqueParZonage",
+                                "ignored_blocOcculationNonDefini",
+                                "ignored_recommandationOccultationNonSuivie"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startDate",
+                        "required": false,
+                        "in": "query",
+                        "description": "Date de début de la décision",
+                        "schema": {
+                            "example": "2025-03-04T09:52:14.870Z",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "endDate",
+                        "required": false,
+                        "in": "query",
+                        "description": "Date de fin de la décision",
+                        "schema": {
+                            "example": "2025-03-04T09:52:14.870Z",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "dateType",
+                        "required": false,
+                        "in": "query",
+                        "description": "Type de date de décision ou de création",
+                        "schema": {
+                            "example": "dateDecision",
+                            "enum": [
+                                "dateDecision",
+                                "dateCreation"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "required": false,
+                        "in": "query",
+                        "description": "NumeroRoleGeneral ou d'appel de la décision",
+                        "schema": {
+                            "example": "01/12345",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sourceId",
+                        "required": false,
+                        "in": "query",
+                        "description": "id de la source de la decision",
+                        "schema": {
+                            "example": 1,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "chamber",
+                        "required": false,
+                        "in": "query",
+                        "description": "chambre de la decision",
+                        "schema": {
+                            "example": "someChamberName",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "jurisdiction",
+                        "required": false,
+                        "in": "query",
+                        "description": "jurisdiction de la decision",
+                        "schema": {
+                            "example": "someJurisdictionName",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "x-api-key",
+                        "in": "header",
+                        "description": "Clé API",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Une liste de décisions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/GetDecisionsListResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Le paramètre écrit n'est présent dans la liste des valeurs acceptées"
+                    },
+                    "401": {
+                        "description": "Vous n'êtes pas autorisé à appeler cette route"
+                    }
+                },
+                "tags": [
+                    "DbSder"
+                ]
+            },
+            "put": {
+                "operationId": "CreateDecisionsController_createDecisions",
+                "parameters": [
+                    {
+                        "name": "x-api-key",
+                        "in": "header",
+                        "description": "Clé API",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Décision intègre au format wordperfect et metadonnées associées.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateDecisionDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Décision créée ou mise à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateDecisionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Il manque un ou plusieurs champs obligatoires dans la décision"
+                    },
+                    "401": {
+                        "description": "Vous n'êtes pas autorisé à appeler cette route"
+                    }
+                },
+                "tags": [
+                    "DbSder"
+                ]
+            }
+        },
+        "/v1/decisions/{id}/decision-pseudonymisee": {
+            "put": {
+                "operationId": "UpdateDecisionPseudonymiseeController_updateDecisionPseudonymisee",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Identifiant de la décision",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "x-api-key",
+                        "in": "header",
+                        "description": "Clé API",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Décision pseudonymisée de la décision",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateDecisionPseudonymiseeDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Statut manquant ou invalide"
+                    },
+                    "401": {
+                        "description": "Vous n'êtes pas autorisé à appeler cette route"
+                    },
+                    "404": {
+                        "description": "La decision n'a pas été trouvée"
+                    }
+                },
+                "tags": [
+                    "DbSder"
+                ]
+            }
+        },
+        "/v1/decisions/{id}/statut": {
+            "put": {
+                "operationId": "UpdateDecisionStatutController_updateDecisionStatut",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Identifiant de la décision",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "x-api-key",
+                        "in": "header",
+                        "description": "Clé API",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Statut de la décision",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateDecisionStatutDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Statut manquant ou invalide"
+                    },
+                    "401": {
+                        "description": "Vous n'êtes pas autorisé à appeler cette route"
+                    },
+                    "404": {
+                        "description": "La decision n'a pas été trouvée"
+                    }
+                },
+                "tags": [
+                    "DbSder"
+                ]
+            }
+        },
+        "/v1/decision-route": {
+            "get": {
+                "operationId": "GetDecisionRouteController_getDecisionRoute",
+                "parameters": [
+                    {
+                        "name": "x-api-key",
+                        "in": "header",
+                        "description": "Clé API",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "description": "Codes de la décision",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GetDecisionRouteDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Code NAC ou code décision manquant ou invalide"
+                    },
+                    "401": {
+                        "description": "Vous n'êtes pas autorisé à appeler cette route"
+                    },
+                    "404": {
+                        "description": "Route non trouvée"
+                    }
+                },
+                "tags": [
+                    "DbSder"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "DBSder API",
+        "description": "Documentation de DBSder API qui permet de fournir une interface aux appels de la DBSder",
+        "version": "1.0",
+        "contact": {}
+    },
+    "tags": [
+        {
+            "name": "DbSder",
+            "description": ""
+        }
+    ],
+    "servers": [],
+    "components": {
+        "schemas": {
+            "GetDecisionByIdResponse": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "Identifiant de la décision",
+                        "example": "507f1f77bcf86cd799439011"
+                    },
+                    "analysis": {
+                        "type": "object",
+                        "description": "Analyse de la décision",
+                        "example": {
+                            "analyse": [
+                                "someAnalyse"
+                            ],
+                            "doctrine": "someDoctrine",
+                            "link": "someLink",
+                            "reference": [
+                                "someReference"
+                            ],
+                            "source": "someSource",
+                            "summary": "someSummary",
+                            "target": "someTarget",
+                            "title": [
+                                "someTitle"
+                            ]
+                        }
+                    },
+                    "appeals": {
+                        "description": "Liste des pourvois",
+                        "example": [
+                            "someAppeal"
+                        ],
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "chamberId": {
+                        "type": "string",
+                        "description": "Identifiant de la chambre",
+                        "example": "someChamberId"
+                    },
+                    "chamberName": {
+                        "type": "string",
+                        "description": "Nom de la chambre",
+                        "example": "someChamberName"
+                    },
+                    "dateCreation": {
+                        "type": "string",
+                        "description": "Date de création de la décision au format ISO 8601",
+                        "example": "2025-03-04T09:52:14.870Z"
+                    },
+                    "dateDecision": {
+                        "type": "string",
+                        "description": "Date de la décision au format AAAA-MM-JJ",
+                        "example": "2025-03-03"
+                    },
+                    "decatt": {
+                        "description": "Décision attaquée : une décision de la Cour de cassation qui attaque une décision de cour d'appel",
+                        "example": [
+                            1,
+                            2
+                        ],
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "jurisdictionCode": {
+                        "type": "string",
+                        "description": "Code de la juridiction",
+                        "example": "someJurisdictionCode"
+                    },
+                    "jurisdictionId": {
+                        "type": "string",
+                        "description": "Identifiant de la juridiction",
+                        "example": "someJurisdictionId"
+                    },
+                    "jurisdictionName": {
+                        "type": "string",
+                        "description": "Nom de la juridiction",
+                        "example": "someJurisdictionName"
+                    },
+                    "labelStatus": {
+                        "type": "string",
+                        "description": "Statut interne de la décision",
+                        "example": "toBeTreated"
+                    },
+                    "occultation": {
+                        "type": "object",
+                        "description": "Instruction d'occultation de la décision (champ non communiqué pour les décisions pseudonymisées)",
+                        "example": {
+                            "additionalTerms": "someAdditionalTerms",
+                            "categoriesToOmit": [
+                                "someCategoriesToOmit"
+                            ],
+                            "motivationOccultation": false
+                        }
+                    },
+                    "originalText": {
+                        "type": "string",
+                        "description": "Texte original de la décision (champ non communiqué pour les décisions pseudonymisées)",
+                        "example": "someOriginalText"
+                    },
+                    "pseudoStatus": {
+                        "type": "string",
+                        "description": "Statut de la décision pseudonymisée",
+                        "example": ""
+                    },
+                    "pseudoText": {
+                        "type": "string",
+                        "description": "Texte pseudonymisé de la décision",
+                        "example": "texte pseudonymisé"
+                    },
+                    "public": {
+                        "type": "boolean",
+                        "description": "Indicateur de décision publique ",
+                        "example": true
+                    },
+                    "registerNumber": {
+                        "type": "string",
+                        "description": "Numéro de registre de la décision",
+                        "example": "someRegisterNumber"
+                    },
+                    "solution": {
+                        "type": "string",
+                        "description": "Solution de la décision",
+                        "example": "someSolution"
+                    },
+                    "sourceId": {
+                        "type": "number",
+                        "description": "Identifiant de la décision depuis la source",
+                        "example": 1
+                    },
+                    "sourceName": {
+                        "type": "string",
+                        "description": "Nom de la source de la décision",
+                        "example": "juritj"
+                    },
+                    "zoning": {
+                        "type": "object",
+                        "description": "Données pour la mise en page d'une décision",
+                        "example": "juritj"
+                    },
+                    "publication": {
+                        "description": "Propriété interne nécessaire à la publication des décisions",
+                        "example": [
+                            "somePublication"
+                        ],
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "formation": {
+                        "type": "string",
+                        "description": "Propriété interne nécessaire à la publication des décisions",
+                        "example": "someFormation"
+                    },
+                    "blocOccultation": {
+                        "type": "number",
+                        "description": "Bloc d'occultation à respecter pour la décision",
+                        "example": 1
+                    },
+                    "NAOCode": {
+                        "type": "string",
+                        "description": "Cour de cassation : circuit de relecture",
+                        "example": "someNAOCode"
+                    },
+                    "natureAffaireCivil": {
+                        "type": "string",
+                        "description": "Cour de cassation : circuit de relecture",
+                        "example": "someNatureAffaireCivil"
+                    },
+                    "natureAffairePenal": {
+                        "type": "string",
+                        "description": "Cour de cassation : circuit de relecture",
+                        "example": "someNatureAffairePenal"
+                    },
+                    "codeMatiereCivil": {
+                        "type": "string",
+                        "description": "Cour de cassation : circuit de relecture",
+                        "example": "someCodeMatiereCivil"
+                    },
+                    "NACCode": {
+                        "type": "string",
+                        "description": "Cour de cassation : circuit de relecture"
+                    },
+                    "NPCode": {
+                        "type": "string",
+                        "description": "Code de nature particulière"
+                    },
+                    "endCaseCode": {
+                        "type": "string",
+                        "description": "Code de fin d'affaire"
+                    },
+                    "libelleEndCaseCode": {
+                        "type": "string",
+                        "description": "Libellé endCaseCode / codeDecision",
+                        "example": "some libelle code decision / endCaseCode"
+                    },
+                    "filenameSource": {
+                        "type": "string",
+                        "description": "Nom du fichier source de la décision"
+                    },
+                    "labelTreatments": {
+                        "description": "Résumé des traitements Label de la décision",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "parties": {
+                        "type": "object",
+                        "description": "Liste des parties de la décision"
+                    },
+                    "pubCategory": {
+                        "type": "string",
+                        "description": "Catégorie de publication de la décision"
+                    },
+                    "codeNature": {
+                        "type": "string",
+                        "description": "Code de la nature de la décision",
+                        "example": "6C"
+                    },
+                    "codeService": {
+                        "type": "string",
+                        "description": "Identifiant du service de la juridiction",
+                        "example": "0A"
+                    },
+                    "debatPublic": {
+                        "type": "boolean",
+                        "description": "Indicateur de débat public de la décision",
+                        "example": true
+                    },
+                    "decisionAssociee": {
+                        "type": "object",
+                        "description": "Décision Associée"
+                    },
+                    "indicateurQPC": {
+                        "type": "boolean",
+                        "description": "Indicateur QPC de décision ",
+                        "example": true
+                    },
+                    "idDecisionWinci": {
+                        "type": "string",
+                        "description": "Identifiant de la décision Winci"
+                    },
+                    "libelleNAC": {
+                        "type": "string",
+                        "description": "Libellé du code NAC",
+                        "example": "Demande en dommages-intérêts contre un organisme"
+                    },
+                    "libelleNatureParticuliere": {
+                        "type": "string",
+                        "description": "Libellé de la nature particulière",
+                        "example": "Autres demandes en matière de frais et dépens"
+                    },
+                    "libelleService": {
+                        "type": "string",
+                        "description": "Libellé du service",
+                        "example": "Libelle de service"
+                    },
+                    "matiereDeterminee": {
+                        "type": "boolean",
+                        "description": "Indicateur de matière déterminée",
+                        "example": true
+                    },
+                    "numeroRoleGeneral": {
+                        "type": "string",
+                        "description": "Numéro de rôle général",
+                        "example": "01/12345"
+                    },
+                    "pourvoiCourDeCassation": {
+                        "type": "boolean",
+                        "description": "Indicateur de pourvoi en cassation",
+                        "example": false
+                    },
+                    "pourvoiLocal": {
+                        "type": "boolean",
+                        "description": "Indicateur de pourvoi local",
+                        "example": false
+                    },
+                    "president": {
+                        "type": "object",
+                        "description": "Président de chambre de la décision"
+                    },
+                    "recommandationOccultation": {
+                        "type": "string",
+                        "description": "Recommandation d'occultation",
+                        "example": "aucune"
+                    },
+                    "sommaire": {
+                        "type": "string",
+                        "description": "Résumé de la décision"
+                    },
+                    "selection": {
+                        "type": "boolean",
+                        "description": "Indicateur de sélection",
+                        "example": false
+                    },
+                    "idDecisionTJ": {
+                        "type": "string",
+                        "description": "Identifiant technique TJ",
+                        "example": "TJ00001A01-1234520221121"
+                    }
+                },
+                "required": [
+                    "_id",
+                    "appeals",
+                    "chamberId",
+                    "chamberName",
+                    "dateCreation",
+                    "dateDecision",
+                    "jurisdictionCode",
+                    "jurisdictionId",
+                    "jurisdictionName",
+                    "labelStatus",
+                    "originalText",
+                    "public",
+                    "registerNumber",
+                    "sourceId",
+                    "sourceName",
+                    "zoning",
+                    "blocOccultation"
+                ]
+            },
+            "GetDecisionsListResponse": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "Identifiant de la décision",
+                        "example": "507f1f77bcf86cd799439011"
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Statut de la décision",
+                        "example": "toBeTreated"
+                    },
+                    "sourceName": {
+                        "type": "string",
+                        "description": "Source de la décision",
+                        "example": "juritj"
+                    },
+                    "dateCreation": {
+                        "type": "string",
+                        "description": "Date de création de la décision au format ISO 8601",
+                        "example": "2025-03-04T09:52:14.870Z"
+                    }
+                },
+                "required": [
+                    "_id",
+                    "status",
+                    "sourceName",
+                    "dateCreation"
+                ]
+            },
+            "DecisionAnalyse": {
+                "type": "object",
+                "properties": {
+                    "analyse": {
+                        "description": "Eléments de titrage et d'analyse complémentaires",
+                        "example": [
+                            "someAnalyse"
+                        ],
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "doctrine": {
+                        "type": "string",
+                        "description": "Doctrine",
+                        "example": "someDoctrine"
+                    },
+                    "link": {
+                        "type": "string",
+                        "description": "Rapprochements de jurisprudence",
+                        "example": "someLink"
+                    },
+                    "reference": {
+                        "description": "Eléments de titrage et d'analyse complémentaires",
+                        "example": [
+                            "someReference"
+                        ],
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "source": {
+                        "type": "string",
+                        "description": "Source",
+                        "example": "someSource"
+                    },
+                    "summary": {
+                        "type": "string",
+                        "description": "Résumé de la décision",
+                        "example": "someSummary"
+                    },
+                    "target": {
+                        "type": "string",
+                        "description": "Texte(s) visé(s)",
+                        "example": "someTarget"
+                    },
+                    "title": {
+                        "description": "Eléments de titrage",
+                        "example": [
+                            "someTitle"
+                        ],
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "analyse",
+                    "doctrine",
+                    "link",
+                    "reference",
+                    "source",
+                    "summary",
+                    "target",
+                    "title"
+                ]
+            },
+            "DecisionOccultation": {
+                "type": "object",
+                "properties": {
+                    "additionalTerms": {
+                        "type": "string",
+                        "description": "Termes additionnels à ajouter lors de l'occultation",
+                        "example": "someAdditionalTerms"
+                    },
+                    "categoriesToOmit": {
+                        "description": "Catégories additionnels à omettre lors de l'occultation",
+                        "example": [
+                            "someCategoriesToOmit"
+                        ],
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "motivationOccultation": {
+                        "type": "boolean",
+                        "description": "Booleen permettant de savoir si il faut occulter les motivations de la décision",
+                        "example": false
+                    }
+                },
+                "required": [
+                    "additionalTerms",
+                    "categoriesToOmit",
+                    "motivationOccultation"
+                ]
+            },
+            "DecisionAssocieeDto": {
+                "type": "object",
+                "properties": {
+                    "numeroRegistre": {
+                        "type": "string",
+                        "description": "Numéro de registre de la décision associée",
+                        "example": "A"
+                    },
+                    "numeroRoleGeneral": {
+                        "type": "string",
+                        "description": "Numéro RG (Rôle Général) du dossier. Année sur deux chiffres séparé par un «/» d’un numéro à cinq chiffres (0 non significatifs présents). Au format : ^[0-9]{2}/[0-9]{5}$",
+                        "example": "01/12345"
+                    },
+                    "idJuridiction": {
+                        "type": "string",
+                        "description": "Identifiant de la juridiction émettrice propre au système d’information originel pour la décision associée. Au format ^TJ[0-9]{5}$",
+                        "example": "TJ00000"
+                    },
+                    "date": {
+                        "type": "string",
+                        "description": "Date de la décision associée. Au format AAAAMMJJ",
+                        "example": "20221121"
+                    },
+                    "idDecisionWinci": {
+                        "type": "string",
+                        "description": "ID de la décision associée provenant de Winci TGI",
+                        "example": "some-id"
+                    }
+                },
+                "required": [
+                    "numeroRegistre",
+                    "numeroRoleGeneral",
+                    "idJuridiction",
+                    "date"
+                ]
+            },
+            "PresidentDto": {
+                "type": "object",
+                "properties": {
+                    "fonction": {
+                        "type": "string",
+                        "description": "Fonction du président de jugement",
+                        "example": "president"
+                    },
+                    "nom": {
+                        "type": "string",
+                        "description": "Nom du président de jugement",
+                        "example": "Nom Presidente"
+                    },
+                    "prenom": {
+                        "type": "string",
+                        "description": "Prénom du président de jugement",
+                        "example": "Prenom Presidente"
+                    },
+                    "civilite": {
+                        "type": "string",
+                        "description": "Civilité du président de jugement",
+                        "example": "Mme."
+                    }
+                },
+                "required": [
+                    "fonction",
+                    "nom"
+                ]
+            },
+            "CreateDecisionDTO": {
+                "type": "object",
+                "properties": {
+                    "analysis": {
+                        "description": "Analyse de la décision",
+                        "example": {
+                            "analyse": [
+                                "someAnalyse"
+                            ],
+                            "doctrine": "someDoctrine",
+                            "link": "someLink",
+                            "reference": [
+                                "someReference"
+                            ],
+                            "source": "someSource",
+                            "summary": "someSummary",
+                            "target": "someTarget",
+                            "title": [
+                                "someTitle"
+                            ]
+                        },
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DecisionAnalyse"
+                            }
+                        ]
+                    },
+                    "appeals": {
+                        "description": "Numéro(s) de pourvoi de la décision",
+                        "example": [
+                            "someAppeal"
+                        ],
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "chamberId": {
+                        "type": "string",
+                        "description": "Composante de chamberName afin de pouvoir etre lisible pour les agents",
+                        "example": "someChamberId"
+                    },
+                    "chamberName": {
+                        "type": "string",
+                        "description": "Nom de la chambre à la Cour de cassation, en fonction du niveau de l'affaire ou du thème : 'Chambre sociale','Chambre commerciale',...",
+                        "example": "someChamberName"
+                    },
+                    "dateCreation": {
+                        "type": "string",
+                        "description": "Date de la création (après réception) de la décision",
+                        "example": "2025-03-04T09:52:14.870Z"
+                    },
+                    "dateDecision": {
+                        "type": "string",
+                        "description": "Date de la décision",
+                        "example": "2025-03-03"
+                    },
+                    "decatt": {
+                        "description": "Décision(s) attaquée(s)",
+                        "example": [
+                            1,
+                            2
+                        ],
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    },
+                    "jurisdictionCode": {
+                        "type": "string",
+                        "description": "Manière de codifier et/ou identifier la juridiction émettrice",
+                        "example": "someJurisdictionCode"
+                    },
+                    "jurisdictionId": {
+                        "type": "string",
+                        "description": "Manière de codifier et/ou identifier la juridiction émettrice",
+                        "example": "someJurisdictionId"
+                    },
+                    "jurisdictionName": {
+                        "type": "string",
+                        "description": "le titre de la juridiction. Ex : 'Cour d'appel d'Angers', 'Tribunal judiciaire de Bobigny'",
+                        "example": "someJurisdictionName"
+                    },
+                    "labelStatus": {
+                        "type": "string",
+                        "description": "Etat du traitement de la décision",
+                        "enum": [
+                            "toBeTreated",
+                            "loaded",
+                            "done",
+                            "exported",
+                            "blocked",
+                            "ignored_debatNonPublic",
+                            "ignored_decisionNonPublique",
+                            "ignored_codeDecisionBloqueCC",
+                            "ignored_dateDecisionIncoherente",
+                            "ignored_codeNACdeDecisionNonPublique",
+                            "ignored_codeNACdeDecisionPartiellementPublique",
+                            "ignored_codeNACInconnu",
+                            "ignored_caractereInconnu",
+                            "ignored_dateAvantMiseEnService",
+                            "ignored_controleRequis",
+                            "ignored_decisionNonPubliqueParZonage",
+                            "ignored_decisionPartiellementPubliqueParZonage",
+                            "ignored_blocOcculationNonDefini",
+                            "ignored_recommandationOccultationNonSuivie"
+                        ],
+                        "example": "toBeTreated"
+                    },
+                    "publishStatus": {
+                        "type": "string",
+                        "description": "Statut de la publication de la décision sur Judilibre",
+                        "enum": [
+                            "toBePublished",
+                            "pending",
+                            "success",
+                            "failure_preparing",
+                            "failure_indexing",
+                            "blocked",
+                            "unpublished"
+                        ],
+                        "example": "toBePublished"
+                    },
+                    "occultation": {
+                        "description": "Statut de la décision dans Judilibre",
+                        "example": {
+                            "additionalTerms": "someAdditionalTerms",
+                            "categoriesToOmit": [
+                                "someCategoriesToOmit"
+                            ],
+                            "motivationOccultation": false
+                        },
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DecisionOccultation"
+                            }
+                        ]
+                    },
+                    "originalText": {
+                        "type": "string",
+                        "description": "Le texte original de la décision",
+                        "example": "someOriginalText"
+                    },
+                    "parties": {
+                        "description": "Parties",
+                        "example": [
+                            {
+                                "type": "PP",
+                                "nom": "nom",
+                                "prenom": "prenom",
+                                "civilite": "M.",
+                                "qualite": "I"
+                            },
+                            {
+                                "type": "PP",
+                                "nom": "nom",
+                                "prenom": "prenom",
+                                "civilite": "Mme.",
+                                "qualite": "K"
+                            }
+                        ],
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "pseudoStatus": {
+                        "type": "string",
+                        "description": "(interne) L'état de la pseudonymisation"
+                    },
+                    "pseudoText": {
+                        "type": "string",
+                        "description": "Le texte de la décision pseudonymisé"
+                    },
+                    "public": {
+                        "type": "boolean",
+                        "description": "La décision est-elle publique ?"
+                    },
+                    "registerNumber": {
+                        "type": "boolean",
+                        "description": "Numéro de registre",
+                        "example": "someRegisterNumber"
+                    },
+                    "solution": {
+                        "type": "string",
+                        "description": "Circuit de relecture pour jurinet ex: 'Avis sur saisine', 'Non-admission', 'Déchéance',",
+                        "example": "someSolution"
+                    },
+                    "sourceId": {
+                        "type": "number",
+                        "description": "ID de la décision (ID Oracle)",
+                        "example": 1
+                    },
+                    "sourceName": {
+                        "type": "string",
+                        "description": "Nom de la source ex : 'jurica', 'jurinet', 'juritj'",
+                        "example": "juritj"
+                    },
+                    "originalTextZoning": {
+                        "type": "object",
+                        "description": "Zonage de la décision sur le texte intègre",
+                        "example": 1
+                    },
+                    "publication": {
+                        "description": "La propriété publication est alimenté par les nouveaux indicateurs positionnés en amont: IND_BULLETIN, IND_RAPPORT, IND_LETTRE et IND_COMMUNIQUE (CC only)",
+                        "example": [
+                            "somePublication"
+                        ],
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "formation": {
+                        "description": "Champ session dans Label :circuit de relecture, pour la Cour de cassation ex: FRR -> formation restreinte",
+                        "example": "someFormation",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "blocOccultation": {
+                        "type": "number",
+                        "description": "Numéro du bloc d'occultation",
+                        "example": 1
+                    },
+                    "NAOCode": {
+                        "type": "string",
+                        "description": "Cour de cassation : circuit de relecture"
+                    },
+                    "natureAffaireCivil": {
+                        "type": "string",
+                        "description": "Cour de cassation : circuit de relecture"
+                    },
+                    "natureAffairePenal": {
+                        "type": "string",
+                        "description": "Cour de cassation : circuit de relecture"
+                    },
+                    "codeMatiereCivil": {
+                        "type": "string",
+                        "description": "Cour de cassation : circuit de relecture"
+                    },
+                    "NACCode": {
+                        "type": "string",
+                        "description": "Utilisable pour les décisions CC"
+                    },
+                    "NPCode": {
+                        "type": "string",
+                        "description": "Utilisable pour les décisions CC"
+                    },
+                    "endCaseCode": {
+                        "type": "string",
+                        "description": "CodeDecision/endCaseCode. Au format : ^[0-9a-zA-Z]{3}$",
+                        "example": "0aA"
+                    },
+                    "filenameSource": {
+                        "type": "string",
+                        "description": "Nom du fichier source"
+                    },
+                    "pubCategory": {
+                        "type": "string",
+                        "description": "Utilisable pour les décisions CC"
+                    },
+                    "codeService": {
+                        "type": "string",
+                        "description": "Identifiant du service de la juridiction. Au format: ^.{2}$",
+                        "example": "0A"
+                    },
+                    "debatPublic": {
+                        "type": "boolean",
+                        "description": "Débat public d'une décision",
+                        "example": true
+                    },
+                    "decisionAssociee": {
+                        "description": "Décision intègre chainée à la décision",
+                        "example": {
+                            "numeroRegistre": "A",
+                            "numeroRoleGeneral": "01/12345",
+                            "idJuridiction": "TJ00000",
+                            "date": "20221121"
+                        },
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DecisionAssocieeDto"
+                            }
+                        ]
+                    },
+                    "libelleEndCaseCode": {
+                        "type": "string",
+                        "description": "Libellé du type de décision",
+                        "example": "some libelle code decision / endCaseCode"
+                    },
+                    "libelleNAC": {
+                        "type": "string",
+                        "description": "Libellé du code NAC de la décision",
+                        "example": "Demande en dommages-intérêts contre un organisme"
+                    },
+                    "libelleService": {
+                        "type": "string",
+                        "description": "Libellé du service de la juridiction",
+                        "example": "Libelle de service"
+                    },
+                    "matiereDeterminee": {
+                        "type": "boolean",
+                        "description": "Matière déterminée d'une décision",
+                        "example": true
+                    },
+                    "numeroRoleGeneral": {
+                        "type": "string",
+                        "description": "Numéro RG (Rôle Général) du dossier. Année sur deux chiffres séparé par un «/» d’un numéro à cinq chiffres (0 non significatifs présents). Au format : ^[0-9]{2}/[0-9]{5}$",
+                        "example": "01/12345"
+                    },
+                    "pourvoiCourDeCassation": {
+                        "type": "boolean",
+                        "description": "Pourvoi de Cour de Cassation d'une décision",
+                        "example": false
+                    },
+                    "pourvoiLocal": {
+                        "type": "boolean",
+                        "description": "Pourvoi local d'une décision",
+                        "example": false
+                    },
+                    "president": {
+                        "description": "Information sur le président de la formation du jugement",
+                        "example": {
+                            "fonction": "president",
+                            "nom": "Nom Presidente",
+                            "prenom": "Prenom Presidente",
+                            "civilite": "Mme."
+                        },
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/PresidentDto"
+                            }
+                        ]
+                    },
+                    "sommaire": {
+                        "type": "string",
+                        "description": "Résumé de la décision intègre",
+                        "example": "Exemple de sommaire"
+                    },
+                    "selection": {
+                        "type": "boolean",
+                        "description": "Selection d'une décision",
+                        "example": false
+                    },
+                    "libelleNatureParticuliere": {
+                        "type": "string",
+                        "description": "Libellé du code de nature particulière",
+                        "example": "Autres demandes en matière de frais et dépens"
+                    },
+                    "indicateurQPC": {
+                        "type": "boolean",
+                        "description": "Indicateur QPC",
+                        "example": true
+                    },
+                    "idDecisionWinci": {
+                        "type": "string",
+                        "description": "ID de la décision provenant de Winci TGI",
+                        "example": "some-id"
+                    }
+                },
+                "required": [
+                    "analysis",
+                    "appeals",
+                    "chamberId",
+                    "chamberName",
+                    "dateCreation",
+                    "dateDecision",
+                    "decatt",
+                    "jurisdictionCode",
+                    "jurisdictionId",
+                    "jurisdictionName",
+                    "labelStatus",
+                    "publishStatus",
+                    "occultation",
+                    "originalText",
+                    "parties",
+                    "registerNumber",
+                    "solution",
+                    "sourceId",
+                    "sourceName",
+                    "publication",
+                    "formation",
+                    "blocOccultation",
+                    "NAOCode",
+                    "natureAffaireCivil",
+                    "natureAffairePenal",
+                    "codeMatiereCivil"
+                ]
+            },
+            "CreateDecisionResponse": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "Identifiant de la décision créée",
+                        "example": "507f1f77bcf86cd799439011"
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Réponse de la création de la décision",
+                        "example": "Decision créée ou mise à jour"
+                    }
+                },
+                "required": [
+                    "_id",
+                    "message"
+                ]
+            },
+            "AnnotationDto": {
+                "type": "object",
+                "properties": {
+                    "category": {
+                        "type": "string",
+                        "description": "Categorie de l'annotation",
+                        "example": {
+                            "annotations": [
+                                {
+                                    "category": "some-category",
+                                    "entityId": "some-entity-id",
+                                    "start": 1,
+                                    "text": "some-text",
+                                    "score": 1,
+                                    "source": "mysource"
+                                },
+                                {
+                                    "category": "other-category",
+                                    "entityId": "other-entity-id",
+                                    "start": 5,
+                                    "text": "other-text",
+                                    "score": 0.5,
+                                    "source": "mysource"
+                                }
+                            ],
+                            "source": "some-source",
+                            "order": 1,
+                            "version": {
+                                "juriSpacyTokenizer": {
+                                    "date": "2000-06-18",
+                                    "version": "1.2.3"
+                                },
+                                "juritools": {
+                                    "date": "2000-06-18",
+                                    "version": "1.2.3"
+                                },
+                                "pseudonymisationApi": {
+                                    "date": "2000-06-18",
+                                    "version": "1.2.3"
+                                },
+                                "model": {
+                                    "name": "MyModel"
+                                }
+                            },
+                            "treatmentDate": "123456",
+                            "checklist": [
+                                {
+                                    "check_type": "juridoute",
+                                    "message": "L'annotation 'Fabien' est-elle une personne physique ?",
+                                    "short_message": "Fabien [personnePhysique] ?",
+                                    "entities": [
+                                        {
+                                            "category": "personnePhysique",
+                                            "entityId": "personnePhysique_fabien",
+                                            "start": 2732,
+                                            "end": 2746,
+                                            "text": "Fabien",
+                                            "source": "",
+                                            "score": 0.5
+                                        }
+                                    ],
+                                    "sentences": [
+                                        {
+                                            "start": 2700,
+                                            "end": 2747
+                                        }
+                                    ],
+                                    "metadata_text": []
+                                }
+                            ]
+                        }
+                    },
+                    "entityId": {
+                        "type": "string",
+                        "description": "ID de l'entité",
+                        "example": "some-entity-id"
+                    },
+                    "start": {
+                        "type": "number",
+                        "description": "Démarre à la position",
+                        "example": 1
+                    },
+                    "text": {
+                        "type": "string",
+                        "description": "Texte de l'annotation",
+                        "example": "some-text"
+                    },
+                    "score": {
+                        "type": "number",
+                        "description": "Score de certitude",
+                        "example": 1
+                    },
+                    "source": {
+                        "type": "string",
+                        "description": "Source",
+                        "example": "mysource"
+                    }
+                },
+                "required": [
+                    "category",
+                    "entityId",
+                    "start",
+                    "text",
+                    "score",
+                    "source"
+                ]
+            },
+            "LabelTreatmentDto": {
+                "type": "object",
+                "properties": {
+                    "annotations": {
+                        "description": "Liste des annotations",
+                        "example": [
+                            {
+                                "category": "some-category",
+                                "entityId": "some-entity-id",
+                                "start": 1,
+                                "text": "some-text",
+                                "score": 1,
+                                "source": "mysource"
+                            },
+                            {
+                                "category": "other-category",
+                                "entityId": "other-entity-id",
+                                "start": 5,
+                                "text": "other-text",
+                                "score": 0.5,
+                                "source": "mysource"
+                            }
+                        ],
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AnnotationDto"
+                        }
+                    },
+                    "source": {
+                        "type": "string",
+                        "description": "Source du traitement",
+                        "example": "some-source"
+                    },
+                    "order": {
+                        "type": "number",
+                        "description": "Ordre du traitement",
+                        "example": 1
+                    },
+                    "version": {
+                        "type": "object",
+                        "description": "Version utilisées pour créer le traitement",
+                        "example": {
+                            "juriSpacyTokenizer": {
+                                "date": "2000-06-18",
+                                "version": "1.2.3"
+                            },
+                            "juritools": {
+                                "date": "2000-06-18",
+                                "version": "1.2.3"
+                            },
+                            "pseudonymisationApi": {
+                                "date": "2000-06-18",
+                                "version": "1.2.3"
+                            },
+                            "model": {
+                                "name": "MyModel"
+                            }
+                        }
+                    },
+                    "treatmentDate": {
+                        "type": "string",
+                        "description": "Date du traitement",
+                        "example": "123456"
+                    },
+                    "checklist": {
+                        "type": "object",
+                        "description": "Checklist",
+                        "example": [
+                            {
+                                "check_type": "juridoute",
+                                "message": "L'annotation 'Fabien' est-elle une personne physique ?",
+                                "short_message": "Fabien [personnePhysique] ?",
+                                "entities": [
+                                    {
+                                        "category": "personnePhysique",
+                                        "entityId": "personnePhysique_fabien",
+                                        "start": 2732,
+                                        "end": 2746,
+                                        "text": "Fabien",
+                                        "source": "",
+                                        "score": 0.5
+                                    }
+                                ],
+                                "sentences": [
+                                    {
+                                        "start": 2700,
+                                        "end": 2747
+                                    }
+                                ],
+                                "metadata_text": []
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "annotations",
+                    "source",
+                    "order"
+                ]
+            },
+            "UpdateDecisionPseudonymiseeDTO": {
+                "type": "object",
+                "properties": {
+                    "pseudoText": {
+                        "type": "string",
+                        "description": "Texte pseudonymisé de la décision",
+                        "example": "My decision pseudo text"
+                    },
+                    "labelTreatments": {
+                        "description": "Label treatments de la décision",
+                        "example": [
+                            {
+                                "annotations": [
+                                    {
+                                        "category": "some-category",
+                                        "entityId": "some-entity-id",
+                                        "start": 1,
+                                        "text": "some-text",
+                                        "score": 1,
+                                        "source": "mysource"
+                                    },
+                                    {
+                                        "category": "other-category",
+                                        "entityId": "other-entity-id",
+                                        "start": 5,
+                                        "text": "other-text",
+                                        "score": 0.5,
+                                        "source": "mysource"
+                                    }
+                                ],
+                                "source": "some-source",
+                                "order": 1,
+                                "version": {
+                                    "juriSpacyTokenizer": {
+                                        "date": "2000-06-18",
+                                        "version": "1.2.3"
+                                    },
+                                    "juritools": {
+                                        "date": "2000-06-18",
+                                        "version": "1.2.3"
+                                    },
+                                    "pseudonymisationApi": {
+                                        "date": "2000-06-18",
+                                        "version": "1.2.3"
+                                    },
+                                    "model": {
+                                        "name": "MyModel"
+                                    }
+                                },
+                                "treatmentDate": "123456",
+                                "checklist": [
+                                    {
+                                        "check_type": "juridoute",
+                                        "message": "L'annotation 'Fabien' est-elle une personne physique ?",
+                                        "short_message": "Fabien [personnePhysique] ?",
+                                        "entities": [
+                                            {
+                                                "category": "personnePhysique",
+                                                "entityId": "personnePhysique_fabien",
+                                                "start": 2732,
+                                                "end": 2746,
+                                                "text": "Fabien",
+                                                "source": "",
+                                                "score": 0.5
+                                            }
+                                        ],
+                                        "sentences": [
+                                            {
+                                                "start": 2700,
+                                                "end": 2747
+                                            }
+                                        ],
+                                        "metadata_text": []
+                                    }
+                                ]
+                            }
+                        ],
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LabelTreatmentDto"
+                        }
+                    }
+                },
+                "required": [
+                    "pseudoText",
+                    "labelTreatments"
+                ]
+            },
+            "UpdateDecisionStatutDTO": {
+                "type": "object",
+                "properties": {
+                    "statut": {
+                        "type": "string",
+                        "description": "Statut de la décision dans Judilibre",
+                        "enum": [
+                            "toBeTreated",
+                            "loaded",
+                            "done",
+                            "exported",
+                            "blocked",
+                            "ignored_debatNonPublic",
+                            "ignored_decisionNonPublique",
+                            "ignored_codeDecisionBloqueCC",
+                            "ignored_dateDecisionIncoherente",
+                            "ignored_codeNACdeDecisionNonPublique",
+                            "ignored_codeNACdeDecisionPartiellementPublique",
+                            "ignored_codeNACInconnu",
+                            "ignored_caractereInconnu",
+                            "ignored_dateAvantMiseEnService",
+                            "ignored_controleRequis",
+                            "ignored_decisionNonPubliqueParZonage",
+                            "ignored_decisionPartiellementPubliqueParZonage",
+                            "ignored_blocOcculationNonDefini",
+                            "ignored_recommandationOccultationNonSuivie"
+                        ],
+                        "example": "toBeTreated"
+                    }
+                },
+                "required": [
+                    "statut"
+                ]
+            },
+            "GetDecisionRouteDTO": {
+                "type": "object",
+                "properties": {
+                    "source": {
+                        "type": "string",
+                        "description": "Source de la décision (TJ/CA/CC...)",
+                        "enum": [
+                            "jurinet",
+                            "juritj",
+                            "jurica",
+                            "juritcom"
+                        ],
+                        "example": "juritj"
+                    },
+                    "codeNac": {
+                        "type": "string",
+                        "description": "Code NAC de la décision",
+                        "example": "45C"
+                    },
+                    "codeDecision": {
+                        "type": "string",
+                        "description": "Code décision (endCaseCode) de la décision",
+                        "example": ""
+                    }
+                },
+                "required": [
+                    "source",
+                    "codeNac",
+                    "codeDecision"
+                ]
+            }
+        }
     }
-  }
 }
