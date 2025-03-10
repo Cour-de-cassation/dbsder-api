@@ -55,7 +55,8 @@ export class ListDecisionsController {
     const authorizedApiKeys = [
       process.env.LABEL_API_KEY,
       process.env.INDEX_API_KEY,
-      process.env.ATTACHMENTS_API_KEY
+      process.env.ATTACHMENTS_API_KEY,
+      process.env.NORMALIZATION_API_KEY
     ]
 
     const apiKey = req.headers['x-api-key']
