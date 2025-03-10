@@ -245,7 +245,7 @@
             "required": true,
             "in": "query",
             "description": "date de début de la période de recherche",
-            "example": "2024-04-24T09:24:23.186Z",
+            "example": "2024-04-24",
             "schema": { "type": "string" }
           },
           {
@@ -253,7 +253,7 @@
             "required": true,
             "in": "query",
             "description": "date de fin de la période de recherche",
-            "example": "2024-04-24T09:24:23.186Z",
+            "example": "2024-04-24",
             "schema": { "type": "string" }
           },
           {
