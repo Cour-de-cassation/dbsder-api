@@ -98,7 +98,7 @@ describe('DecisionsController', () => {
       it('when the apiKey is not authorized to call this endpoint', async () => {
         // GIVEN
         const mockGetDecisionListQuery = mockUtils.decisionQueryDTO
-        const normalisationApiKey = process.env.NORMALIZATION_API_KEY
+        const normalisationApiKey = process.env.OPS_API_KEY
 
         // WHEN
         const result = await request(app.getHttpServer())
