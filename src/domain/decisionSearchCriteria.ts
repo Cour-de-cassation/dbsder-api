@@ -27,8 +27,8 @@ export class DecisionSearchCriteria {
   status?: LabelStatus
 
   @ApiPropertyOptional({
-    description: 'Date de début de la décision',
-    example: mockUtils.decisionTJToBeTreated.dateCreation
+    description: 'Date de début de la période de recherche',
+    example: '2024-04-24'
   })
   @IsOptional()
   @IsString()
@@ -37,8 +37,8 @@ export class DecisionSearchCriteria {
   startDate?: string
 
   @ApiPropertyOptional({
-    description: 'Date de fin de la décision',
-    example: mockUtils.decisionTJToBeTreated.dateCreation
+    description: 'Date de fin de la période de recherche',
+    example: '2024-04-24'
   })
   @IsOptional()
   @IsString()
