@@ -123,13 +123,12 @@ export class AnnotationDto {
     type: Number,
     example: mockUtils.labelTreatment.annotations[0].score
   })
-  @IsNumber()
-  score: number
+  score?: number
 
   @ApiProperty({
     description: 'Source',
     type: String,
     example: mockUtils.labelTreatment.annotations[0].source
   })
-  source: string
+  source?: string
 }
