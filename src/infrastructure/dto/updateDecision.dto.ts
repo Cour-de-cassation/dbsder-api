@@ -121,8 +121,14 @@ export class AnnotationDto {
   @ApiProperty({
     description: 'Score de certitude',
     type: Number,
-    example: mockUtils.labelTreatment.annotations[0].certaintyScore
+    example: mockUtils.labelTreatment.annotations[0].score
   })
-  @IsNumber()
-  certaintyScore: number
+  score?: number
+
+  @ApiProperty({
+    description: 'Source',
+    type: String,
+    example: mockUtils.labelTreatment.annotations[0].source
+  })
+  source?: string
 }
