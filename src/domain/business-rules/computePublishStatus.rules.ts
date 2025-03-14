@@ -13,7 +13,8 @@ export function computePublishStatus(decisionDto: CreateDecisionDTO): PublishSta
   logger.log({ ...formatLogs })
 
   const publishStatus =
-    decisionDto.labelStatus === LabelStatus.TOBETREATED
+    decisionDto.labelStatus === LabelStatus.TOBETREATED ||
+    decisionDto.labelStatus === LabelStatus.DONE
       ? PublishStatus.TOBEPUBLISHED
       : PublishStatus.BLOCKED
 
