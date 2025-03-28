@@ -6,14 +6,14 @@ import {
   HttpStatus,
   Logger,
   Request,
-  UsePipes
+  UsePipes,
+  Query
 } from '@nestjs/common'
 import {
   ApiHeader,
   ApiBadRequestResponse,
   ApiTags,
   ApiUnauthorizedResponse,
-  ApiBody,
   ApiNoContentResponse,
   ApiNotFoundResponse
 } from '@nestjs/swagger'
@@ -26,15 +26,11 @@ import { FindDecisionRouteUseCase } from '../../usecase/findDecisionRoute.usecas
 import { GetDecisionRouteDTO } from '../dto/getRoute.dto'
 import { ValidateDtoPipe } from '../pipes/validateDto.pipe'
 import { CodeNACsRepository } from '../db/repositories/codeNACs.repository'
-import { CodeDecisionRepository } from '../db/repositories/codeDecision.repository'
 
 @ApiTags('DbSder')
 @Controller('decision-route')
 export class GetDecisionRouteController {
-  constructor(
-    private readonly codeNACsRepository: CodeNACsRepository,
-    private readonly codeDecisionRepository: CodeDecisionRepository
-  ) {}
+  constructor(private readonly codeNACsRepository: CodeNACsRepository) {}
 
   private readonly logger = new Logger(GetDecisionRouteController.name)
 
@@ -44,13 +40,9 @@ export class GetDecisionRouteController {
     name: 'x-api-key',
     description: 'Clé API'
   })
-  @ApiBody({
-    description: 'Codes de la décision',
-    type: GetDecisionRouteDTO
-  })
   @ApiNoContentResponse()
   @ApiBadRequestResponse({
-    description: 'Code NAC ou code décision manquant ou invalide'
+    description: 'Code NAC manquant ou invalide'
   })
   @ApiNotFoundResponse({
     description: 'Route non trouvée'
@@ -59,13 +51,13 @@ export class GetDecisionRouteController {
     description: "Vous n'êtes pas autorisé à appeler cette route"
   })
   @UsePipes(new ValidateDtoPipe())
-  async getDecisionRoute(@Body() body: GetDecisionRouteDTO, @Request() req): Promise<any> {
+  async getDecisionRoute(@Query() query: GetDecisionRouteDTO, @Request() req): Promise<any> {
     const routePath = `${req.method} ${req.path}`
     const formatLogs: LogsFormat = {
       operationName: 'getDecisionRoute',
       httpMethod: req.method,
       path: req.path,
-      msg: `${routePath} called with codeNac ${body.codeNac}, codeDecision ${body.codeDecision}, source ${body.source}`
+      msg: `${routePath} called with codeNac ${query.codeNac}.`
     }
     this.logger.log(formatLogs)
 
@@ -75,17 +67,10 @@ export class GetDecisionRouteController {
       throw new ClientNotAuthorizedException()
     }
 
-    const findDecisionRouteUseCase = new FindDecisionRouteUseCase(
-      this.codeNACsRepository,
-      this.codeDecisionRepository
-    )
+    const findDecisionRouteUseCase = new FindDecisionRouteUseCase(this.codeNACsRepository)
 
     try {
-      const result = await findDecisionRouteUseCase.execute(
-        body.codeNac,
-        body.codeDecision,
-        body.source
-      )
+      const result = await findDecisionRouteUseCase.execute(query.codeNac)
       this.logger.log({
         ...formatLogs,
         msg: routePath + ' returns ' + HttpStatus.OK,
