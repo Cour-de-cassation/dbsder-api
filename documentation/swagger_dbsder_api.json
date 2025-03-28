@@ -349,7 +349,8 @@
                 "ignored_decisionNonPubliqueParZonage",
                 "ignored_decisionPartiellementPubliqueParZonage",
                 "ignored_blocOcculationNonDefini",
-                "ignored_recommandationOccultationNonSuivie"
+                "ignored_recommandationOccultationNonSuivie",
+                "ignored_juridictionEnPhaseDeTest"
               ],
               "type": "string"
             }
@@ -617,6 +618,16 @@
         "operationId": "GetDecisionRouteController_getDecisionRoute",
         "parameters": [
           {
+            "name": "codeNac",
+            "required": true,
+            "in": "query",
+            "description": "Code NAC de la décision",
+            "schema": {
+              "example": "45C",
+              "type": "string"
+            }
+          },
+          {
             "name": "x-api-key",
             "in": "header",
             "description": "Clé API",
@@ -625,23 +636,12 @@
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "description": "Codes de la décision",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetDecisionRouteDTO"
-              }
-            }
-          }
-        },
         "responses": {
           "204": {
             "description": ""
           },
           "400": {
-            "description": "Code NAC ou code décision manquant ou invalide"
+            "description": "Code NAC manquant ou invalide"
           },
           "401": {
             "description": "Vous n'êtes pas autorisé à appeler cette route"
@@ -722,12 +722,12 @@
           "dateCreation": {
             "type": "string",
             "description": "Date de création de la décision au format ISO 8601",
-            "example": "2025-03-13T14:58:51.856Z"
+            "example": "2025-03-28T10:37:25.131Z"
           },
           "dateDecision": {
             "type": "string",
             "description": "Date de la décision au format AAAA-MM-JJ",
-            "example": "2025-03-12"
+            "example": "2025-03-27"
           },
           "decatt": {
             "description": "Décision attaquée : une décision de la Cour de cassation qui attaque une décision de cour d'appel",
@@ -1020,7 +1020,7 @@
           "dateCreation": {
             "type": "string",
             "description": "Date de création de la décision au format ISO 8601",
-            "example": "2025-03-13T14:58:51.856Z"
+            "example": "2025-03-28T10:37:25.131Z"
           }
         },
         "required": [
@@ -1245,12 +1245,12 @@
           "dateCreation": {
             "type": "string",
             "description": "Date de la création (après réception) de la décision",
-            "example": "2025-03-13T14:58:51.856Z"
+            "example": "2025-03-28T10:37:25.131Z"
           },
           "dateDecision": {
             "type": "string",
             "description": "Date de la décision",
-            "example": "2025-03-12"
+            "example": "2025-03-27"
           },
           "decatt": {
             "description": "Décision(s) attaquée(s)",
@@ -1300,7 +1300,8 @@
               "ignored_decisionNonPubliqueParZonage",
               "ignored_decisionPartiellementPubliqueParZonage",
               "ignored_blocOcculationNonDefini",
-              "ignored_recommandationOccultationNonSuivie"
+              "ignored_recommandationOccultationNonSuivie",
+              "ignored_juridictionEnPhaseDeTest"
             ],
             "example": "toBeTreated"
           },
@@ -1925,44 +1926,14 @@
               "ignored_decisionNonPubliqueParZonage",
               "ignored_decisionPartiellementPubliqueParZonage",
               "ignored_blocOcculationNonDefini",
-              "ignored_recommandationOccultationNonSuivie"
+              "ignored_recommandationOccultationNonSuivie",
+              "ignored_juridictionEnPhaseDeTest"
             ],
             "example": "toBeTreated"
           }
         },
         "required": [
           "statut"
-        ]
-      },
-      "GetDecisionRouteDTO": {
-        "type": "object",
-        "properties": {
-          "source": {
-            "type": "string",
-            "description": "Source de la décision (TJ/CA/CC...)",
-            "enum": [
-              "jurinet",
-              "juritj",
-              "jurica",
-              "juritcom"
-            ],
-            "example": "juritj"
-          },
-          "codeNac": {
-            "type": "string",
-            "description": "Code NAC de la décision",
-            "example": "45C"
-          },
-          "codeDecision": {
-            "type": "string",
-            "description": "Code décision (endCaseCode) de la décision",
-            "example": ""
-          }
-        },
-        "required": [
-          "source",
-          "codeNac",
-          "codeDecision"
         ]
       }
     }

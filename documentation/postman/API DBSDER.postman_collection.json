@@ -1957,7 +1957,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"codeNac\":\"12A\",\n    \"codeDecision\":\"09\",\n    \"source\":\"juritj\"\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1965,13 +1965,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{HOSTNAME}}/{{VERSION}}/decision-route",
+							"raw": "{{HOSTNAME}}/{{VERSION}}/decision-route?codeNac=92S",
 							"host": [
 								"{{HOSTNAME}}"
 							],
 							"path": [
 								"{{VERSION}}",
 								"decision-route"
+							],
+							"query": [
+								{
+									"key": "codeNac",
+									"value": "92S"
+								}
 							]
 						}
 					},
