@@ -182,8 +182,8 @@ export class MockUtils {
     sourceName: Sources.TJ,
     originalTextZoning: this.zoningModel,
     pseudoText: 'My decision pseudo text',
-    firstImportDate: TODAY,
-    lastImportDate: TODAY,
+    firstImportDate: new Date(TODAY),
+    lastImportDate: new Date(TODAY),
     publishDate: null,
     unpublishDate: null
   }
@@ -300,8 +300,8 @@ export class MockUtils {
     sourceName: Sources.TJ,
     originalTextZoning: this.zoningModel,
     pseudoText: 'My decision pseudo text',
-    firstImportDate: TODAY,
-    lastImportDate: TODAY,
+    firstImportDate: new Date(TODAY),
+    lastImportDate: new Date(TODAY),
     publishDate: null,
     unpublishDate: null
   }

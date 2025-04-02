@@ -28,10 +28,10 @@ async function refreshDecisions(db, date) {
             $set: {
               dateCreation: dateCreation ? date.toISOString() : null,
               dateDecision: setDate(date, (new Date(dateDecision)).getDate(), date.getMonth() - 1).toISOString(),
-              firstImportDate: firstImportDate ? date.toISOString() : null,
-              lastImportDate: lastImportDate ? date.toISOString() : null,
-              publishDate: publishDate ? date.toISOString() : null,
-              unpublishDate: unpublishDate ? date.toISOString() : null
+              firstImportDate: firstImportDate ? date : null,
+              lastImportDate: lastImportDate ? date : null,
+              publishDate: publishDate ? date : null,
+              unpublishDate: unpublishDate ? date : null
             }
           }
         )

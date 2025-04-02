@@ -80,7 +80,7 @@ describe('DecisionsRepository', () => {
 
       it('returns updated decision with dates when decision is successfully updated in DB', async () => {
         // GIVEN
-        const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString()
+        const yesterday = new Date(new Date().setDate(new Date().getDate() - 1))
 
         const decision = mockUtils.createDecisionDTO
         const oldDecision = {
