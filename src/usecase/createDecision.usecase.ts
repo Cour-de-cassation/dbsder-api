@@ -5,12 +5,14 @@ import { LabelStatus, Sources, Zoning } from 'dbsder-api-types'
 import { ZoningApiService } from '../service/zoningApi.service'
 import { computeLabelStatus } from '../domain/business-rules/computeLabelStatus.rules'
 import { computePublishStatus } from '../domain/business-rules/computePublishStatus.rules'
+import { Logger } from '@nestjs/common'
 
 export class CreateDecisionUsecase {
   constructor(
     private decisionsRepository: InterfaceDecisionsRepository,
     private codeNACsRepository: CodeNACsRepository,
-    private zoningApiService: ZoningApiService
+    private zoningApiService: ZoningApiService,
+    private readonly logger: Logger = new Logger()
   ) {}
 
   async execute(decision: CreateDecisionDTO): Promise<string> {
@@ -18,7 +20,11 @@ export class CreateDecisionUsecase {
       const decisionZoning: Zoning = await this.zoningApiService.getDecisionZoning(decision)
       decision.originalTextZoning = decisionZoning
     } catch (error) {
-      throw new Error(error)
+      this.logger.error({
+        operationName: 'CreateDecision',
+        msg: `Error while calling zoning.`,
+        data: error
+      })
     }
 
     if (
