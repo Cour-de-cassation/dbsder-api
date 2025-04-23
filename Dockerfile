@@ -1,8 +1,8 @@
 # Source : https://github.com/nestjs/awesome-nestjs#resources boilerplates
 # --- Builder --- #
-FROM node:18-alpine as builder
+FROM node:22-alpine as builder
 
-ENV NODE_ENV build
+ENV NODE_ENV=build
 
 USER node
 WORKDIR /home/node
@@ -22,7 +22,7 @@ COPY --chown=node:node . .
 # https://nodkz.github.io/mongodb-memory-server/docs/guides/known-issues/#no-build-available-for-alpine-linux 
 FROM node:16 as test
 
-ENV NODE_ENV build
+ENV NODE_ENV=build
 
 USER node
 WORKDIR /home/node
@@ -46,9 +46,9 @@ RUN npm run build && npm prune --production
 
 
 # --- Base final image with only shared dist content --- #
-FROM node:18-alpine as shared
+FROM node:22-alpine as shared
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 USER node
 WORKDIR /home/node
@@ -67,9 +67,9 @@ COPY --from=prod --chown=node:node /home/node/seeds ./seeds
 CMD ["node", "dist/main"]
 
 # --- Base final image with api dist content --- #
-FROM node:18-alpine as api-local
+FROM node:22-alpine as api-local
 
-ENV NODE_ENV local
+ENV NODE_ENV=local
 
 USER node
 WORKDIR /home/node
@@ -77,4 +77,4 @@ WORKDIR /home/node
 COPY --chown=node:node . .
 RUN npm i
 
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start"]
