@@ -1,11 +1,12 @@
 import { Request, Router } from 'express'
-import { missingValue } from '../library/error'
+import { forbiddenError, missingValue } from '../library/error'
 import {
   parseId,
   parseUpdatableDecisionFields,
   UpdatableDecisionFields
 } from '../service/decision/models'
 import { updateDecisionForLabel } from '../service/decision/handler'
+import { Service } from '../service/authentication'
 
 const app = Router()
 
@@ -23,6 +24,8 @@ function parseBody(
  */
 app.patch('/fromLabel/:id', async (req, res, next) => {
   try {
+    if (req.context?.service !== Service.LABEL) throw forbiddenError(new Error())
+    
     const id = parseId(req.params.id)
     const updateFields = parseBody(req.body)
     const { _id } = await updateDecisionForLabel(id, updateFields)
