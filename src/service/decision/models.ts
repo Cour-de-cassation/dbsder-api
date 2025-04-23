@@ -15,7 +15,7 @@ import {
 } from 'dbsder-api-types'
 import { ObjectId } from 'mongodb'
 import { ZoningParameters } from '../../library/zoning'
-import { notSupported } from '../../library/error'
+import { notSupported, unexpectedError } from '../../library/error'
 
 export type DecisionSupported = Exclude<Decision, DecisionDila> & {
   originalText: string // Warn: current model accept empty but it's wrong
@@ -55,8 +55,10 @@ function parseDate(x: unknown): Date {
     throw notSupported('date', x, new Error('Date should be at format: yyyy-mm-dd'))
   const date = new Date()
   date.setFullYear(parseInt(x.slice(0, 'yyyy'.length)))
-  date.setMonth(parseInt(x.slice('yyyy-'.length, 'mm'.length)) - 1)
-  date.setDate(parseInt(x.slice('yyyy-mm-'.length, 'dd'.length)))
+  date.setMonth(parseInt(x.slice('yyyy-'.length, 'yyyy-mm'.length)) - 1)
+  date.setDate(parseInt(x.slice('yyyy-mm-'.length, 'yyyy-mm-dd'.length)))
+  if (Number.isNaN(date.valueOf()))
+    throw unexpectedError(new Error())
   return date
 }
 
@@ -68,37 +70,44 @@ export type DecisionListFilters = {
   endDate?: Date
   dateType: 'dateDecision' | 'dateCreation'
 }
-export function parseDecisionListFilters(x: unknown = {}): DecisionListFilters {
+export function parseDecisionListFilters(x: unknown): DecisionListFilters {
   if (typeof x !== 'object' || !x) throw notSupported('filters', x, new Error())
+  const dateType = 'dateType' in x && x.dateType === "dateCreation" ? x.dateType : "dateDecision"
 
-  const sourceName = 'sourceName' in x && x.sourceName
-  const labelStatus = 'labelStatus' in x && x.labelStatus
-  const sourceId = 'sourceId' in x && x.sourceId
-  const startDate = 'startDate' in x && x.startDate
-  const endDate = 'endDate' in x && x.endDate
-  const dateType = 'dateType' in x && x.dateType
+  let filter: DecisionListFilters = { dateType }
 
-  if (sourceName !== undefined && !isSourceName(sourceName))
-    throw notSupported('sourceName', sourceName, new Error())
-  if (labelStatus !== undefined && !isLabelStatus(labelStatus))
-    throw notSupported('labelStatus', labelStatus, new Error())
-  if (sourceId !== undefined && (typeof sourceId !== 'string' || typeof sourceId !== 'number'))
-    throw notSupported('sourceId', sourceId, new Error())
-  if (dateType !== 'dateDecision' && dateType !== 'dateCreation')
-    throw notSupported(
-      'dateType',
-      dateType,
-      new Error('dateType should be dateDecision or dateCreation')
-    )
-
-  return {
-    sourceName,
-    labelStatus,
-    sourceId,
-    startDate: (!!startDate && parseDate(startDate)) || undefined,
-    endDate: (!!startDate && parseDate(endDate)) || undefined,
-    dateType
+  if ('sourceName' in x) {
+    const sourceName = x.sourceName
+    if (!isSourceName(sourceName))
+      throw notSupported('sourceName', sourceName, new Error())
+    filter = { ...filter, sourceName }
   }
+
+  if ('labelStatus' in x) {
+    const labelStatus = x.labelStatus
+    if (!isLabelStatus(labelStatus))
+      throw notSupported('labelStatus', labelStatus, new Error())
+    filter = { ...filter, labelStatus }
+  }
+
+  if ('sourceId' in x) {
+    const sourceId = x.sourceId
+    if (typeof sourceId !== 'string' && typeof sourceId !== 'number')
+      throw notSupported('sourceId', sourceId, new Error())
+    filter = { ...filter, sourceId }
+  }
+
+  if ('startDate' in x) {
+    const startDate = parseDate(x.startDate)
+    filter = { ...filter, startDate }
+  }
+
+  if ('endDate' in x) {
+    const endDate = parseDate(x.endDate)
+    filter = { ...filter, endDate }
+  }
+
+  return filter
 }
 
 export type UpdatableDecisionFields = {
@@ -110,10 +119,10 @@ export type UpdatableDecisionFields = {
 export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionFields {
   if (typeof x !== 'object' || !x) throw notSupported('filters', x, new Error())
 
-  const labelStatus = 'labelStatus' in x && x.labelStatus
-  const pseudoText = 'pseudoText' in x && x.pseudoText
-  const labelTreatments = 'labelTreatments' in x && x.labelTreatments
-  const publishStatus = 'publishStatus' in x && x.publishStatus
+  const labelStatus = 'labelStatus' in x ? x.labelStatus : undefined
+  const pseudoText = 'pseudoText' in x ? x.pseudoText : undefined
+  const labelTreatments = 'labelTreatments' in x ? x.labelTreatments : undefined
+  const publishStatus = 'publishStatus' in x ? x.publishStatus : undefined
 
   if (labelStatus !== undefined && !isLabelStatus(labelStatus))
     throw notSupported('labelStatus', labelStatus, new Error())
@@ -178,25 +187,25 @@ export function mapDecisionListFiltersIntoDbFilters(filters: DecisionListFilters
   const dateFilter =
     startDate && endDate
       ? {
-          [dateType]: {
-            $gte: startDate.toISOString(),
-            $lte: endDate.toISOString()
-          }
+        [dateType]: {
+          $gte: startDate.toISOString(),
+          $lte: endDate.toISOString()
         }
+      }
       : startDate
         ? {
-            [dateType]: {
-              $gte: startDate.toISOString(),
-              $lte: new Date().toISOString()
-            }
+          [dateType]: {
+            $gte: startDate.toISOString(),
+            $lte: new Date().toISOString()
           }
+        }
         : endDate
           ? {
-              [dateType]: {
-                $gte: new Date().toISOString(),
-                $lte: endDate.toISOString()
-              }
+            [dateType]: {
+              $gte: new Date().toISOString(),
+              $lte: endDate.toISOString()
             }
+          }
           : {}
 
   return {
