@@ -48,7 +48,7 @@ function parsePatchBody(body: Request['body']): UpdatableDecisionFields {
 
 app.patch('/decisions/:id', async (req, res, next) => {
   try {
-    if (req.context.service !== Service.LABEL) throw forbiddenError(new Error())
+    if (req.context?.service !== Service.LABEL) throw forbiddenError(new Error())
 
     const id = parseId(req.params.id)
     const updateFields = parsePatchBody(req.body)
@@ -71,7 +71,7 @@ function parsePutBody(body: Request['body']): UnIdentifiedDecisionSupported {
 
 app.put('/decisions', async (req, res, next) => {
   try {
-    if (req.context.service !== Service.NORMALIZATION) throw forbiddenError(new Error())
+    if (req.context?.service !== Service.NORMALIZATION) throw forbiddenError(new Error())
 
     const decision = parsePutBody(req.body)
     const { _id } = await saveDecision(decision)

@@ -5,7 +5,7 @@ import { unauthorizedError } from '../library/error'
 declare global {
   namespace Express {
     interface Request {
-      context: { service: Service }
+      context?: { service: Service }
     }
   }
 }
@@ -15,7 +15,8 @@ export const apiKeyHandler = async (req: Request, _: Response, next: NextFunctio
     const apiKey = req.headers['x-api-key']
     if (typeof apiKey !== 'string') throw unauthorizedError(new Error())
     const service = apiKeyToService(apiKey)
-    req.context.service = service
+    req.context = { service }
+
     next()
   } catch (err) {
     next(err)
