@@ -45,7 +45,7 @@ export type UnauthorizedError = Error & {
 }
 export function unauthorizedError(error: Error): UnauthorizedError {
   if (!error.message)
-    error.message = 'Resource needs to be logged to access. Currently unauthorized.'
+    error.message = 'You need to be logged to access at this resource. Currently unauthorized.'
   return Object.assign(error, {
     type: 'unauthorizedError' as const
   })
@@ -55,7 +55,7 @@ export type ForbiddenError = Error & {
   type: 'forbiddenError'
 }
 export function forbiddenError(error: Error): ForbiddenError {
-  if (!error.message) error.message = 'Resource needs to be logged to access. Currently forbidden.'
+  if (!error.message) error.message = 'Your connexion cannot access to this resource. Currently forbidden.'
   return Object.assign(error, {
     type: 'forbiddenError' as const
   })
