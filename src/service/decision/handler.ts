@@ -4,9 +4,9 @@ import {
   DecisionDila,
   hasSourceNameTj,
   LabelStatus,
-  PublishStatus,
-} from "dbsder-api-types";
-import { fetchZoning } from "../../library/zoning";
+  PublishStatus
+} from 'dbsder-api-types'
+import { fetchZoning } from '../../library/zoning'
 import {
   DecisionListFilters,
   DecisionSupported,
@@ -14,65 +14,58 @@ import {
   mapDecisionIntoZoningParameters,
   mapDecisionListFiltersIntoDbFilters,
   UnIdentifiedDecisionSupported,
-  UpdatableDecisionFields,
-} from "./models";
-import { computeRulesDecisionTj } from "./rulesTj";
+  UpdatableDecisionFields
+} from './models'
+import { computeRulesDecisionTj } from './rulesTj'
 import {
   findCodeNac,
   findDecision,
   findDecisions,
   findAndUpdateDecision,
-  findAndUpdateDecisionFields,
-} from "../../library/sderDB";
-import { logger } from "../../library/logger";
-import { notFound } from "../../library/error";
+  findAndUpdateDecisionFields
+} from '../../library/sderDB'
+import { logger } from '../../library/logger'
+import { notFound } from '../../library/error'
 
-function computeDates(
-  previousDecision: Exclude<Decision, DecisionDila> | null
-) {
-  const now = new Date();
+function computeDates(previousDecision: Exclude<Decision, DecisionDila> | null) {
+  const now = new Date()
   return {
     firstImportDate: previousDecision
-      ? previousDecision.firstImportDate ?? undefined
+      ? (previousDecision.firstImportDate ?? undefined)
       : now.toISOString(),
     lastImportDate: now.toISOString(),
     publishDate: previousDecision?.publishDate ?? null,
-    unpublishDate: previousDecision?.unpublishDate ?? null,
-  };
+    unpublishDate: previousDecision?.unpublishDate ?? null
+  }
 }
 
 async function computeZoning(
   decision: UnIdentifiedDecisionSupported
-): Promise<UnIdentifiedDecisionSupported["originalTextZoning"]> {
+): Promise<UnIdentifiedDecisionSupported['originalTextZoning']> {
   try {
-    const zoning = await fetchZoning(mapDecisionIntoZoningParameters(decision));
-    return zoning;
+    const zoning = await fetchZoning(mapDecisionIntoZoningParameters(decision))
+    return zoning
   } catch (err) {
     logger.warn({
-      operationName: "Compute zoning",
-      msg: "Zoning has failed and fallback into undefined",
-      err,
-    });
-    return undefined;
+      operationName: 'Compute zoning',
+      msg: 'Zoning has failed and fallback into undefined',
+      err
+    })
+    return undefined
   }
 }
 
-export async function saveDecision(
-  decision: UnIdentifiedDecisionSupported
-): Promise<Decision> {
-  const uniqueFilters = mapDecisionIntoUniqueFilters(decision);
-  const previousDecision = (await findDecision(uniqueFilters)) as Exclude<
-    Decision,
-    DecisionDila
-  >; // decision cannot coming from dila
+export async function saveDecision(decision: UnIdentifiedDecisionSupported): Promise<Decision> {
+  const uniqueFilters = mapDecisionIntoUniqueFilters(decision)
+  const previousDecision = (await findDecision(uniqueFilters)) as Exclude<Decision, DecisionDila> // decision cannot coming from dila
   const { firstImportDate, unpublishDate, publishDate, lastImportDate } =
-    computeDates(previousDecision);
+    computeDates(previousDecision)
 
-  const originalTextZoning = await computeZoning(decision);
+  const originalTextZoning = await computeZoning(decision)
 
   const decisionWithRules = hasSourceNameTj(decision)
     ? await computeRulesDecisionTj(decision)
-    : decision;
+    : decision
 
   const decisionNormalized: UnIdentifiedDecisionSupported = {
     ...decisionWithRules,
@@ -84,82 +77,76 @@ export async function saveDecision(
     publishStatus:
       decisionWithRules.labelStatus !== LabelStatus.TOBETREATED
         ? PublishStatus.BLOCKED
-        : PublishStatus.TOBEPUBLISHED,
-  };
+        : PublishStatus.TOBEPUBLISHED
+  }
 
   const res = await findAndUpdateDecision(
     mapDecisionIntoUniqueFilters(decisionNormalized),
     decisionNormalized
-  );
+  )
 
   logger.warn({
-    operationName: "Insert in Sder Decision",
-    msg: "Decision will not be treated",
+    operationName: 'Insert in Sder Decision',
+    msg: 'Decision will not be treated',
     decision: {
       _id: res._id,
       labelStatus: res.labelStatus,
-      publishStatus: res.publishStatus,
-    },
-  });
+      publishStatus: res.publishStatus
+    }
+  })
 
-  return res;
+  return res
 }
 
 export async function updateDecision(
-  targetId: Decision["_id"],
+  targetId: Decision['_id'],
   updateFields: UpdatableDecisionFields
 ) {
-  return findAndUpdateDecisionFields({ _id: targetId }, updateFields);
+  return findAndUpdateDecisionFields({ _id: targetId }, updateFields)
 }
 
-export async function fetchDecisionById(
-  decisionId: Decision["_id"]
-): Promise<Decision> {
-  const decision = await findDecision({ _id: decisionId });
-  if (!decision) throw notFound("decision", new Error());
-  return decision;
+export async function fetchDecisionById(decisionId: Decision['_id']): Promise<Decision> {
+  const decision = await findDecision({ _id: decisionId })
+  if (!decision) throw notFound('decision', new Error())
+  return decision
 }
 
-export async function fetchCodeNacById(
-  codeNacId: CodeNac["_id"]
-): Promise<CodeNac> {
-  const codeNac = await findCodeNac({ _id: codeNacId });
-  if (!codeNac) throw notFound("codeNac", new Error());
-  return codeNac;
+export async function fetchCodeNacById(codeNacId: CodeNac['_id']): Promise<CodeNac> {
+  const codeNac = await findCodeNac({ _id: codeNacId })
+  if (!codeNac) throw notFound('codeNac', new Error())
+  return codeNac
 }
 
-export async function fetchDecisions(
-  filters: DecisionListFilters
-): Promise<Decision[]> {
-  return findDecisions(mapDecisionListFiltersIntoDbFilters(filters));
+export async function fetchDecisions(filters: DecisionListFilters): Promise<Decision[]> {
+  return findDecisions(mapDecisionListFiltersIntoDbFilters(filters))
 }
 
 // Warn: probable Label responsability -
 export async function updateDecisionForLabel(
-  targetId: Decision["_id"],
-  updateFields: Omit<UpdatableDecisionFields, "labelStatus" | "publishStatus">
+  targetId: Decision['_id'],
+  updateFields: Omit<UpdatableDecisionFields, 'labelStatus' | 'publishStatus'>
 ) {
   const originalDecision = (await findDecision({
-    _id: targetId,
-  })) as DecisionSupported | null;
-  if (!originalDecision) throw notFound("original decision", new Error());
+    _id: targetId
+  })) as DecisionSupported | null
+  if (!originalDecision) throw notFound('original decision', new Error())
 
-  const labelStatus = LabelStatus.DONE;
+  const labelStatus = LabelStatus.DONE
   const publishStatus =
     originalDecision.publishStatus === PublishStatus.BLOCKED
       ? PublishStatus.BLOCKED
-      : PublishStatus.TOBEPUBLISHED;
+      : PublishStatus.TOBEPUBLISHED
 
-  const originalTreatments = originalDecision?.labelTreatments ?? [];
+  const originalTreatments = originalDecision?.labelTreatments ?? []
   const updatedLabelTreatments = updateFields.labelTreatments
     ? [
         ...originalTreatments,
         ...updateFields.labelTreatments.map(({ order, ..._ }) => ({
           ..._,
-          order: originalTreatments.length + order,
-        })),
+          order: originalTreatments.length + order
+        }))
       ]
-    : originalTreatments;
+    : originalTreatments
 
   return findAndUpdateDecisionFields(
     { _id: targetId },
@@ -167,7 +154,7 @@ export async function updateDecisionForLabel(
       ...updateFields,
       labelTreatments: updatedLabelTreatments,
       labelStatus,
-      publishStatus,
+      publishStatus
     }
-  );
+  )
 }
