@@ -121,7 +121,7 @@ export async function fetchDecisions(filters: DecisionListFilters): Promise<Deci
   return findDecisions(mapDecisionListFiltersIntoDbFilters(filters))
 }
 
-// Warn: probable Label responsability -
+// Warn: maybe Label responsability -
 export async function updateDecisionForLabel(
   targetId: Decision['_id'],
   updateFields: Omit<UpdatableDecisionFields, 'labelStatus' | 'publishStatus'>
@@ -140,12 +140,12 @@ export async function updateDecisionForLabel(
   const originalTreatments = originalDecision?.labelTreatments ?? []
   const updatedLabelTreatments = updateFields.labelTreatments
     ? [
-        ...originalTreatments,
-        ...updateFields.labelTreatments.map(({ order, ..._ }) => ({
-          ..._,
-          order: originalTreatments.length + order
-        }))
-      ]
+      ...originalTreatments,
+      ...updateFields.labelTreatments.map(({ order, ..._ }) => ({
+        ..._,
+        order: originalTreatments.length + order
+      }))
+    ]
     : originalTreatments
 
   return findAndUpdateDecisionFields(
