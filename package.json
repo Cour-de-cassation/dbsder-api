@@ -9,7 +9,8 @@
     "start:watch": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'npx ts-node src/server.ts'",
     "start": "node dist/server.js",
     "format": "prettier \"src/**/*.ts\" --write",
-    "lint": "eslint \"src/**/*.ts\" --quiet --fix",
+    "lint": "eslint \"src/**/*.ts\" --quiet",
+    "fix": "eslint \"src/**/*.ts\" --fix",
     "build": "tsc --build"
   },
   "dependencies": {
