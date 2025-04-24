@@ -16,15 +16,16 @@ import {
 import { ObjectId } from 'mongodb'
 import { ZoningParameters } from '../../library/zoning'
 import { notSupported, unexpectedError } from '../../library/error'
+import { ZodError } from 'zod'
 
 export type DecisionSupported = Exclude<Decision, DecisionDila> & {
-  originalText: string // Warn: current model accept empty but it's wrong
+  originalText: string // Warn: current model accept empty but new data doesn't
 }
 
 export type UnIdentifiedDecisionSupported = Exclude<
   UnIdentifiedDecision,
   UnIdentifiedDecisionDila
-> & { originalText: string } /// Warn: current model accept empty but it's wrong
+> & { originalText: string } /// Warn: current model accept empty but new data doesn't
 
 function hasOriginalText(
   x: UnIdentifiedDecision
@@ -33,16 +34,22 @@ function hasOriginalText(
 }
 
 export function parseUnIdentifiedDecisionSupported(x: unknown): UnIdentifiedDecisionSupported {
-  const decision = isUnIdentifiedDecision(x)
-  if (decision.sourceName === 'dila')
-    throw notSupported('decision.sourceName', decision.sourceName, new Error())
-  if (!hasOriginalText(decision))
-    throw notSupported(
-      'decision.originalText',
-      decision.originalText,
-      new Error('originalText in decision is missing')
-    )
-  return decision
+  try {
+    const decision = isUnIdentifiedDecision(x)
+    if (decision.sourceName === 'dila')
+      throw notSupported('decision.sourceName', decision.sourceName, new Error())
+    if (!hasOriginalText(decision))
+      throw notSupported(
+        'decision.originalText',
+        decision.originalText,
+        new Error('originalText in decision is missing')
+      )
+    return decision
+  } catch (err) {
+    if (err instanceof ZodError)
+      throw notSupported("decision", x, err)
+    else throw err
+  }
 }
 
 export function parseId(maybeId: unknown): ObjectId {
@@ -118,30 +125,37 @@ export type UpdatableDecisionFields = {
 }
 export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionFields {
   if (typeof x !== 'object' || !x) throw notSupported('filters', x, new Error())
+  let updateDecision: UpdatableDecisionFields = {}
 
-  const labelStatus = 'labelStatus' in x ? x.labelStatus : undefined
-  const pseudoText = 'pseudoText' in x ? x.pseudoText : undefined
-  const labelTreatments = 'labelTreatments' in x ? x.labelTreatments : undefined
-  const publishStatus = 'publishStatus' in x ? x.publishStatus : undefined
-
-  if (labelStatus !== undefined && !isLabelStatus(labelStatus))
-    throw notSupported('labelStatus', labelStatus, new Error())
-  if (pseudoText !== undefined && typeof pseudoText !== 'string')
-    throw notSupported('pseudoText', pseudoText, new Error('pseudoText should be a string'))
-  if (
-    labelTreatments !== undefined &&
-    (!Array.isArray(labelTreatments) || !labelTreatments.every(isLabelTreatment))
-  )
-    throw notSupported('labelTreatments', labelTreatments, new Error())
-  if (publishStatus !== undefined && !isPublishStatus(publishStatus))
-    throw notSupported('publishStatus', publishStatus, new Error())
-
-  return {
-    labelStatus,
-    labelTreatments,
-    pseudoText,
-    publishStatus
+  if ('publishStatus' in x) {
+    const publishStatus = x.publishStatus
+    if (!isPublishStatus(publishStatus))
+      throw notSupported('publishStatus', publishStatus, new Error())
+    updateDecision = { ...updateDecision, publishStatus }
   }
+
+  if ('labelStatus' in x) {
+    const labelStatus = x.labelStatus
+    if (!isLabelStatus(labelStatus))
+      throw notSupported('labelStatus', labelStatus, new Error())
+    updateDecision = { ...updateDecision, labelStatus }
+  }
+
+  if ('pseudoText' in x) {
+    const pseudoText = x.pseudoText
+    if (typeof pseudoText !== 'string')
+      throw notSupported('pseudoText', pseudoText, new Error())
+    updateDecision = { ...updateDecision, pseudoText }
+  }
+
+  if ('labelTreatments' in x) {
+    const labelTreatments = x.labelTreatments
+    if (!Array.isArray(labelTreatments) || !labelTreatments.every(isLabelTreatment))
+      throw notSupported('labelTreatments', labelTreatments, new Error())
+    updateDecision = { ...updateDecision, labelTreatments }
+  }
+
+  return updateDecision
 }
 
 function mapDecisionIntoZoningSource(
