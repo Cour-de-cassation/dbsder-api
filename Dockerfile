@@ -1,6 +1,6 @@
 # Source : https://github.com/nestjs/awesome-nestjs#resources boilerplates
 # --- Builder --- #
-FROM node:22-alpine as builder
+FROM node:24-alpine as builder
 
 ENV NODE_ENV=build
 
@@ -46,7 +46,7 @@ RUN npm run build && npm prune --production
 
 
 # --- Base final image with only shared dist content --- #
-FROM node:22-alpine as shared
+FROM node:24-alpine as shared
 
 ENV NODE_ENV=production
 
@@ -67,7 +67,7 @@ COPY --from=prod --chown=node:node /home/node/seeds ./seeds
 CMD ["node", "dist/main"]
 
 # --- Base final image with api dist content --- #
-FROM node:22-alpine as api-local
+FROM node:24-alpine as api-local
 
 ENV NODE_ENV=local
 
