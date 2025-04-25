@@ -21,8 +21,8 @@ import {
   findCodeNac,
   findDecision,
   findDecisions,
-  findAndUpdateDecision,
-  findAndUpdateDecisionFields
+  findAndReplaceDecision,
+  findAndUpdateDecision
 } from '../../library/sderDB'
 import { logger } from '../../library/logger'
 import { notFound } from '../../library/error'
@@ -80,7 +80,7 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
         : PublishStatus.TOBEPUBLISHED
   }
 
-  const res = await findAndUpdateDecision(
+  const res = await findAndReplaceDecision(
     mapDecisionIntoUniqueFilters(decisionNormalized),
     decisionNormalized
   )
@@ -102,7 +102,7 @@ export async function updateDecision(
   targetId: Decision['_id'],
   updateFields: UpdatableDecisionFields
 ) {
-  return findAndUpdateDecisionFields({ _id: targetId }, updateFields)
+  return findAndUpdateDecision({ _id: targetId }, updateFields)
 }
 
 export async function fetchDecisionById(decisionId: Decision['_id']): Promise<Decision> {
@@ -148,7 +148,7 @@ export async function updateDecisionForLabel(
     ]
     : originalTreatments
 
-  return findAndUpdateDecisionFields(
+  return findAndUpdateDecision(
     { _id: targetId },
     {
       ...updateFields,
