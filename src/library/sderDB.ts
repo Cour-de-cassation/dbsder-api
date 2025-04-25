@@ -33,21 +33,21 @@ async function _findCodeNac(filters: Filter<CodeNac>) {
 }
 export const findCodeNac = safeMongoQuery(_findCodeNac)
 
-async function _findAndUpdateDecision(
+async function _findAndReplaceDecision(
   decisionFilters: Filter<UnIdentifiedDecision>,
   decision: UnIdentifiedDecision
 ): Promise<Decision> {
   const db = await dbConnect()
   const decisionWithId = await db
     .collection<UnIdentifiedDecision>('decisions')
-    .findOneAndUpdate(decisionFilters, decision, { upsert: true, returnDocument: 'after' })
+    .findOneAndReplace(decisionFilters, decision, { upsert: true, returnDocument: 'after' })
   if (!decisionWithId)
     throw unexpectedError(new Error('Upsert behave like there were no document and cannot create'))
   return decisionWithId
 }
-export const findAndUpdateDecision = safeMongoQuery(_findAndUpdateDecision)
+export const findAndReplaceDecision = safeMongoQuery(_findAndReplaceDecision)
 
-async function _findAndUpdateDecisionFields(
+async function _findAndUpdateDecision(
   decisionFilters: Filter<UnIdentifiedDecision>,
   decision: Partial<UnIdentifiedDecision>
 ): Promise<Decision> {
@@ -59,7 +59,7 @@ async function _findAndUpdateDecisionFields(
     throw unexpectedError(new Error('Upsert behave like there were no document and cannot create'))
   return decisionWithId
 }
-export const findAndUpdateDecisionFields = safeMongoQuery(_findAndUpdateDecisionFields)
+export const findAndUpdateDecision = safeMongoQuery(_findAndUpdateDecision)
 
 async function _findDecision(filters: Filter<Decision>): Promise<Decision | null> {
   const db = await dbConnect()
