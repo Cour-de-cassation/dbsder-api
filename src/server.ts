@@ -4,6 +4,7 @@ import helmet from 'helmet'
 import { loggerHttp } from './library/logger'
 import codeNacRoute from './controller/codeNac'
 import decisionRoute from './controller/decision'
+import labelRoute from './controller/fromLabel'
 import { errorHandler } from './controller/error'
 import { missingValue } from './library/error'
 import { apiKeyHandler } from './controller/authentication'
@@ -20,6 +21,7 @@ app
   .use(json())
   .use(codeNacRoute)
   .use(decisionRoute)
+  .use(labelRoute)
   .use(errorHandler)
 
 app.listen(PORT)
