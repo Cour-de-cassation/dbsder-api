@@ -14,8 +14,7 @@ function parseBody(
   body: Request['body']
 ): Omit<UpdatableDecisionFields, 'labelStatus' | 'publishStatus'> {
   if (!body) throw missingValue('req.body', new Error('body is missing on request'))
-  const maybeDecisionFields = JSON.parse(body)
-  return parseUpdatableDecisionFields(maybeDecisionFields)
+  return parseUpdatableDecisionFields(body)
 }
 
 /**
