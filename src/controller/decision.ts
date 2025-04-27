@@ -42,8 +42,7 @@ app.get('/decisions', async (req, res, next) => {
 
 function parsePatchBody(body: Request['body']): UpdatableDecisionFields {
   if (!body) throw missingValue('req.body', new Error('body is missing on request'))
-  const maybeBody = JSON.parse(body)
-  return parseUpdatableDecisionFields(maybeBody)
+  return parseUpdatableDecisionFields(body)
 }
 
 app.patch('/decisions/:id', async (req, res, next) => {
