@@ -25,7 +25,7 @@ import {
   findAndUpdateDecision
 } from '../../library/sderDB'
 import { logger } from '../../library/logger'
-import { notFound } from '../../library/error'
+import { notFound, unexpectedError } from '../../library/error'
 
 function computeDates(previousDecision: Exclude<Decision, DecisionDila> | null) {
   const now = new Date()
@@ -46,12 +46,15 @@ async function computeZoning(
     const zoning = await fetchZoning(mapDecisionIntoZoningParameters(decision))
     return zoning
   } catch (err) {
+    const normalizedError = err instanceof Error ?
+      unexpectedError(err) :
+      unexpectedError(new Error('Zoning has been failed'))
     logger.warn({
       operationName: 'Compute zoning',
-      msg: 'Zoning has failed and fallback into undefined',
+      msg: normalizedError.message,
       err
     })
-    return undefined
+    throw normalizedError
   }
 }
 
