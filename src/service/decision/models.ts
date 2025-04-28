@@ -168,6 +168,8 @@ function mapDecisionIntoZoningSource(
       return 'tj'
     case 'jurinet':
       return 'cc'
+    case 'juritcom':
+      return 'tcom'
   }
 }
 
