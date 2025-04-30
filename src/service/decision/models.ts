@@ -1,7 +1,7 @@
 import {
   UnIdentifiedDecisionDila,
   UnIdentifiedDecision,
-  isUnIdentifiedDecision,
+  parseUnIdentifiedDecision,
   isId,
   isSourceName,
   Decision,
@@ -11,7 +11,8 @@ import {
   LabelTreatment,
   isLabelTreatment,
   PublishStatus,
-  isPublishStatus
+  isPublishStatus,
+  hasSourceNameDila
 } from 'dbsder-api-types'
 import { ObjectId } from 'mongodb'
 import { ZoningParameters } from '../../library/zoning'
@@ -35,8 +36,8 @@ function hasOriginalText(
 
 export function parseUnIdentifiedDecisionSupported(x: unknown): UnIdentifiedDecisionSupported {
   try {
-    const decision = isUnIdentifiedDecision(x)
-    if (decision.sourceName === 'dila')
+    const decision = parseUnIdentifiedDecision(x)
+    if (hasSourceNameDila(decision))
       throw notSupported('decision.sourceName', decision.sourceName, new Error())
     if (!hasOriginalText(decision))
       throw notSupported(
