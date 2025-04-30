@@ -18,10 +18,10 @@ function parseBody(
 }
 
 /**
- * Logic of this route seems like label responsability.
+ * Logic of this route seems like label responsibility.
  * decision and codenac route should be sufficient to provide Label work
  */
-app.patch('/fromLabel/:id', async (req, res, next) => {
+app.patch('/label/:id', async (req, res, next) => {
   try {
     if (req.context?.service !== Service.LABEL) throw forbiddenError(new Error())
     

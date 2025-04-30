@@ -11,7 +11,7 @@ const pinoPrettyConf = {
 }
 
 const loggerOptions: LoggerOptions = {
-  base: { appName: 'dbsder-api-reloaded' },
+  base: { appName: 'dbsder-api' },
   formatters: {
     level: (label) => {
       return {
