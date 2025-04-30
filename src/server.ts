@@ -2,9 +2,9 @@ import express, { Express, json } from 'express'
 import helmet from 'helmet'
 
 import { loggerHttp } from './library/logger'
-import codeNacRoute from './controller/codeNac'
-import decisionRoute from './controller/decision'
-import labelRoute from './controller/fromLabel'
+import codeNacRouter from './controller/codeNac'
+import decisionRouter from './controller/decision'
+import labelRouter from './controller/label'
 import { errorHandler } from './controller/error'
 import { missingValue } from './library/error'
 import { apiKeyHandler } from './controller/authentication'
@@ -19,9 +19,9 @@ app
   .use(loggerHttp)
   .use(apiKeyHandler)
   .use(json())
-  .use(codeNacRoute)
-  .use(decisionRoute)
-  .use(labelRoute)
+  .use(codeNacRouter)
+  .use(decisionRouter)
+  .use(labelRouter)
   .use(errorHandler)
 
 app.listen(PORT)
