@@ -154,7 +154,7 @@ export async function updateDecisionForLabel(
   return findAndUpdateDecision(
     { _id: targetId },
     {
-      ...updateFields,
+      pseudoText: updateFields.pseudoText,
       labelTreatments: updatedLabelTreatments,
       labelStatus,
       publishStatus
