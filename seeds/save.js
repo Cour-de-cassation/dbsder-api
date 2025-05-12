@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongoose/node_modules/mongodb')
+const { MongoClient } = require('mongodb')
 const { writeFile } = require('fs/promises')
 const { existsSync, mkdirSync } = require('fs')
 const { resolve } = require('path')
@@ -15,7 +15,7 @@ async function exportCollection(collection) {
 }
 
 async function main() {
-  const client = new MongoClient(process.env.MONGO_DB_URL, { useUnifiedTopology: true })
+  const client = new MongoClient(process.env.MONGO_DB_URL)
   await client.connect()
 
   const dbCollections = await client.db().collections()
