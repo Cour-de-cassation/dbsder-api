@@ -1,4 +1,4 @@
-const { MongoClient, BSON } = require('mongoose/node_modules/mongodb')
+const { MongoClient, BSON } = require('mongodb')
 const { readFile, readdir } = require('fs/promises')
 const { resolve } = require('path')
 if (!process.env.NODE_ENV) require('dotenv').config()
@@ -23,7 +23,7 @@ async function saveCollections(client, { collectionName, path }) {
 }
 
 async function main() {
-  const client = new MongoClient(process.env.MONGO_DB_URL, { useUnifiedTopology: true })
+  const client = new MongoClient(process.env.MONGO_DB_URL)
   await client.connect()
 
   const collections = await readCollections()

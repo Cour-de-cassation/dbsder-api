@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongoose/node_modules/mongodb')
+const { MongoClient } = require('mongodb')
 if (!process.env.NODE_ENV) require('dotenv').config()
 
 function setDate(dateRef, day, month) {
@@ -84,7 +84,7 @@ async function refreshRawJurinet(db, date) {
 }
 
 async function main() {
-  const client = new MongoClient(process.env.MONGO_DB_URL, { useUnifiedTopology: true })
+  const client = new MongoClient(process.env.MONGO_DB_URL)
   const db = client.db()
   await client.connect()
 
