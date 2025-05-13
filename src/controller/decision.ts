@@ -63,7 +63,11 @@ app.patch('/decisions/:id', async (req, res, next) => {
 })
 
 function parsePutBody(body: Request['body']): UnIdentifiedDecisionSupported {
-  if (!body || !("decision" in body)) throw missingValue('req.body', new Error('body is missing on request or doesn\'t contain a decision'))
+  if (!body || !('decision' in body))
+    throw missingValue(
+      'req.body',
+      new Error("body is missing on request or doesn't contain a decision")
+    )
   return parseUnIdentifiedDecisionSupported(body.decision)
 }
 
