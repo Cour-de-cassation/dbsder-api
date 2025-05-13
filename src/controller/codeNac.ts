@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { parseId } from '../service/decision/models'
-import { fetchCodeNacById } from '../service/decision/handler'
+import { parseId } from '../service/codeNac/models'
+import { fetchCodeNacById } from '../service/codeNac/handler'
 
 const app = Router()
 
