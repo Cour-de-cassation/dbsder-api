@@ -114,12 +114,6 @@ export async function fetchDecisionById(decisionId: Decision['_id']): Promise<De
   return decision
 }
 
-export async function fetchCodeNacById(codeNacId: CodeNac['_id']): Promise<CodeNac> {
-  const codeNac = await findCodeNac({ _id: codeNacId })
-  if (!codeNac) throw notFound('codeNac', new Error())
-  return codeNac
-}
-
 export async function fetchDecisions(filters: DecisionListFilters): Promise<Decision[]> {
   return findDecisions(mapDecisionListFiltersIntoDbFilters(filters))
 }
