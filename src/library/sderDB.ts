@@ -1,16 +1,14 @@
 import { Filter, MongoClient } from 'mongodb'
-import { missingValue, unexpectedError } from './error'
+import { unexpectedError } from './error'
 import { CodeNac, Decision, UnIdentifiedDecision } from 'dbsder-api-types'
-
-if (process.env.MONGO_DB_URL == null) throw missingValue('process.env.MONGO_DB_URL', new Error())
-const { MONGO_DB_URL } = process.env
+import { MONGO_DB_URL } from './env'
 
 const client = new MongoClient(MONGO_DB_URL)
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any -- Type is safe due any fallback into Parameters<T> and ReturnType<T> */
 function safeMongoQuery<T extends (...args: any[]) => Promise<any>>(
   mongoQuery: T
-): (...args: Parameters<T>) => Promise<ReturnType<T>> {
+): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>> {
   return async (...params: Parameters<T>) => {
     try {
       const res = await mongoQuery(...params)
@@ -62,6 +60,7 @@ async function _findAndUpdateDecision(
 export const findAndUpdateDecision = safeMongoQuery(_findAndUpdateDecision)
 
 async function _findDecision(filters: Filter<Decision>): Promise<Decision | null> {
+  console.log(filters)
   const db = await dbConnect()
   return db.collection<Decision>('decisions').findOne(filters)
 }

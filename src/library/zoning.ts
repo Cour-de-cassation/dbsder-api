@@ -1,9 +1,6 @@
-import { missingValue, notSupported, unexpectedError } from './error'
+import { ZONING_API_URL } from './env'
+import { notSupported, unexpectedError } from './error'
 import axios, { AxiosError } from 'axios'
-
-if (process.env.ZONING_API_URL == null)
-  throw missingValue('process.env.ZONING_API_URL', new Error())
-const { ZONING_API_URL } = process.env
 
 export type ZoningParameters = {
   arret_id: number

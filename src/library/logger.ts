@@ -1,5 +1,6 @@
 import pino, { LoggerOptions } from 'pino'
 import pinoHttp from 'pino-http'
+import { NODE_ENV } from './env'
 
 const pinoPrettyConf = {
   target: 'pino-pretty',
@@ -25,7 +26,7 @@ const loggerOptions: LoggerOptions = {
     censor: '',
     remove: true
   },
-  transport: process.env.NODE_ENV === 'development' ? pinoPrettyConf : undefined
+  transport: NODE_ENV === 'development' ? pinoPrettyConf : undefined
 }
 
 export const logger = pino(loggerOptions)
