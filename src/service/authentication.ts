@@ -1,4 +1,12 @@
-import { ATTACHMENTS_API_KEY, INDEX_API_KEY, LABEL_API_KEY, NORMALIZATION_API_KEY, OPENSDER_API_KEY, OPS_API_KEY, PUBLICATION_API_KEY } from '../library/env'
+import {
+  ATTACHMENTS_API_KEY,
+  INDEX_API_KEY,
+  LABEL_API_KEY,
+  NORMALIZATION_API_KEY,
+  OPENSDER_API_KEY,
+  OPS_API_KEY,
+  PUBLICATION_API_KEY
+} from '../library/env'
 import { unauthorizedError } from '../library/error'
 
 // Warn: I don't understand some of this services

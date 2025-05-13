@@ -60,7 +60,6 @@ async function _findAndUpdateDecision(
 export const findAndUpdateDecision = safeMongoQuery(_findAndUpdateDecision)
 
 async function _findDecision(filters: Filter<Decision>): Promise<Decision | null> {
-  console.log(filters)
   const db = await dbConnect()
   return db.collection<Decision>('decisions').findOne(filters)
 }
