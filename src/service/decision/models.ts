@@ -47,8 +47,7 @@ export function parseUnIdentifiedDecisionSupported(x: unknown): UnIdentifiedDeci
       )
     return decision
   } catch (err) {
-    if (err instanceof ZodError)
-      throw notSupported("decision", x, err)
+    if (err instanceof ZodError) throw notSupported('decision', x, err)
     else throw err
   }
 }
@@ -65,8 +64,7 @@ function parseDate(x: unknown): Date {
   date.setFullYear(parseInt(x.slice(0, 'yyyy'.length)))
   date.setMonth(parseInt(x.slice('yyyy-'.length, 'yyyy-mm'.length)) - 1)
   date.setDate(parseInt(x.slice('yyyy-mm-'.length, 'yyyy-mm-dd'.length)))
-  if (Number.isNaN(date.valueOf()))
-    throw unexpectedError(new Error())
+  if (Number.isNaN(date.valueOf())) throw unexpectedError(new Error())
   return date
 }
 
@@ -80,21 +78,19 @@ export type DecisionListFilters = {
 }
 export function parseDecisionListFilters(x: unknown): DecisionListFilters {
   if (typeof x !== 'object' || !x) throw notSupported('filters', x, new Error())
-  const dateType = 'dateType' in x && x.dateType === "dateCreation" ? x.dateType : "dateDecision"
+  const dateType = 'dateType' in x && x.dateType === 'dateCreation' ? x.dateType : 'dateDecision'
 
   let filter: DecisionListFilters = { dateType }
 
   if ('sourceName' in x) {
     const sourceName = x.sourceName
-    if (!isSourceName(sourceName))
-      throw notSupported('sourceName', sourceName, new Error())
+    if (!isSourceName(sourceName)) throw notSupported('sourceName', sourceName, new Error())
     filter = { ...filter, sourceName }
   }
 
   if ('labelStatus' in x) {
     const labelStatus = x.labelStatus
-    if (!isLabelStatus(labelStatus))
-      throw notSupported('labelStatus', labelStatus, new Error())
+    if (!isLabelStatus(labelStatus)) throw notSupported('labelStatus', labelStatus, new Error())
     filter = { ...filter, labelStatus }
   }
 
@@ -137,15 +133,13 @@ export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionField
 
   if ('labelStatus' in x) {
     const labelStatus = x.labelStatus
-    if (!isLabelStatus(labelStatus))
-      throw notSupported('labelStatus', labelStatus, new Error())
+    if (!isLabelStatus(labelStatus)) throw notSupported('labelStatus', labelStatus, new Error())
     updateDecision = { ...updateDecision, labelStatus }
   }
 
   if ('pseudoText' in x) {
     const pseudoText = x.pseudoText
-    if (typeof pseudoText !== 'string')
-      throw notSupported('pseudoText', pseudoText, new Error())
+    if (typeof pseudoText !== 'string') throw notSupported('pseudoText', pseudoText, new Error())
     updateDecision = { ...updateDecision, pseudoText }
   }
 
@@ -204,25 +198,25 @@ export function mapDecisionListFiltersIntoDbFilters(filters: DecisionListFilters
   const dateFilter =
     startDate && endDate
       ? {
-        [dateType]: {
-          $gte: startDate.toISOString(),
-          $lte: endDate.toISOString()
-        }
-      }
-      : startDate
-        ? {
           [dateType]: {
             $gte: startDate.toISOString(),
-            $lte: new Date().toISOString()
+            $lte: endDate.toISOString()
           }
         }
-        : endDate
-          ? {
+      : startDate
+        ? {
             [dateType]: {
-              $gte: new Date().toISOString(),
-              $lte: endDate.toISOString()
+              $gte: startDate.toISOString(),
+              $lte: new Date().toISOString()
             }
           }
+        : endDate
+          ? {
+              [dateType]: {
+                $gte: new Date().toISOString(),
+                $lte: endDate.toISOString()
+              }
+            }
           : {}
 
   return {

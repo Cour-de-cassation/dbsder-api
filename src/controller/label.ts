@@ -24,7 +24,7 @@ function parseBody(
 app.patch('/label/:id', async (req, res, next) => {
   try {
     if (req.context?.service !== Service.LABEL) throw forbiddenError(new Error())
-    
+
     const id = parseId(req.params.id)
     const updateFields = parseBody(req.body)
     const { _id } = await updateDecisionForLabel(id, updateFields)

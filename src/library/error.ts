@@ -55,7 +55,8 @@ export type ForbiddenError = Error & {
   type: 'forbiddenError'
 }
 export function forbiddenError(error: Error): ForbiddenError {
-  if (!error.message) error.message = 'Your connexion cannot access to this resource. Currently forbidden.'
+  if (!error.message)
+    error.message = 'Your connexion cannot access to this resource. Currently forbidden.'
   return Object.assign(error, {
     type: 'forbiddenError' as const
   })

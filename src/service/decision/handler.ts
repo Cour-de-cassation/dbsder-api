@@ -1,5 +1,4 @@
 import {
-  CodeNac,
   Decision,
   DecisionDila,
   hasSourceNameTj,
@@ -17,7 +16,6 @@ import {
 } from './models'
 import { computeRulesDecisionTj } from './rulesTj'
 import {
-  findCodeNac,
   findDecision,
   findDecisions,
   findAndReplaceDecision,
@@ -45,9 +43,10 @@ async function computeZoning(
     const zoning = await fetchZoning(mapDecisionIntoZoningParameters(decision))
     return zoning
   } catch (err) {
-    const normalizedError = err instanceof Error ?
-      unexpectedError(err) :
-      unexpectedError(new Error('Zoning has been failed'))
+    const normalizedError =
+      err instanceof Error
+        ? unexpectedError(err)
+        : unexpectedError(new Error('Zoning has been failed'))
     logger.warn({
       operationName: 'Compute zoning',
       msg: normalizedError.message,
