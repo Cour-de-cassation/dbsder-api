@@ -9,7 +9,6 @@ import {
 import { fetchZoning } from '../../library/zoning'
 import {
   DecisionListFilters,
-  DecisionSupported,
   mapDecisionIntoUniqueFilters,
   mapDecisionIntoZoningParameters,
   mapDecisionListFiltersIntoDbFilters,
@@ -77,6 +76,7 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
     publishDate,
     unpublishDate,
     originalTextZoning,
+    // warn: next line could be not true and should manage by normalization during status computation
     publishStatus:
       decisionWithRules.labelStatus !== LabelStatus.TOBETREATED
         ? PublishStatus.BLOCKED
@@ -124,40 +124,5 @@ export async function fetchDecisions(filters: DecisionListFilters): Promise<Deci
   return findDecisions(mapDecisionListFiltersIntoDbFilters(filters))
 }
 
-// Warn: maybe Label responsability -
-export async function updateDecisionForLabel(
-  targetId: Decision['_id'],
-  updateFields: Omit<UpdatableDecisionFields, 'labelStatus' | 'publishStatus'>
-) {
-  const originalDecision = (await findDecision({
-    _id: targetId
-  })) as DecisionSupported | null
-  if (!originalDecision) throw notFound('original decision', new Error())
-
-  const labelStatus = LabelStatus.DONE
-  const publishStatus =
-    originalDecision.publishStatus === PublishStatus.BLOCKED
-      ? PublishStatus.BLOCKED
-      : PublishStatus.TOBEPUBLISHED
-
-  const originalTreatments = originalDecision?.labelTreatments ?? []
-  const updatedLabelTreatments = updateFields.labelTreatments
-    ? [
-      ...originalTreatments,
-      ...updateFields.labelTreatments.map(({ order, ..._ }) => ({
-        ..._,
-        order: originalTreatments.length + order
-      }))
-    ]
-    : originalTreatments
-
-  return findAndUpdateDecision(
-    { _id: targetId },
-    {
-      pseudoText: updateFields.pseudoText,
-      labelTreatments: updatedLabelTreatments,
-      labelStatus,
-      publishStatus
-    }
-  )
-}
+// Warn: isolated because Label responsibility
+export { updateDecisionForLabel } from './rulesLabel'

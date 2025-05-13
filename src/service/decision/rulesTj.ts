@@ -1,3 +1,5 @@
+// Warn: isolated because normalization rules (juritj responsibilities)
+
 import { findCodeNac } from '../../library/sderDB'
 import { LabelStatus, UnIdentifiedDecisionTj } from 'dbsder-api-types'
 
@@ -28,7 +30,7 @@ export async function computeRulesDecisionTj(
       ...decision,
       labelStatus: LabelStatus.IGNORED_CODE_NAC_DECISION_NON_PUBLIQUE
     }
-  if (!codeNac.categoriesToOmitTJ || !codeNac.blocOccultationTJ)
+  if (!codeNac.categoriesToOmitTJ || !codeNac.blocOccultationTJ) // warn: !categoriesToOmitTJ should never happened due type.
     return {
       ...decision,
       labelStatus: LabelStatus.IGNORED_BLOC_OCCULATION_NON_DEFINI

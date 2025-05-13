@@ -6,11 +6,8 @@ import codeNacRouter from './controller/codeNac'
 import decisionRouter from './controller/decision'
 import labelRouter from './controller/label'
 import { errorHandler } from './controller/error'
-import { missingValue } from './library/error'
 import { apiKeyHandler } from './controller/authentication'
-
-if (process.env.PORT == null) throw missingValue('process.env.PORT', new Error())
-const { PORT } = process.env
+import { PORT } from './library/env'
 
 const app: Express = express()
 

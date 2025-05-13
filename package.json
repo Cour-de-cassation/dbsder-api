@@ -12,7 +12,8 @@
     "build": "tsc --build",
     "format": "prettier \"src/**/*.ts\" --write",
     "lint": "eslint \"src/**/*.ts\" --quiet",
-    "fix": "eslint \"src/**/*.ts\" --fix"
+    "fix": "eslint \"src/**/*.ts\" --fix",
+    "test": "jest --detectOpenHandles -c=jest.config.js"
   },
   "dependencies": {
     "axios": "^1.8.4",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@eslint/js": "^9.25.1",
     "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.10.10",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",
@@ -35,9 +37,11 @@
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.2.6",
     "globals": "^16.0.0",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.9",
     "pino-pretty": "^13.0.0",
     "prettier": "^3.5.3",
+    "ts-jest": "^29.3.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.31.0"
