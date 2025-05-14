@@ -60,7 +60,7 @@ const codeNac: CodeNac = {
   indicateurAffaireSignalee: false,
   isInJuricaDatabase: true,
   blocOccultationTJ: 1,
-  categoriesToOmitCA: { aucune: [], complément: [], conforme: [], substitutant: [] },
+  categoriesToOmitCA: { aucune: [], complément: [], conforme: [], substituant: [] },
   categoriesToOmitTJ: { aucune: [], complément: [], conforme: [], substituant: [] },
   logs: [],
   indicateurDebatsPublics: true
