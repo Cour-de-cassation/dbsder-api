@@ -11,7 +11,8 @@
     "build:watch": "tsc --watch",
     "build": "tsc --build",
     "format": "prettier \"src/**/*.ts\" --write",
-    "lint": "eslint \"src/**/*.ts\" --quiet",
+    "format:check": "prettier \"src/**/*.ts\" --check",
+    "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
     "fix": "eslint \"src/**/*.ts\" --fix",
     "test": "jest --detectOpenHandles -c=jest.config.js"
   },
