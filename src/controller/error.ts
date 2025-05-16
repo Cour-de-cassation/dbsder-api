@@ -16,8 +16,8 @@ type ApiError =
   | ForbiddenError
   | UnexpectedError
 
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars -- define express error middleware with 4 parameters is better for readability */
 export const errorHandler = (err: ApiError, req: Request, res: Response, _: NextFunction) => {
-
   req.log.error(err)
 
   switch (err?.type) {
