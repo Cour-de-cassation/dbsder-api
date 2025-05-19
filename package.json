@@ -10,10 +10,9 @@
     "start": "node dist/server.js",
     "build:watch": "tsc --watch",
     "build": "tsc --build",
-    "format": "prettier \"src/**/*.ts\" --write",
-    "format:check": "prettier \"src/**/*.ts\" --check",
+    "format": "prettier \"src/**/*.ts\" --check",
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
-    "fix": "eslint \"src/**/*.ts\" --fix",
+    "fix": "eslint \"src/**/*.ts\" --fix && prettier \"src/**/*.ts\" --write",
     "test": "jest --detectOpenHandles -c=jest.config.js"
   },
   "dependencies": {
