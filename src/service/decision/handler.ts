@@ -48,7 +48,7 @@ async function computeZoning(
         ? unexpectedError(err)
         : unexpectedError(new Error('Zoning has been failed'))
     logger.warn({
-      operationName: 'Compute zoning',
+      operationName: 'computeZoning',
       msg: normalizedError.message,
       err
     })
@@ -88,7 +88,7 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
   )
 
   logger.warn({
-    operationName: 'Insert in Sder Decision',
+    operationName: 'saveDecision',
     msg: 'Decision will not be treated',
     decision: {
       _id: res._id,
