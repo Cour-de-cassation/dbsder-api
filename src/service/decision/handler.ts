@@ -87,15 +87,16 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
     decisionNormalized
   )
 
-  logger.warn({
-    operationName: 'saveDecision',
-    msg: 'Decision will not be treated',
-    decision: {
-      _id: res._id,
-      labelStatus: res.labelStatus,
-      publishStatus: res.publishStatus
-    }
-  })
+  if (res.labelStatus !== LabelStatus.TOBETREATED)
+    logger.warn({
+      operationName: 'saveDecision',
+      msg: 'Saved decision will not be treated',
+      decision: {
+        _id: res._id,
+        labelStatus: res.labelStatus,
+        publishStatus: res.publishStatus
+      }
+    })
 
   return res
 }
