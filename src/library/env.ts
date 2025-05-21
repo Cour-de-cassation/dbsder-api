@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { missingValue } from './error'
 
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'test') dotenv.config()
+if (!process.env.NODE_ENV) dotenv.config()
 
 if (process.env.ATTACHMENTS_API_KEY == null)
   throw missingValue('process.env.ATTACHMENTS_API_KEY', new Error())
