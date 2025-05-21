@@ -61,7 +61,7 @@ USER node
 COPY --from=prod --chown=node:node /home/node/dist ./dist
 COPY --from=prod --chown=node:node /home/node/seeds ./seeds
 
-CMD ["node", "dist/main"]
+CMD ["node", "dist/server"]
 
 # --- Base final image with api dist content --- #
 FROM node:24-alpine AS api-local
