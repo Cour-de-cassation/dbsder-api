@@ -14,7 +14,6 @@ if (process.env.NORMALIZATION_API_KEY == null)
 if (process.env.OPENSDER_API_KEY == null)
   throw missingValue('process.env.OPENSDER_API_KEY', new Error())
 if (process.env.OPS_API_KEY == null) throw missingValue('process.env.OPS_API_KEY', new Error())
-if (process.env.PORT == null) throw missingValue('process.env.PORT', new Error())
 if (process.env.PUBLICATION_API_KEY == null)
   throw missingValue('process.env.PUBLICATION_API_KEY', new Error())
 if (process.env.ZONING_API_URL == null)
@@ -29,7 +28,7 @@ export const {
   NORMALIZATION_API_KEY,
   OPENSDER_API_KEY,
   OPS_API_KEY,
-  PORT,
+  PORT = 3000,
   PUBLICATION_API_KEY,
   ZONING_API_URL
 } = process.env
