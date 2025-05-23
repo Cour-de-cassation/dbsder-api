@@ -1,14 +1,13 @@
 import { Router } from 'express'
-import { parseId } from '../service/codeNac/models'
-import { fetchCodeNacById } from '../service/codeNac/handler'
+import { fetchCodeNacByCodeNac } from '../service/codeNac/handler'
 
 const app = Router()
 
-app.get('/codenacs/:id', async (req, res, next) => {
+app.get('/codenacs/:codenac', async (req, res, next) => {
   try {
-    const codeNacId = parseId(req.params.id)
-    const codeNac = await fetchCodeNacById(codeNacId)
-    res.send(codeNac)
+    const codeNac = req.params.codenac
+    const codeNacDetails = await fetchCodeNacByCodeNac(codeNac)
+    res.send(codeNacDetails)
   } catch (err: unknown) {
     req.log.error(err)
     next(err)
