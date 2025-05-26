@@ -96,9 +96,14 @@ export function parseDecisionListFilters(x: unknown): DecisionListFilters {
 
   if ('sourceId' in x) {
     const sourceId = x.sourceId
-    if (typeof sourceId !== 'string' && typeof sourceId !== 'number')
-      throw notSupported('sourceId', sourceId, new Error())
-    filter = { ...filter, sourceId }
+    if (typeof sourceId !== 'string') throw notSupported('sourceId', sourceId, new Error())
+
+    if (filter.sourceName === 'dila') filter = { ...filter, sourceId }
+    else {
+      const sourceIdAsNumber = parseInt(sourceId)
+      if (isNaN(sourceIdAsNumber)) throw notSupported('sourceId', sourceId, new Error())
+      filter = { ...filter, sourceId: sourceIdAsNumber }
+    }
   }
 
   if ('startDate' in x) {
