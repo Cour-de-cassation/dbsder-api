@@ -15,7 +15,7 @@ app
   .use(helmet())
   .use(loggerHttp)
   .use(apiKeyHandler)
-  .use(json({ limit: "10mb" }))
+  .use(json({ limit: '10mb' }))
 
   .use((req: Request, _: Response, next: NextFunction) => {
     req.log.info({
