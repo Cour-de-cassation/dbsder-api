@@ -2,17 +2,17 @@ import {
   UnIdentifiedDecisionDila,
   UnIdentifiedDecision,
   parseUnIdentifiedDecision,
-  isId,
-  isSourceName,
+  parseId as parseDbsderId,
+  parseSourceName,
   Decision,
-  isLabelStatus,
+  parseLabelStatus,
   DecisionDila,
   LabelStatus,
-  LabelTreatment,
-  isLabelTreatment,
+  LabelTreatments,
+  parseLabelTreatments,
   PublishStatus,
-  isPublishStatus,
-  hasSourceNameDila
+  parsePublishStatus,
+  hasSourceNameDila,
 } from 'dbsder-api-types'
 import { ObjectId } from 'mongodb'
 import { ZoningParameters } from '../../library/zoning'
@@ -53,8 +53,13 @@ export function parseUnIdentifiedDecisionSupported(x: unknown): UnIdentifiedDeci
 }
 
 export function parseId(maybeId: unknown): ObjectId {
-  if (!isId(maybeId)) throw notSupported('id', maybeId, new Error('Given ID is not a valid ID'))
-  return new ObjectId(maybeId)
+  try {
+    return parseDbsderId(maybeId)
+  } catch(err) {
+    throw err instanceof Error ? 
+      notSupported("id", maybeId, err) : 
+      notSupported("id", maybeId, new Error('Given ID is not a valid ID'))
+  }
 }
 
 function parseDate(x: unknown): Date {
@@ -83,15 +88,23 @@ export function parseDecisionListFilters(x: unknown): DecisionListFilters {
   let filter: DecisionListFilters = { dateType }
 
   if ('sourceName' in x) {
-    const sourceName = x.sourceName
-    if (!isSourceName(sourceName)) throw notSupported('sourceName', sourceName, new Error())
-    filter = { ...filter, sourceName }
+    try {
+      filter = { ...filter, sourceName: parseSourceName(x.sourceName) }
+    } catch (err) {
+      throw err instanceof Error ? 
+        notSupported("sourceName", x.sourceName, err) : 
+        notSupported("sourceName", x.sourceName, new Error())
+    }
   }
 
   if ('labelStatus' in x) {
-    const labelStatus = x.labelStatus
-    if (!isLabelStatus(labelStatus)) throw notSupported('labelStatus', labelStatus, new Error())
-    filter = { ...filter, labelStatus }
+    try {
+      filter = { ...filter, labelStatus: parseLabelStatus(x.labelStatus) }
+    } catch (err) {
+      throw err instanceof Error ? 
+        notSupported("publishStatus", x.labelStatus, err) : 
+        notSupported("publishStatus", x.labelStatus, new Error())
+    }
   }
 
   if ('sourceId' in x) {
@@ -123,23 +136,30 @@ export type UpdatableDecisionFields = {
   labelStatus?: LabelStatus
   publishStatus?: PublishStatus
   pseudoText?: string
-  labelTreatments?: LabelTreatment[]
+  labelTreatments?: LabelTreatments
 }
 export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionFields {
   if (typeof x !== 'object' || !x) throw notSupported('filters', x, new Error())
   let updateDecision: UpdatableDecisionFields = {}
 
   if ('publishStatus' in x) {
-    const publishStatus = x.publishStatus
-    if (!isPublishStatus(publishStatus))
-      throw notSupported('publishStatus', publishStatus, new Error())
-    updateDecision = { ...updateDecision, publishStatus }
+    try {
+      updateDecision = { ...updateDecision, publishStatus: parsePublishStatus(x.publishStatus) }
+    } catch (err) {
+      throw err instanceof Error ? 
+        notSupported("publishStatus", x.publishStatus, err) : 
+        notSupported("publishStatus", x.publishStatus, new Error())
+    }
   }
 
   if ('labelStatus' in x) {
-    const labelStatus = x.labelStatus
-    if (!isLabelStatus(labelStatus)) throw notSupported('labelStatus', labelStatus, new Error())
-    updateDecision = { ...updateDecision, labelStatus }
+    try {
+      updateDecision = { ...updateDecision, labelStatus: parseLabelStatus(x.labelStatus) }
+    } catch (err) {
+      throw err instanceof Error ? 
+        notSupported("publishStatus", x.labelStatus, err) : 
+        notSupported("publishStatus", x.labelStatus, new Error())
+    }
   }
 
   if ('pseudoText' in x) {
@@ -149,10 +169,13 @@ export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionField
   }
 
   if ('labelTreatments' in x) {
-    const labelTreatments = x.labelTreatments
-    if (!Array.isArray(labelTreatments) || !labelTreatments.every(isLabelTreatment))
-      throw notSupported('labelTreatments', labelTreatments, new Error())
-    updateDecision = { ...updateDecision, labelTreatments }
+    try {
+      updateDecision = { ...updateDecision, labelTreatments: parseLabelTreatments(x.labelTreatments) }
+    } catch (err) {
+      throw err instanceof Error ? 
+        notSupported("publishStatus", x.labelTreatments, err) : 
+        notSupported("publishStatus", x.labelTreatments, new Error())
+    }
   }
 
   return updateDecision
@@ -203,25 +226,25 @@ export function mapDecisionListFiltersIntoDbFilters(filters: DecisionListFilters
   const dateFilter =
     startDate && endDate
       ? {
-          [dateType]: {
-            $gte: startDate.toISOString(),
-            $lte: endDate.toISOString()
-          }
+        [dateType]: {
+          $gte: startDate.toISOString(),
+          $lte: endDate.toISOString()
         }
+      }
       : startDate
         ? {
-            [dateType]: {
-              $gte: startDate.toISOString(),
-              $lte: new Date().toISOString()
-            }
+          [dateType]: {
+            $gte: startDate.toISOString(),
+            $lte: new Date().toISOString()
           }
+        }
         : endDate
           ? {
-              [dateType]: {
-                $gte: new Date().toISOString(),
-                $lte: endDate.toISOString()
-              }
+            [dateType]: {
+              $gte: new Date().toISOString(),
+              $lte: endDate.toISOString()
             }
+          }
           : {}
 
   return {
