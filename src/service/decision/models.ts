@@ -176,8 +176,8 @@ export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionField
       }
     } catch (err) {
       throw err instanceof Error
-        ? notSupported('publishStatus', x.labelTreatments, err)
-        : notSupported('publishStatus', x.labelTreatments, new Error())
+        ? notSupported('labelTreatments', x.labelTreatments, err)
+        : notSupported('labelTreatments', x.labelTreatments, new Error())
     }
   }
 
