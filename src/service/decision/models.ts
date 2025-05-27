@@ -12,7 +12,7 @@ import {
   parseLabelTreatments,
   PublishStatus,
   parsePublishStatus,
-  hasSourceNameDila,
+  hasSourceNameDila
 } from 'dbsder-api-types'
 import { ObjectId } from 'mongodb'
 import { ZoningParameters } from '../../library/zoning'
@@ -55,10 +55,10 @@ export function parseUnIdentifiedDecisionSupported(x: unknown): UnIdentifiedDeci
 export function parseId(maybeId: unknown): ObjectId {
   try {
     return parseDbsderId(maybeId)
-  } catch(err) {
-    throw err instanceof Error ? 
-      notSupported("id", maybeId, err) : 
-      notSupported("id", maybeId, new Error('Given ID is not a valid ID'))
+  } catch (err) {
+    throw err instanceof Error
+      ? notSupported('id', maybeId, err)
+      : notSupported('id', maybeId, new Error('Given ID is not a valid ID'))
   }
 }
 
@@ -91,9 +91,9 @@ export function parseDecisionListFilters(x: unknown): DecisionListFilters {
     try {
       filter = { ...filter, sourceName: parseSourceName(x.sourceName) }
     } catch (err) {
-      throw err instanceof Error ? 
-        notSupported("sourceName", x.sourceName, err) : 
-        notSupported("sourceName", x.sourceName, new Error())
+      throw err instanceof Error
+        ? notSupported('sourceName', x.sourceName, err)
+        : notSupported('sourceName', x.sourceName, new Error())
     }
   }
 
@@ -101,9 +101,9 @@ export function parseDecisionListFilters(x: unknown): DecisionListFilters {
     try {
       filter = { ...filter, labelStatus: parseLabelStatus(x.labelStatus) }
     } catch (err) {
-      throw err instanceof Error ? 
-        notSupported("publishStatus", x.labelStatus, err) : 
-        notSupported("publishStatus", x.labelStatus, new Error())
+      throw err instanceof Error
+        ? notSupported('publishStatus', x.labelStatus, err)
+        : notSupported('publishStatus', x.labelStatus, new Error())
     }
   }
 
@@ -146,9 +146,9 @@ export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionField
     try {
       updateDecision = { ...updateDecision, publishStatus: parsePublishStatus(x.publishStatus) }
     } catch (err) {
-      throw err instanceof Error ? 
-        notSupported("publishStatus", x.publishStatus, err) : 
-        notSupported("publishStatus", x.publishStatus, new Error())
+      throw err instanceof Error
+        ? notSupported('publishStatus', x.publishStatus, err)
+        : notSupported('publishStatus', x.publishStatus, new Error())
     }
   }
 
@@ -156,9 +156,9 @@ export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionField
     try {
       updateDecision = { ...updateDecision, labelStatus: parseLabelStatus(x.labelStatus) }
     } catch (err) {
-      throw err instanceof Error ? 
-        notSupported("publishStatus", x.labelStatus, err) : 
-        notSupported("publishStatus", x.labelStatus, new Error())
+      throw err instanceof Error
+        ? notSupported('publishStatus', x.labelStatus, err)
+        : notSupported('publishStatus', x.labelStatus, new Error())
     }
   }
 
@@ -170,11 +170,14 @@ export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionField
 
   if ('labelTreatments' in x) {
     try {
-      updateDecision = { ...updateDecision, labelTreatments: parseLabelTreatments(x.labelTreatments) }
+      updateDecision = {
+        ...updateDecision,
+        labelTreatments: parseLabelTreatments(x.labelTreatments)
+      }
     } catch (err) {
-      throw err instanceof Error ? 
-        notSupported("publishStatus", x.labelTreatments, err) : 
-        notSupported("publishStatus", x.labelTreatments, new Error())
+      throw err instanceof Error
+        ? notSupported('publishStatus', x.labelTreatments, err)
+        : notSupported('publishStatus', x.labelTreatments, new Error())
     }
   }
 
@@ -226,25 +229,25 @@ export function mapDecisionListFiltersIntoDbFilters(filters: DecisionListFilters
   const dateFilter =
     startDate && endDate
       ? {
-        [dateType]: {
-          $gte: startDate.toISOString(),
-          $lte: endDate.toISOString()
-        }
-      }
-      : startDate
-        ? {
           [dateType]: {
             $gte: startDate.toISOString(),
-            $lte: new Date().toISOString()
+            $lte: endDate.toISOString()
           }
         }
-        : endDate
-          ? {
+      : startDate
+        ? {
             [dateType]: {
-              $gte: new Date().toISOString(),
-              $lte: endDate.toISOString()
+              $gte: startDate.toISOString(),
+              $lte: new Date().toISOString()
             }
           }
+        : endDate
+          ? {
+              [dateType]: {
+                $gte: new Date().toISOString(),
+                $lte: endDate.toISOString()
+              }
+            }
           : {}
 
   return {
