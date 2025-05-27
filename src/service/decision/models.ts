@@ -102,8 +102,8 @@ export function parseDecisionListFilters(x: unknown): DecisionListFilters {
       filter = { ...filter, labelStatus: parseLabelStatus(x.labelStatus) }
     } catch (err) {
       throw err instanceof Error
-        ? notSupported('publishStatus', x.labelStatus, err)
-        : notSupported('publishStatus', x.labelStatus, new Error())
+        ? notSupported('labelStatus', x.labelStatus, err)
+        : notSupported('labelStatus', x.labelStatus, new Error())
     }
   }
 
@@ -157,8 +157,8 @@ export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionField
       updateDecision = { ...updateDecision, labelStatus: parseLabelStatus(x.labelStatus) }
     } catch (err) {
       throw err instanceof Error
-        ? notSupported('publishStatus', x.labelStatus, err)
-        : notSupported('publishStatus', x.labelStatus, new Error())
+        ? notSupported('labelStatus', x.labelStatus, err)
+        : notSupported('labelStatus', x.labelStatus, new Error())
     }
   }
 
