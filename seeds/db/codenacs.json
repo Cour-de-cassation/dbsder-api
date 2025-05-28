@@ -128,7 +128,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "systematique"
   },
   {
     "_id": "660ed3506ccff4bf6c93b1cc",
@@ -247,7 +247,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "aleatoireSensible"
   },
   {
     "_id": "660ed3506ccff4bf6c93b139",
@@ -378,7 +378,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "aleatoireNonSensible"
   },
   {
     "_id": "660ed3506ccff4bf6c93b237",
@@ -628,7 +628,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "aleatoireSensible"
   },
   {
     "_id": "660ed34f6ccff4bf6c93b0c5",
@@ -759,7 +759,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "aleatoireNonSensible"
   },
   {
     "_id": "660ed3506ccff4bf6c93b2ad",
@@ -1009,7 +1009,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "systematique"
   },
   {
     "_id": "660ed34f6ccff4bf6c93b06a",
@@ -1085,7 +1085,7 @@
       ]
     },
     "categoriesToOmitTJ": null,
-    "routeRelecture": null
+    "routeRelecture": "aleatoireSensible"
   },
   {
     "_id": "660ed3506ccff4bf6c93b1c0",
@@ -1204,7 +1204,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "aleatoireNonSensible"
   },
   {
     "_id": "660ed3506ccff4bf6c93b2a8",
@@ -1323,7 +1323,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "systematique"
   },
   {
     "_id": "660ed34f6ccff4bf6c93b07c",
@@ -1343,7 +1343,7 @@
     "indicateurDebatsPublics": false,
     "indicateurAffaireSignalee": false,
     "categoriesToOmitTJ": null,
-    "routeRelecture": null
+    "routeRelecture": "aleatoireSensible"
   },
   {
     "_id": "660ed3506ccff4bf6c93b0f8",
@@ -1474,7 +1474,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "aleatoireNonSensible"
   },
   {
     "_id": "660ed3506ccff4bf6c93b1d4",
@@ -1585,7 +1585,7 @@
         "professionnelMagistratGreffier"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "systematique"
   },
   {
     "_id": "660ed34f6ccff4bf6c93b04d",
@@ -1704,7 +1704,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "aleatoireSensible"
   },
   {
     "_id": "660ed3506ccff4bf6c93b16e",
@@ -1835,7 +1835,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "aleatoireNonSensible"
   },
   {
     "_id": "660ed34f6ccff4bf6c93afea",
@@ -1855,7 +1855,7 @@
     "indicateurDebatsPublics": false,
     "indicateurAffaireSignalee": false,
     "categoriesToOmitTJ": null,
-    "routeRelecture": null
+    "routeRelecture": "systematique"
   },
   {
     "_id": "660ed3506ccff4bf6c93b140",
@@ -1974,7 +1974,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "aleatoireSensible"
   },
   {
     "_id": "660ed3516ccff4bf6c93b307",
@@ -2093,7 +2093,7 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "aleatoireNonSensible"
   },
   {
     "_id": "660ed3516ccff4bf6c93b2f0",
@@ -2211,6 +2211,6 @@
         "numeroSiretSiren"
       ]
     },
-    "routeRelecture": null
+    "routeRelecture": "systematique"
   }
 ]
