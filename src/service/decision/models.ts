@@ -132,19 +132,15 @@ export function parseDecisionListFilters(x: unknown): DecisionListFilters {
   return filter
 }
 
-export type UpdatableDecisionFields = {
-  labelStatus?: LabelStatus
-  publishStatus?: PublishStatus
-  pseudoText?: string
-  labelTreatments?: LabelTreatments
-}
+export type UpdatableDecisionFields = Partial<Omit<UnIdentifiedDecision, 'originalText' | 'public' | 'debatPublic' | 'occultation' | 'NACCode' | 'endCaseCode' | 'blocOccultation'>>
+
 export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionFields {
   if (typeof x !== 'object' || !x) throw notSupported('filters', x, new Error())
-  let updateDecision: UpdatableDecisionFields = {}
+  let updateDecision: UpdatableDecisionFields = x
 
   if ('publishStatus' in x) {
     try {
-      updateDecision = { ...updateDecision, publishStatus: parsePublishStatus(x.publishStatus) }
+      updateDecision.publishStatus = parsePublishStatus(x.publishStatus)
     } catch (err) {
       throw err instanceof Error
         ? notSupported('publishStatus', x.publishStatus, err)
@@ -154,7 +150,7 @@ export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionField
 
   if ('labelStatus' in x) {
     try {
-      updateDecision = { ...updateDecision, labelStatus: parseLabelStatus(x.labelStatus) }
+      updateDecision.labelStatus = parseLabelStatus(x.labelStatus)
     } catch (err) {
       throw err instanceof Error
         ? notSupported('labelStatus', x.labelStatus, err)
@@ -163,17 +159,12 @@ export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionField
   }
 
   if ('pseudoText' in x) {
-    const pseudoText = x.pseudoText
-    if (typeof pseudoText !== 'string') throw notSupported('pseudoText', pseudoText, new Error())
-    updateDecision = { ...updateDecision, pseudoText }
+    if (typeof x.pseudoText !== 'string') throw notSupported('pseudoText', x.pseudoText, new Error())
   }
 
   if ('labelTreatments' in x) {
     try {
-      updateDecision = {
-        ...updateDecision,
-        labelTreatments: parseLabelTreatments(x.labelTreatments)
-      }
+      updateDecision.labelTreatments = parseLabelTreatments(x.labelTreatments)
     } catch (err) {
       throw err instanceof Error
         ? notSupported('labelTreatments', x.labelTreatments, err)
