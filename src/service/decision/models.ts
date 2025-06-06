@@ -132,7 +132,18 @@ export function parseDecisionListFilters(x: unknown): DecisionListFilters {
   return filter
 }
 
-export type UpdatableDecisionFields = Partial<Omit<UnIdentifiedDecision, 'originalText' | 'public' | 'debatPublic' | 'occultation' | 'NACCode' | 'endCaseCode' | 'blocOccultation'>>
+export type UpdatableDecisionFields = Partial<
+  Omit<
+    UnIdentifiedDecision,
+    | 'originalText'
+    | 'public'
+    | 'debatPublic'
+    | 'occultation'
+    | 'NACCode'
+    | 'endCaseCode'
+    | 'blocOccultation'
+  >
+>
 
 export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionFields {
   if (typeof x !== 'object' || !x) throw notSupported('filters', x, new Error())
@@ -159,7 +170,8 @@ export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionField
   }
 
   if ('pseudoText' in x) {
-    if (typeof x.pseudoText !== 'string') throw notSupported('pseudoText', x.pseudoText, new Error())
+    if (typeof x.pseudoText !== 'string')
+      throw notSupported('pseudoText', x.pseudoText, new Error())
   }
 
   if ('labelTreatments' in x) {
