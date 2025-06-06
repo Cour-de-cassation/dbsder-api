@@ -7,10 +7,7 @@ import {
   Decision,
   parseLabelStatus,
   DecisionDila,
-  LabelStatus,
-  LabelTreatments,
   parseLabelTreatments,
-  PublishStatus,
   parsePublishStatus,
   hasSourceNameDila
 } from 'dbsder-api-types'
