@@ -1,6 +1,8 @@
 [
   {
-    "_id": "664c8ed9bbeb4c9288119fc4",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119fc4"
+    },
     "codeDecision": "74",
     "libelleCodeDecision": "[FACTICE] Rejette la demande de suspension des poursuites individuelles (L. 722-6 C. consom.)",
     "categorieCodeDecision": {
@@ -11,7 +13,9 @@
     "routeTJ": "Exhaustive"
   },
   {
-    "_id": "664c8ed9bbeb4c9288119fa2",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119fa2"
+    },
     "codeDecision": "81",
     "libelleCodeDecision": "[FACTICE] Ordonne la liquidation judiciaire simplifiée (L. 641-2 C. com.)",
     "categorieCodeDecision": {
@@ -22,7 +26,9 @@
     "routeTJ": "Exhaustive"
   },
   {
-    "_id": "664c8ed9bbeb4c9288119ffd",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119ffd"
+    },
     "codeDecision": "29",
     "libelleCodeDecision": "[FACTICE] Déclare irrecevable l'opposition à injonction de payer",
     "categorieCodeDecision": {
@@ -33,7 +39,9 @@
     "routeTJ": "Exhaustive"
   },
   {
-    "_id": "664c8ed9bbeb4c9288119ffb",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119ffb"
+    },
     "codeDecision": "60",
     "libelleCodeDecision": "[FACTICE] Homologue un accord de médiation pénale",
     "categorieCodeDecision": {
@@ -44,7 +52,9 @@
     "routeTJ": "Exhaustive"
   },
   {
-    "_id": "664c8ed9bbeb4c928811a003",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c928811a003"
+    },
     "codeDecision": "20",
     "libelleCodeDecision": "[FACTICE] Prononce la déchéance de l’autorité parentale (art. 378-1 C. civ.)",
     "categorieCodeDecision": {
@@ -55,7 +65,9 @@
     "routeTJ": null
   },
   {
-    "_id": "664c8ed9bbeb4c9288119f73",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119f73"
+    },
     "codeDecision": "72",
     "libelleCodeDecision": "[FACTICE] Ordonne l’expulsion du locataire pour impayés de loyers",
     "categorieCodeDecision": {
@@ -66,7 +78,9 @@
     "routeTJ": "Simple"
   },
   {
-    "_id": "664c8ed9bbeb4c9288119f64",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119f64"
+    },
     "codeDecision": "32",
     "libelleCodeDecision": "[FACTICE] Confirme la reconnaissance de paternité",
     "categorieCodeDecision": {
@@ -77,7 +91,9 @@
     "routeTJ": "Simple"
   },
   {
-    "_id": "664c8ed9bbeb4c9288119f75",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119f75"
+    },
     "codeDecision": "22",
     "libelleCodeDecision": "[FACTICE] Accorde des dommages et intérêts pour licenciement abusif",
     "categorieCodeDecision": {
@@ -88,7 +104,9 @@
     "routeTJ": null
   },
   {
-    "_id": "664c8ed9bbeb4c9288119fab",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119fab"
+    },
     "codeDecision": "75",
     "libelleCodeDecision": "[FACTICE] Prononce la nullité du contrat pour dol",
     "categorieCodeDecision": {
@@ -99,7 +117,9 @@
     "routeTJ": "Exhaustive"
   },
   {
-    "_id": "664c8ed9bbeb4c9288119fbb",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119fbb"
+    },
     "codeDecision": "41",
     "libelleCodeDecision": "[FACTICE] Rejette la demande d'annulation de mariage pour défaut de consentement",
     "categorieCodeDecision": {
@@ -108,7 +128,9 @@
     }
   },
   {
-    "_id": "664c8ed9bbeb4c9288119f86",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119f86"
+    },
     "codeDecision": "43",
     "libelleCodeDecision": "[FACTICE] Condamne le débiteur au paiement des arriérés de pension alimentaire",
     "categorieCodeDecision": {
@@ -117,7 +139,9 @@
     }
   },
   {
-    "_id": "664c8ed9bbeb4c9288119f99",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119f99"
+    },
     "codeDecision": "52",
     "libelleCodeDecision": "[FACTICE] Déclare l'acquisition de la nationalité française par naturalisation",
     "categorieCodeDecision": {
@@ -128,7 +152,9 @@
     "routeTJ": null
   },
   {
-    "_id": "664c8ed9bbeb4c9288119fe3",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119fe3"
+    },
     "codeDecision": "55",
     "libelleCodeDecision": "[FACTICE] Ordonne la mainlevée d’une saisie sur rémunération",
     "categorieCodeDecision": {
@@ -139,7 +165,9 @@
     "routeTJ": "Simple"
   },
   {
-    "_id": "664c8ed9bbeb4c9288119fee",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119fee"
+    },
     "codeDecision": "77",
     "libelleCodeDecision": "[FACTICE] Accorde la restitution d’un bien sous séquestre",
     "categorieCodeDecision": {
@@ -150,7 +178,9 @@
     "routeTJ": "Simple"
   },
   {
-    "_id": "664c8ed9bbeb4c9288119f50",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119f50"
+    },
     "codeDecision": "68",
     "libelleCodeDecision": "[FACTICE] Ordonne le placement d’un mineur en foyer d’accueil",
     "categorieCodeDecision": {
@@ -162,7 +192,9 @@
     "overwritesNAC": true
   },
   {
-    "_id": "664c8ed9bbeb4c9288119f95",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119f95"
+    },
     "codeDecision": "80",
     "libelleCodeDecision": "[FACTICE] Condamne à une peine d’emprisonnement avec sursis",
     "categorieCodeDecision": {
@@ -173,7 +205,9 @@
     "routeTJ": null
   },
   {
-    "_id": "664c8ed9bbeb4c9288119f8a",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119f8a"
+    },
     "codeDecision": "49",
     "libelleCodeDecision": "[FACTICE] Prononce la relaxe pour absence d’infraction pénale caractérisée",
     "categorieCodeDecision": {
@@ -182,7 +216,9 @@
     }
   },
   {
-    "_id": "664c8ed9bbeb4c9288119fbd",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c9288119fbd"
+    },
     "codeDecision": "18",
     "libelleCodeDecision": "[FACTICE] Rejette la demande d’expertise médicale en réparation du préjudice corporel",
     "categorieCodeDecision": {
@@ -191,7 +227,9 @@
     }
   },
   {
-    "_id": "664c8ed9bbeb4c928811a002",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c928811a002"
+    },
     "codeDecision": "37",
     "libelleCodeDecision": "[FACTICE] Confirme l’interdiction de gérer d’un dirigeant de société",
     "categorieCodeDecision": {
@@ -202,7 +240,9 @@
     "routeTJ": "Simple"
   },
   {
-    "_id": "664c8ed9bbeb4c928811a006",
+    "_id": {
+      "$oid": "664c8ed9bbeb4c928811a006"
+    },
     "codeDecision": "56",
     "libelleCodeDecision": "[FACTICE] Ordonne la mainlevée d’une interdiction de sortie du territoire",
     "categorieCodeDecision": {
