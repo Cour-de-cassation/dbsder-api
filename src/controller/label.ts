@@ -28,9 +28,9 @@ app.patch('/label/:id', async (req, res, next) => {
     if (req.context?.service !== Service.LABEL) throw forbiddenError(new Error())
 
     const id = parseId(req.params.id)
-    const { sourceName } = await fetchDecisionById(id)
-    const updateFields = parseBody(sourceName, req.body)
-    const { _id } = await updateDecisionForLabel(id, sourceName, updateFields)
+    const decision = await fetchDecisionById(id)
+    const updateFields = parseBody(decision.sourceName, req.body)
+    const { _id } = await updateDecisionForLabel(decision, updateFields)
     res.send({
       _id,
       message: 'Decision mise à jour'
