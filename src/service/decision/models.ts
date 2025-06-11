@@ -7,14 +7,17 @@ import {
   Decision,
   parseLabelStatus,
   DecisionDila,
-  parseLabelTreatments,
-  parsePublishStatus,
-  hasSourceNameDila
+  hasSourceNameDila,
+  DecisionTcom,
+  parsePartialDecision,
+  DecisionTj,
+  DecisionCc,
+  DecisionCa,
+  ParseError
 } from 'dbsder-api-types'
 import { ObjectId } from 'mongodb'
 import { ZoningParameters } from '../../library/zoning'
 import { notSupported, unexpectedError } from '../../library/error'
-import { ZodError } from 'zod'
 
 export type DecisionSupported = Exclude<Decision, DecisionDila> & {
   originalText: string // Warn: current model accept empty but new data doesn't
@@ -44,7 +47,7 @@ export function parseUnIdentifiedDecisionSupported(x: unknown): UnIdentifiedDeci
       )
     return decision
   } catch (err) {
-    if (err instanceof ZodError) throw notSupported('decision', x, err)
+    if (err instanceof ParseError) throw notSupported('decision', x, err)
     else throw err
   }
 }
@@ -129,59 +132,28 @@ export function parseDecisionListFilters(x: unknown): DecisionListFilters {
   return filter
 }
 
-export type UpdatableDecisionFields = Partial<
-  Omit<
-    UnIdentifiedDecision,
-    | 'originalText'
-    | 'public'
-    | 'debatPublic'
-    | 'occultation'
-    | 'NACCode'
-    | 'endCaseCode'
-    | 'blocOccultation'
-  >
->
+const protectedKeys = ["_id", "sourceId", "sourceName"] as const
+export type UpdatableDecisionFields = Partial<DecisionTcom> | Partial<DecisionTj> | Partial<DecisionCc> | Partial<DecisionCa>
+export function parseUpdatableDecisionFields(sourceName: Decision["sourceName"], x: unknown): UpdatableDecisionFields {
+  try {
+    if (typeof x !== 'object' || !x) throw notSupported('decisionFields', x, new Error())
 
-export function parseUpdatableDecisionFields(x: unknown): UpdatableDecisionFields {
-  if (typeof x !== 'object' || !x) throw notSupported('filters', x, new Error())
-  let updateDecision: UpdatableDecisionFields = x
+    if (sourceName === 'dila')
+      throw notSupported(
+        'updatableDecisionFields',
+        x,
+        new Error(`Dbsder-api doesn't handle Dila source`)
+      )
 
-  if ('publishStatus' in x) {
-    try {
-      updateDecision.publishStatus = parsePublishStatus(x.publishStatus)
-    } catch (err) {
-      throw err instanceof Error
-        ? notSupported('publishStatus', x.publishStatus, err)
-        : notSupported('publishStatus', x.publishStatus, new Error())
-    }
+    const updatableDecisionFields = parsePartialDecision(sourceName, x) as Exclude<ReturnType<typeof parsePartialDecision>, Partial<DecisionDila>>
+    if (protectedKeys.some(key => Object.keys(updatableDecisionFields).includes(key)))
+      throw notSupported('updatableDecisionFields', updatableDecisionFields, new Error(`Keys: "${protectedKeys.join(", ")}" are protected and cannot be update`))
+
+    return updatableDecisionFields
+  } catch (err) {
+    if (err instanceof ParseError) throw notSupported('decision', x, err)
+    else throw err
   }
-
-  if ('labelStatus' in x) {
-    try {
-      updateDecision.labelStatus = parseLabelStatus(x.labelStatus)
-    } catch (err) {
-      throw err instanceof Error
-        ? notSupported('labelStatus', x.labelStatus, err)
-        : notSupported('labelStatus', x.labelStatus, new Error())
-    }
-  }
-
-  if ('pseudoText' in x) {
-    if (typeof x.pseudoText !== 'string')
-      throw notSupported('pseudoText', x.pseudoText, new Error())
-  }
-
-  if ('labelTreatments' in x) {
-    try {
-      updateDecision.labelTreatments = parseLabelTreatments(x.labelTreatments)
-    } catch (err) {
-      throw err instanceof Error
-        ? notSupported('labelTreatments', x.labelTreatments, err)
-        : notSupported('labelTreatments', x.labelTreatments, new Error())
-    }
-  }
-
-  return updateDecision
 }
 
 function mapDecisionIntoZoningSource(
@@ -229,25 +201,25 @@ export function mapDecisionListFiltersIntoDbFilters(filters: DecisionListFilters
   const dateFilter =
     startDate && endDate
       ? {
-          [dateType]: {
-            $gte: startDate.toISOString(),
-            $lte: endDate.toISOString()
-          }
+        [dateType]: {
+          $gte: startDate.toISOString(),
+          $lte: endDate.toISOString()
         }
+      }
       : startDate
         ? {
-            [dateType]: {
-              $gte: startDate.toISOString(),
-              $lte: new Date().toISOString()
-            }
+          [dateType]: {
+            $gte: startDate.toISOString(),
+            $lte: new Date().toISOString()
           }
+        }
         : endDate
           ? {
-              [dateType]: {
-                $gte: new Date().toISOString(),
-                $lte: endDate.toISOString()
-              }
+            [dateType]: {
+              $gte: new Date().toISOString(),
+              $lte: endDate.toISOString()
             }
+          }
           : {}
 
   return {

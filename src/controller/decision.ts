@@ -15,6 +15,7 @@ import {
 } from '../service/decision/handler'
 import { forbiddenError, missingValue } from '../library/error'
 import { Service } from '../service/authentication'
+import { Decision } from 'dbsder-api-types'
 
 const app = Router()
 
@@ -40,9 +41,9 @@ app.get('/decisions', async (req, res, next) => {
   }
 })
 
-function parsePatchBody(body: Request['body']): UpdatableDecisionFields {
+function parsePatchBody(sourceName: Decision["sourceName"], body: Request['body']): UpdatableDecisionFields {
   if (!body) throw missingValue('req.body', new Error('body is missing on request'))
-  return parseUpdatableDecisionFields(body)
+  return parseUpdatableDecisionFields(sourceName, body)
 }
 
 app.patch('/decisions/:id', async (req, res, next) => {
@@ -50,8 +51,9 @@ app.patch('/decisions/:id', async (req, res, next) => {
     if (req.context?.service !== Service.LABEL) throw forbiddenError(new Error())
 
     const id = parseId(req.params.id)
-    const updateFields = parsePatchBody(req.body)
-    const { _id } = await updateDecision(id, updateFields)
+    const { sourceName } = await fetchDecisionById(id)
+    const updateFields = parsePatchBody(sourceName, req.body)
+    const { _id } = await updateDecision(id, sourceName, updateFields)
     res.send({
       _id,
       message: 'Decision mise à jour'

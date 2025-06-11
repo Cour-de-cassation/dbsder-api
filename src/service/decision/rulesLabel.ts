@@ -7,8 +7,9 @@ import { notFound } from '../../library/error'
 
 export async function updateDecisionForLabel(
   targetId: Decision['_id'],
+  sourceName: Decision['sourceName'],
   updateFields: Omit<UpdatableDecisionFields, 'labelStatus' | 'publishStatus'>
-) {
+): Promise<Decision> {
   const originalDecision = await findDecision({
     _id: targetId
   })
@@ -31,8 +32,9 @@ export async function updateDecisionForLabel(
       ]
     : originalTreatments
 
-  return findAndUpdateDecision(
-    { _id: targetId },
+  const filter = { _id: targetId, sourceName }
+  const decision = await findAndUpdateDecision(
+    filter,
     {
       pseudoText: updateFields.pseudoText,
       labelTreatments: updatedLabelTreatments,
@@ -40,4 +42,7 @@ export async function updateDecisionForLabel(
       publishStatus
     }
   )
+
+  if (!decision) throw notFound("Decision", new Error(`Decision missing for ${JSON.stringify(filter)}`))
+  return decision
 }

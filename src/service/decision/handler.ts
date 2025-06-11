@@ -103,9 +103,13 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
 
 export async function updateDecision(
   targetId: Decision['_id'],
+  sourceName: Decision['sourceName'],
   updateFields: UpdatableDecisionFields
-) {
-  return findAndUpdateDecision({ _id: targetId }, updateFields)
+): Promise<Decision> {
+  const filter = { _id: targetId, sourceName }
+  const decision = await findAndUpdateDecision(filter, updateFields)
+  if (!decision) throw notFound("Decision", new Error(`Decision missing for id: ${filter._id} and sourceName: ${filter.sourceName}`))
+  return decision
 }
 
 export async function fetchDecisionById(decisionId: Decision['_id']): Promise<Decision> {
