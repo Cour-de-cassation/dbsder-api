@@ -1,5 +1,4 @@
-const { MongoClient } = require('mongodb')
-const { EJSON } = require('bson')
+const { MongoClient, BSON } = require('mongodb')
 const { writeFile } = require('fs/promises')
 const { existsSync, mkdirSync } = require('fs')
 const { resolve } = require('path')
@@ -12,7 +11,7 @@ async function exportCollection(collection) {
 
   if (!existsSync(dirPath)) mkdirSync(dirPath)
 
-  return writeFile(resolve(dirPath, `${collectionName}.json`), EJSON.stringify(raw, null, 2), 'utf8')
+  return writeFile(resolve(dirPath, `${collectionName}.json`), BSON.EJSON.stringify(raw, null, 2), 'utf8')
 }
 
 async function main() {
