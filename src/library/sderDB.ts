@@ -48,13 +48,11 @@ export const findAndReplaceDecision = safeMongoQuery(_findAndReplaceDecision)
 async function _findAndUpdateDecision(
   decisionFilters: Filter<UnIdentifiedDecision>,
   decision: Partial<UnIdentifiedDecision>
-): Promise<Decision> {
+): Promise<Decision | null> {
   const db = await dbConnect()
   const decisionWithId = await db
     .collection<UnIdentifiedDecision>('decisions')
     .findOneAndUpdate(decisionFilters, { $set: decision }, { returnDocument: 'after' })
-  if (!decisionWithId)
-    throw unexpectedError(new Error('Upsert behave like there were no document and cannot create'))
   return decisionWithId
 }
 export const findAndUpdateDecision = safeMongoQuery(_findAndUpdateDecision)
