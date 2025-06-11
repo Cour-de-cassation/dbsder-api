@@ -132,9 +132,16 @@ export function parseDecisionListFilters(x: unknown): DecisionListFilters {
   return filter
 }
 
-const protectedKeys = ["_id", "sourceId", "sourceName"] as const
-export type UpdatableDecisionFields = Partial<DecisionTcom> | Partial<DecisionTj> | Partial<DecisionCc> | Partial<DecisionCa>
-export function parseUpdatableDecisionFields(sourceName: Decision["sourceName"], x: unknown): UpdatableDecisionFields {
+const protectedKeys = ['_id', 'sourceId', 'sourceName'] as const
+export type UpdatableDecisionFields =
+  | Partial<DecisionTcom>
+  | Partial<DecisionTj>
+  | Partial<DecisionCc>
+  | Partial<DecisionCa>
+export function parseUpdatableDecisionFields(
+  sourceName: Decision['sourceName'],
+  x: unknown
+): UpdatableDecisionFields {
   try {
     if (typeof x !== 'object' || !x) throw notSupported('decisionFields', x, new Error())
 
@@ -145,9 +152,16 @@ export function parseUpdatableDecisionFields(sourceName: Decision["sourceName"],
         new Error(`Dbsder-api doesn't handle Dila source`)
       )
 
-    const updatableDecisionFields = parsePartialDecision(sourceName, x) as Exclude<ReturnType<typeof parsePartialDecision>, Partial<DecisionDila>>
-    if (protectedKeys.some(key => Object.keys(updatableDecisionFields).includes(key)))
-      throw notSupported('updatableDecisionFields', updatableDecisionFields, new Error(`Keys: "${protectedKeys.join(", ")}" are protected and cannot be update`))
+    const updatableDecisionFields = parsePartialDecision(sourceName, x) as Exclude<
+      ReturnType<typeof parsePartialDecision>,
+      Partial<DecisionDila>
+    >
+    if (protectedKeys.some((key) => Object.keys(updatableDecisionFields).includes(key)))
+      throw notSupported(
+        'updatableDecisionFields',
+        updatableDecisionFields,
+        new Error(`Keys: "${protectedKeys.join(', ')}" are protected and cannot be update`)
+      )
 
     return updatableDecisionFields
   } catch (err) {
@@ -201,25 +215,25 @@ export function mapDecisionListFiltersIntoDbFilters(filters: DecisionListFilters
   const dateFilter =
     startDate && endDate
       ? {
-        [dateType]: {
-          $gte: startDate.toISOString(),
-          $lte: endDate.toISOString()
-        }
-      }
-      : startDate
-        ? {
           [dateType]: {
             $gte: startDate.toISOString(),
-            $lte: new Date().toISOString()
+            $lte: endDate.toISOString()
           }
         }
-        : endDate
-          ? {
+      : startDate
+        ? {
             [dateType]: {
-              $gte: new Date().toISOString(),
-              $lte: endDate.toISOString()
+              $gte: startDate.toISOString(),
+              $lte: new Date().toISOString()
             }
           }
+        : endDate
+          ? {
+              [dateType]: {
+                $gte: new Date().toISOString(),
+                $lte: endDate.toISOString()
+              }
+            }
           : {}
 
   return {
