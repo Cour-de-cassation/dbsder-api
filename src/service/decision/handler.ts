@@ -108,7 +108,11 @@ export async function updateDecision(
 ): Promise<Decision> {
   const filter = { _id: targetId, sourceName }
   const decision = await findAndUpdateDecision(filter, updateFields)
-  if (!decision) throw notFound("Decision", new Error(`Decision missing for id: ${filter._id} and sourceName: ${filter.sourceName}`))
+  if (!decision)
+    throw notFound(
+      'Decision',
+      new Error(`Decision missing for id: ${filter._id} and sourceName: ${filter.sourceName}`)
+    )
   return decision
 }
 

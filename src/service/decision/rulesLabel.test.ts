@@ -91,11 +91,14 @@ describe('service/decision/rulesLabel', () => {
       }
 
       // return something
-      findAndUpdateDecision.mockReturnValue(Promise.resolve(decision)) 
+      findAndUpdateDecision.mockReturnValue(Promise.resolve(decision))
 
       await rulesLabel.updateDecisionForLabel(decision, updateFields)
 
-      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({ _id: id, sourceName: decision.sourceName })
+      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({
+        _id: id,
+        sourceName: decision.sourceName
+      })
       expect(findAndUpdateDecision.mock.lastCall?.[1].pseudoText).toEqual(updateFields.pseudoText)
       expect(findAndUpdateDecision.mock.lastCall?.[1].labelTreatments).toEqual(
         updateFields.labelTreatments
@@ -109,18 +112,24 @@ describe('service/decision/rulesLabel', () => {
       const secondDecision = { ...fakeDecision(secondId), publishStatus: PublishStatus.BLOCKED }
 
       // return something
-      findAndUpdateDecision.mockReturnValue(Promise.resolve(firstDecision)) 
+      findAndUpdateDecision.mockReturnValue(Promise.resolve(firstDecision))
 
       await rulesLabel.updateDecisionForLabel(firstDecision, {})
 
-      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({ _id: firstId, sourceName: firstDecision.sourceName })
+      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({
+        _id: firstId,
+        sourceName: firstDecision.sourceName
+      })
       expect(findAndUpdateDecision.mock.lastCall?.[1].publishStatus).toEqual(
         PublishStatus.TOBEPUBLISHED
       )
 
       await rulesLabel.updateDecisionForLabel(secondDecision, {})
 
-      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({ _id: secondId, sourceName: secondDecision.sourceName })
+      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({
+        _id: secondId,
+        sourceName: secondDecision.sourceName
+      })
       expect(findAndUpdateDecision.mock.lastCall?.[1].publishStatus).toEqual(PublishStatus.BLOCKED)
     })
 
@@ -165,11 +174,14 @@ describe('service/decision/rulesLabel', () => {
       }
 
       // return something
-      findAndUpdateDecision.mockReturnValue(Promise.resolve(decision)) 
+      findAndUpdateDecision.mockReturnValue(Promise.resolve(decision))
 
       await rulesLabel.updateDecisionForLabel(decision, updateFields)
 
-      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({ _id: id, sourceName: decision.sourceName })
+      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({
+        _id: id,
+        sourceName: decision.sourceName
+      })
       expect(findAndUpdateDecision.mock.lastCall?.[1].labelTreatments).toEqual([
         {
           order: 1,

@@ -1,5 +1,5 @@
 import { Request, Router } from 'express'
-import { forbiddenError, missingValue } from '../library/error'
+import { forbiddenError, missingValue, notSupported } from '../library/error'
 import {
   parseId,
   parseUpdatableDecisionFields,
@@ -12,11 +12,20 @@ import { Decision } from 'dbsder-api-types'
 const app = Router()
 
 function parseBody(
-  sourceName: Decision["sourceName"],
+  sourceName: Decision['sourceName'],
   body: Request['body']
-): Omit<UpdatableDecisionFields, 'labelStatus' | 'publishStatus'> {
+): Pick<UpdatableDecisionFields, 'pseudoText' | 'labelTreatments'> {
   if (!body) throw missingValue('req.body', new Error('body is missing on request'))
-  return parseUpdatableDecisionFields(sourceName, body)
+  const updatableDecisionFields = parseUpdatableDecisionFields(sourceName, body)
+  if (
+    Object.keys(updatableDecisionFields).some((k) => k !== 'pseudoText' && k !== 'labelTreatments')
+  )
+    throw notSupported(
+      'body',
+      body,
+      new Error('Only pseudoText or labelTreatments are allowed on Label Route')
+    )
+  return updatableDecisionFields
 }
 
 /**
