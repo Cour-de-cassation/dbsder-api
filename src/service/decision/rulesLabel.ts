@@ -2,19 +2,13 @@
 
 import { Decision, LabelStatus, PublishStatus } from 'dbsder-api-types'
 import { UpdatableDecisionFields } from './models'
-import { findAndUpdateDecision, findDecision } from '../../library/sderDB'
-import { notFound } from '../../library/error'
+import { findAndUpdateDecision } from '../../library/sderDB'
+import { unexpectedError } from '../../library/error'
 
 export async function updateDecisionForLabel(
-  targetId: Decision['_id'],
-  sourceName: Decision['sourceName'],
+  originalDecision: Decision,
   updateFields: Omit<UpdatableDecisionFields, 'labelStatus' | 'publishStatus'>
 ): Promise<Decision> {
-  const originalDecision = await findDecision({
-    _id: targetId
-  })
-  if (!originalDecision) throw notFound('original decision', new Error())
-
   const labelStatus = LabelStatus.DONE
   const publishStatus =
     originalDecision.publishStatus === PublishStatus.BLOCKED
@@ -24,15 +18,15 @@ export async function updateDecisionForLabel(
   const originalTreatments = originalDecision?.labelTreatments ?? []
   const updatedLabelTreatments = updateFields.labelTreatments
     ? [
-        ...originalTreatments,
-        ...updateFields.labelTreatments.map(({ order, ..._ }) => ({
-          ..._,
-          order: originalTreatments.length + order
-        }))
-      ]
+      ...originalTreatments,
+      ...updateFields.labelTreatments.map(({ order, ..._ }) => ({
+        ..._,
+        order: originalTreatments.length + order
+      }))
+    ]
     : originalTreatments
 
-  const filter = { _id: targetId, sourceName }
+  const filter = { _id: originalDecision._id, sourceName: originalDecision.sourceName }
   const decision = await findAndUpdateDecision(
     filter,
     {
@@ -43,6 +37,6 @@ export async function updateDecisionForLabel(
     }
   )
 
-  if (!decision) throw notFound("Decision", new Error(`Decision missing for ${JSON.stringify(filter)}`))
+  if (!decision) throw unexpectedError(new Error(`Decision found with id: "${originalDecision._id}" but not found during update`))
   return decision
 }

@@ -11,7 +11,6 @@ import {
 } from 'dbsder-api-types/dist/types/common'
 import { UpdatableDecisionFields } from './models'
 
-const findDecision = jest.spyOn(sderDB, 'findDecision')
 const findAndUpdateDecision = jest.spyOn(sderDB, 'findAndUpdateDecision')
 
 const fakeDecision = (id: ObjectId): DecisionTj => ({
@@ -57,17 +56,18 @@ const fakeDecision = (id: ObjectId): DecisionTj => ({
 
 describe('service/decision/rulesLabel', () => {
   beforeEach(() => {
-    findDecision.mockReset()
     findAndUpdateDecision.mockReset()
   })
 
   describe('updateDecisionForLabel', () => {
     it('should throw an error if decision is not find', async () => {
-      findDecision.mockResolvedValue(null)
       const id = new ObjectId()
+      const decision = fakeDecision(id)
+
+      findAndUpdateDecision.mockReturnValue(Promise.resolve(null))
 
       await expect(async () => {
-        await rulesLabel.updateDecisionForLabel(id, {})
+        await rulesLabel.updateDecisionForLabel(decision, {})
       }).rejects.toThrow(/not found/)
     })
 
@@ -90,11 +90,12 @@ describe('service/decision/rulesLabel', () => {
         ]
       }
 
-      findDecision.mockResolvedValue(decision)
+      // return something
+      findAndUpdateDecision.mockReturnValue(Promise.resolve(decision)) 
 
-      await rulesLabel.updateDecisionForLabel(id, updateFields)
+      await rulesLabel.updateDecisionForLabel(decision, updateFields)
 
-      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({ _id: id })
+      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({ _id: id, sourceName: decision.sourceName })
       expect(findAndUpdateDecision.mock.lastCall?.[1].pseudoText).toEqual(updateFields.pseudoText)
       expect(findAndUpdateDecision.mock.lastCall?.[1].labelTreatments).toEqual(
         updateFields.labelTreatments
@@ -105,20 +106,21 @@ describe('service/decision/rulesLabel', () => {
       const firstId = new ObjectId()
       const firstDecision = { ...fakeDecision(firstId), publishStatus: PublishStatus.SUCCESS }
       const secondId = new ObjectId()
-      const secondDecision = { ...fakeDecision(firstId), publishStatus: PublishStatus.BLOCKED }
+      const secondDecision = { ...fakeDecision(secondId), publishStatus: PublishStatus.BLOCKED }
 
-      findDecision.mockResolvedValue(firstDecision)
-      await rulesLabel.updateDecisionForLabel(firstId, {})
+      // return something
+      findAndUpdateDecision.mockReturnValue(Promise.resolve(firstDecision)) 
 
-      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({ _id: firstId })
+      await rulesLabel.updateDecisionForLabel(firstDecision, {})
+
+      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({ _id: firstId, sourceName: firstDecision.sourceName })
       expect(findAndUpdateDecision.mock.lastCall?.[1].publishStatus).toEqual(
         PublishStatus.TOBEPUBLISHED
       )
 
-      findDecision.mockResolvedValue(secondDecision)
-      await rulesLabel.updateDecisionForLabel(secondId, {})
+      await rulesLabel.updateDecisionForLabel(secondDecision, {})
 
-      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({ _id: secondId })
+      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({ _id: secondId, sourceName: secondDecision.sourceName })
       expect(findAndUpdateDecision.mock.lastCall?.[1].publishStatus).toEqual(PublishStatus.BLOCKED)
     })
 
@@ -162,10 +164,12 @@ describe('service/decision/rulesLabel', () => {
         ]
       }
 
-      findDecision.mockResolvedValue(decision)
-      await rulesLabel.updateDecisionForLabel(id, updateFields)
+      // return something
+      findAndUpdateDecision.mockReturnValue(Promise.resolve(decision)) 
 
-      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({ _id: id })
+      await rulesLabel.updateDecisionForLabel(decision, updateFields)
+
+      expect(findAndUpdateDecision.mock.lastCall?.[0]).toEqual({ _id: id, sourceName: decision.sourceName })
       expect(findAndUpdateDecision.mock.lastCall?.[1].labelTreatments).toEqual([
         {
           order: 1,
@@ -197,7 +201,6 @@ describe('service/decision/rulesLabel', () => {
   })
 
   afterAll(() => {
-    findDecision.mockRestore()
     findAndUpdateDecision.mockRestore()
   })
 })
