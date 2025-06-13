@@ -13,7 +13,7 @@ import {
   saveDecision,
   updateDecision
 } from '../service/decision/handler'
-import { ForbiddenError, MissingValue } from '../library/error'
+import { ForbiddenError, MissingValue, NotSupported } from '../library/error'
 import { Service } from '../service/authentication'
 import { Decision } from 'dbsder-api-types'
 
@@ -25,7 +25,6 @@ app.get('/decisions/:id', async (req, res, next) => {
     const decision = await fetchDecisionById(decisionId)
     res.send(decision)
   } catch (err: unknown) {
-    req.log.error(err)
     next(err)
   }
 })
@@ -36,7 +35,6 @@ app.get('/decisions', async (req, res, next) => {
     const decision = await fetchDecisions(filters)
     res.send(decision)
   } catch (err: unknown) {
-    req.log.error(err)
     next(err)
   }
 })
@@ -45,8 +43,10 @@ function parsePatchBody(
   sourceName: Decision['sourceName'],
   body: Request['body']
 ): UpdatableDecisionFields {
-  if (!body) throw new MissingValue('req.body', 'body is missing on request')
-  return parseUpdatableDecisionFields(sourceName, body)
+  if (!body || Object.entries(body).length <= 0) throw new MissingValue('req.body', 'body is missing on request')
+  const updatableFields = parseUpdatableDecisionFields(sourceName, body)
+  if (Object.entries(updatableFields).length <= 0) throw new NotSupported('req.body', body, "Any fields known to update")
+  return updatableFields
 }
 
 app.patch('/decisions/:id', async (req, res, next) => {
@@ -60,7 +60,6 @@ app.patch('/decisions/:id', async (req, res, next) => {
       message: 'Decision mise à jour'
     })
   } catch (err: unknown) {
-    req.log.error(err)
     next(err)
   }
 })
@@ -85,7 +84,6 @@ app.put('/decisions', async (req, res, next) => {
       message: 'Decision créée ou mise à jour'
     })
   } catch (err: unknown) {
-    req.log.error(err)
     next(err)
   }
 })
