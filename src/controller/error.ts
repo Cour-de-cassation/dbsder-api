@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import {
-  isCustomError
-} from '../library/error'
+import { isCustomError } from '../library/error'
 
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- always define express error middleware with 4 parameters */
 export const errorHandler = (err: Error, req: Request, res: Response, _: NextFunction) => {
@@ -9,12 +7,12 @@ export const errorHandler = (err: Error, req: Request, res: Response, _: NextFun
 
   if (isCustomError(err)) {
     switch (err.type) {
-      case "notSupported":
-        res.status(400);
+      case 'notSupported':
+        res.status(400)
         res.send({ message: err.message, explain: err.explain ?? null })
         return
-      case "missingValue":
-        res.status(400);
+      case 'missingValue':
+        res.status(400)
         res.send({ message: err.message })
         return
       case 'notFound':
@@ -33,6 +31,6 @@ export const errorHandler = (err: Error, req: Request, res: Response, _: NextFun
   }
 
   res.status(500)
-  res.send({ message: "Something wrong on server, please contact us" });
+  res.send({ message: 'Something wrong on server, please contact us' })
   return
 }

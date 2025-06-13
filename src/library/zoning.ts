@@ -1,5 +1,5 @@
 import { ZONING_API_URL } from './env'
-import { NotSupported, toNotSupported, UnexpectedError } from './error'
+import { toNotSupported, UnexpectedError } from './error'
 import axios, { AxiosError } from 'axios'
 
 export type ZoningParameters = {

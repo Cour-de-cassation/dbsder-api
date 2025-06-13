@@ -44,9 +44,7 @@ async function computeZoning(
     return zoning
   } catch (err) {
     const normalizedError =
-      err instanceof Error
-        ? toUnexpectedError(err)
-        : new UnexpectedError('Zoning has been failed')
+      err instanceof Error ? toUnexpectedError(err) : new UnexpectedError('Zoning has been failed')
     logger.warn({
       operationName: 'computeZoning',
       msg: normalizedError.message,
