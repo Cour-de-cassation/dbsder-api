@@ -7,26 +7,32 @@ import {
 export const errorHandler = (err: Error, req: Request, res: Response, _: NextFunction) => {
   req.log.error(err)
 
-  if (!isCustomError(err)) {
-    res.status(500)
-    return res.send({ message: "Something wrong on server, please contact us" });
+  if (isCustomError(err)) {
+    switch (err.type) {
+      case "notSupported":
+        res.status(400);
+        res.send({ message: err.message, explain: err.explain ?? null })
+        return
+      case "missingValue":
+        res.status(400);
+        res.send({ message: err.message })
+        return
+      case 'notFound':
+        res.status(404)
+        res.send({ message: err.message })
+        return
+      case 'unauthorizedError':
+        res.status(401)
+        res.send({ message: err.message })
+        return
+      case 'forbiddenError':
+        res.status(403)
+        res.send({ message: err.message })
+        return
+    }
   }
 
-  switch (err.type) {
-    case "notSupported":
-    case "missingValue":
-      res.status(400);
-      break
-    case 'notFound':
-      res.status(404)
-      break
-    case 'unauthorizedError':
-      res.status(401)
-      break
-    case 'forbiddenError':
-      res.status(403)
-      break
-  }
-
-  return res.send({ message: err.message })
+  res.status(500)
+  res.send({ message: "Something wrong on server, please contact us" });
+  return
 }

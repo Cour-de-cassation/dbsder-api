@@ -1,16 +1,24 @@
+import { ParseError } from "dbsder-api-types"
+
 export class NotSupported extends Error {
   type = "notSupported" as const
   variableName: string
   variableValue: unknown
-  constructor(variableName: string, variableValue: unknown, message?: string) {
+  explain: unknown
+  constructor(variableName: string, variableValue: unknown, message?: string, explain?: unknown) {
     const _message = message ? message : `value: ${variableValue} is not supported to ${variableName}.`
     super(_message)
     this.variableName = variableName
     this.variableValue = variableValue
+    this.explain = explain
   }
 }
+
 export function toNotSupported(variableName: string, variableValue: unknown, error: Error) {
-  return Object.assign(new NotSupported(variableName, variableValue), error)
+  if (error instanceof ParseError) {
+    return new NotSupported(variableName, variableValue, `parse error on ${variableName}`, error.errors)
+  }
+  return Object.assign(new NotSupported(variableName, variableValue, error.message), error)
 }
 
 export class MissingValue extends Error {
@@ -66,10 +74,12 @@ type CustomError = NotSupported | MissingValue | NotFound | UnauthorizedError | 
 
 export function isCustomError(x: any): x is CustomError {
   if (!x) return false
-  
+
   switch (x.type) {
+    case "notFound":
     case "notSupported":
     case "missingValue":
+    case "forbiddenError":
     case "unauthorizedError":
     case "unexpectedError":
       return x instanceof Error
