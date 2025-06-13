@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { apiKeyToService, Service } from '../service/authentication'
-import { unauthorizedError } from '../library/error'
+import { UnauthorizedError } from '../library/error'
 
 declare global {
   namespace Express {
@@ -13,7 +13,7 @@ declare global {
 export const apiKeyHandler = async (req: Request, _: Response, next: NextFunction) => {
   try {
     const apiKey = req.headers['x-api-key']
-    if (typeof apiKey !== 'string') throw unauthorizedError(new Error())
+    if (typeof apiKey !== 'string') throw new UnauthorizedError()
     const service = apiKeyToService(apiKey)
     req.context = { service }
 

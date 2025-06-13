@@ -1,23 +1,23 @@
 import dotenv from 'dotenv'
-import { missingValue } from './error'
+import { MissingValue } from './error'
 
 if (!process.env.NODE_ENV) dotenv.config()
 
 if (process.env.ATTACHMENTS_API_KEY == null)
-  throw missingValue('process.env.ATTACHMENTS_API_KEY', new Error())
-if (process.env.INDEX_API_KEY == null) throw missingValue('process.env.INDEX_API_KEY', new Error())
-if (process.env.LABEL_API_KEY == null) throw missingValue('process.env.LABEL_API_KEY', new Error())
-if (process.env.MONGO_DB_URL == null) throw missingValue('process.env.MONGO_DB_URL', new Error())
-if (process.env.NODE_ENV == null) throw missingValue('process.env.NODE_ENV', new Error())
+  throw new MissingValue('process.env.ATTACHMENTS_API_KEY')
+if (process.env.INDEX_API_KEY == null) throw new MissingValue('process.env.INDEX_API_KEY')
+if (process.env.LABEL_API_KEY == null) throw new MissingValue('process.env.LABEL_API_KEY')
+if (process.env.MONGO_DB_URL == null) throw new MissingValue('process.env.MONGO_DB_URL')
+if (process.env.NODE_ENV == null) throw new MissingValue('process.env.NODE_ENV')
 if (process.env.NORMALIZATION_API_KEY == null)
-  throw missingValue('process.env.NORMALIZATION_API_KEY', new Error())
+  throw new MissingValue('process.env.NORMALIZATION_API_KEY')
 if (process.env.OPENSDER_API_KEY == null)
-  throw missingValue('process.env.OPENSDER_API_KEY', new Error())
-if (process.env.OPS_API_KEY == null) throw missingValue('process.env.OPS_API_KEY', new Error())
+  throw new MissingValue('process.env.OPENSDER_API_KEY')
+if (process.env.OPS_API_KEY == null) throw new MissingValue('process.env.OPS_API_KEY')
 if (process.env.PUBLICATION_API_KEY == null)
-  throw missingValue('process.env.PUBLICATION_API_KEY', new Error())
+  throw new MissingValue('process.env.PUBLICATION_API_KEY')
 if (process.env.ZONING_API_URL == null)
-  throw missingValue('process.env.ZONING_API_URL', new Error())
+  throw new MissingValue('process.env.ZONING_API_URL')
 
 export const {
   ATTACHMENTS_API_KEY,

@@ -1,5 +1,5 @@
 import { Request, Router } from 'express'
-import { forbiddenError, missingValue, notSupported } from '../library/error'
+import { ForbiddenError, MissingValue, NotSupported } from '../library/error'
 import {
   parseId,
   parseUpdatableDecisionFields,
@@ -15,15 +15,15 @@ function parseBody(
   sourceName: Decision['sourceName'],
   body: Request['body']
 ): Pick<UpdatableDecisionFields, 'pseudoText' | 'labelTreatments'> {
-  if (!body) throw missingValue('req.body', new Error('body is missing on request'))
+  if (!body) throw new MissingValue('req.body', 'body is missing on request')
   const updatableDecisionFields = parseUpdatableDecisionFields(sourceName, body)
   if (
     Object.keys(updatableDecisionFields).some((k) => k !== 'pseudoText' && k !== 'labelTreatments')
   )
-    throw notSupported(
+    throw new NotSupported(
       'body',
       body,
-      new Error('Only pseudoText or labelTreatments are allowed on Label Route')
+      'Only pseudoText or labelTreatments are allowed on Label Route'
     )
   return updatableDecisionFields
 }
@@ -34,7 +34,7 @@ function parseBody(
  */
 app.patch('/label/:id', async (req, res, next) => {
   try {
-    if (req.context?.service !== Service.LABEL) throw forbiddenError(new Error())
+    if (req.context?.service !== Service.LABEL) throw new ForbiddenError()
 
     const id = parseId(req.params.id)
     const decision = await fetchDecisionById(id)

@@ -13,7 +13,7 @@ import {
   saveDecision,
   updateDecision
 } from '../service/decision/handler'
-import { forbiddenError, missingValue } from '../library/error'
+import { ForbiddenError, MissingValue } from '../library/error'
 import { Service } from '../service/authentication'
 import { Decision } from 'dbsder-api-types'
 
@@ -45,14 +45,12 @@ function parsePatchBody(
   sourceName: Decision['sourceName'],
   body: Request['body']
 ): UpdatableDecisionFields {
-  if (!body) throw missingValue('req.body', new Error('body is missing on request'))
+  if (!body) throw new MissingValue('req.body', 'body is missing on request')
   return parseUpdatableDecisionFields(sourceName, body)
 }
 
 app.patch('/decisions/:id', async (req, res, next) => {
   try {
-    if (req.context?.service !== Service.LABEL) throw forbiddenError(new Error())
-
     const id = parseId(req.params.id)
     const { sourceName } = await fetchDecisionById(id)
     const updateFields = parsePatchBody(sourceName, req.body)
@@ -69,16 +67,16 @@ app.patch('/decisions/:id', async (req, res, next) => {
 
 function parsePutBody(body: Request['body']): UnIdentifiedDecisionSupported {
   if (!body || !('decision' in body))
-    throw missingValue(
+    throw new MissingValue(
       'req.body',
-      new Error("body is missing on request or doesn't contain a decision")
+      "body is missing on request or doesn't contain a decision"
     )
   return parseUnIdentifiedDecisionSupported(body.decision)
 }
 
 app.put('/decisions', async (req, res, next) => {
   try {
-    if (req.context?.service !== Service.NORMALIZATION) throw forbiddenError(new Error())
+    if (req.context?.service !== Service.NORMALIZATION) throw new ForbiddenError()
 
     const decision = parsePutBody(req.body)
     const { _id } = await saveDecision(decision)

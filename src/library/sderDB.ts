@@ -1,5 +1,5 @@
 import { Filter, MongoClient } from 'mongodb'
-import { unexpectedError } from './error'
+import { toUnexpectedError, UnexpectedError } from './error'
 import { CodeNac, Decision, UnIdentifiedDecision } from 'dbsder-api-types'
 import { MONGO_DB_URL } from './env'
 
@@ -14,7 +14,7 @@ function safeMongoQuery<T extends (...args: any[]) => Promise<any>>(
       const res = await mongoQuery(...params)
       return res
     } catch (err) {
-      throw err instanceof Error ? unexpectedError(err) : unexpectedError(new Error())
+      throw err instanceof Error ? toUnexpectedError(err) : new UnexpectedError()
     }
   }
 }
@@ -40,7 +40,7 @@ async function _findAndReplaceDecision(
     .collection<UnIdentifiedDecision>('decisions')
     .findOneAndReplace(decisionFilters, decision, { upsert: true, returnDocument: 'after' })
   if (!decisionWithId)
-    throw unexpectedError(new Error('Upsert behave like there were no document and cannot create'))
+    throw new UnexpectedError('Upsert behave like there were no document and cannot create')
   return decisionWithId
 }
 export const findAndReplaceDecision = safeMongoQuery(_findAndReplaceDecision)

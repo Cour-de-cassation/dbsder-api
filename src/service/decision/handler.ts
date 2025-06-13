@@ -22,7 +22,7 @@ import {
   findAndUpdateDecision
 } from '../../library/sderDB'
 import { logger } from '../../library/logger'
-import { notFound, unexpectedError } from '../../library/error'
+import { NotFound, toUnexpectedError, UnexpectedError } from '../../library/error'
 
 function computeDates(previousDecision: Exclude<Decision, DecisionDila> | null) {
   const now = new Date()
@@ -45,8 +45,8 @@ async function computeZoning(
   } catch (err) {
     const normalizedError =
       err instanceof Error
-        ? unexpectedError(err)
-        : unexpectedError(new Error('Zoning has been failed'))
+        ? toUnexpectedError(err)
+        : new UnexpectedError('Zoning has been failed')
     logger.warn({
       operationName: 'computeZoning',
       msg: normalizedError.message,
@@ -109,16 +109,16 @@ export async function updateDecision(
   const filter = { _id: targetId, sourceName }
   const decision = await findAndUpdateDecision(filter, updateFields)
   if (!decision)
-    throw notFound(
+    throw new NotFound(
       'Decision',
-      new Error(`Decision missing for id: ${filter._id} and sourceName: ${filter.sourceName}`)
+      `Decision missing for id: ${filter._id} and sourceName: ${filter.sourceName}`
     )
   return decision
 }
 
 export async function fetchDecisionById(decisionId: Decision['_id']): Promise<Decision> {
   const decision = await findDecision({ _id: decisionId })
-  if (!decision) throw notFound('decision', new Error())
+  if (!decision) throw new NotFound('decision')
   return decision
 }
 
