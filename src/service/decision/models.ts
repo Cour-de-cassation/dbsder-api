@@ -146,11 +146,7 @@ export function parseUpdatableDecisionFields(
     if (typeof x !== 'object' || !x) throw new NotSupported('decisionFields', x)
 
     if (sourceName === 'dila')
-      throw new NotSupported(
-        'updatableDecisionFields',
-        x,
-        "Dbsder-api doesn't handle Dila source"
-      )
+      throw new NotSupported('updatableDecisionFields', x, "Dbsder-api doesn't handle Dila source")
 
     const updatableDecisionFields = parsePartialDecision(sourceName, x) as Exclude<
       ReturnType<typeof parsePartialDecision>,

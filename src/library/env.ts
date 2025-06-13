@@ -11,13 +11,11 @@ if (process.env.MONGO_DB_URL == null) throw new MissingValue('process.env.MONGO_
 if (process.env.NODE_ENV == null) throw new MissingValue('process.env.NODE_ENV')
 if (process.env.NORMALIZATION_API_KEY == null)
   throw new MissingValue('process.env.NORMALIZATION_API_KEY')
-if (process.env.OPENSDER_API_KEY == null)
-  throw new MissingValue('process.env.OPENSDER_API_KEY')
+if (process.env.OPENSDER_API_KEY == null) throw new MissingValue('process.env.OPENSDER_API_KEY')
 if (process.env.OPS_API_KEY == null) throw new MissingValue('process.env.OPS_API_KEY')
 if (process.env.PUBLICATION_API_KEY == null)
   throw new MissingValue('process.env.PUBLICATION_API_KEY')
-if (process.env.ZONING_API_URL == null)
-  throw new MissingValue('process.env.ZONING_API_URL')
+if (process.env.ZONING_API_URL == null) throw new MissingValue('process.env.ZONING_API_URL')
 
 export const {
   ATTACHMENTS_API_KEY,

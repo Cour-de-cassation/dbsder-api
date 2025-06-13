@@ -43,9 +43,11 @@ function parsePatchBody(
   sourceName: Decision['sourceName'],
   body: Request['body']
 ): UpdatableDecisionFields {
-  if (!body || Object.entries(body).length <= 0) throw new MissingValue('req.body', 'body is missing on request')
+  if (!body || Object.entries(body).length <= 0)
+    throw new MissingValue('req.body', 'body is missing on request')
   const updatableFields = parseUpdatableDecisionFields(sourceName, body)
-  if (Object.entries(updatableFields).length <= 0) throw new NotSupported('req.body', body, "Any fields known to update")
+  if (Object.entries(updatableFields).length <= 0)
+    throw new NotSupported('req.body', body, 'Any fields known to update')
   return updatableFields
 }
 
@@ -66,10 +68,7 @@ app.patch('/decisions/:id', async (req, res, next) => {
 
 function parsePutBody(body: Request['body']): UnIdentifiedDecisionSupported {
   if (!body || !('decision' in body))
-    throw new MissingValue(
-      'req.body',
-      "body is missing on request or doesn't contain a decision"
-    )
+    throw new MissingValue('req.body', "body is missing on request or doesn't contain a decision")
   return parseUnIdentifiedDecisionSupported(body.decision)
 }
 

@@ -18,12 +18,12 @@ export async function updateDecisionForLabel(
   const originalTreatments = originalDecision?.labelTreatments ?? []
   const updatedLabelTreatments = updateFields.labelTreatments
     ? [
-      ...originalTreatments,
-      ...updateFields.labelTreatments.map(({ order, ..._ }) => ({
-        ..._,
-        order: originalTreatments.length + order
-      }))
-    ]
+        ...originalTreatments,
+        ...updateFields.labelTreatments.map(({ order, ..._ }) => ({
+          ..._,
+          order: originalTreatments.length + order
+        }))
+      ]
     : originalTreatments
 
   const filter = { _id: originalDecision._id, sourceName: originalDecision.sourceName }
