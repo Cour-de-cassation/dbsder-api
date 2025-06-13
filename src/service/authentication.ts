@@ -7,7 +7,7 @@ import {
   OPS_API_KEY,
   PUBLICATION_API_KEY
 } from '../library/env'
-import { unauthorizedError } from '../library/error'
+import { UnauthorizedError } from '../library/error'
 
 // Warn: I don't understand some of this services
 export enum Service {
@@ -37,6 +37,6 @@ export function apiKeyToService(apiKey: string): Service {
     case ATTACHMENTS_API_KEY:
       return Service.ATTACHEMENTS
     default:
-      throw unauthorizedError(new Error())
+      throw new UnauthorizedError()
   }
 }

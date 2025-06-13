@@ -1,5 +1,5 @@
 import { ZONING_API_URL } from './env'
-import { notSupported, unexpectedError } from './error'
+import { NotSupported, toNotSupported, UnexpectedError } from './error'
 import axios, { AxiosError } from 'axios'
 
 export type ZoningParameters = {
@@ -20,7 +20,7 @@ export async function fetchZoning(parameters: ZoningParameters): Promise<ZoningR
     })
     return result.data
   } catch (err) {
-    if (!(err instanceof AxiosError)) throw unexpectedError(new Error())
+    if (!(err instanceof AxiosError)) throw new UnexpectedError()
     if (
       err instanceof AxiosError &&
       err.response &&
@@ -28,8 +28,8 @@ export async function fetchZoning(parameters: ZoningParameters): Promise<ZoningR
       err.response.status < 400 &&
       err.response.status >= 500
     )
-      throw unexpectedError(new Error('Zoning service is currently unavailable'))
+      throw new UnexpectedError('Zoning service is currently unavailable')
 
-    throw notSupported('zoning parameters', parameters, err)
+    throw toNotSupported('zoning parameters', parameters, err)
   }
 }

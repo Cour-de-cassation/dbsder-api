@@ -17,7 +17,7 @@ import {
 } from 'dbsder-api-types'
 import { ObjectId } from 'mongodb'
 import { ZoningParameters } from '../../library/zoning'
-import { notSupported, unexpectedError } from '../../library/error'
+import { NotSupported, toNotSupported, UnexpectedError } from '../../library/error'
 
 export type DecisionSupported = Exclude<Decision, DecisionDila> & {
   originalText: string // Warn: current model accept empty but new data doesn't
@@ -38,16 +38,16 @@ export function parseUnIdentifiedDecisionSupported(x: unknown): UnIdentifiedDeci
   try {
     const decision = parseUnIdentifiedDecision(x)
     if (hasSourceNameDila(decision))
-      throw notSupported('decision.sourceName', decision.sourceName, new Error())
+      throw new NotSupported('decision.sourceName', decision.sourceName)
     if (!hasOriginalText(decision))
-      throw notSupported(
+      throw new NotSupported(
         'decision.originalText',
         decision.originalText,
-        new Error('originalText in decision is missing')
+        'originalText in decision is missing'
       )
     return decision
   } catch (err) {
-    if (err instanceof ParseError) throw notSupported('decision', x, err)
+    if (err instanceof ParseError) throw toNotSupported('decision', x, err)
     else throw err
   }
 }
@@ -57,19 +57,19 @@ export function parseId(maybeId: unknown): ObjectId {
     return parseDbsderId(maybeId)
   } catch (err) {
     throw err instanceof Error
-      ? notSupported('id', maybeId, err)
-      : notSupported('id', maybeId, new Error('Given ID is not a valid ID'))
+      ? toNotSupported('id', maybeId, err)
+      : new NotSupported('id', maybeId, 'Given ID is not a valid ID')
   }
 }
 
 function parseDate(x: unknown): Date {
   if (typeof x !== 'string' || !/\d{4}-\d{2}-\d{2}/.test(x))
-    throw notSupported('date', x, new Error('Date should be at format: yyyy-mm-dd'))
+    throw new NotSupported('date', x, 'Date should be at format: yyyy-mm-dd')
   const date = new Date()
   date.setFullYear(parseInt(x.slice(0, 'yyyy'.length)))
   date.setMonth(parseInt(x.slice('yyyy-'.length, 'yyyy-mm'.length)) - 1)
   date.setDate(parseInt(x.slice('yyyy-mm-'.length, 'yyyy-mm-dd'.length)))
-  if (Number.isNaN(date.valueOf())) throw unexpectedError(new Error())
+  if (Number.isNaN(date.valueOf())) throw new UnexpectedError()
   return date
 }
 
@@ -82,7 +82,7 @@ export type DecisionListFilters = {
   dateType: 'dateDecision' | 'dateCreation'
 }
 export function parseDecisionListFilters(x: unknown): DecisionListFilters {
-  if (typeof x !== 'object' || !x) throw notSupported('filters', x, new Error())
+  if (typeof x !== 'object' || !x) throw new NotSupported('filters', x)
   const dateType = 'dateType' in x && x.dateType === 'dateCreation' ? x.dateType : 'dateDecision'
 
   let filter: DecisionListFilters = { dateType }
@@ -92,8 +92,8 @@ export function parseDecisionListFilters(x: unknown): DecisionListFilters {
       filter = { ...filter, sourceName: parseSourceName(x.sourceName) }
     } catch (err) {
       throw err instanceof Error
-        ? notSupported('sourceName', x.sourceName, err)
-        : notSupported('sourceName', x.sourceName, new Error())
+        ? toNotSupported('sourceName', x.sourceName, err)
+        : new NotSupported('sourceName', x.sourceName)
     }
   }
 
@@ -102,19 +102,19 @@ export function parseDecisionListFilters(x: unknown): DecisionListFilters {
       filter = { ...filter, labelStatus: parseLabelStatus(x.labelStatus) }
     } catch (err) {
       throw err instanceof Error
-        ? notSupported('labelStatus', x.labelStatus, err)
-        : notSupported('labelStatus', x.labelStatus, new Error())
+        ? toNotSupported('labelStatus', x.labelStatus, err)
+        : new NotSupported('labelStatus', x.labelStatus)
     }
   }
 
   if ('sourceId' in x) {
     const sourceId = x.sourceId
-    if (typeof sourceId !== 'string') throw notSupported('sourceId', sourceId, new Error())
+    if (typeof sourceId !== 'string') throw new NotSupported('sourceId', sourceId)
 
     if (filter.sourceName === 'dila') filter = { ...filter, sourceId }
     else {
       const sourceIdAsNumber = parseInt(sourceId)
-      if (isNaN(sourceIdAsNumber)) throw notSupported('sourceId', sourceId, new Error())
+      if (isNaN(sourceIdAsNumber)) throw new NotSupported('sourceId', sourceId)
       filter = { ...filter, sourceId: sourceIdAsNumber }
     }
   }
@@ -143,13 +143,13 @@ export function parseUpdatableDecisionFields(
   x: unknown
 ): UpdatableDecisionFields {
   try {
-    if (typeof x !== 'object' || !x) throw notSupported('decisionFields', x, new Error())
+    if (typeof x !== 'object' || !x) throw new NotSupported('decisionFields', x)
 
     if (sourceName === 'dila')
-      throw notSupported(
+      throw new NotSupported(
         'updatableDecisionFields',
         x,
-        new Error(`Dbsder-api doesn't handle Dila source`)
+        "Dbsder-api doesn't handle Dila source"
       )
 
     const updatableDecisionFields = parsePartialDecision(sourceName, x) as Exclude<
@@ -157,15 +157,15 @@ export function parseUpdatableDecisionFields(
       Partial<DecisionDila>
     >
     if (protectedKeys.some((key) => Object.keys(updatableDecisionFields).includes(key)))
-      throw notSupported(
+      throw new NotSupported(
         'updatableDecisionFields',
         updatableDecisionFields,
-        new Error(`Keys: "${protectedKeys.join(', ')}" are protected and cannot be update`)
+        `Keys: "${protectedKeys.join(', ')}" are protected and cannot be update`
       )
 
     return updatableDecisionFields
   } catch (err) {
-    if (err instanceof ParseError) throw notSupported('decision', x, err)
+    if (err instanceof ParseError) throw toNotSupported('decision', x, err)
     else throw err
   }
 }

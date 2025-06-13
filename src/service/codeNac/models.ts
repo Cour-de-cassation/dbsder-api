@@ -1,5 +1,5 @@
 import { parseId as parseDbsderId } from 'dbsder-api-types'
-import { notSupported } from '../../library/error'
+import { NotSupported, toNotSupported } from '../../library/error'
 import { ObjectId } from 'mongodb'
 
 export function parseId(maybeId: unknown): ObjectId {
@@ -7,7 +7,7 @@ export function parseId(maybeId: unknown): ObjectId {
     return parseDbsderId(maybeId)
   } catch (err) {
     throw err instanceof Error
-      ? notSupported('id', maybeId, err)
-      : notSupported('id', maybeId, new Error('Given ID is not a valid ID'))
+      ? toNotSupported('id', maybeId, err)
+      : new NotSupported('id', maybeId, 'Given ID is not a valid ID')
   }
 }
