@@ -17,12 +17,15 @@ import {
 import { computeRulesDecisionTj } from './rulesTj'
 import {
   findDecision,
-  findDecisions,
+  findDecisionsWithPagination,
   findAndReplaceDecision,
-  findAndUpdateDecision
+  findAndUpdateDecision,
+  PaginatedDecisions,
+  Page
 } from '../../library/sderDB'
 import { logger } from '../../library/logger'
 import { NotFound, toUnexpectedError, UnexpectedError } from '../../library/error'
+import { ObjectId } from 'mongodb'
 
 function computeDates(previousDecision: Exclude<Decision, DecisionDila> | null) {
   const now = new Date()
@@ -120,8 +123,11 @@ export async function fetchDecisionById(decisionId: Decision['_id']): Promise<De
   return decision
 }
 
-export async function fetchDecisions(filters: DecisionListFilters): Promise<Decision[]> {
-  return findDecisions(mapDecisionListFiltersIntoDbFilters(filters))
+export async function fetchDecisions(
+  filters: DecisionListFilters,
+  page: Page
+): Promise<PaginatedDecisions> {
+  return findDecisionsWithPagination(mapDecisionListFiltersIntoDbFilters(filters), page)
 }
 
 // Warn: isolated because Label responsibility
