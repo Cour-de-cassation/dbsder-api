@@ -94,7 +94,7 @@ describe('service/decision/rulesLabel', () => {
       ])
     })
 
-    it('should call findDecisions without pageFilters if no pages', async () => {
+    it('should call findDecisions with pageFilters to searchAfter', async () => {
       const mocked = findDecisions.mockResolvedValue({
         decisions: [],
         length: decisions.length
