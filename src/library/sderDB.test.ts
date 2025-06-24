@@ -36,7 +36,7 @@ describe('service/decision/rulesLabel', () => {
 
       expect(result).toStrictEqual({
         decisions,
-        length: decisions.length,
+        totalDecisions: decisions.length,
         previousCursor: undefined,
         nextCursor: undefined
       })
@@ -59,7 +59,7 @@ describe('service/decision/rulesLabel', () => {
 
       expect(result).toStrictEqual({
         decisions: decisionsInPage,
-        length: decisions.length,
+        totalDecisions: decisions.length,
         previousCursor: previousDecision[0]?._id,
         nextCursor: nextDecision[0]?._id
       })
