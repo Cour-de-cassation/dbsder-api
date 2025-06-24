@@ -88,10 +88,12 @@ export async function findDecisionsWithPagination(
   const lastDecision = decisions[decisions.length - 1]
 
   const [decisionBefore] = firstDecision
-    ? (await findDecisionsFunction(filters, { _id: { $gt: firstDecision._id } }, { _id: 1 }, 1)).decisions
+    ? (await findDecisionsFunction(filters, { _id: { $gt: firstDecision._id } }, { _id: 1 }, 1))
+        .decisions
     : []
   const [decisionAfter] = lastDecision
-    ? (await findDecisionsFunction(filters, { _id: { $lt: lastDecision._id } }, { _id: -1 }, 1)).decisions
+    ? (await findDecisionsFunction(filters, { _id: { $lt: lastDecision._id } }, { _id: -1 }, 1))
+        .decisions
     : []
 
   return {

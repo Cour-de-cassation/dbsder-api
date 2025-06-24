@@ -25,7 +25,6 @@ import {
 } from '../../library/sderDB'
 import { logger } from '../../library/logger'
 import { NotFound, toUnexpectedError, UnexpectedError } from '../../library/error'
-import { ObjectId } from 'mongodb'
 
 function computeDates(previousDecision: Exclude<Decision, DecisionDila> | null) {
   const now = new Date()
