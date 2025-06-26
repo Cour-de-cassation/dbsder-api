@@ -13,6 +13,7 @@ import {
   DecisionTj,
   DecisionCc,
   DecisionCa,
+  DecisionCph,
   ParseError
 } from 'dbsder-api-types'
 import { ObjectId } from 'mongodb'
@@ -138,6 +139,7 @@ export type UpdatableDecisionFields =
   | Partial<DecisionTj>
   | Partial<DecisionCc>
   | Partial<DecisionCa>
+  | Partial<DecisionCph>
 export function parseUpdatableDecisionFields(
   sourceName: Decision['sourceName'],
   x: unknown
@@ -178,6 +180,9 @@ function mapDecisionIntoZoningSource(
       return 'cc'
     case 'juritcom':
       return 'tcom'
+    case 'portalis-cph':
+      // Warn: should be 'cph' but but does not yet exist in zoning API
+      return 'ca'
   }
 }
 
