@@ -27,6 +27,7 @@ test:
     - docker run -e HTTP_PROXY=$HTTP_PROXY -e HTTPS_PROXY=$HTTPS_PROXY dbsder-api npm test
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "cicd-refacto"'
+    - if: '$CI_COMMIT_TAG'
   tags:
     - docker
 
@@ -45,6 +46,7 @@ build_api:
     - docker push $api_docker_image
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "cicd-refacto"'
+    - if: '$CI_COMMIT_TAG'
   tags:
     - docker
 
