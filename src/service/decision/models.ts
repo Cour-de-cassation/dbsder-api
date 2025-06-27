@@ -82,8 +82,7 @@ export type DecisionListFilters = {
   endDate?: Date
   dateType: 'dateDecision' | 'dateCreation'
 }
-export function parseDecisionListFilters(x: unknown): DecisionListFilters {
-  if (typeof x !== 'object' || !x) throw new NotSupported('filters', x)
+export function parseDecisionListFilters(x: object): DecisionListFilters {
   const dateType = 'dateType' in x && x.dateType === 'dateCreation' ? x.dateType : 'dateDecision'
 
   let filter: DecisionListFilters = { dateType }

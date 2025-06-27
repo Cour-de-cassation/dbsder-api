@@ -1,23 +1,9 @@
-import { Filter, MongoClient } from 'mongodb'
-import { toUnexpectedError, UnexpectedError } from './error'
+import { Filter, MongoClient, ObjectId, Sort } from 'mongodb'
+import { UnexpectedError } from './error'
 import { CodeNac, Decision, UnIdentifiedDecision } from 'dbsder-api-types'
 import { MONGO_DB_URL } from './env'
 
 const client = new MongoClient(MONGO_DB_URL)
-
-/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- Type is safe due any fallback into Parameters<T> and ReturnType<T> */
-function safeMongoQuery<T extends (...args: any[]) => Promise<any>>(
-  mongoQuery: T
-): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>> {
-  return async (...params: Parameters<T>) => {
-    try {
-      const res = await mongoQuery(...params)
-      return res
-    } catch (err) {
-      throw err instanceof Error ? toUnexpectedError(err) : new UnexpectedError()
-    }
-  }
-}
 
 async function dbConnect() {
   const db = client.db()
@@ -25,13 +11,12 @@ async function dbConnect() {
   return db
 }
 
-async function _findCodeNac(filters: Filter<CodeNac>) {
+export async function findCodeNac(filters: Filter<CodeNac>) {
   const db = await dbConnect()
   return db.collection<CodeNac>('codenacs').findOne(filters)
 }
-export const findCodeNac = safeMongoQuery(_findCodeNac)
 
-async function _findAndReplaceDecision(
+export async function findAndReplaceDecision(
   decisionFilters: Filter<UnIdentifiedDecision>,
   decision: UnIdentifiedDecision
 ): Promise<Decision> {
@@ -43,9 +28,8 @@ async function _findAndReplaceDecision(
     throw new UnexpectedError('Upsert behave like there were no document and cannot create')
   return decisionWithId
 }
-export const findAndReplaceDecision = safeMongoQuery(_findAndReplaceDecision)
 
-async function _findAndUpdateDecision(
+export async function findAndUpdateDecision(
   decisionFilters: Filter<UnIdentifiedDecision>,
   decision: Partial<UnIdentifiedDecision>
 ): Promise<Decision | null> {
@@ -55,17 +39,67 @@ async function _findAndUpdateDecision(
     .findOneAndUpdate(decisionFilters, { $set: decision }, { returnDocument: 'after' })
   return decisionWithId
 }
-export const findAndUpdateDecision = safeMongoQuery(_findAndUpdateDecision)
 
-async function _findDecision(filters: Filter<Decision>): Promise<Decision | null> {
+export async function findDecision(filters: Filter<Decision>): Promise<Decision | null> {
   const db = await dbConnect()
   return db.collection<Decision>('decisions').findOne(filters)
 }
-export const findDecision = safeMongoQuery(_findDecision)
 
-async function _findDecisions(filters: Filter<Decision>): Promise<Decision[]> {
+export async function findDecisions(
+  filters: Filter<Decision>,
+  pageFilters: Filter<Decision> = {},
+  sort: Sort = { _id: -1 },
+  limit: number = 50
+) {
   const db = await dbConnect()
-  // Todo: check pagination or streaming to avoid a RAM overflow on empty filters
-  return db.collection<Decision>('decisions').find(filters).toArray()
+  const length = await db.collection<Decision>('decisions').countDocuments(filters)
+  const decisions = await db
+    .collection<Decision>('decisions')
+    .find({ ...filters, ...pageFilters })
+    .sort(sort)
+    .limit(limit)
+    .toArray()
+  return { length, decisions }
 }
-export const findDecisions = safeMongoQuery(_findDecisions)
+
+export type Page = { searchBefore: ObjectId } | { searchAfter: ObjectId } | object
+export type PaginatedDecisions = {
+  decisions: Decision[]
+  previousCursor?: ObjectId
+  nextCursor?: ObjectId
+  totalDecisions: number
+}
+
+export async function findDecisionsWithPagination(
+  filters: Filter<Decision>,
+  page: Page,
+  findDecisionsFunction = findDecisions // used to test
+): Promise<PaginatedDecisions> {
+  const pageFilters =
+    'searchBefore' in page
+      ? { _id: { $gte: page.searchBefore } }
+      : 'searchAfter' in page
+        ? { _id: { $lte: page.searchAfter } }
+        : {}
+
+  const { decisions, length } = await findDecisionsFunction(filters, pageFilters)
+
+  const firstDecision = decisions[0]
+  const lastDecision = decisions[decisions.length - 1]
+
+  const [decisionBefore] = firstDecision
+    ? (await findDecisionsFunction(filters, { _id: { $gt: firstDecision._id } }, { _id: 1 }, 1))
+        .decisions
+    : []
+  const [decisionAfter] = lastDecision
+    ? (await findDecisionsFunction(filters, { _id: { $lt: lastDecision._id } }, { _id: -1 }, 1))
+        .decisions
+    : []
+
+  return {
+    decisions,
+    totalDecisions: length,
+    previousCursor: decisionBefore?._id,
+    nextCursor: decisionAfter?._id
+  }
+}
