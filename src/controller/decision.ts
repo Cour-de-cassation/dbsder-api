@@ -16,6 +16,7 @@ import {
 import { ForbiddenError, MissingValue, NotSupported } from '../library/error'
 import { Service } from '../service/authentication'
 import { Decision } from 'dbsder-api-types'
+import queryString from 'qs'
 
 const app = Router()
 
@@ -29,11 +30,36 @@ app.get('/decisions/:id', async (req, res, next) => {
   }
 })
 
+function parseGetQuery(query: unknown) {
+  if (typeof query !== 'object' || !query) throw new NotSupported('querystring', query)
+  const filters = parseDecisionListFilters(query)
+
+  if ('searchBefore' in query && 'searchAfter' in query)
+    throw new NotSupported(
+      'querystring',
+      query,
+      'searchBefore cannot be combinated with SearchAfter'
+    )
+
+  if ('searchBefore' in query) return { filters, searchBefore: parseId(query.searchBefore) }
+  if ('searchAfter' in query) return { filters, searchAfter: parseId(query.searchAfter) }
+  return { filters }
+}
+
 app.get('/decisions', async (req, res, next) => {
   try {
-    const filters = parseDecisionListFilters(req.query)
-    const decision = await fetchDecisions(filters)
-    res.send(decision)
+    const { filters, ...pagination } = parseGetQuery(req.query)
+
+    const result = await fetchDecisions(filters, pagination)
+
+    const previousPage = result.previousCursor
+      ? queryString.stringify({ ...filters, searchBefore: result.previousCursor.toString() })
+      : undefined
+    const nextPage = result.nextCursor
+      ? queryString.stringify({ ...filters, searchAfter: result.nextCursor.toString() })
+      : undefined
+
+    res.send({ ...result, previousPage, nextPage })
   } catch (err: unknown) {
     next(err)
   }
