@@ -54,9 +54,9 @@ deploy_dev:
   stage: deploy
   image: alpine/ansible:2.16.1
   script:
-    - mkdir -p /root/.ssh
-    - echo "$SSH_KEY" > /root/.ssh/id_rsa
-    - echo "$KNOWN_HOSTS" > /root/.ssh/known_hosts
+    - mkdir /root/.ssh
+    - cat "$SSH_KEY" > /root/.ssh/id_rsa
+    - cat "$KNOWN_HOSTS" > /root/.ssh/known_hosts
     - chmod 600 /root/.ssh/id_rsa
     - chmod 600 /root/.ssh/known_hosts
     - ansible-playbook -e dbsder_api_image=$api_docker_image -i ansible/inventory/dev.yml ansible/deploy_dbsder.yml --vault-password-file=$ANSIBLE_VAULT_PASS
@@ -74,9 +74,9 @@ deploy_re7:
   stage: deploy
   image: alpine/ansible:2.16.1
   script:
-    - mkdir -p /root/.ssh
-    - echo "$SSH_KEY" > /root/.ssh/id_rsa
-    - echo "$KNOWN_HOSTS" > /root/.ssh/known_hosts
+    - mkdir /root/.ssh
+    - cat "$SSH_KEY" > /root/.ssh/id_rsa
+    - cat "$KNOWN_HOSTS" > /root/.ssh/known_hosts
     - chmod 600 /root/.ssh/id_rsa
     - chmod 600 /root/.ssh/known_hosts
     - ansible-playbook -e dbsder_api_image=$api_docker_image -i ansible/inventory/preprod.yml ansible/deploy_dbsder.yml --vault-password-file=$ANSIBLE_VAULT_PASS
@@ -92,9 +92,9 @@ deploy_prod:
   stage: deploy
   image: alpine/ansible:2.16.1
   script:
-    - mkdir -p /root/.ssh
-    - echo "$SSH_KEY" > /root/.ssh/id_rsa
-    - echo "$KNOWN_HOSTS" > /root/.ssh/known_hosts
+    - mkdir /root/.ssh
+    - cat "$SSH_KEY" > /root/.ssh/id_rsa
+    - cat "$KNOWN_HOSTS" > /root/.ssh/known_hosts
     - chmod 600 /root/.ssh/id_rsa
     - chmod 600 /root/.ssh/known_hosts
     - ansible-playbook -e dbsder_api_image=$api_docker_image -i ansible/inventory/prod.yml ansible/deploy_dbsder.yml --vault-password-file=$ANSIBLE_VAULT_PASS
