@@ -38,6 +38,12 @@ build_api:
     HTTPS_PROXY: $HTTPS_PROXY_DEV
   script:
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - |
+      if docker manifest inspect $api_docker_image > /dev/null 2>&1; then
+        echo "Image $api_docker_image already exists. Skipping build."
+        exit 0
+      fi
+
     - docker build
       --build-arg http_proxy=$HTTP_PROXY
       --build-arg https_proxy=$HTTPS_PROXY
