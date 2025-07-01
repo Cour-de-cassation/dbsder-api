@@ -51,6 +51,7 @@ build_api:
     - docker
 
 deploy_dev:
+  stage: deploy_dev
   environment: dev
   image: alpine/ansible:2.16.1
   script:
@@ -71,6 +72,7 @@ deploy_dev:
     - docker
 
 deploy_preprod:
+  stage: deploy_preprod
   environment: preprod
   image: alpine/ansible:2.16.1
   script:
@@ -90,6 +92,7 @@ deploy_preprod:
 
 deploy_prod:
   environment: prod
+  stage: deploy_prod
   image: alpine/ansible:2.16.1
   script:
     - mkdir /root/.ssh
