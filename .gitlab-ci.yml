@@ -38,14 +38,6 @@ build_api:
     HTTPS_PROXY: $HTTPS_PROXY_DEV
   script:
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
-    - echo "CI_REGISTRY = $CI_REGISTRY"
-    - echo $CI_JOB_TOKEN | docker manifest inspect $api_docker_image
-    - |
-      if echo $CI_JOB_TOKEN | docker manifest inspect $api_docker_image > /dev/null 2>&1; then
-        echo "Image $api_docker_image already exists. Skipping build."
-        exit 0
-      fi
-
     - docker build
       --build-arg http_proxy=$HTTP_PROXY
       --build-arg https_proxy=$HTTPS_PROXY
@@ -60,6 +52,7 @@ build_api:
 
 deploy_dev:
   stage: deploy
+  environment: dev
   image: alpine/ansible:2.16.1
   script:
     - mkdir /root/.ssh
@@ -78,8 +71,9 @@ deploy_dev:
   tags:
     - docker
 
-deploy_re7:
+deploy_preprod:
   stage: deploy
+  environment: preprod
   image: alpine/ansible:2.16.1
   script:
     - mkdir /root/.ssh
@@ -97,6 +91,7 @@ deploy_re7:
     - docker
 
 deploy_prod:
+  environment: prod
   stage: deploy
   image: alpine/ansible:2.16.1
   script:
