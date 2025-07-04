@@ -106,6 +106,5 @@ deploy_prod:
       when: manual
   needs:
     - build_api
-    - deploy_preprod
   tags:
     - docker
