@@ -41,7 +41,7 @@ build_and_push_api:
     - |
       if docker pull "$api_docker_image"; then
         echo "Docker image $api_docker_image already exist, skiping build and push."
-        exit 1
+        exit 0
       fi
 
     - docker build
@@ -101,12 +101,6 @@ deploy_prod:
   image: alpine/ansible:2.16.1
   script:
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
-    - |
-      if ! docker pull "$api_docker_image"; then
-        echo "Docker image $api_docker_image does not exist, aborting deployment."
-        exit 1
-      fi
-
     - mkdir /root/.ssh
     - cat "$SSH_KEY" > /root/.ssh/id_rsa
     - cat "$KNOWN_HOSTS" > /root/.ssh/known_hosts
