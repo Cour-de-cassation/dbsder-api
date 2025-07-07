@@ -30,13 +30,20 @@ test:
   tags:
     - docker
 
-build_api:
+build_and_push_api:
   stage: build
   variables:
     HTTP_PROXY: $HTTP_PROXY_DEV
     HTTPS_PROXY: $HTTPS_PROXY_DEV
   script:
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+
+    - |
+      if docker pull "$api_docker_image"; then
+        echo "Docker image $api_docker_image already exist, skiping build and push."
+        exit 1
+      fi
+
     - docker build
       --build-arg http_proxy=$HTTP_PROXY
       --build-arg https_proxy=$HTTPS_PROXY
@@ -45,6 +52,7 @@ build_api:
     - docker push $api_docker_image
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "cicd-refacto"'
+    - if: '$CI_COMMIT_TAG'
   tags:
     - docker
 
@@ -60,10 +68,10 @@ deploy_dev:
     - chmod 600 /root/.ssh/known_hosts
     - ansible-playbook -e dbsder_api_image=$api_docker_image -i ansible/inventory/dev.yml ansible/deploy_dbsder.yml --vault-password-file=$ANSIBLE_VAULT_PASS
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "cicd-refacto"'
+    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_TAG || $CI_COMMIT_BRANCH == "cicd-refacto"'
       when: on_success
   needs:
-    - build_api
+    - build_and_push_api
   tags:
     - docker
 
@@ -73,12 +81,6 @@ deploy_preprod:
   image: alpine/ansible:2.16.1
   script:
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
-    - |
-      if ! docker pull "$api_docker_image"; then
-        echo "Docker image $api_docker_image does not exist, aborting deployment."
-        exit 1
-      fi
-
     - mkdir /root/.ssh
     - cat "$SSH_KEY" > /root/.ssh/id_rsa
     - cat "$KNOWN_HOSTS" > /root/.ssh/known_hosts
@@ -88,6 +90,8 @@ deploy_preprod:
   rules:
     - if: '$CI_COMMIT_TAG'
       when: manual
+  needs:
+    - deploy_dev
   tags:
     - docker
 
