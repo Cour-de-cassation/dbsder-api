@@ -8,6 +8,12 @@
   "scripts": {
     "start:watch": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'npx ts-node src/server.ts'",
     "start": "node dist/server.js",
+    "docker:build": "docker compose -f docker-compose.local.yml build",
+    "docker:start": "docker compose -f docker-compose.local.yml up -d",
+    "docker:logs": "docker compose -f docker-compose.local.yml logs --follow",
+    "docker:stop": "docker compose -f docker-compose.local.yml stop",
+    "docker:kill": "docker compose -f docker-compose.local.yml down --remove-orphans --volumes --rmi local",
+    "docker:start:db": "docker compose -f docker-compose.local.yml up -d db",
     "build:watch": "tsc --watch",
     "build": "tsc --build",
     "format": "prettier \"src/**/*.ts\" --check",
@@ -17,7 +23,7 @@
   },
   "dependencies": {
     "axios": "^1.8.4",
-    "dbsder-api-types": "2.1.0",
+    "dbsder-api-types": "2.1.2",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "helmet": "^8.1.0",
