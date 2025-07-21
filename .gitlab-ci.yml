@@ -38,6 +38,7 @@ build_and_push_api:
   script:
     - echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
 
+    # To avoid rebuild existing image when addind tag to a commit
     - |
       if docker pull "$api_docker_image"; then
         echo "Docker image $api_docker_image already exist, skiping build and push."
