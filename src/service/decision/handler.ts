@@ -64,9 +64,14 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
 
   const originalTextZoning = await computeZoning(decision)
 
-  const decisionWithRules = hasSourceNameTj(decision)
-    ? await computeRulesDecisionTj(decision)
-    : decision
+  const decisionWithZoning: UnIdentifiedDecisionSupported = {
+    ...decision,
+    originalTextZoning
+  }
+
+  const decisionWithRules = hasSourceNameTj(decisionWithZoning)
+    ? await computeRulesDecisionTj(decisionWithZoning)
+    : decisionWithZoning
 
   const decisionNormalized: UnIdentifiedDecisionSupported = {
     ...decisionWithRules,
@@ -74,7 +79,6 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
     lastImportDate,
     publishDate,
     unpublishDate,
-    originalTextZoning,
     // warn: next line could be not true and should manage by normalization during status computation
     publishStatus:
       decisionWithRules.labelStatus !== LabelStatus.TOBETREATED
