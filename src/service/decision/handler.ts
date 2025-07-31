@@ -128,6 +128,3 @@ export async function fetchDecisions(
 ): Promise<PaginatedDecisions> {
   return findDecisionsWithPagination(mapDecisionListFiltersIntoDbFilters(filters), page)
 }
-
-// Warn: isolated because Label responsibility
-export { updateDecisionForLabel } from './rulesLabel'

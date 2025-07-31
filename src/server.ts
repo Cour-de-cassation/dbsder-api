@@ -4,7 +4,6 @@ import helmet from 'helmet'
 import { logger, loggerHttp } from './library/logger'
 import codeNacRouter from './controller/codeNac'
 import decisionRouter from './controller/decision'
-import labelRouter from './controller/label'
 import { errorHandler } from './controller/error'
 import { apiKeyHandler } from './controller/authentication'
 import { PORT } from './library/env'
@@ -28,7 +27,6 @@ app
 
   .use(codeNacRouter)
   .use(decisionRouter)
-  .use(labelRouter)
   .use(errorHandler)
 
 app.listen(PORT, () => {
