@@ -4,19 +4,20 @@ import { findCodeNac } from '../../library/sderDB'
 import { LabelStatus, UnIdentifiedDecisionTj } from 'dbsder-api-types'
 
 export async function computeRulesDecisionTj(
-  decision: UnIdentifiedDecisionTj
+  decision: UnIdentifiedDecisionTj,
+  originalTextZoning: UnIdentifiedDecisionTj["originalTextZoning"]
 ): Promise<UnIdentifiedDecisionTj> {
   if (!decision.public)
     return {
       ...decision,
       labelStatus: LabelStatus.IGNORED_DECISION_NON_PUBLIQUE
     }
-  if (decision.originalTextZoning?.is_public === 0)
+  if (originalTextZoning?.is_public === 0)
     return {
       ...decision,
       labelStatus: LabelStatus.IGNORED_DECISION_NON_PUBLIQUE_PAR_ZONAGE
     }
-  if (decision.debatPublic && decision.originalTextZoning?.is_public === 2)
+  if (decision.debatPublic && originalTextZoning?.is_public === 2)
     return {
       ...decision,
       labelStatus: LabelStatus.IGNORED_DECISION_PARTIELLEMENT_PUBLIQUE_PAR_ZONAGE
