@@ -5,7 +5,7 @@ import { LabelStatus, UnIdentifiedDecisionTj } from 'dbsder-api-types'
 
 export async function computeRulesDecisionTj(
   decision: UnIdentifiedDecisionTj,
-  originalTextZoning: UnIdentifiedDecisionTj["originalTextZoning"]
+  originalTextZoning: UnIdentifiedDecisionTj['originalTextZoning']
 ): Promise<UnIdentifiedDecisionTj> {
   if (!decision.public)
     return {

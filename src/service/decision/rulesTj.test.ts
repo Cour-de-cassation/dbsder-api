@@ -74,14 +74,15 @@ describe('service/decision/rulesTj', () => {
   describe('computeRulesDecisionTj', () => {
     it('should be ignored if decision is not public', async () => {
       const decision: DecisionTj = { ...fakeDecision, public: false }
-      const result = await rulesTj.computeRulesDecisionTj(decision)
+      const result = await rulesTj.computeRulesDecisionTj(decision, undefined)
 
       expect(result.labelStatus).not.toEqual(LabelStatus.TOBETREATED)
     })
 
     it('should be ignored if zoning fallback into not public', async () => {
-      const decision: DecisionTj = { ...fakeDecision, originalTextZoning: { is_public: 0 } }
-      const result = await rulesTj.computeRulesDecisionTj(decision)
+      const decision: DecisionTj = fakeDecision
+      const originalTextZoning = { is_public: 0 }
+      const result = await rulesTj.computeRulesDecisionTj(decision, originalTextZoning)
 
       expect(result.labelStatus).not.toEqual(LabelStatus.TOBETREATED)
     })
@@ -89,10 +90,10 @@ describe('service/decision/rulesTj', () => {
     it('should be ignored if zoning fallback into partially not public', async () => {
       const decision: DecisionTj = {
         ...fakeDecision,
-        debatPublic: true,
-        originalTextZoning: { is_public: 2 }
+        debatPublic: true
       }
-      const result = await rulesTj.computeRulesDecisionTj(decision)
+      const originalTextZoning = { is_public: 2 }
+      const result = await rulesTj.computeRulesDecisionTj(decision, originalTextZoning)
 
       expect(result.labelStatus).not.toEqual(LabelStatus.TOBETREATED)
     })
@@ -101,7 +102,7 @@ describe('service/decision/rulesTj', () => {
       findCodeNac.mockResolvedValue(null)
 
       const decision = fakeDecision
-      const result = await rulesTj.computeRulesDecisionTj(decision)
+      const result = await rulesTj.computeRulesDecisionTj(decision, undefined)
 
       expect(result.labelStatus).not.toEqual(LabelStatus.TOBETREATED)
     })
@@ -109,7 +110,7 @@ describe('service/decision/rulesTj', () => {
     it('should be ignored if not public by code Nac', async () => {
       findCodeNac.mockResolvedValue({ ...codeNac, indicateurDecisionRenduePubliquement: false })
       const decision = fakeDecision
-      const result = await rulesTj.computeRulesDecisionTj(decision)
+      const result = await rulesTj.computeRulesDecisionTj(decision, undefined)
 
       expect(result.labelStatus).not.toEqual(LabelStatus.TOBETREATED)
     })
@@ -117,7 +118,7 @@ describe('service/decision/rulesTj', () => {
     it('should be ignored if codeNac occultations are undefined', async () => {
       findCodeNac.mockResolvedValue({ ...codeNac, blocOccultationTJ: undefined })
       const decision = fakeDecision
-      const result = await rulesTj.computeRulesDecisionTj(decision)
+      const result = await rulesTj.computeRulesDecisionTj(decision, undefined)
 
       expect(result.labelStatus).not.toEqual(LabelStatus.TOBETREATED)
     })
@@ -125,7 +126,7 @@ describe('service/decision/rulesTj', () => {
     it('should be ignored if partially not public by nac', async () => {
       findCodeNac.mockResolvedValue({ ...codeNac, indicateurDebatsPublics: false })
       const decision = fakeDecision
-      const result = await rulesTj.computeRulesDecisionTj(decision)
+      const result = await rulesTj.computeRulesDecisionTj(decision, undefined)
 
       expect(result.labelStatus).not.toEqual(LabelStatus.TOBETREATED)
     })
@@ -133,7 +134,7 @@ describe('service/decision/rulesTj', () => {
     it('should be treated otherwise', async () => {
       findCodeNac.mockResolvedValue(codeNac)
       const decision = fakeDecision
-      const result = await rulesTj.computeRulesDecisionTj(decision)
+      const result = await rulesTj.computeRulesDecisionTj(decision, undefined)
 
       expect(result.labelStatus).toEqual(LabelStatus.TOBETREATED)
     })
@@ -150,7 +151,7 @@ describe('service/decision/rulesTj', () => {
         }
       })
       const decision = { ...fakeDecision, recommandationOccultation: SuiviOccultation.COMPLEMENT }
-      const result = await rulesTj.computeRulesDecisionTj(decision)
+      const result = await rulesTj.computeRulesDecisionTj(decision, undefined)
 
       expect(result.occultation.categoriesToOmit).toEqual(categoriesToOmit)
     })
@@ -159,7 +160,7 @@ describe('service/decision/rulesTj', () => {
       const blocOccultation = 3
       findCodeNac.mockResolvedValue({ ...codeNac, blocOccultationTJ: blocOccultation })
       const decision = fakeDecision
-      const result = await rulesTj.computeRulesDecisionTj(decision)
+      const result = await rulesTj.computeRulesDecisionTj(decision, undefined)
 
       expect(result.blocOccultation).toEqual(blocOccultation)
     })
