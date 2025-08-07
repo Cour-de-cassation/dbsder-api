@@ -2,14 +2,11 @@
 
 L'API DBSDER est une brique applicative du projet [Judilibre](https://www.courdecassation.fr/toutes-les-actualites/2021/10/01/judilibre-les-decisions-judiciaires-en-open-data) qui permet aux applications composant Judilibre d'interagir avec la base de données DBSDER. Cette base de données contient notamment les décisions de justice collectées auprès des différentes juridictions.
 
-## Pré-requis
+## Dépendances
+
+L'application nécessite node ainsi qu'une base de donnée mongo, n'hésitez pas à jeter un coup d'oeil à [juridependencies](https://github.com/Cour-de-cassation/juridependencies).
 
 La version de Node utilisée par ce projet est indiquée dans le fichier [.nvmrc](.nvmrc).
-Vous pouvez installer [nvm](https://github.com/nvm-sh/nvm) afin d'avoir la version utilisée pour cette application et lancer la commande :
-
-```bash
-nvm install
-```
 
 ## Installation
 
@@ -20,19 +17,9 @@ npm install
 ## Utilisation de l'application
 
 Configurer les variables d'environnement :
-
-- Dupliquer le fichier `docker.env.example` et le rennomer `docker.env`, adapter les variables d'environnement si besoin
 - Dupliquer le fichier `.env.example` et le renommer `.env`, adapter les variables d'environnement si besoin
 
 ### Avec Docker
-
-1. Construire l'image docker:
-
-```bash
-npm run docker:build
-```
-
-2. Lancer la base de donnée et l'application
 
 ```bash
 npm run docker:start
@@ -44,12 +31,6 @@ Vous pouvez également lancer l'application sans utiliser docker avec la command
 
 ```bash
 npm run start:watch
-```
-
-Dans ce cas là, l'application a besoin d'une base de données mongo, vous pouvez en lancer une via la commande :
-
-```bash
-npm run docker:start:db
 ```
 
 ### Tests
