@@ -1,0 +1,14 @@
+name: opendata
+
+services:
+  dbsder-api:
+    build:
+      target: api-local
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - .:/home/node
