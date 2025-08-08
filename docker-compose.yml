@@ -1,9 +1,8 @@
-name: dbsder-api
+name: opendata
 
 services:
   dbsder-api:
     build:
-      context: ./
       target: api-local
     env_file:
       - .env
