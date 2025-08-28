@@ -59,7 +59,6 @@ FROM shared AS api
 
 USER node
 COPY --from=prod --chown=node:node /home/node/dist ./dist
-COPY --from=prod --chown=node:node /home/node/seeds ./seeds
 
 CMD ["node", "dist/server"]
 
@@ -72,6 +71,5 @@ USER node
 WORKDIR /home/node
 
 COPY --chown=node:node . .
-RUN npm i
 
 CMD ["npm", "run", "start:watch"]

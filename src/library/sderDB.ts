@@ -3,7 +3,7 @@ import { UnexpectedError } from './error'
 import { CodeNac, Decision, UnIdentifiedDecision } from 'dbsder-api-types'
 import { MONGO_DB_URL } from './env'
 
-const client = new MongoClient(MONGO_DB_URL)
+const client = new MongoClient(MONGO_DB_URL, { directConnection: true })
 
 async function dbConnect() {
   const db = client.db()

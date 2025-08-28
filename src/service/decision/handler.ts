@@ -65,7 +65,7 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
   const originalTextZoning = await computeZoning(decision)
 
   const decisionWithRules = hasSourceNameTj(decision)
-    ? await computeRulesDecisionTj(decision)
+    ? await computeRulesDecisionTj(decision, originalTextZoning)
     : decision
 
   const decisionNormalized: UnIdentifiedDecisionSupported = {
