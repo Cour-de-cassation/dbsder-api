@@ -17,7 +17,7 @@ const decisions = [
 
 const findDecisions = jest.spyOn(sderDb, 'findDecisions')
 
-describe('service/decision/rulesLabel', () => {
+describe('service/decision', () => {
   beforeEach(() => {
     findDecisions.mockReset()
   })
