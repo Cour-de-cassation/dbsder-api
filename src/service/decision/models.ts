@@ -17,7 +17,6 @@ import {
   ParseError
 } from 'dbsder-api-types'
 import { ObjectId } from 'mongodb'
-import { ZoningParameters } from '../../library/zoning'
 import { NotSupported, toNotSupported, UnexpectedError } from '../../library/error'
 
 export type DecisionSupported = Exclude<Decision, DecisionDila> & {
@@ -164,34 +163,6 @@ export function parseUpdatableDecisionFields(
   } catch (err) {
     if (err instanceof ParseError) throw toNotSupported('decision', x, err)
     else throw err
-  }
-}
-
-function mapDecisionIntoZoningSource(
-  decision: UnIdentifiedDecisionSupported
-): ZoningParameters['source'] {
-  switch (decision.sourceName) {
-    case 'jurica':
-      return 'ca'
-    case 'juritj':
-      return 'tj'
-    case 'jurinet':
-      return 'cc'
-    case 'juritcom':
-      return 'tcom'
-    case 'portalis-cph':
-      // Warn: should be 'cph' but but does not yet exist in zoning API
-      return 'ca'
-  }
-}
-
-export function mapDecisionIntoZoningParameters(
-  decision: UnIdentifiedDecisionSupported
-): ZoningParameters {
-  return {
-    arret_id: decision.sourceId,
-    source: mapDecisionIntoZoningSource(decision),
-    text: decision.originalText
   }
 }
 

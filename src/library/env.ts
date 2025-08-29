@@ -15,7 +15,6 @@ if (process.env.OPENSDER_API_KEY == null) throw new MissingValue('process.env.OP
 if (process.env.OPS_API_KEY == null) throw new MissingValue('process.env.OPS_API_KEY')
 if (process.env.PUBLICATION_API_KEY == null)
   throw new MissingValue('process.env.PUBLICATION_API_KEY')
-if (process.env.ZONING_API_URL == null) throw new MissingValue('process.env.ZONING_API_URL')
 
 export const {
   ATTACHMENTS_API_KEY,
@@ -27,6 +26,5 @@ export const {
   OPENSDER_API_KEY,
   OPS_API_KEY,
   PORT = 3000,
-  PUBLICATION_API_KEY,
-  ZONING_API_URL
+  PUBLICATION_API_KEY
 } = process.env

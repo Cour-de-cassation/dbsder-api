@@ -10,5 +10,4 @@ process.env = {
   OPS_API_KEY: '',
   PORT: '',
   PUBLICATION_API_KEY: '',
-  ZONING_API_URL: ''
 }

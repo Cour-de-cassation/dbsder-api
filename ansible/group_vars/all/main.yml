@@ -6,4 +6,3 @@ api_service: 'api-service'
 dbsder_private_name: 'apidbsder.judilibre-prive.local'
 
 no_color: 'true'
-zoning_api_url: http://nlp-jurizonage-api-service.nlp.svc.cluster.local:8090
