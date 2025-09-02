@@ -32,7 +32,6 @@ export async function computeRulesDecisionTj(
       labelStatus: LabelStatus.IGNORED_CODE_NAC_DECISION_NON_PUBLIQUE
     }
   if (!codeNac.categoriesToOmitTJ || !codeNac.blocOccultationTJ)
-    // warn: !categoriesToOmitTJ should never happened due type.
     return {
       ...decision,
       labelStatus: LabelStatus.IGNORED_BLOC_OCCULATION_NON_DEFINI
