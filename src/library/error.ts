@@ -1,4 +1,4 @@
-import { ParseError } from 'dbsder-api-types'
+import { ParseError, stringifyError } from 'dbsder-api-types'
 
 export class NotSupported extends Error {
   type = 'notSupported' as const
@@ -22,7 +22,7 @@ export function toNotSupported(variableName: string, variableValue: unknown, err
       variableName,
       variableValue,
       `parse error on ${variableName}`,
-      error.errors
+      stringifyError(error)
     )
   }
   return Object.assign(new NotSupported(variableName, variableValue, error.message), error)
