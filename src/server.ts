@@ -31,7 +31,8 @@ app
 
 app.listen(PORT, () => {
   logger.info({
-    operationName: 'startServer',
-    msg: `DBSDER-API running on port ${PORT}`
+    path: "src/server.ts",
+    operations: ['other', 'startServer'],
+    message: `DBSDER-API running on port ${PORT}`
   })
 })
