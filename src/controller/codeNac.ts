@@ -8,8 +8,8 @@ app.get('/codenacs/:codenac', async (req, res, next) => {
     const codeNac = req.params.codenac
     const codeNacDetails = await fetchCodeNacByCodeNac(codeNac)
     res.send(codeNacDetails)
+    next()
   } catch (err: unknown) {
-    req.log.error(err)
     next(err)
   }
 })

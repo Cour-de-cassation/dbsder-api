@@ -4,15 +4,16 @@ export class NotSupported extends Error {
   type = 'notSupported' as const
   variableName: string
   variableValue: unknown
-  explain: unknown
-  constructor(variableName: string, variableValue: unknown, message?: string, explain?: unknown) {
+  message: string
+
+  constructor(variableName: string, variableValue: unknown, message?: string) {
     const _message = message
       ? message
       : `value: ${variableValue} is not supported to ${variableName}.`
-    super(_message)
+    super()
     this.variableName = variableName
     this.variableValue = variableValue
-    this.explain = explain
+    this.message = _message
   }
 }
 
@@ -21,11 +22,10 @@ export function toNotSupported(variableName: string, variableValue: unknown, err
     return new NotSupported(
       variableName,
       variableValue,
-      `parse error on ${variableName}`,
-      stringifyError(error)
+      `'${variableName}' parse error: ${stringifyError(error)}`
     )
   }
-  return Object.assign(new NotSupported(variableName, variableValue, error.message), error)
+  return Object.assign(error, new NotSupported(variableName, variableValue, error.message))
 }
 
 export class MissingValue extends Error {
