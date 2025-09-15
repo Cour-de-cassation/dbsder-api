@@ -1,6 +1,26 @@
-import pino, { LoggerOptions } from 'pino'
-import pinoHttp from 'pino-http'
+import pino, { Logger, LoggerOptions } from 'pino'
 import { NODE_ENV } from './env'
+import { Handler } from 'express'
+import { randomUUID } from 'crypto'
+
+type DecisionLog = {
+  decision: {
+    _id?: string
+    sourceId: string
+    sourceName: string
+    publishStatus?: string
+    labelStatus?: string
+  }
+  path: string
+  operations: readonly ['normalization', string]
+  message?: string
+}
+
+type TechLog = {
+  path: string
+  operations: readonly ['normalization' | 'other', string]
+  message?: string
+}
 
 const pinoPrettyConf = {
   target: 'pino-pretty',
@@ -12,13 +32,17 @@ const pinoPrettyConf = {
 }
 
 const loggerOptions: LoggerOptions = {
-  base: { appName: 'dbsder-api' },
   formatters: {
     level: (label) => {
       return {
         logLevel: label.toUpperCase()
       }
-    }
+    },
+    log: (content) => ({
+      ...content,
+      type: Object.keys(content).includes('decison') ? 'decision' : 'tech',
+      appName: 'dbsder-api'
+    })
   },
   timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
   redact: {
@@ -29,6 +53,43 @@ const loggerOptions: LoggerOptions = {
   transport: NODE_ENV === 'development' ? pinoPrettyConf : undefined
 }
 
-export const logger = pino(loggerOptions)
+export type CustomLogger = Omit<Logger, 'error' | 'warn' | 'info'> & {
+  error: (a: TechLog & { error: unknown }) => void
+  warn: (a: TechLog) => void
+  info: (a: TechLog | DecisionLog) => void
+}
 
-export const loggerHttp = pinoHttp(loggerOptions) // attach logger instance at req (req.log will log message and req info)
+export const logger: CustomLogger = pino(loggerOptions)
+
+declare module 'http' {
+  interface IncomingMessage {
+    log: CustomLogger
+    allLogs: CustomLogger[]
+  }
+
+  interface OutgoingMessage {
+    log: CustomLogger
+    allLogs: CustomLogger[]
+  }
+}
+
+export const loggerHttp: Handler = (req, res, next) => {
+  const requestId = randomUUID()
+
+  const httpLogger = pino({
+    ...loggerOptions,
+    formatters: {
+      ...loggerOptions.formatters,
+      log: (content) => ({
+        ...content,
+        type: Object.keys(content).includes('decison') ? 'decision' : 'tech',
+        appName: 'dbsder-api',
+        requestId
+      })
+    }
+  })
+
+  req.log = httpLogger
+  res.log = httpLogger
+  next()
+}

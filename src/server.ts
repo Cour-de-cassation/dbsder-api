@@ -1,4 +1,4 @@
-import express, { Express, json, NextFunction, Request, Response } from 'express'
+import express, { Express, json } from 'express'
 import helmet from 'helmet'
 
 import { logger, loggerHttp } from './library/logger'
@@ -16,11 +16,10 @@ app
   .use(apiKeyHandler)
   .use(json({ limit: '10mb' }))
 
-  .use((req: Request, _: Response, next: NextFunction) => {
+  .use((req, _, next) => {
     req.log.info({
-      operationName: 'request',
-      url: `${req.method} ${req.originalUrl}`,
-      service: req.context?.service
+      path: 'src/server.ts',
+      operations: ['other', `${req.method} ${req.path}`]
     })
     next()
   })
@@ -29,9 +28,18 @@ app
   .use(decisionRouter)
   .use(errorHandler)
 
+  .use((req, res) => {
+    res.log.info({
+      path: 'src/server.ts',
+      operations: ['other', `${req.method} ${req.path}`],
+      message: `Done with statusCode: ${res.statusCode}`
+    })
+  })
+
 app.listen(PORT, () => {
   logger.info({
-    operationName: 'startServer',
-    msg: `DBSDER-API running on port ${PORT}`
+    path: 'src/server.ts',
+    operations: ['other', 'startServer'],
+    message: `DBSDER-API running on port ${PORT}`
   })
 })

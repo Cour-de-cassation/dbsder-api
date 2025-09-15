@@ -25,6 +25,7 @@ app.get('/decisions/:id', async (req, res, next) => {
     const decisionId = parseId(req.params.id)
     const decision = await fetchDecisionById(decisionId)
     res.send(decision)
+    next()
   } catch (err: unknown) {
     next(err)
   }
@@ -60,6 +61,7 @@ app.get('/decisions', async (req, res, next) => {
       : undefined
 
     res.send({ ...result, previousPage, nextPage })
+    next()
   } catch (err: unknown) {
     next(err)
   }
@@ -87,6 +89,7 @@ app.patch('/decisions/:id', async (req, res, next) => {
       _id,
       message: 'Decision mise à jour'
     })
+    next()
   } catch (err: unknown) {
     next(err)
   }
@@ -108,6 +111,7 @@ app.put('/decisions', async (req, res, next) => {
       _id,
       message: 'Decision créée ou mise à jour'
     })
+    next()
   } catch (err: unknown) {
     next(err)
   }

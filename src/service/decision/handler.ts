@@ -48,9 +48,9 @@ async function computeZoning(
     const normalizedError =
       err instanceof Error ? toUnexpectedError(err) : new UnexpectedError('Zoning has been failed')
     logger.warn({
-      operationName: 'computeZoning',
-      msg: normalizedError.message,
-      err
+      path: 'src/service/decision.ts',
+      operations: ['normalization', 'computeZoning'],
+      message: `${normalizedError}`
     })
     throw normalizedError
   }
@@ -88,11 +88,14 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
   )
 
   if (res.labelStatus !== LabelStatus.TOBETREATED)
-    logger.warn({
-      operationName: 'saveDecision',
-      msg: 'Saved decision will not be treated',
+    logger.info({
+      path: 'src/service/decision.ts',
+      operations: ['normalization', 'saveDecision'],
+      message: 'Saved decision will not be treated',
       decision: {
-        _id: res._id,
+        _id: res._id?.toString(),
+        sourceId: `${res.sourceId}`,
+        sourceName: res.sourceName,
         labelStatus: res.labelStatus,
         publishStatus: res.publishStatus
       }
