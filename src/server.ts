@@ -7,6 +7,7 @@ import decisionRouter from './controller/decision'
 import { errorHandler } from './controller/error'
 import { apiKeyHandler } from './controller/authentication'
 import { PORT } from './library/env'
+import { NotFound } from './library/error'
 
 const app: Express = express()
 
@@ -26,6 +27,7 @@ app
 
   .use(codeNacRouter)
   .use(decisionRouter)
+  .use((req, _, next) => next(new NotFound('path', `${req.path} doesn't exists`)))
   .use(errorHandler)
 
   .use((req, res) => {
