@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "axios": "1.12.2",
-    "dbsder-api-types": "2.1.10",
+    "dbsder-api-types": "2.1.11",
     "dotenv": "17.2.2",
     "express": "5.1.0",
     "helmet": "8.1.0",
