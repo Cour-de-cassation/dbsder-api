@@ -8,6 +8,7 @@ import { errorHandler } from './controller/error'
 import { apiKeyHandler } from './controller/authentication'
 import { PORT } from './library/env'
 import { NotFound } from './library/error'
+import { requestLog } from './controller/logger'
 
 const app: Express = express()
 
@@ -17,26 +18,12 @@ app
   .use(apiKeyHandler)
   .use(json({ limit: '10mb' }))
 
-  .use((req, _, next) => {
-    req.log.info({
-      path: 'src/server.ts',
-      operations: ['other', `${req.method} ${req.path}`]
-    })
-    next()
-  })
-
+  .use(requestLog)
   .use(codeNacRouter)
   .use(decisionRouter)
-  .use((req, _, next) => next(new NotFound('path', `${req.path} doesn't exists`)))
-  .use(errorHandler)
 
-  .use((req, res) => {
-    res.log.info({
-      path: 'src/server.ts',
-      operations: ['other', `${req.method} ${req.path}`],
-      message: `Done with statusCode: ${res.statusCode}`
-    })
-  })
+  .use((req, _, next) => next(new NotFound('path', `${req.method} ${req.path} doesn't exists`)))
+  .use(errorHandler)
 
 app.listen(PORT, () => {
   logger.info({

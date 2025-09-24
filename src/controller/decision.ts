@@ -17,19 +17,24 @@ import { ForbiddenError, MissingValue, NotSupported } from '../library/error'
 import { Service } from '../service/authentication'
 import { Decision } from 'dbsder-api-types'
 import queryString from 'qs'
+import { responseLog } from './logger'
 
 const app = Router()
 
-app.get('/decisions/:id', async (req, res, next) => {
-  try {
-    const decisionId = parseId(req.params.id)
-    const decision = await fetchDecisionById(decisionId)
-    res.send(decision)
-    next()
-  } catch (err: unknown) {
-    next(err)
-  }
-})
+app.get(
+  '/decisions/:id',
+  async (req, res, next) => {
+    try {
+      const decisionId = parseId(req.params.id)
+      const decision = await fetchDecisionById(decisionId)
+      res.send(decision)
+      next()
+    } catch (err: unknown) {
+      next(err)
+    }
+  },
+  responseLog
+)
 
 function parseGetQuery(query: unknown) {
   if (typeof query !== 'object' || !query) throw new NotSupported('querystring', query)
@@ -47,25 +52,29 @@ function parseGetQuery(query: unknown) {
   return { filters }
 }
 
-app.get('/decisions', async (req, res, next) => {
-  try {
-    const { filters, ...pagination } = parseGetQuery(req.query)
+app.get(
+  '/decisions',
+  async (req, res, next) => {
+    try {
+      const { filters, ...pagination } = parseGetQuery(req.query)
 
-    const result = await fetchDecisions(filters, pagination)
+      const result = await fetchDecisions(filters, pagination)
 
-    const previousPage = result.previousCursor
-      ? queryString.stringify({ ...filters, searchBefore: result.previousCursor.toString() })
-      : undefined
-    const nextPage = result.nextCursor
-      ? queryString.stringify({ ...filters, searchAfter: result.nextCursor.toString() })
-      : undefined
+      const previousPage = result.previousCursor
+        ? queryString.stringify({ ...filters, searchBefore: result.previousCursor.toString() })
+        : undefined
+      const nextPage = result.nextCursor
+        ? queryString.stringify({ ...filters, searchAfter: result.nextCursor.toString() })
+        : undefined
 
-    res.send({ ...result, previousPage, nextPage })
-    next()
-  } catch (err: unknown) {
-    next(err)
-  }
-})
+      res.send({ ...result, previousPage, nextPage })
+      next()
+    } catch (err: unknown) {
+      next(err)
+    }
+  },
+  responseLog
+)
 
 function parsePatchBody(
   sourceName: Decision['sourceName'],
@@ -79,21 +88,25 @@ function parsePatchBody(
   return updatableFields
 }
 
-app.patch('/decisions/:id', async (req, res, next) => {
-  try {
-    const id = parseId(req.params.id)
-    const { sourceName } = await fetchDecisionById(id)
-    const updateFields = parsePatchBody(sourceName, req.body)
-    const { _id } = await updateDecision(id, sourceName, updateFields)
-    res.send({
-      _id,
-      message: 'Decision mise à jour'
-    })
-    next()
-  } catch (err: unknown) {
-    next(err)
-  }
-})
+app.patch(
+  '/decisions/:id',
+  async (req, res, next) => {
+    try {
+      const id = parseId(req.params.id)
+      const { sourceName } = await fetchDecisionById(id)
+      const updateFields = parsePatchBody(sourceName, req.body)
+      const { _id } = await updateDecision(id, sourceName, updateFields)
+      res.send({
+        _id,
+        message: 'Decision mise à jour'
+      })
+      next()
+    } catch (err: unknown) {
+      next(err)
+    }
+  },
+  responseLog
+)
 
 function parsePutBody(body: Request['body']): UnIdentifiedDecisionSupported {
   if (!body || !('decision' in body))
@@ -101,20 +114,24 @@ function parsePutBody(body: Request['body']): UnIdentifiedDecisionSupported {
   return parseUnIdentifiedDecisionSupported(body.decision)
 }
 
-app.put('/decisions', async (req, res, next) => {
-  try {
-    if (req.context?.service !== Service.NORMALIZATION) throw new ForbiddenError()
+app.put(
+  '/decisions',
+  async (req, res, next) => {
+    try {
+      if (req.context?.service !== Service.NORMALIZATION) throw new ForbiddenError()
 
-    const decision = parsePutBody(req.body)
-    const { _id } = await saveDecision(decision)
-    res.send({
-      _id,
-      message: 'Decision créée ou mise à jour'
-    })
-    next()
-  } catch (err: unknown) {
-    next(err)
-  }
-})
+      const decision = parsePutBody(req.body)
+      const { _id } = await saveDecision(decision)
+      res.send({
+        _id,
+        message: 'Decision créée ou mise à jour'
+      })
+      next()
+    } catch (err: unknown) {
+      next(err)
+    }
+  },
+  responseLog
+)
 
 export default app
