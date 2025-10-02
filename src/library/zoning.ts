@@ -25,11 +25,11 @@ export async function fetchZoning(parameters: ZoningParameters): Promise<ZoningR
       err instanceof AxiosError &&
       err.response &&
       err.response.status &&
-      err.response.status < 400 &&
-      err.response.status >= 500
+      err.response.status >= 400 &&
+      err.response.status < 500
     )
-      throw new UnexpectedError('Zoning service is currently unavailable')
+      throw toNotSupported('zoning parameters', parameters, err)
 
-    throw toNotSupported('zoning parameters', parameters, err)
+    throw new UnexpectedError('Zoning service is currently unavailable')
   }
 }
