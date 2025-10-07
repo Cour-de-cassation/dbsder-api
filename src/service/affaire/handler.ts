@@ -22,7 +22,6 @@ export async function updateAffaire(affaire: Partial<Affaire>, _id: string): Pro
   if (!isPartialValidAffaire(affaire))
     throw new UnexpectedError('partial affaire to update is not valid, cannot update it')
   const updatedAffaire = await updateAffaireById(parseId(_id), affaire)
-  console.log('updatedAffaire', updatedAffaire)
   if (!updatedAffaire)
     throw new NotFound(`affaire with id ${affaire._id} not found, cannot update it`)
   return updatedAffaire

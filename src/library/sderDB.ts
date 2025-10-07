@@ -89,11 +89,11 @@ export async function findDecisionsWithPagination(
 
   const [decisionBefore] = firstDecision
     ? (await findDecisionsFunction(filters, { _id: { $gt: firstDecision._id } }, { _id: 1 }, 1))
-      .decisions
+        .decisions
     : []
   const [decisionAfter] = lastDecision
     ? (await findDecisionsFunction(filters, { _id: { $lt: lastDecision._id } }, { _id: -1 }, 1))
-      .decisions
+        .decisions
     : []
 
   return {
@@ -133,4 +133,3 @@ export async function findAffaire(filters: Filter<Affaire>): Promise<Affaire | n
   const db = await dbConnect()
   return db.collection<Affaire>('affaires').findOne(filters)
 }
-
