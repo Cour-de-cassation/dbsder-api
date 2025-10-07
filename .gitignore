@@ -40,3 +40,7 @@ lerna-debug.log*
 .env
 docker.env
 .npm
+
+#ignore http folder for test api with restclient in vscode extension
+./src/http
+/src/http/*
