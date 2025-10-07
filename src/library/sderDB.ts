@@ -1,7 +1,7 @@
-import { Filter, MongoClient, ObjectId, Sort } from 'mongodb'
+import { Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
 import { UnexpectedError } from './error'
-import { CodeNac, Decision, UnIdentifiedDecision } from 'dbsder-api-types'
 import { MONGO_DB_URL } from './env'
+import { CodeNac, Decision, UnIdentifiedDecision, Affaire } from 'dbsder-api-types'
 
 const client = new MongoClient(MONGO_DB_URL, { directConnection: true })
 
@@ -89,11 +89,11 @@ export async function findDecisionsWithPagination(
 
   const [decisionBefore] = firstDecision
     ? (await findDecisionsFunction(filters, { _id: { $gt: firstDecision._id } }, { _id: 1 }, 1))
-        .decisions
+      .decisions
     : []
   const [decisionAfter] = lastDecision
     ? (await findDecisionsFunction(filters, { _id: { $lt: lastDecision._id } }, { _id: -1 }, 1))
-        .decisions
+      .decisions
     : []
 
   return {
@@ -103,3 +103,34 @@ export async function findDecisionsWithPagination(
     nextCursor: decisionAfter?._id
   }
 }
+
+//create an affaire
+export async function createAffaire(affaire: WithoutId<Affaire>): Promise<Affaire> {
+  const db = await dbConnect()
+  const affaireWithId = await db.collection<WithoutId<Affaire>>('affaires').insertOne(affaire)
+  if (!affaireWithId.acknowledged || !affaireWithId.insertedId) {
+    throw new UnexpectedError('Insert behave like there were no document and cannot create')
+  }
+  return { ...affaire, _id: affaireWithId.insertedId }
+}
+
+// update affaire by _id
+export async function updateAffaireById(
+  _id: ObjectId,
+  updateFields: Partial<Affaire>
+): Promise<Affaire> {
+  const db = await dbConnect()
+  const affaireWithId = await db
+    .collection<Affaire>('affaires')
+    .findOneAndUpdate(_id, { $set: updateFields }, { returnDocument: 'after' })
+  if (!affaireWithId)
+    throw new UnexpectedError('The update behave like there were no document and cannot update')
+  return affaireWithId
+}
+
+// find affaire by filters decisionId or numeroPourvoi
+export async function findAffaire(filters: Filter<Affaire>): Promise<Affaire | null> {
+  const db = await dbConnect()
+  return db.collection<Affaire>('affaires').findOne(filters)
+}
+
