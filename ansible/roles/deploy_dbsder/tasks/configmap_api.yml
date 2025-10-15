@@ -14,4 +14,3 @@
           app: '{{ dbsder_application }}'
       data:
         NO_COLOR: '{{ no_color }}'
-        ZONING_API_URL: '{{ zoning_api_url}}'

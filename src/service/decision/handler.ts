@@ -1,20 +1,11 @@
-import {
-  Decision,
-  DecisionDila,
-  hasSourceNameTj,
-  LabelStatus,
-  PublishStatus
-} from 'dbsder-api-types'
-import { fetchZoning } from '../../library/zoning'
+import { Decision, DecisionDila, LabelStatus } from 'dbsder-api-types'
 import {
   DecisionListFilters,
   mapDecisionIntoUniqueFilters,
-  mapDecisionIntoZoningParameters,
   mapDecisionListFiltersIntoDbFilters,
   UnIdentifiedDecisionSupported,
   UpdatableDecisionFields
 } from './models'
-import { computeRulesDecisionTj } from './rulesTj'
 import {
   findDecision,
   findDecisionsWithPagination,
@@ -24,7 +15,7 @@ import {
   Page
 } from '../../library/sderDB'
 import { logger } from '../../library/logger'
-import { NotFound, toUnexpectedError, UnexpectedError } from '../../library/error'
+import { NotFound } from '../../library/error'
 
 function computeDates(previousDecision: Exclude<Decision, DecisionDila> | null) {
   const now = new Date()
@@ -38,48 +29,18 @@ function computeDates(previousDecision: Exclude<Decision, DecisionDila> | null) 
   }
 }
 
-async function computeZoning(
-  decision: UnIdentifiedDecisionSupported
-): Promise<UnIdentifiedDecisionSupported['originalTextZoning']> {
-  try {
-    const zoning = await fetchZoning(mapDecisionIntoZoningParameters(decision))
-    return zoning
-  } catch (err) {
-    const normalizedError =
-      err instanceof Error ? toUnexpectedError(err) : new UnexpectedError('Zoning has been failed')
-    logger.warn({
-      path: 'src/service/decision.ts',
-      operations: ['normalization', 'computeZoning'],
-      message: `${normalizedError}`
-    })
-    throw normalizedError
-  }
-}
-
 export async function saveDecision(decision: UnIdentifiedDecisionSupported): Promise<Decision> {
   const uniqueFilters = mapDecisionIntoUniqueFilters(decision)
   const previousDecision = (await findDecision(uniqueFilters)) as Exclude<Decision, DecisionDila> // decision cannot coming from dila
   const { firstImportDate, unpublishDate, publishDate, lastImportDate } =
     computeDates(previousDecision)
 
-  const originalTextZoning = await computeZoning(decision)
-
-  const decisionWithRules = hasSourceNameTj(decision)
-    ? await computeRulesDecisionTj(decision, originalTextZoning)
-    : decision
-
   const decisionNormalized: UnIdentifiedDecisionSupported = {
-    ...decisionWithRules,
+    ...decision,
     firstImportDate,
     lastImportDate,
     publishDate,
-    unpublishDate,
-    originalTextZoning,
-    // warn: next line could be not true and should manage by normalization during status computation
-    publishStatus:
-      decisionWithRules.labelStatus !== LabelStatus.TOBETREATED
-        ? PublishStatus.BLOCKED
-        : PublishStatus.TOBEPUBLISHED
+    unpublishDate
   }
 
   const res = await findAndReplaceDecision(
