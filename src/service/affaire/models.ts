@@ -8,7 +8,7 @@ export type affaireSearchType = {
 }
 
 export function buildAffaireFilter(filters: affaireSearchType): {
-  mongoFilter: Filter<Affaire>;
+  mongoFilter: Filter<Affaire>
   filters: affaireSearchType
 } {
   try {
@@ -29,7 +29,6 @@ export function buildAffaireFilter(filters: affaireSearchType): {
     }
 
     return { mongoFilter, filters }
-
   } catch (error: unknown) {
     if (error instanceof ParseError) throw toNotSupported('affaire', filters, error)
     else throw error

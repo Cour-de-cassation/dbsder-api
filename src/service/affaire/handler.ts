@@ -12,7 +12,10 @@ export async function saveAffaire(affaire: UnIdentifiedAffaire): Promise<Affaire
 }
 
 //find affaire by filters decisionIf in ["id1","id2"] or numeroPourvoi in ["num1","num2"]
-export async function fetchAffaireByFilters(filters: Filter<Affaire>, searchValues: affaireSearchType): Promise<Affaire> {
+export async function fetchAffaireByFilters(
+  filters: Filter<Affaire>,
+  searchValues: affaireSearchType
+): Promise<Affaire> {
   const affaire = await findAffaire(filters, searchValues)
   if (!affaire) throw new NotFound('affaire with given filters not found')
   return affaire

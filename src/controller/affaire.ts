@@ -26,7 +26,7 @@ app.post(
 )
 
 function parseGetQuery(query: unknown): {
-  mongoFilter: Filter<Affaire>;
+  mongoFilter: Filter<Affaire>
   filters: affaireSearchType
 } {
   if (typeof query !== 'object' || !query) throw new NotSupported('querystring', query)
