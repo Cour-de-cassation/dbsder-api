@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { fetchAffaireByFilters, saveAffaire, updateAffaire } from '../service/affaire/handler'
 import { responseLog } from './logger'
 import { MissingValue, NotSupported, toNotSupported } from '../library/error'
-import { buildAffaireFilter } from '../service/affaire/models'
+import { affaireSearchType, buildAffaireFilter } from '../service/affaire/models'
 import { Affaire, isValidAffaire, ParseError } from 'dbsder-api-types'
 import { Filter } from 'mongodb'
 
@@ -25,20 +25,23 @@ app.post(
   responseLog
 )
 
-function parseGetQuery(query: unknown): Filter<Affaire> {
+function parseGetQuery(query: unknown): {
+  mongoFilter: Filter<Affaire>;
+  filters: affaireSearchType
+} {
   if (typeof query !== 'object' || !query) throw new NotSupported('querystring', query)
-  const filters = buildAffaireFilter(query)
-  return filters
+  const { mongoFilter, filters } = buildAffaireFilter(query)
+  return { mongoFilter, filters }
 }
 
 app.get(
   '/affaires',
   async (req, res, next) => {
     try {
-      const filters = parseGetQuery(req.query)
-      if (!filters)
+      const { filters, mongoFilter } = parseGetQuery(req.query)
+      if (!mongoFilter)
         throw new MissingValue('filters', 'Request needs query with filters to find affaire')
-      const affaire = await fetchAffaireByFilters(filters)
+      const affaire = await fetchAffaireByFilters(mongoFilter, filters)
       res.send(affaire)
       next()
     } catch (err: unknown) {

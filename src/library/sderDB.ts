@@ -1,7 +1,8 @@
 import { Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
 import { UnexpectedError } from './error'
 import { MONGO_DB_URL } from './env'
-import { CodeNac, Decision, UnIdentifiedDecision, Affaire } from 'dbsder-api-types'
+import { CodeNac, Decision, UnIdentifiedDecision, Affaire, UnIdentifiedAffaire, parseId, isValidAffaire } from 'dbsder-api-types'
+import { affaireSearchType } from '../service/affaire/models'
 
 const client = new MongoClient(MONGO_DB_URL, { directConnection: true })
 
@@ -89,11 +90,11 @@ export async function findDecisionsWithPagination(
 
   const [decisionBefore] = firstDecision
     ? (await findDecisionsFunction(filters, { _id: { $gt: firstDecision._id } }, { _id: 1 }, 1))
-        .decisions
+      .decisions
     : []
   const [decisionAfter] = lastDecision
     ? (await findDecisionsFunction(filters, { _id: { $lt: lastDecision._id } }, { _id: -1 }, 1))
-        .decisions
+      .decisions
     : []
 
   return {
@@ -129,7 +130,31 @@ export async function updateAffaireById(
 }
 
 // find affaire by filters decisionId or numeroPourvoi
-export async function findAffaire(filters: Filter<Affaire>): Promise<Affaire | null> {
+export async function findAffaire(filters: Filter<Affaire>, searchValues: affaireSearchType): Promise<Affaire> {
   const db = await dbConnect()
-  return db.collection<Affaire>('affaires').findOne(filters)
+
+  let affaire = await db.collection<Affaire>('affaires').findOne(filters)
+
+  //if not affaire create it
+  if (!affaire) {
+
+    const decisionIds: ObjectId[] = searchValues.decisionId ? [parseId(searchValues.decisionId)] : []
+    const numeroPourvois: string[] = searchValues.numeroPourvoi ? [searchValues.numeroPourvoi] : []
+
+    const newAffaire: WithoutId<Partial<Affaire>> = {
+      decisionIds,
+      numeroPourvois,
+    }
+
+    const affaireToCreate: UnIdentifiedAffaire = {
+      replacementTerms: [],
+      decisionIds: newAffaire.decisionIds ? newAffaire.decisionIds : [],
+      numeroPourvois: newAffaire.numeroPourvois ? newAffaire.numeroPourvois : []
+    }
+    const valideAffaire = isValidAffaire(affaireToCreate)
+    affaire = await createAffaire(valideAffaire)
+
+  }
+
+  return affaire
 }
