@@ -1,22 +1,11 @@
-import { Affaire, isPartialValidAffaire, parseId, UnIdentifiedAffaire } from 'dbsder-api-types'
+import { Affaire, isPartialValidAffaire, parseId } from 'dbsder-api-types'
 import { NotFound, UnexpectedError } from '../../library/error'
-import { createAffaire, updateAffaireById, findAffaire } from '../../library/sderDB'
-import { Filter } from 'mongodb'
+import { updateAffaireById, findAffaire } from '../../library/sderDB'
 import { affaireSearchType } from './models'
 
-export async function saveAffaire(affaire: UnIdentifiedAffaire): Promise<Affaire> {
-  const savedAffaire = await createAffaire(affaire)
-  if (!savedAffaire)
-    throw new UnexpectedError('Upsert behave like there were no affaire and cannot create')
-  return savedAffaire
-}
-
 //find affaire by filters decisionIf in ["id1","id2"] or numeroPourvoi in ["num1","num2"]
-export async function fetchAffaireByFilters(
-  filters: Filter<Affaire>,
-  searchValues: affaireSearchType
-): Promise<Affaire> {
-  const affaire = await findAffaire(filters, searchValues)
+export async function fetchAffaireByFilters(searchValues: affaireSearchType): Promise<Affaire> {
+  const affaire = await findAffaire(searchValues)
   if (!affaire) throw new NotFound('affaire with given filters not found')
   return affaire
 }

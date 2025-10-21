@@ -1,47 +1,36 @@
-import { Router } from 'express'
-import { fetchAffaireByFilters, saveAffaire, updateAffaire } from '../service/affaire/handler'
+import { Request, Router } from 'express'
+import { fetchAffaireByFilters, updateAffaire } from '../service/affaire/handler'
 import { responseLog } from './logger'
 import { MissingValue, NotSupported, toNotSupported } from '../library/error'
-import { affaireSearchType, buildAffaireFilter } from '../service/affaire/models'
-import { Affaire, isValidAffaire, ParseError } from 'dbsder-api-types'
-import { Filter } from 'mongodb'
+import { Affaire, ParseError, parseId } from 'dbsder-api-types'
+import { ObjectId } from 'mongodb'
 
 const app = Router()
 
-app.post(
-  '/affaires',
-  async (req, res, next) => {
-    try {
-      if (!req.body) throw new MissingValue('req.body', 'Request needs a body with affaire to save')
-      const affaire = isValidAffaire(req.body)
-      const savedAffaire = await saveAffaire(affaire)
-      res.send(savedAffaire)
-      next()
-    } catch (err: unknown) {
-      if (err instanceof ParseError) throw toNotSupported('affaire', req.body, err)
-      next(err)
-    }
-  },
-  responseLog
-)
-
-function parseGetQuery(query: unknown): {
-  mongoFilter: Filter<Affaire>
-  filters: affaireSearchType
+function parseGetDecisionPourvoiQuery(query: Request['query']): {
+  decisionId?: ObjectId
+  numeroPourvoi?: string
 } {
   if (typeof query !== 'object' || !query) throw new NotSupported('querystring', query)
-  const { mongoFilter, filters } = buildAffaireFilter(query)
-  return { mongoFilter, filters }
+  const searchItems: { decisionId?: ObjectId; numeroPourvoi?: string } = {}
+  if ('decisionId' in query) {
+    searchItems.decisionId = parseId(query.decisionId)
+  }
+  if ('numeroPourvoi' in query && typeof query.numeroPourvoi === 'string') {
+    searchItems.numeroPourvoi = query.numeroPourvoi
+  }
+
+  return searchItems
 }
 
 app.get(
   '/affaires',
   async (req, res, next) => {
     try {
-      const { filters, mongoFilter } = parseGetQuery(req.query)
-      if (!mongoFilter)
-        throw new MissingValue('filters', 'Request needs query with filters to find affaire')
-      const affaire = await fetchAffaireByFilters(mongoFilter, filters)
+      const searchItems = parseGetDecisionPourvoiQuery(req.query)
+      if (!searchItems)
+        throw new MissingValue('searchItems', 'Request needs query with filters to find affaire')
+      const affaire: Affaire = await fetchAffaireByFilters(searchItems)
       res.send(affaire)
       next()
     } catch (err: unknown) {

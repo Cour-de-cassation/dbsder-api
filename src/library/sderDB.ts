@@ -10,7 +10,7 @@ import {
   parseId,
   isValidAffaire
 } from 'dbsder-api-types'
-import { affaireSearchType } from '../service/affaire/models'
+import { affaireSearchType, buildAffaireFilter } from '../service/affaire/models'
 
 const client = new MongoClient(MONGO_DB_URL, { directConnection: true })
 
@@ -138,34 +138,27 @@ export async function updateAffaireById(
 }
 
 // find affaire by filters decisionId or numeroPourvoi
-export async function findAffaire(
-  filters: Filter<Affaire>,
-  searchValues: affaireSearchType
-): Promise<Affaire> {
+export async function findAffaire(searchValues: affaireSearchType): Promise<Affaire> {
   const db = await dbConnect()
-
-  let affaire = await db.collection<Affaire>('affaires').findOne(filters)
+  const filters = buildAffaireFilter(searchValues)
+  const affaire = await db.collection<Affaire>('affaires').findOne(filters)
+  if (affaire) return affaire
 
   //if not affaire create it
-  if (!affaire) {
-    const decisionIds: ObjectId[] = searchValues.decisionId
-      ? [parseId(searchValues.decisionId)]
-      : []
-    const numeroPourvois: string[] = searchValues.numeroPourvoi ? [searchValues.numeroPourvoi] : []
+  const decisionIds: ObjectId[] = searchValues.decisionId ? [parseId(searchValues.decisionId)] : []
+  const numeroPourvois: string[] = searchValues.numeroPourvoi ? [searchValues.numeroPourvoi] : []
 
-    const newAffaire: WithoutId<Partial<Affaire>> = {
-      decisionIds,
-      numeroPourvois
-    }
-
-    const affaireToCreate: UnIdentifiedAffaire = {
-      replacementTerms: [],
-      decisionIds: newAffaire.decisionIds ? newAffaire.decisionIds : [],
-      numeroPourvois: newAffaire.numeroPourvois ? newAffaire.numeroPourvois : []
-    }
-    const valideAffaire = isValidAffaire(affaireToCreate)
-    affaire = await createAffaire(valideAffaire)
+  const newAffaire: WithoutId<Partial<Affaire>> = {
+    decisionIds,
+    numeroPourvois
   }
 
-  return affaire
+  const affaireToCreate: UnIdentifiedAffaire = {
+    replacementTerms: [],
+    decisionIds: newAffaire.decisionIds ? newAffaire.decisionIds : [],
+    numeroPourvois: newAffaire.numeroPourvois ? newAffaire.numeroPourvois : []
+  }
+
+  const valideAffaire = isValidAffaire(affaireToCreate)
+  return createAffaire(valideAffaire)
 }
