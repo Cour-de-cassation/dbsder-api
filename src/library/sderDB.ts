@@ -1,7 +1,16 @@
-import { Filter, MongoClient, ObjectId, Sort } from 'mongodb'
+import { Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
 import { UnexpectedError } from './error'
-import { CodeNac, Decision, UnIdentifiedDecision } from 'dbsder-api-types'
 import { MONGO_DB_URL } from './env'
+import {
+  CodeNac,
+  Decision,
+  UnIdentifiedDecision,
+  Affaire,
+  UnIdentifiedAffaire,
+  parseId,
+  isValidAffaire
+} from 'dbsder-api-types'
+import { affaireSearchType, buildAffaireFilter } from '../service/affaire/models'
 
 const client = new MongoClient(MONGO_DB_URL, { directConnection: true })
 
@@ -102,4 +111,54 @@ export async function findDecisionsWithPagination(
     previousCursor: decisionBefore?._id,
     nextCursor: decisionAfter?._id
   }
+}
+
+//create an affaire
+export async function createAffaire(affaire: WithoutId<Affaire>): Promise<Affaire> {
+  const db = await dbConnect()
+  const affaireWithId = await db.collection<WithoutId<Affaire>>('affaires').insertOne(affaire)
+  if (!affaireWithId.acknowledged || !affaireWithId.insertedId) {
+    throw new UnexpectedError('Insert behave like there were no document and cannot create')
+  }
+  return { ...affaire, _id: affaireWithId.insertedId }
+}
+
+// update affaire by _id
+export async function updateAffaireById(
+  _id: ObjectId,
+  updateFields: Partial<Affaire>
+): Promise<Affaire> {
+  const db = await dbConnect()
+  const affaireWithId = await db
+    .collection<Affaire>('affaires')
+    .findOneAndUpdate(_id, { $set: updateFields }, { returnDocument: 'after' })
+  if (!affaireWithId)
+    throw new UnexpectedError('The update behave like there were no document and cannot update')
+  return affaireWithId
+}
+
+// find affaire by filters decisionId or numeroPourvoi
+export async function findAffaire(searchValues: affaireSearchType): Promise<Affaire> {
+  const db = await dbConnect()
+  const filters = buildAffaireFilter(searchValues)
+  const affaire = await db.collection<Affaire>('affaires').findOne(filters)
+  if (affaire) return affaire
+
+  //if not affaire create it
+  const decisionIds: ObjectId[] = searchValues.decisionId ? [parseId(searchValues.decisionId)] : []
+  const numeroPourvois: string[] = searchValues.numeroPourvoi ? [searchValues.numeroPourvoi] : []
+
+  const newAffaire: WithoutId<Partial<Affaire>> = {
+    decisionIds,
+    numeroPourvois
+  }
+
+  const affaireToCreate: UnIdentifiedAffaire = {
+    replacementTerms: [],
+    decisionIds: newAffaire.decisionIds ? newAffaire.decisionIds : [],
+    numeroPourvois: newAffaire.numeroPourvois ? newAffaire.numeroPourvois : []
+  }
+
+  const valideAffaire = isValidAffaire(affaireToCreate)
+  return createAffaire(valideAffaire)
 }
