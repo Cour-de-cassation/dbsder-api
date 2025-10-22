@@ -7,6 +7,9 @@ export async function fetchAffaireByFilters(searchValues: AffaireSearchQuery): P
   return affaire ?? createAffaire(mapQueryIntoAffaire(searchValues))
 }
 
-export async function updateAffaire(id: Affaire["_id"], affaire: Partial<Affaire>): Promise<Affaire> {
+export async function updateAffaire(
+  id: Affaire['_id'],
+  affaire: Partial<Affaire>
+): Promise<Affaire> {
   return updateAffaireById(id, affaire)
 }
