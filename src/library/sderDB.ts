@@ -6,11 +6,7 @@ import {
   Decision,
   UnIdentifiedDecision,
   Affaire,
-  UnIdentifiedAffaire,
-  parseId,
-  isValidAffaire
 } from 'dbsder-api-types'
-// import { affaireSearchType, buildAffaireFilter } from '../service/affaire/models'
 
 const client = new MongoClient(MONGO_DB_URL, { directConnection: true })
 

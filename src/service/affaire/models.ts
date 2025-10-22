@@ -1,8 +1,8 @@
 import {
   Affaire,
-  isPartialValidAffaire,
   ParseError,
-  parseId as parseDbsderId
+  parseId as parseDbsderId,
+  parsePartialAffaire
 } from 'dbsder-api-types'
 import { isCustomError, NotSupported, toNotSupported } from '../../library/error'
 import { Filter, ObjectId } from 'mongodb'
@@ -41,7 +41,7 @@ export function parseAffaireSearchQuery(x: unknown): AffaireSearchQuery {
 
 export function parseAffaireUpdateQuery(x: unknown): Partial<Affaire> {
   try {
-    const partialAffaire = isPartialValidAffaire(x)
+    const partialAffaire = parsePartialAffaire(x)
     if (Object.keys(partialAffaire).length === 0)
       throw new NotSupported(
         'affaireUpdateQuery',
