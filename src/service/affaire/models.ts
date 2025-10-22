@@ -1,36 +1,72 @@
+import {
+  Affaire,
+  ParseError,
+  parseId as parseDbsderId,
+  parsePartialAffaire
+} from 'dbsder-api-types'
+import { isCustomError, NotSupported, toNotSupported } from '../../library/error'
 import { Filter, ObjectId } from 'mongodb'
-import { Affaire, ParseError } from 'dbsder-api-types'
-import { toNotSupported } from '../../library/error'
 
-export type affaireSearchType = {
-  decisionId?: ObjectId
-  numeroPourvoi?: string
+export type AffaireSearchQuery = { decisionId?: ObjectId; numeroPourvoi?: string }
+
+export function parseId(maybeId: unknown): ObjectId {
+  try {
+    return parseDbsderId(maybeId)
+  } catch (err) {
+    throw err instanceof Error
+      ? toNotSupported('id', maybeId, err)
+      : new NotSupported('id', maybeId, 'Given ID is not a valid ID')
+  }
 }
 
-export function buildAffaireFilter(searchItems: {
-  decisionId?: ObjectId
-  numeroPourvoi?: string
-}): Filter<Affaire> {
+export function parseAffaireSearchQuery(x: unknown): AffaireSearchQuery {
+  if (typeof x !== 'object' || !x) throw new NotSupported('affaireSearchQuery', x)
+
+  const numeroPourvoi = 'numeroPourvoi' in x ? x.numeroPourvoi : undefined
+  const decisionId = 'decisionId' in x ? parseId(x.decisionId) : undefined
+
+  if (numeroPourvoi !== undefined && typeof numeroPourvoi !== 'string')
+    throw new NotSupported('query.numeroPourvoi', numeroPourvoi, 'numeroPourvoi should be a string')
+
+  if (numeroPourvoi && decisionId) return { numeroPourvoi, decisionId }
+  if (numeroPourvoi) return { numeroPourvoi }
+  if (decisionId) return { decisionId }
+
+  throw new NotSupported(
+    'affaireSearchQuery',
+    x,
+    'affaireSearchQuery is empty or valids search fields are missing'
+  )
+}
+
+export function parseAffaireUpdateQuery(x: unknown): Partial<Affaire> {
   try {
-    const mongoFilter: Filter<Affaire> = {}
+    const partialAffaire = parsePartialAffaire(x)
+    if (Object.keys(partialAffaire).length === 0)
+      throw new NotSupported(
+        'affaireUpdateQuery',
+        x,
+        'affaireUpdateQuery is empty or valids search fields are missing'
+      )
+    return partialAffaire
+  } catch (err) {
+    if (isCustomError(err)) throw err
+    if (err instanceof ParseError) throw toNotSupported('affaireUpdateQuery', x, err)
+    throw new NotSupported('affaireUpdateQuery', x)
+  }
+}
 
-    const orConditions: Filter<Affaire>[] = []
+export function mapQueryIntoFilter(searchItems: AffaireSearchQuery): Filter<Affaire> {
+  return {
+    ...(searchItems.decisionId ? { decisionIds: searchItems.decisionId } : {}),
+    ...(searchItems.numeroPourvoi ? { numeroPourvois: searchItems.numeroPourvoi } : {})
+  }
+}
 
-    if (searchItems.decisionId) {
-      orConditions.push({ decisionIds: { $in: [searchItems.decisionId] } })
-    }
-
-    if (searchItems.numeroPourvoi) {
-      orConditions.push({ numeroPourvois: { $in: [searchItems.numeroPourvoi] } })
-    }
-
-    if (orConditions.length) {
-      mongoFilter.$or = orConditions
-    }
-
-    return mongoFilter
-  } catch (error: unknown) {
-    if (error instanceof ParseError) throw toNotSupported('affaire', searchItems, error)
-    else throw error
+export function mapQueryIntoAffaire(searchItems: AffaireSearchQuery): Omit<Affaire, '_id'> {
+  return {
+    decisionIds: searchItems.decisionId ? [searchItems.decisionId] : [],
+    numeroPourvois: searchItems.numeroPourvoi ? [searchItems.numeroPourvoi] : [],
+    replacementTerms: []
   }
 }
