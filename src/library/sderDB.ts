@@ -1,12 +1,7 @@
 import { Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
 import { UnexpectedError } from './error'
 import { MONGO_DB_URL } from './env'
-import {
-  CodeNac,
-  Decision,
-  UnIdentifiedDecision,
-  Affaire,
-} from 'dbsder-api-types'
+import { CodeNac, Decision, UnIdentifiedDecision, Affaire } from 'dbsder-api-types'
 
 const client = new MongoClient(MONGO_DB_URL, { directConnection: true })
 
