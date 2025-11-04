@@ -1,4 +1,4 @@
-import { Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
+import { DeleteResult, Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
 import { UnexpectedError } from './error'
 import { MONGO_DB_URL } from './env'
 import { CodeNac, Decision, UnIdentifiedDecision, Affaire } from 'dbsder-api-types'
@@ -43,6 +43,11 @@ export async function findAndUpdateDecision(
 export async function findDecision(filters: Filter<Decision>): Promise<Decision | null> {
   const db = await dbConnect()
   return db.collection<Decision>('decisions').findOne(filters)
+}
+
+export async function deleteDecision(filters: Filter<Decision>): Promise<DeleteResult> {
+  const db = await dbConnect()
+  return db.collection<Decision>('decisions').deleteOne(filters)
 }
 
 export async function findDecisions(
