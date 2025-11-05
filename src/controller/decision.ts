@@ -11,7 +11,8 @@ import {
   fetchDecisionById,
   fetchDecisions,
   saveDecision,
-  updateDecision
+  updateDecision,
+  deleteDecisionById
 } from '../service/decision/handler'
 import { ForbiddenError, MissingValue, NotSupported } from '../library/error'
 import { Service } from '../service/authentication'
@@ -125,6 +126,23 @@ app.put(
       res.send({
         _id,
         message: 'Decision créée ou mise à jour'
+      })
+      next()
+    } catch (err: unknown) {
+      next(err)
+    }
+  },
+  responseLog
+)
+
+app.delete(
+  '/decisions/:id',
+  async (req, res, next) => {
+    try {
+      const decisionId = parseId(req.params.id)
+      const deleted = await deleteDecisionById(decisionId)
+      res.send({
+        message: deleted ? 'Decision supprimée' : 'Decision non supprimée'
       })
       next()
     } catch (err: unknown) {

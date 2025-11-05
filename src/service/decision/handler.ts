@@ -11,6 +11,7 @@ import {
   findDecisionsWithPagination,
   findAndReplaceDecision,
   findAndUpdateDecision,
+  deleteDecision,
   PaginatedDecisions,
   Page
 } from '../../library/sderDB'
@@ -91,4 +92,11 @@ export async function fetchDecisions(
   page: Page
 ): Promise<PaginatedDecisions> {
   return findDecisionsWithPagination(mapDecisionListFiltersIntoDbFilters(filters), page)
+}
+
+export async function deleteDecisionById(decisionId: Decision['_id']): Promise<boolean> {
+  const decision = await findDecision({ _id: decisionId })
+  if (!decision) throw new NotFound('decision')
+  const deleted = await deleteDecision({ _id: decision._id })
+  return deleted.deletedCount > 0
 }
