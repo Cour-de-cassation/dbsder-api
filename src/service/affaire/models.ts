@@ -7,7 +7,7 @@ import {
 import { isCustomError, NotSupported, toNotSupported } from '../../library/error'
 import { Filter, ObjectId } from 'mongodb'
 
-export type AffaireSearchQuery = { decisionId?: ObjectId; numeroPourvoi?: string }
+export type AffaireSearchQuery = { decisionId?: ObjectId }
 
 export function parseId(maybeId: unknown): ObjectId {
   try {
@@ -22,14 +22,8 @@ export function parseId(maybeId: unknown): ObjectId {
 export function parseAffaireSearchQuery(x: unknown): AffaireSearchQuery {
   if (typeof x !== 'object' || !x) throw new NotSupported('affaireSearchQuery', x)
 
-  const numeroPourvoi = 'numeroPourvoi' in x ? x.numeroPourvoi : undefined
   const decisionId = 'decisionId' in x ? parseId(x.decisionId) : undefined
 
-  if (numeroPourvoi !== undefined && typeof numeroPourvoi !== 'string')
-    throw new NotSupported('query.numeroPourvoi', numeroPourvoi, 'numeroPourvoi should be a string')
-
-  if (numeroPourvoi && decisionId) return { numeroPourvoi, decisionId }
-  if (numeroPourvoi) return { numeroPourvoi }
   if (decisionId) return { decisionId }
 
   throw new NotSupported(
@@ -58,15 +52,13 @@ export function parseAffaireUpdateQuery(x: unknown): Partial<Affaire> {
 
 export function mapQueryIntoFilter(searchItems: AffaireSearchQuery): Filter<Affaire> {
   return {
-    ...(searchItems.decisionId ? { decisionIds: searchItems.decisionId } : {}),
-    ...(searchItems.numeroPourvoi ? { numeroPourvois: searchItems.numeroPourvoi } : {})
+    ...(searchItems.decisionId ? { decisionIds: searchItems.decisionId } : {})
   }
 }
 
-export function mapQueryIntoAffaire(searchItems: AffaireSearchQuery): Omit<Affaire, '_id'> {
+/*export function mapQueryIntoAffaire(searchItems: AffaireSearchQuery): Omit<Affaire, '_id'> {
   return {
     decisionIds: searchItems.decisionId ? [searchItems.decisionId] : [],
-    numeroPourvois: searchItems.numeroPourvoi ? [searchItems.numeroPourvoi] : [],
     replacementTerms: []
   }
-}
+}*/

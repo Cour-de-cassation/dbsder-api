@@ -1,10 +1,12 @@
 import { Affaire } from 'dbsder-api-types'
-import { updateAffaireById, findAffaire, createAffaire } from '../../library/sderDB'
-import { AffaireSearchQuery, mapQueryIntoAffaire, mapQueryIntoFilter } from './models'
+import { createAffaire, findAffaire, updateAffaireById } from '../../library/sderDB'
+import { AffaireSearchQuery, mapQueryIntoFilter } from './models'
+import { WithoutId } from 'mongodb'
 
-export async function fetchAffaireByFilters(searchValues: AffaireSearchQuery): Promise<Affaire> {
-  const affaire = await findAffaire(mapQueryIntoFilter(searchValues))
-  return affaire ?? createAffaire(mapQueryIntoAffaire(searchValues))
+export async function fetchAffaireByFilters(
+  searchValues: AffaireSearchQuery
+): Promise<Affaire | null> {
+  return await findAffaire(mapQueryIntoFilter(searchValues))
 }
 
 export async function updateAffaire(
@@ -12,4 +14,8 @@ export async function updateAffaire(
   affaire: Partial<Affaire>
 ): Promise<Affaire> {
   return updateAffaireById(id, affaire)
+}
+
+export async function createAffaireHandler(affaire: WithoutId<Affaire>): Promise<Affaire> {
+  return await createAffaire(affaire)
 }
