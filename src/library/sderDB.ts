@@ -1,7 +1,7 @@
 import { DeleteResult, Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
 import { UnexpectedError } from './error'
 import { MONGO_DB_URL } from './env'
-import { CodeNac, Decision, UnIdentifiedDecision, Affaire } from 'dbsder-api-types'
+import { Affaire, CodeNac, Decision, UnIdentifiedDecision } from 'dbsder-api-types'
 
 const client = new MongoClient(MONGO_DB_URL, { directConnection: true })
 
@@ -131,7 +131,7 @@ export async function updateAffaireById(
   return affaireWithId
 }
 
-export async function findAffaire(filter: Filter<Affaire>): Promise<Affaire | null> {
+export async function findAffaire(filter: Filter<Affaire>): Promise<Affaire[] | null> {
   const db = await dbConnect()
-  return db.collection<Affaire>('affaires').findOne(filter)
+  return db.collection<Affaire>('affaires').find(filter).toArray()
 }

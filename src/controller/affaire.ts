@@ -1,8 +1,13 @@
 import { Router } from 'express'
-import { fetchAffaireByFilters, updateAffaire } from '../service/affaire/handler'
+import {
+  createAffaireHandler,
+  fetchAffaireByFilters,
+  updateAffaire
+} from '../service/affaire/handler'
 import { responseLog } from './logger'
 import { Affaire } from 'dbsder-api-types'
 import {
+  parseAffaireCreateQuery,
   parseAffaireSearchQuery,
   parseAffaireUpdateQuery,
   parseId
@@ -15,9 +20,22 @@ app.get(
   async (req, res, next) => {
     try {
       const searchItems = parseAffaireSearchQuery(req.query)
-      const affaire: Affaire = await fetchAffaireByFilters(searchItems)
+      const affaire: Affaire | null = await fetchAffaireByFilters(searchItems)
       res.send(affaire)
       next()
+    } catch (err: unknown) {
+      next(err)
+    }
+  },
+  responseLog
+)
+
+app.post(
+  '/affaires',
+  async (req, res, next) => {
+    try {
+      const affaire: Affaire | null = await createAffaireHandler(parseAffaireCreateQuery(req.body))
+      res.send(affaire)
     } catch (err: unknown) {
       next(err)
     }
