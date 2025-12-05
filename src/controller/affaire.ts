@@ -7,6 +7,7 @@ import {
 import { responseLog } from './logger'
 import { Affaire } from 'dbsder-api-types'
 import {
+  parseAffaireCreateQuery,
   parseAffaireSearchQuery,
   parseAffaireUpdateQuery,
   parseId
@@ -33,7 +34,7 @@ app.post(
   '/affaires',
   async (req, res, next) => {
     try {
-      const affaire: Affaire | null = await createAffaireHandler(req.body)
+      const affaire: Affaire | null = await createAffaireHandler(parseAffaireCreateQuery(req.body))
       res.send(affaire)
     } catch (err: unknown) {
       next(err)

@@ -1,8 +1,10 @@
 import {
   Affaire,
+  parseAffaire,
   ParseError,
   parseId as parseDbsderId,
-  parsePartialAffaire
+  parsePartialAffaire,
+  UnIdentifiedAffaire
 } from 'dbsder-api-types'
 import { isCustomError, NotSupported, toNotSupported } from '../../library/error'
 import { Filter, ObjectId } from 'mongodb'
@@ -50,15 +52,18 @@ export function parseAffaireUpdateQuery(x: unknown): Partial<Affaire> {
   }
 }
 
+export function parseAffaireCreateQuery(x: unknown): UnIdentifiedAffaire {
+  try {
+    return parseAffaire(x)
+  } catch (err) {
+    if (isCustomError(err)) throw err
+    if (err instanceof ParseError) throw toNotSupported('affaireCreateQuery', x, err)
+    throw new NotSupported('affaireCreateQuery', x)
+  }
+}
+
 export function mapQueryIntoFilter(searchItems: AffaireSearchQuery): Filter<Affaire> {
   return {
     ...(searchItems.decisionId ? { decisionIds: searchItems.decisionId } : {})
   }
 }
-
-/*export function mapQueryIntoAffaire(searchItems: AffaireSearchQuery): Omit<Affaire, '_id'> {
-  return {
-    decisionIds: searchItems.decisionId ? [searchItems.decisionId] : [],
-    replacementTerms: []
-  }
-}*/

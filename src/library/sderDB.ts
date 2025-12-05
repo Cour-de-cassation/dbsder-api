@@ -131,7 +131,7 @@ export async function updateAffaireById(
   return affaireWithId
 }
 
-export async function findAffaire(filter: Filter<Affaire>): Promise<Affaire | null> {
+export async function findAffaire(filter: Filter<Affaire>): Promise<Affaire[] | null> {
   const db = await dbConnect()
-  return db.collection<Affaire>('affaires').findOne(filter)
+  return db.collection<Affaire>('affaires').find(filter).toArray()
 }
