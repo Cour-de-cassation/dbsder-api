@@ -16,7 +16,7 @@ import {
 const app = Router()
 
 app.get(
-  '/documentassocie',
+  '/documentassocies',
   async (req, res, next) => {
     console.log('couocu')
     try {
@@ -33,7 +33,7 @@ app.get(
 )
 
 app.post(
-  '/documentassocie',
+  '/documentassocies',
   async (req, res, next) => {
     try {
       const { _id } = await createDocumentAssocieHandler(parseDocumentAssocieCreateQuery(req.body))
@@ -46,7 +46,7 @@ app.post(
 )
 
 app.patch(
-  '/documentassocie/:id',
+  '/documentassocies/:id',
   async (req, res, next) => {
     try {
       const id = parseId(req.params.id)
