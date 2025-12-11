@@ -1,6 +1,6 @@
 import { DocumentAssocie, UnIdentifiedDocumentAssocie } from 'dbsder-api-types'
 import { DocumentAssocieSearchQuery } from './models'
-import { NotFound, UnexpectedError } from '../../library/error'
+import { NotFound } from '../../library/error'
 import {
   findDocumentAssocie,
   updateDocumentAssocieById,
@@ -9,12 +9,9 @@ import {
 
 export async function fetchDocumentAssocieByFilters(
   searchValues: DocumentAssocieSearchQuery
-): Promise<DocumentAssocie> {
-  const [response, ...rest] = (await findDocumentAssocie(searchValues)) ?? []
+): Promise<DocumentAssocie[]> {
+  const response = (await findDocumentAssocie(searchValues)) ?? []
   if (!response) throw new NotFound('response', 'documentAssocie not found')
-  if (rest.length > 0) {
-    throw new UnexpectedError('More than 1 documentAssocie')
-  }
   return response
 }
 
