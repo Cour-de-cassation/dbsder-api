@@ -18,7 +18,6 @@ const app = Router()
 app.get(
   '/documentassocies',
   async (req, res, next) => {
-    console.log('couocu')
     try {
       const searchItems = parseDocumentAssocieSearchQuery(req.query)
       const documentAssocie: DocumentAssocie | null =
