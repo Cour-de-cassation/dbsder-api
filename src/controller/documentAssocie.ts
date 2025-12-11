@@ -20,8 +20,8 @@ app.get(
   async (req, res, next) => {
     try {
       const searchItems = parseDocumentAssocieSearchQuery(req.query)
-      const documentAssocie = await fetchDocumentAssocieByFilters(searchItems)
-      res.send(documentAssocie)
+      const documentAssocies = await fetchDocumentAssocieByFilters(searchItems)
+      res.send(documentAssocies)
       next()
     } catch (err: unknown) {
       next(err)
