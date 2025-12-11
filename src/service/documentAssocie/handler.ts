@@ -1,6 +1,6 @@
 import { DocumentAssocie, UnIdentifiedDocumentAssocie } from 'dbsder-api-types'
 import { DocumentAssocieSearchQuery } from './models'
-import { NotFound, UnexpectedError } from '../../library/error'
+import { NotFound } from '../../library/error'
 import {
   findDocumentAssocie,
   updateDocumentAssocieById,
