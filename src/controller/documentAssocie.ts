@@ -5,7 +5,6 @@ import {
   updateDocumentAssocie
 } from '../service/documentAssocie/handler'
 import { responseLog } from './logger'
-import { DocumentAssocie } from 'dbsder-api-types'
 import {
   parseDocumentAssocieCreateQuery,
   parseUpdatableDocumentAssocieFields,
