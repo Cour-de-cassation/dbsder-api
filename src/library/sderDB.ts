@@ -1,7 +1,7 @@
 import { DeleteResult, Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
 import { UnexpectedError } from './error'
 import { MONGO_DB_URL } from './env'
-import { Affaire, CodeNac, Decision, UnIdentifiedDecision } from 'dbsder-api-types'
+import { Affaire, CodeNac, Decision, DocumentAssocie, UnIdentifiedDecision } from 'dbsder-api-types'
 
 const client = new MongoClient(MONGO_DB_URL, { directConnection: true })
 
@@ -134,4 +134,39 @@ export async function updateAffaireById(
 export async function findAffaire(filter: Filter<Affaire>): Promise<Affaire[] | null> {
   const db = await dbConnect()
   return db.collection<Affaire>('affaires').find(filter).toArray()
+}
+
+export async function createDocumentAssocie(
+  documentAssocie: WithoutId<DocumentAssocie>
+): Promise<DocumentAssocie> {
+  const db = await dbConnect()
+  const documentAssocieWithId = await db
+    .collection<WithoutId<DocumentAssocie>>('documentassocies')
+    .insertOne(documentAssocie)
+  if (!documentAssocieWithId.acknowledged || !documentAssocieWithId.insertedId) {
+    throw new UnexpectedError('Insert behave like there were no documentAssocie created')
+  }
+  return { ...documentAssocie, _id: documentAssocieWithId.insertedId }
+}
+
+export async function updateDocumentAssocieById(
+  _id: ObjectId,
+  updateFields: Partial<DocumentAssocie>
+): Promise<DocumentAssocie> {
+  const db = await dbConnect()
+  const documentAssocieWithId = await db
+    .collection<DocumentAssocie>('documentassocies')
+    .findOneAndUpdate({ _id }, { $set: updateFields }, { returnDocument: 'after' })
+  if (!documentAssocieWithId)
+    throw new UnexpectedError(
+      'The update behave like there were no documentAssocie and cannot update'
+    )
+  return documentAssocieWithId
+}
+
+export async function findDocumentAssocie(
+  filter: Filter<DocumentAssocie>
+): Promise<DocumentAssocie[] | null> {
+  const db = await dbConnect()
+  return db.collection<DocumentAssocie>('documentassocies').find(filter).toArray()
 }
