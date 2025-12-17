@@ -20,7 +20,7 @@ app.get(
   async (req, res, next) => {
     try {
       const searchItems = parseAffaireSearchQuery(req.query)
-      const affaire: Affaire | null = await fetchAffaireByFilters(searchItems)
+      const affaire: Affaire = await fetchAffaireByFilters(searchItems)
       res.send(affaire)
       next()
     } catch (err: unknown) {
