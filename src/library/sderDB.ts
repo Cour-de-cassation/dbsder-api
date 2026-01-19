@@ -1,5 +1,5 @@
 import { DeleteResult, Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
-import { UnexpectedError } from './error'
+import { NotFound, UnexpectedError } from './error'
 import { MONGO_DB_URL } from './env'
 import { Affaire, CodeNac, Decision, DocumentAssocie, UnIdentifiedDecision } from 'dbsder-api-types'
 
@@ -15,6 +15,68 @@ export async function findCodeNac(filters: Filter<CodeNac>) {
   const db = await dbConnect()
   return db.collection<CodeNac>('codenacs').findOne(filters)
 }
+
+export async function findAllCodeNac() {
+  const db = await dbConnect()
+  return db.collection<CodeNac>('codenacs').find().toArray()
+}
+
+export async function createNac(codeNac: WithoutId<CodeNac>): Promise<CodeNac> {
+  const db = await dbConnect()
+  const codeNacWithId = await db.collection<WithoutId<CodeNac>>('codenacs').insertOne(codeNac)
+  if (!codeNacWithId.acknowledged || !codeNacWithId.insertedId) {
+    throw new UnexpectedError('Insert behave like there were no document and cannot create')
+  }
+  return { ...codeNac, _id: codeNacWithId.insertedId }
+}
+
+export async function updateNacById(
+  _id: ObjectId,
+  updateFields: Partial<CodeNac>
+): Promise<CodeNac> {
+  const db = await dbConnect()
+  const codeNacWithId = await db
+    .collection<CodeNac>('codenacs')
+    .findOneAndUpdate({ _id }, { $set: updateFields }, { returnDocument: 'after' })
+  if (!codeNacWithId)
+    throw new UnexpectedError('The update behave like there were no document and cannot update')
+  return codeNacWithId
+}
+//####################################################################
+// codenac suite 
+//####################################################################
+
+export async function findAllValidCodeNac(): Promise<CodeNac[]> {
+  const db = await dbConnect()
+
+  return db.collection<CodeNac>('codenacs')
+    .find({
+      obsolete: false,
+      $or: [
+        { dateFinValidite: null },
+      ]
+    })
+    .toArray()
+}
+
+
+export async function findValidCodeNac(codeNac: CodeNac['codeNAC']): Promise<CodeNac | null> {
+  const db = await dbConnect()
+  const codenac = db.collection<CodeNac>('codenacs')
+    .findOne({
+      codeNAC: codeNac,
+      obsolete: false,
+      $or: [
+        { dateFinValidite: null },
+      ]
+    })
+
+  return codenac
+}
+
+//####################################################################
+// codenac end
+//####################################################################
 
 export async function findAndReplaceDecision(
   decisionFilters: Filter<UnIdentifiedDecision>,
@@ -94,11 +156,11 @@ export async function findDecisionsWithPagination(
 
   const [decisionBefore] = firstDecision
     ? (await findDecisionsFunction(filters, { _id: { $gt: firstDecision._id } }, { _id: 1 }, 1))
-        .decisions
+      .decisions
     : []
   const [decisionAfter] = lastDecision
     ? (await findDecisionsFunction(filters, { _id: { $lt: lastDecision._id } }, { _id: -1 }, 1))
-        .decisions
+      .decisions
     : []
 
   return {

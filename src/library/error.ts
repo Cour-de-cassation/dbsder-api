@@ -50,6 +50,16 @@ export class NotFound extends Error {
   }
 }
 
+export class ExistingCodeNac extends Error {
+  type = 'existingCodeNac' as const
+  variableName: string
+  constructor(variableName: string, message?: string) {
+    const _message = message ? message : `Le codenac ${variableName} existe déjà.`
+    super(_message)
+    this.variableName = variableName
+  }
+}
+
 export class UnauthorizedError extends Error {
   type = 'unauthorizedError' as const
   constructor(message?: string) {
@@ -88,6 +98,7 @@ type CustomError =
   | UnauthorizedError
   | ForbiddenError
   | UnexpectedError
+  | ExistingCodeNac
 
 export function isCustomError(x: unknown): x is CustomError {
   const isValidX = !!x && x instanceof Error && 'type' in x
@@ -100,6 +111,7 @@ export function isCustomError(x: unknown): x is CustomError {
     case 'forbiddenError':
     case 'unauthorizedError':
     case 'unexpectedError':
+    case 'existingCodeNac':
       return true
     default:
       return false

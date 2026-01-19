@@ -1,9 +1,10 @@
 import { expect, jest } from '@jest/globals'
-import { Filter, WithId } from 'mongodb'
+import { Filter, MongoClient, WithId, WithoutId } from 'mongodb'
 
-import { Decision } from 'dbsder-api-types'
+import { CodeNac, Decision } from 'dbsder-api-types'
 
 import * as sderDb from './sderDB'
+import request from 'supertest'
 
 const decisions = [
   { _id: 1 },
@@ -113,5 +114,186 @@ describe('service/decision', () => {
 
   afterAll(() => {
     findDecisions.mockRestore()
+  })
+})
+
+// code nac test part version 2
+
+// Données de test
+const testData = {
+  AAA: {
+    codeNAC: 'AAA',
+    libelleNAC: 'Code NAC AAA',
+    sousChapitre: { code: 'AA', libelle: 'Sous-chapitre AA' },
+    chapitre: { code: 'A', libelle: 'Chapitre A' },
+    dateDebutValidite: new Date('2020-01-01'),
+    dateFinValidite: null,
+    routeRElecture: 'exhaustif',
+    blocOccultation: 2,
+    categoriesToOccult: ['personnePhysique', 'adresse'],
+    decisionsPubliques: 'decisions publiques',
+    debatsPublics: 'débats publics',
+    obsolete: false
+  },
+  AA1: {
+    codeNAC: 'AA1',
+    libelleNAC: 'Code NAC AA1',
+    sousChapitre: { code: 'AA', libelle: 'Sous-chapitre AA' },
+    chapitre: { code: 'A', libelle: 'Chapitre A' },
+    dateDebutValidite: new Date('2020-01-01'),
+    dateFinValidite: null,
+    routeRElecture: 'simple',
+    blocOccultation: 1,
+    categoriesToOccult: null,
+    decisionsPubliques: 'decisions non publiques',
+    debatsPublics: null,
+    obsolete: false
+  },
+  AAC: {
+    codeNAC: 'AAC',
+    libelleNAC: 'Code NAC AAC (invalide)',
+    sousChapitre: { code: 'AA', libelle: 'Sous-chapitre AA' },
+    chapitre: { code: 'A', libelle: 'Chapitre A' },
+    dateDebutValidite: new Date('2020-01-01'),
+    dateFinValidite: new Date('2021-12-31'),
+    routeRElecture: null,
+    blocOccultation: null,
+    categoriesToOccult: null,
+    decisionsPubliques: null,
+    debatsPublics: null,
+    obsolete: false
+  }
+}
+
+let db: MongoClient;
+beforeAll(async () => {
+  const uri = 'mongodb://localhost:55433/docker-local'
+  db = new MongoClient(uri)
+  await db.connect()
+})
+
+afterAll(async () => {
+  await db.close()
+})
+
+beforeEach(async () => {
+  const database = db.db()
+  await database.collection('codenacs').deleteMany({})
+  await database.collection('codenacs').insertMany([
+    testData.AAA,
+    testData.AA1,
+    testData.AAC
+  ])
+})
+
+describe('GET /codenacs - Récupération de tous les codenac valides', () => {
+
+  it('devrait retourner tous les codenac valides avec status 200', async () => {
+    const response = await request(`localhost:3008`).get('/codenacs')
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveLength(2)
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ codeNAC: 'AAA', dateFinValidite: null }),
+        expect.objectContaining({ codeNAC: 'AA1', dateFinValidite: null })
+      ])
+    )
+  })
+
+})
+
+describe('Get /codenacs/:AAA - Récuperation du codenac AAA', () => {
+  it('devrait retourner le codenac AAA valide avec status 200', async () => {
+    const response = await request(`localhost:3008`).get('/codenacs/AAA')
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty('codeNAC', 'AAA')
+    expect(response.body).toEqual(
+      expect.objectContaining({ codeNAC: 'AAA', dateFinValidite: null, obsolete: false })
+    )
+  })
+})
+
+
+describe(`Get /codenacs/:AAB - Récuperation d'un codenac qui n'exsite pas `, () => {
+  it(` devrait retourner un message de notFound`, async () => {
+    const response = await request(`localhost:3008`).get('/codenacs/AAB')
+    expect(response.status).toBe(404)
+    expect(response.body).toEqual(
+      expect.objectContaining({ "error": { "type": "notFound", "variableName": "Le codenac AAB n'existe pas ou n'est pas en cours de validité." } })
+    )
+  })
+})
+
+describe(`Get /codenacs/:AAC - Récuperation d'un codenac invalide`, () => {
+  it(`devrait retourner un message de notFound`, async () => {
+    const response = await request(`localhost:3008`).get('/codenacs/AAC')
+    expect(response.status).toBe(404)
+    expect(response.body).toEqual(
+      expect.objectContaining({ "error": { "type": "notFound", "variableName": "Le codenac AAC n'existe pas ou n'est pas en cours de validité." } })
+    )
+  })
+})
+
+// à revoir les critère de verification de la validité du codenac créé
+describe(`Post /codenacs - Création d'un codenac`, () => {
+  it(`devrait créer un codenac et le retourner avec un status 201`, async () => {
+    const newCodeNac = {
+      codeNAC: 'AA2',
+      libelleNAC: 'Code NAC AA2',
+      sousChapitre: { code: 'AA', libelle: 'Sous-chapitre AA' },
+      chapitre: { code: 'A', libelle: 'Chapitre A' }
+    }
+
+    const response = await request(`localhost:3008`)
+      .post('/codenacs')
+      .send(newCodeNac)
+      .set('Accept', 'application/json')
+    expect(response.status).toBe(201)
+    expect(response.body).toEqual(
+      expect.objectContaining({ codeNAC: 'AA2' })
+    )
+  })
+})
+
+
+describe(`Post /codenacs - Création d'un codenac existant`, () => {
+  it(`devrait retourner une erreur indiquant que le codenac existe déjà`, async () => {
+    const existingCodeNac = {
+      codeNAC: 'AAA',
+      libelleNAC: 'Code NAC AAA',
+      sousChapitre: { code: 'AA', libelle: 'Sous-chapitre AA' },
+      chapitre: { code: 'A', libelle: 'Chapitre A' }
+    }
+
+    const response = await request(`localhost:3008`)
+      .post('/codenacs')
+      .send(existingCodeNac)
+      .set('Accept', 'application/json')
+    expect(response.status).toBe(409)
+    expect(response.body).toEqual(
+      expect.objectContaining({ "error": { "type": "existingCodeNac", "variableName": "Le codenac AAA existe déjà." } })
+    )
+  })
+})
+
+
+// test for creating an existing but invalid codenac à revoir sa necessité ?? on peut gérer l'affichage dans la class existingcodenac error pour retrouner ce que l'on veut comme massage
+describe(`Post /codenacs - Création d'un codenac existant mais invalide`, () => {
+  it(`devrait retourner une erreur indiquant que le codenac existe déjà et qu'il est obsolette`, async () => {
+    const newCodeNac = {
+      codeNAC: 'AAC',
+      libelleNAC: 'Code NAC AAC',
+      sousChapitre: { code: 'AA', libelle: 'Sous-chapitre AA' },
+      chapitre: { code: 'A', libelle: 'Chapitre A' }
+    }
+
+    const response = await request(`localhost:3008`)
+      .post('/codenacs')
+      .send(newCodeNac)
+      .set('Accept', 'application/json')
+    expect(response.status).toBe(409)
+    expect(response.body).toEqual(
+      expect.objectContaining({ "error": { "type": "existingCodeNac", "variableName": "Le codenac AAC existe déjà." } })
+    )
   })
 })
