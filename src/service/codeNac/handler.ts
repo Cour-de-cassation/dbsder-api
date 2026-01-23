@@ -1,9 +1,87 @@
 import { CodeNac } from 'dbsder-api-types'
-import { NotFound } from '../../library/error'
-import { findCodeNac } from '../../library/sderDB'
+import { NotFound, ExistingCodeNac } from '../../library/error'
+import {
+  findEveryValidCodeNAC,
+  findCodeNac,
+  findValidCodeNAC,
+  createNAC,
+  updateNacById,
+  deleteCodeNAC,
+  findEveryByNAC,
+  findEveryNACBySubChapter
+} from '../../library/sderDB'
+import { WithoutId } from 'mongodb'
 
-export async function fetchCodeNacByCodeNac(codeNac: CodeNac['codeNAC']): Promise<CodeNac> {
-  const codeNacDetails = await findCodeNac({ codeNAC: codeNac })
-  if (!codeNacDetails) throw new NotFound('codeNac')
+export async function fetchCodeNacByNac(codeNac: CodeNac['codeNAC']): Promise<CodeNac> {
+  const codeNacDetails = await findValidCodeNAC(codeNac)
+  if (!codeNacDetails)
+    throw new NotFound(`Le codenac ${codeNac} n'existe pas ou n'est pas en cours de validité.`)
   return codeNacDetails
+}
+
+export async function fetchEveryCodeNacByNac(codeNac: CodeNac['codeNAC']): Promise<CodeNac[]> {
+  const codeNacDetails = await findEveryByNAC(codeNac)
+  if (!codeNacDetails || codeNacDetails.length === 0)
+    throw new NotFound(`Le codenac ${codeNac} n'existe pas ou n'est pas en cours de validité.`)
+  return codeNacDetails
+}
+
+export async function fetchEveryValidCodeNac(): Promise<CodeNac[]> {
+  const allValidCodeNacs = await findEveryValidCodeNAC()
+  if (!allValidCodeNacs || allValidCodeNacs.length === 0) throw new NotFound('codeNacs')
+  return allValidCodeNacs
+}
+
+export async function createCodeNac(
+  codeNac: WithoutId<Partial<CodeNac>>
+): Promise<Partial<CodeNac>> {
+  const existingCodeNac = await findCodeNac({ codeNAC: codeNac.codeNAC })
+  if (existingCodeNac) {
+    throw new ExistingCodeNac(
+      existingCodeNac.codeNAC,
+      existingCodeNac.dateFinValidite?.toISOString() ?? '',
+      existingCodeNac.obsolete
+    )
+  }
+  return await createNAC(codeNac)
+}
+
+export async function updateNacIfExistsOrCreate(
+  codeNac: WithoutId<CodeNac>,
+  nac: string
+): Promise<Partial<CodeNac>> {
+  // Recherche d'un Code NAC existant
+  const existingCodeNac = await findCodeNac({ codeNAC: nac })
+
+  if (!existingCodeNac) {
+    throw new NotFound(`Le code NAC ${codeNac.codeNAC} n'existe pas.`)
+  }
+
+  // Cas 1 : le Code NAC existe mais est déjà non valide (version obsolète)
+  if (existingCodeNac.dateFinValidite !== null || existingCodeNac.dateFinValidite! <= new Date()) {
+    return createNAC(codeNac)
+  }
+
+  // Cas 2 : le Code NAC existe et est encore valide
+  const updatedExistingCodeNac: CodeNac = {
+    ...existingCodeNac,
+    dateFinValidite: new Date(),
+    obsolete: true
+  }
+
+  await updateNacById(existingCodeNac._id, updatedExistingCodeNac)
+
+  return createNAC(codeNac)
+}
+
+export async function deleteCodeNac(codeNac: CodeNac['codeNAC']): Promise<string> {
+  const deletedCodeNac = await deleteCodeNAC(codeNac)
+  return `Le codenac ${deletedCodeNac.codeNAC} a été supprimé`
+}
+
+export async function fetchEverySubChapter(
+  code: CodeNac['sousChapitre']['code']
+): Promise<CodeNac[]> {
+  const everySubChapterNAC = await findEveryNACBySubChapter(code)
+  return everySubChapterNAC
 }
