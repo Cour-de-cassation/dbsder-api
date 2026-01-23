@@ -17,7 +17,7 @@ const app: Express = express()
 app
   .use(helmet())
   .use(loggerHttp)
-  // .use(apiKeyHandler)
+  .use(apiKeyHandler)
   .use(json({ limit: '10mb' }))
 
   .use(requestLog)

@@ -1,14 +1,25 @@
 import { Router } from 'express'
-import { createCodeNac, fetchAllValidCodeNac, fetchCodeNacByCodeNac } from '../service/codeNac/handler'
+import {
+  createCodeNac,
+  fetchEveryValidCodeNac,
+  fetchCodeNacByNac,
+  updateNacIfExistsOrCreate,
+  deleteCodeNac,
+  fetchEveryCodeNacByNac,
+  fetchEverySubChapter
+} from '../service/codeNac/handler'
 import { responseLog } from './logger'
 import { MissingValue } from '../library/error'
+import { CodeNac, parsePartialCodeNac } from 'dbsder-api-types'
+import { WithoutId } from 'mongodb'
 
 const app = Router()
 
-app.get('/codenacs',
+app.get(
+  '/codenacs',
   async (req, res, next) => {
     try {
-      const allValidCodeNacs = await fetchAllValidCodeNac()
+      const allValidCodeNacs = await fetchEveryValidCodeNac()
       res.send(allValidCodeNacs)
       next()
     } catch (err: unknown) {
@@ -25,7 +36,7 @@ app.get(
       const codeNac = req.params.codenac
       if (!codeNac) throw new MissingValue('codenac', 'Request needs a codenac param')
 
-      const codeNacDetails = await fetchCodeNacByCodeNac(codeNac)
+      const codeNacDetails = await fetchCodeNacByNac(codeNac)
       res.send(codeNacDetails)
       next()
     } catch (err: unknown) {
@@ -35,16 +46,91 @@ app.get(
   responseLog
 )
 
+app.get(
+  '/codenacs/versions/:codenac',
+  async (req, res, next) => {
+    try {
+      const codeNac = req.params.codenac
+      if (!codeNac) throw new MissingValue('codenac', 'Request needs a codenac param')
+
+      const codeNacDetails = await fetchEveryCodeNacByNac(codeNac)
+      res.send(codeNacDetails)
+      next()
+    } catch (err: unknown) {
+      next(err)
+    }
+  },
+  responseLog
+)
+
+app.get(
+  '/souschapitre/:code',
+  async (req, res, next) => {
+    try {
+      const code = req.params.code
+      if (!code) throw new MissingValue('sous-chapitre', 'Request needs a subchapter params')
+      const everySubChapterNAC = await fetchEverySubChapter(code)
+      res.send(everySubChapterNAC)
+      next()
+    } catch (err: unknown) {
+      next(err)
+    }
+  },
+  responseLog
+)
+
+function parseNAC(body: unknown): WithoutId<Partial<CodeNac>> {
+  const parsed = parsePartialCodeNac(body)
+  if (!parsed.codeNAC) {
+    throw new MissingValue('codeNAC', 'Le champ codeNAC est obligatoire.')
+  }
+  if (!parsed.libelleNAC) {
+    throw new MissingValue('libelleNAC', 'Le champ libelleNAC est obligatoire.')
+  }
+  return parsed
+}
 app.post(
   '/codenacs',
   async (req, res, next) => {
     try {
-      const codenac = req.body
-      if (!codenac) throw new MissingValue('codenac', 'Request needs a codenac body')
-
-      const createdCodeNac = await createCodeNac(codenac)
+      const codenac = parseNAC(req.body)
+      const createdCodeNac: Partial<CodeNac> = await createCodeNac(codenac)
       if (createdCodeNac) res.status(201)
       res.send(createdCodeNac)
+      next()
+    } catch (err: unknown) {
+      next(err)
+    }
+  },
+  responseLog
+)
+
+app.put(
+  '/codenacs/:nac',
+  async (req, res, next) => {
+    try {
+      const nac = req.params.nac
+      const codenac = req.body
+      if (!codenac) throw new MissingValue('codenac', 'Request needs a codenac body')
+      const updatedCodeNac = await updateNacIfExistsOrCreate(codenac, nac!)
+      res.send(updatedCodeNac)
+      next()
+    } catch (err: unknown) {
+      next(err)
+    }
+  },
+  responseLog
+)
+
+app.delete(
+  '/codenacs/:nac',
+  async (req, res, next) => {
+    try {
+      const nac = req.params.nac
+      if (!nac) throw new MissingValue('codenac', 'Request needs a codenac param')
+      const deletedNAC = await deleteCodeNac(nac)
+      if (deletedNAC) res.status(200)
+      res.send(deletedNAC)
       next()
     } catch (err: unknown) {
       next(err)

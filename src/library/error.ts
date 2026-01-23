@@ -52,11 +52,11 @@ export class NotFound extends Error {
 
 export class ExistingCodeNac extends Error {
   type = 'existingCodeNac' as const
-  variableName: string
-  constructor(variableName: string, message?: string) {
-    const _message = message ? message : `Le codenac ${variableName} existe déjà.`
+  message: string
+  constructor(codeNac: string, dateFinValidite: string, obsolete: boolean) {
+    const _message = `Le codenac ${codeNac} existe déjà, dateFinValidite: ${dateFinValidite}, obsolete: ${obsolete}.`
     super(_message)
-    this.variableName = variableName
+    this.message = _message
   }
 }
 

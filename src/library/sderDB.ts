@@ -11,23 +11,18 @@ async function dbConnect() {
   return db
 }
 
-export async function findCodeNac(filters: Filter<CodeNac>) {
+export async function findCodeNac(
+  filters: Filter<CodeNac>,
+  idNac?: ObjectId
+): Promise<CodeNac | null> {
   const db = await dbConnect()
-  return db.collection<CodeNac>('codenacs').findOne(filters)
+  const filter: Filter<CodeNac> = idNac ? { _id: idNac } : filters
+  return db.collection<CodeNac>('codenacs').findOne(filter)
 }
 
 export async function findAllCodeNac() {
   const db = await dbConnect()
   return db.collection<CodeNac>('codenacs').find().toArray()
-}
-
-export async function createNac(codeNac: WithoutId<CodeNac>): Promise<CodeNac> {
-  const db = await dbConnect()
-  const codeNacWithId = await db.collection<WithoutId<CodeNac>>('codenacs').insertOne(codeNac)
-  if (!codeNacWithId.acknowledged || !codeNacWithId.insertedId) {
-    throw new UnexpectedError('Insert behave like there were no document and cannot create')
-  }
-  return { ...codeNac, _id: codeNacWithId.insertedId }
 }
 
 export async function updateNacById(
@@ -43,35 +38,83 @@ export async function updateNacById(
   return codeNacWithId
 }
 //####################################################################
-// codenac suite 
+// codenac suite
 //####################################################################
-
-export async function findAllValidCodeNac(): Promise<CodeNac[]> {
+export async function createNAC(codeNac: WithoutId<Partial<CodeNac>>): Promise<Partial<CodeNac>> {
   const db = await dbConnect()
-
-  return db.collection<CodeNac>('codenacs')
-    .find({
-      obsolete: false,
-      $or: [
-        { dateFinValidite: null },
-      ]
-    })
-    .toArray()
+  const codeNacWithId = await db
+    .collection<WithoutId<Partial<CodeNac>>>('codenacs')
+    .insertOne(codeNac)
+  if (!codeNacWithId.acknowledged || !codeNacWithId.insertedId) {
+    throw new UnexpectedError('Insert behave like there were no document and cannot create')
+  }
+  return { ...codeNac, _id: codeNacWithId.insertedId }
 }
 
-
-export async function findValidCodeNac(codeNac: CodeNac['codeNAC']): Promise<CodeNac | null> {
+export async function findEveryValidCodeNAC(): Promise<CodeNac[]> {
   const db = await dbConnect()
-  const codenac = db.collection<CodeNac>('codenacs')
-    .findOne({
-      codeNAC: codeNac,
-      obsolete: false,
-      $or: [
-        { dateFinValidite: null },
-      ]
-    })
+  const now = new Date()
+  const filter = {
+    dateDebutValidite: { $lte: now },
+    $or: [{ dateFinValidite: null }, { dateFinValidite: { $gte: now } }]
+  }
+  return db.collection<CodeNac>('codenacs').find(filter).toArray()
+}
+
+export async function findValidCodeNAC(codeNac: CodeNac['codeNAC']): Promise<CodeNac | null> {
+  const db = await dbConnect()
+  const codenac = db.collection<CodeNac>('codenacs').findOne({
+    codeNAC: codeNac,
+    dateDebutValidite: { $lte: new Date() },
+    $or: [{ dateFinValidite: null }, { dateFinValidite: { $gte: new Date() } }]
+  })
 
   return codenac
+}
+
+export async function findEveryByNAC(codeNac: CodeNac['codeNAC']): Promise<CodeNac[]> {
+  const db = await dbConnect()
+  const codenac = db
+    .collection<CodeNac>('codenacs')
+    .find({
+      codeNAC: codeNac
+    })
+    .toArray()
+  return codenac
+}
+
+//soft delete
+export async function deleteCodeNAC(codeNac: CodeNac['codeNAC']): Promise<CodeNac> {
+  const db = await dbConnect()
+  const now = new Date()
+  const updatedCodeNacStatus: Partial<CodeNac> = {
+    dateFinValidite: now,
+    obsolete: true
+  }
+  const codeNacWithId = await db
+    .collection<CodeNac>('codenacs')
+    .findOneAndUpdate(
+      { codeNAC: codeNac },
+      { $set: updatedCodeNacStatus },
+      { returnDocument: 'after' }
+    )
+  if (!codeNacWithId) {
+    throw new NotFound(`Le code NAC ${codeNac} n'existe pas.`)
+  }
+  return codeNacWithId
+}
+
+export async function findEveryNACBySubChapter(
+  code: CodeNac['sousChapitre']['code']
+): Promise<CodeNac[]> {
+  const db = await dbConnect()
+  const findEveryNACSubChapter = await db
+    .collection<CodeNac>('codenacs')
+    .find({
+      'sousChapitre.code': code
+    })
+    .toArray()
+  return findEveryNACSubChapter
 }
 
 //####################################################################
@@ -156,11 +199,11 @@ export async function findDecisionsWithPagination(
 
   const [decisionBefore] = firstDecision
     ? (await findDecisionsFunction(filters, { _id: { $gt: firstDecision._id } }, { _id: 1 }, 1))
-      .decisions
+        .decisions
     : []
   const [decisionAfter] = lastDecision
     ? (await findDecisionsFunction(filters, { _id: { $lt: lastDecision._id } }, { _id: -1 }, 1))
-      .decisions
+        .decisions
     : []
 
   return {
