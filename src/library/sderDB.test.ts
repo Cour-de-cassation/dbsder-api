@@ -212,7 +212,7 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
 
 let db: MongoClient
 beforeAll(async () => {
-  const uri = 'mongodb://localhost:55433/docker-local'
+  const uri = 'mongodb://localhost:55433/SDER'
   db = new MongoClient(uri)
   await db.connect()
 })
