@@ -11,6 +11,7 @@ RUN npm config set proxy $http_proxy
 RUN npm config set https-proxy $https_proxy
 
 COPY package*.json ./
+COPY ./.yalc ./.yalc
 RUN npm ci
 
 COPY --chown=node:node . .
@@ -28,6 +29,7 @@ RUN npm config set proxy $http_proxy
 RUN npm config set https-proxy $https_proxy
 
 COPY package*.json ./
+COPY ./.yalc ./.yalc
 RUN npm ci
 
 COPY --chown=node:node . .

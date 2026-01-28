@@ -135,7 +135,7 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
       nonSuivi: ['personnePhysique', 'adresse'],
       suivi: null
     },
-    decisionsPubliques: 'decisions publiques',
+    decisionsPubliques: 'décisions publiques',
     debatsPublics: 'débats publics',
     obsolete: false
   },
@@ -152,7 +152,7 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
       nonSuivi: ['personnePhysique', 'adresse'],
       suivi: null
     },
-    decisionsPubliques: 'decisions publiques',
+    decisionsPubliques: 'décisions publiques',
     debatsPublics: 'débats publics',
     obsolete: false
   },
@@ -166,7 +166,7 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     routeRelecture: LabelRoute.DOUBLE_RELECTURE,
     blocOccultation: 1,
     categoriesToOccult: null,
-    decisionsPubliques: 'decisions non publiques',
+    decisionsPubliques: 'décisions non publiques',
     debatsPublics: null,
     obsolete: false
   },
@@ -180,7 +180,7 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     routeRelecture: LabelRoute.DOUBLE_RELECTURE,
     blocOccultation: 1,
     categoriesToOccult: null,
-    decisionsPubliques: 'decisions non publiques',
+    decisionsPubliques: 'décisions non publiques',
     debatsPublics: null,
     obsolete: false
   },
