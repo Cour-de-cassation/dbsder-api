@@ -42,6 +42,7 @@ export async function updateNacById(
 //####################################################################
 export async function createNAC(codeNac: WithoutId<Partial<CodeNac>>): Promise<Partial<CodeNac>> {
   const db = await dbConnect()
+  codeNac.dateDebutValidite = new Date()
   const codeNacWithId = await db
     .collection<WithoutId<Partial<CodeNac>>>('codenacs')
     .insertOne(codeNac)
