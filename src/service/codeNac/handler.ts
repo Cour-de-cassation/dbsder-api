@@ -56,9 +56,9 @@ export async function updateNacIfExistsOrCreate(
   if (!existingCodeNac) {
     throw new NotFound(`Le code NAC ${codeNac.codeNAC} n'existe pas.`)
   }
-
+  
   // Cas 1 : le Code NAC existe mais est déjà non valide (version obsolète)
-  if (existingCodeNac.dateFinValidite !== null || existingCodeNac.dateFinValidite! <= new Date()) {
+  if (existingCodeNac.dateFinValidite !== null) {
     return createNAC(codeNac)
   }
 
