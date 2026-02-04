@@ -95,7 +95,7 @@ export async function deleteCodeNAC(codeNac: CodeNac['codeNAC']): Promise<CodeNa
   const codeNacWithId = await db
     .collection<CodeNac>('codenacs')
     .findOneAndUpdate(
-      { codeNAC: codeNac },
+      { codeNAC: codeNac, dateFinValidite: null },
       { $set: updatedCodeNacStatus },
       { returnDocument: 'after' }
     )
