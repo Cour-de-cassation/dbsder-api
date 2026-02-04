@@ -207,6 +207,17 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     routeRelecture: LabelRoute.PAS_DE_RELECTURE,
     blocOccultation: 1,
     codeUsageNonConseille: false
+  },
+  AA4: {
+    codeNAC: 'AA4',
+    libelleNAC: 'Code NAC AA4',
+    sousChapitre: { code: 'AA', libelle: 'Sous-chapitre AA' },
+    chapitre: { code: 'A', libelle: 'Chapitre A' },
+    dateDebutValidite: new Date('2020-01-01'),
+    dateFinValidite: null,
+    routeRelecture: LabelRoute.PAS_DE_RELECTURE,
+    blocOccultation: 1,
+    codeUsageNonConseille: true
   }
 }
 
@@ -231,8 +242,9 @@ beforeEach(async () => {
       testData.AA1!,
       testData.AAC!,
       testData.AA2!,
+      testData.AA4!,
       testData.AA5!,
-      testData.AA8!
+      testData.AA8!,
     ])
 })
 
@@ -244,11 +256,12 @@ describe('GET /codenacs - Récupération de tous les codenac valides', () => {
       .set('x-api-key', '3d8767ff-ed2a-47bd-91c2-f5ebac712f2c')
 
     expect(response.status).toBe(200)
-    expect(response.body).toHaveLength(5)
+    expect(response.body).toHaveLength(6)
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ codeNAC: 'AAA' }),
-        expect.objectContaining({ codeNAC: 'AA8' })
+        expect.objectContaining({ codeNAC: 'AA8' }),
+        expect.objectContaining({ codeNAC: 'AA4' })
       ])
     )
   })
