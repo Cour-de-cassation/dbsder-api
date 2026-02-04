@@ -349,30 +349,6 @@ describe(`Post /codenacs - Création d'un codenac existant`, () => {
   })
 })
 
-describe(`Post /codenacs - Création d'un codenac, le codenac existe mais invalide`, () => {
-  it(`devrait retourner une erreur indiquant que le codenac existe déjà et qu'il est obsolette`, async () => {
-    const newCodeNac = {
-      codeNAC: 'AAC',
-      libelleNAC: 'Code NAC AAC',
-      sousChapitre: { code: 'AA', libelle: 'Sous-chapitre AA' },
-      chapitre: { code: 'A', libelle: 'Chapitre A' }
-    }
-    const response = await request(`localhost:3008`)
-      .post('/codenacs')
-      .send(newCodeNac)
-      .set('Accept', 'application/json')
-      .set('x-api-key', '3d8767ff-ed2a-47bd-91c2-f5ebac712f2c')
-    expect(response.status).toBe(409)
-    expect(response.body).toEqual(
-      expect.objectContaining({
-        error: {
-          type: 'existingCodeNac',
-          message: `Le codenac AAC existe déjà, dateFinValidite: 2021-12-31T00:00:00.000Z, obsolete: true.`
-        }
-      })
-    )
-  })
-})
 
 describe('Put /codenacs/:AA6 - Modification codenac non existante', () => {
   it('devrait retourner une erreur de notFound', async () => {
@@ -393,21 +369,6 @@ describe('Put /codenacs/:AA6 - Modification codenac non existante', () => {
         error: { type: 'notFound', variableName: "Le code NAC AA6 n'existe pas." }
       })
     )
-  })
-})
-
-describe('Put /codenacs/:AAC - Modification codenac existante mais pas valide - création nouvelle version codenac', () => {
-  it('devrait créer une nouvelle version valide si le codenac existe mais pas valide', async () => {
-    const updatedCodeNac = {
-      libelleNAC: 'Code NAC AAC modifié'
-    }
-    const response = await request(`localhost:3008`)
-      .put('/codenacs/AAC')
-      .send(updatedCodeNac)
-      .set('Accept', 'application/json')
-      .set('x-api-key', '3d8767ff-ed2a-47bd-91c2-f5ebac712f2c')
-    expect(response.status).toBe(200)
-    expect(response.body).toEqual(expect.objectContaining({ libelleNAC: 'Code NAC AAC modifié' }))
   })
 })
 

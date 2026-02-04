@@ -35,7 +35,7 @@ export async function fetchEveryValidCodeNac(): Promise<CodeNac[]> {
 export async function createCodeNac(
   codeNac: WithoutId<Partial<CodeNac>>
 ): Promise<Partial<CodeNac>> {
-  const existingCodeNac = await findCodeNac({ codeNAC: codeNac.codeNAC })
+  const existingCodeNac = await findCodeNac({ codeNAC: codeNac.codeNAC, dateFinValidite: null })
   if (existingCodeNac) {
     throw new ExistingCodeNac(
       existingCodeNac.codeNAC,
@@ -51,18 +51,12 @@ export async function updateNacIfExistsOrCreate(
   nac: string
 ): Promise<Partial<CodeNac>> {
   // Recherche d'un Code NAC existant
-  const existingCodeNac = await findCodeNac({ codeNAC: nac })
+  const existingCodeNac = await findCodeNac({ codeNAC: nac, dateFinValidite: null })
 
   if (!existingCodeNac) {
     throw new NotFound(`Le code NAC ${codeNac.codeNAC} n'existe pas.`)
   }
   
-  // Cas 1 : le Code NAC existe mais est déjà non valide (version obsolète)
-  if (existingCodeNac.dateFinValidite !== null) {
-    return createNAC(codeNac)
-  }
-
-  // Cas 2 : le Code NAC existe et est encore valide
   const updatedExistingCodeNac: CodeNac = {
     ...existingCodeNac,
     dateFinValidite: new Date(),
