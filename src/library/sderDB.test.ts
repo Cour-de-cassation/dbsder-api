@@ -137,7 +137,7 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     },
     decisionsPubliques: 'décisions publiques',
     debatsPublics: 'débats publics',
-    obsolete: false
+    codeUsageNonConseille: false
   },
   AA8: {
     codeNAC: 'AA8',
@@ -154,7 +154,7 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     },
     decisionsPubliques: 'décisions publiques',
     debatsPublics: 'débats publics',
-    obsolete: false
+    codeUsageNonConseille: false
   },
   AA1: {
     codeNAC: 'AA1',
@@ -168,7 +168,7 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     categoriesToOccult: null,
     decisionsPubliques: 'décisions non publiques',
     debatsPublics: null,
-    obsolete: false
+    codeUsageNonConseille: false
   },
   AA5: {
     codeNAC: 'AA5',
@@ -182,7 +182,7 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     categoriesToOccult: null,
     decisionsPubliques: 'décisions non publiques',
     debatsPublics: null,
-    obsolete: false
+    codeUsageNonConseille: false
   },
   AAC: {
     codeNAC: 'AAC',
@@ -195,7 +195,7 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     blocOccultation: null,
     decisionsPubliques: null,
     debatsPublics: null,
-    obsolete: true
+    codeUsageNonConseille: true
   },
   AA2: {
     codeNAC: 'AA2',
@@ -206,7 +206,7 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     dateFinValidite: null,
     routeRelecture: LabelRoute.PAS_DE_RELECTURE,
     blocOccultation: 1,
-    obsolete: false
+    codeUsageNonConseille: false
   }
 }
 
@@ -263,7 +263,7 @@ describe('Get /codenacs/:AAA - Récuperation du codenac AAA', () => {
     expect(response.status).toBe(200)
     expect(response.body).toHaveProperty('codeNAC', 'AAA')
     expect(response.body).toEqual(
-      expect.objectContaining({ codeNAC: 'AAA', dateFinValidite: null, obsolete: false })
+      expect.objectContaining({ codeNAC: 'AAA', dateFinValidite: null, codeUsageNonConseille: false })
     )
   })
 })

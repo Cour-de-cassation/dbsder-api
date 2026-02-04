@@ -90,7 +90,7 @@ export async function deleteCodeNAC(codeNac: CodeNac['codeNAC']): Promise<CodeNa
   const now = new Date()
   const updatedCodeNacStatus: Partial<CodeNac> = {
     dateFinValidite: now,
-    obsolete: true
+    codeUsageNonConseille: true
   }
   const codeNacWithId = await db
     .collection<CodeNac>('codenacs')

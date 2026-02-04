@@ -40,7 +40,7 @@ export async function createCodeNac(
     throw new ExistingCodeNac(
       existingCodeNac.codeNAC,
       existingCodeNac.dateFinValidite?.toISOString() ?? '',
-      existingCodeNac.obsolete
+      existingCodeNac.codeUsageNonConseille
     )
   }
   return await createNAC(codeNac)
@@ -60,7 +60,7 @@ export async function updateNacIfExistsOrCreate(
   const updatedExistingCodeNac: CodeNac = {
     ...existingCodeNac,
     dateFinValidite: new Date(),
-    obsolete: true
+    codeUsageNonConseille: true
   }
 
   await updateNacById(existingCodeNac._id, updatedExistingCodeNac)
