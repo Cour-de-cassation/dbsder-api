@@ -56,7 +56,7 @@ export async function updateNacIfExistsOrCreate(
   if (!existingCodeNac) {
     throw new NotFound(`Le code NAC ${codeNac.codeNAC} n'existe pas.`)
   }
-  
+
   const updatedExistingCodeNac: CodeNac = {
     ...existingCodeNac,
     dateFinValidite: new Date(),

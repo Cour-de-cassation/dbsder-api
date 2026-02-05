@@ -80,3 +80,6 @@ jobs:
 
       - name: Run tests
         run: npm run test
+# pour tester uniquement les tests liés aux codenacs, monter une mongodb dans github action quand dbsder-api-types sera push et lancer la commande suivante 
+      # - name: Run codenacs tests
+      #   run: npm run test:codenacs

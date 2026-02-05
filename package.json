@@ -15,7 +15,8 @@
     "format": "prettier \"src/**/*.ts\" --check",
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
     "fix": "eslint \"src/**/*.ts\" --fix && prettier \"src/**/*.ts\" --write",
-    "test": "jest --detectOpenHandles -c=jest.config.js"
+    "test": "jest sderDb.test.ts --detectOpenHandles -c jest.config.js",
+    "test:codenacs": "jest codenacs.test.ts --detectOpenHandles -c jest.config.js"
   },
   "dependencies": {
     "axios": "1.13.2",
