@@ -52,10 +52,11 @@ export async function createNAC(codeNac: WithoutId<Partial<CodeNac>>): Promise<P
   return { ...codeNac, _id: codeNacWithId.insertedId }
 }
 
-export async function findEveryValidCodeNAC(): Promise<CodeNac[]> {
+export async function findEveryValidCodeNAC(filters: Filter<CodeNac> | null): Promise<CodeNac[]> {
   const db = await dbConnect()
   const now = new Date()
   const filter = {
+    ...(filters ?? {}),
     dateDebutValidite: { $lte: now },
     $or: [{ dateFinValidite: null }, { dateFinValidite: { $gte: now } }]
   }

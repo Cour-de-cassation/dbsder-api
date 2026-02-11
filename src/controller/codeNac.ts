@@ -1,25 +1,28 @@
 import { Router } from 'express'
 import {
   createCodeNac,
-  fetchEveryValidCodeNac,
-  fetchCodeNacByNac,
-  updateNacIfExistsOrCreate,
   deleteCodeNac,
+  fetchCodeNacByNac,
   fetchEveryCodeNacByNac,
-  fetchEverySubChapter
+  fetchEverySubChapter,
+  fetchEveryValidCodeNac,
+  updateNacIfExistsOrCreate
 } from '../service/codeNac/handler'
 import { responseLog } from './logger'
 import { MissingValue } from '../library/error'
 import { CodeNac, parsePartialCodeNac } from 'dbsder-api-types'
-import { WithoutId } from 'mongodb'
+import { Filter, WithoutId } from 'mongodb'
 
 const app = Router()
 
 app.get(
   '/codenacs',
   async (req, res, next) => {
+    const filters: Filter<CodeNac> | null = req.query.filters
+      ? JSON.parse(req.query.filters as string)
+      : null
     try {
-      const allValidCodeNacs = await fetchEveryValidCodeNac()
+      const allValidCodeNacs = await fetchEveryValidCodeNac(filters)
       res.send(allValidCodeNacs)
       next()
     } catch (err: unknown) {

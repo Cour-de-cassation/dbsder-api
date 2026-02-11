@@ -1,16 +1,16 @@
 import { CodeNac } from 'dbsder-api-types'
-import { NotFound, ExistingCodeNac } from '../../library/error'
+import { ExistingCodeNac, NotFound } from '../../library/error'
 import {
-  findEveryValidCodeNAC,
-  findCodeNac,
-  findValidCodeNAC,
   createNAC,
-  updateNacById,
   deleteCodeNAC,
+  findCodeNac,
   findEveryByNAC,
-  findEveryNACBySubChapter
+  findEveryNACBySubChapter,
+  findEveryValidCodeNAC,
+  findValidCodeNAC,
+  updateNacById
 } from '../../library/sderDB'
-import { WithoutId } from 'mongodb'
+import { Filter, WithoutId } from 'mongodb'
 
 export async function fetchCodeNacByNac(codeNac: CodeNac['codeNAC']): Promise<CodeNac> {
   const codeNacDetails = await findValidCodeNAC(codeNac)
@@ -26,8 +26,8 @@ export async function fetchEveryCodeNacByNac(codeNac: CodeNac['codeNAC']): Promi
   return codeNacDetails
 }
 
-export async function fetchEveryValidCodeNac(): Promise<CodeNac[]> {
-  const allValidCodeNacs = await findEveryValidCodeNAC()
+export async function fetchEveryValidCodeNac(filters: Filter<CodeNac> | null): Promise<CodeNac[]> {
+  const allValidCodeNacs = await findEveryValidCodeNAC(filters)
   if (!allValidCodeNacs || allValidCodeNacs.length === 0) throw new NotFound('codeNacs')
   return allValidCodeNacs
 }
