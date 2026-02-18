@@ -26,7 +26,7 @@ export async function fetchEveryCodeNacByNac(codeNac: CodeNac['codeNAC']): Promi
   return codeNacDetails
 }
 
-export async function fetchEveryValidCodeNac(filters: Filter<CodeNac> | null): Promise<CodeNac[]> {
+export async function fetchEveryValidCodeNac(filters: Filter<CodeNac>): Promise<CodeNac[]> {
   const allValidCodeNacs = await findEveryValidCodeNAC(filters)
   if (!allValidCodeNacs || allValidCodeNacs.length === 0) throw new NotFound('codeNacs')
   return allValidCodeNacs

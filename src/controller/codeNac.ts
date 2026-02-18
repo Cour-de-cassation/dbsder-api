@@ -11,18 +11,16 @@ import {
 import { responseLog } from './logger'
 import { MissingValue } from '../library/error'
 import { CodeNac, parsePartialCodeNac } from 'dbsder-api-types'
-import { Filter, WithoutId } from 'mongodb'
+import { WithoutId } from 'mongodb'
+import { parseFilterNAC } from '../library/codenacs'
 
 const app = Router()
 
 app.get(
   '/codenacs',
   async (req, res, next) => {
-    const filters: Filter<CodeNac> | null = req.query.filters
-      ? JSON.parse(req.query.filters as string)
-      : null
     try {
-      const allValidCodeNacs = await fetchEveryValidCodeNac(filters)
+      const allValidCodeNacs = await fetchEveryValidCodeNac(parseFilterNAC(req.query.filters))
       res.send(allValidCodeNacs)
       next()
     } catch (err: unknown) {
