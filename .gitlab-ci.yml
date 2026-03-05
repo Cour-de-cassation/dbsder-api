@@ -76,7 +76,7 @@ deploy_dev:
     ENV: dev
   extends: .deploy_template
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_TAG'
+    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_TAG || $CI_COMMIT_BRANCH == "feat/codenac" '
       when: on_success
   needs:
     - build_and_push_api
