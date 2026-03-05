@@ -21,6 +21,7 @@
   "dependencies": {
     "axios": "1.13.2",
     "dotenv": "17.2.3",
+    "dbsder-api-types": "2.1.45",
     "express": "5.1.0",
     "helmet": "8.1.0",
     "mongodb": "7.0.0",
