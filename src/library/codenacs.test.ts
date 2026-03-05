@@ -155,16 +155,14 @@ describe('GET /codenacs - Récupération de tous les codenac valides', () => {
 describe('GET /codenacs - Récupération de tous les codenac valides avec filtres', () => {
   it('devrait retourner tous les codenac valides avec status 200', async () => {
     const response = await request(`localhost:3008`)
-      .get(`/codenacs?${{codeNAC: "AAA"}}`)
+      .get(`/codenacs?${{ codeNAC: 'AAA' }}`)
       .set('Accept', 'application/json')
       .set('x-api-key', '3d8767ff-ed2a-47bd-91c2-f5ebac712f2c')
 
     expect(response.status).toBe(200)
     expect(response.body).toHaveLength(6)
     expect(response.body).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ codeNAC: 'AAA' }),
-      ])
+      expect.arrayContaining([expect.objectContaining({ codeNAC: 'AAA' })])
     )
   })
 })
