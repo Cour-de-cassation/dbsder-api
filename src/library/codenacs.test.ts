@@ -1,7 +1,7 @@
 import { expect } from '@jest/globals'
 import { MongoClient, WithoutId } from 'mongodb'
 
-import { CodeNac } from 'dbsder-api-types'
+import { Category, CodeNac, DebatsPublics, DecisionsPubliques } from 'dbsder-api-types'
 import request from 'supertest'
 import { LabelRoute } from 'dbsder-api-types/dist/typeGuards/common.zod'
 
@@ -16,12 +16,12 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     dateFinValidite: null,
     routeRelecture: LabelRoute.PAS_DE_RELECTURE,
     blocOccultation: 2,
-    categoriesToOccult: {
-      nonSuivi: ['personnePhysique', 'adresse'],
+    categoriesToOmit: {
+      nonSuivi: [Category.PERSONNEPHYSIQUE, Category.ADRESSE],
       suivi: null
     },
-    decisionsPubliques: 'décisions publiques',
-    debatsPublics: 'débats publics',
+    decisionsPubliques: DecisionsPubliques.DECISIONS_PUBLIQUES,
+    debatsPublics: DebatsPublics.DEBATS_PUBLICS,
     codeUsageNonConseille: false
   },
   AA8: {
@@ -33,12 +33,12 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     dateFinValidite: null,
     routeRelecture: LabelRoute.PAS_DE_RELECTURE,
     blocOccultation: 2,
-    categoriesToOccult: {
-      nonSuivi: ['personnePhysique', 'adresse'],
+    categoriesToOmit: {
+      nonSuivi: [Category.PERSONNEPHYSIQUE, Category.ADRESSE],
       suivi: null
     },
-    decisionsPubliques: 'décisions publiques',
-    debatsPublics: 'débats publics',
+    decisionsPubliques: DecisionsPubliques.DECISIONS_PUBLIQUES,
+    debatsPublics: DebatsPublics.DEBATS_PUBLICS,
     codeUsageNonConseille: false
   },
   AA1: {
@@ -50,8 +50,8 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     dateFinValidite: null,
     routeRelecture: LabelRoute.DOUBLE_RELECTURE,
     blocOccultation: 1,
-    categoriesToOccult: null,
-    decisionsPubliques: 'décisions non publiques',
+    categoriesToOmit: null,
+    decisionsPubliques: DecisionsPubliques.DECISIONS_NON_PUBLIQUES,
     debatsPublics: null,
     codeUsageNonConseille: false
   },
@@ -64,8 +64,8 @@ const testData: Record<string, Partial<WithoutId<CodeNac>>> = {
     dateFinValidite: null,
     routeRelecture: LabelRoute.DOUBLE_RELECTURE,
     blocOccultation: 1,
-    categoriesToOccult: null,
-    decisionsPubliques: 'décisions non publiques',
+    categoriesToOmit: null,
+    decisionsPubliques: DecisionsPubliques.DECISIONS_NON_PUBLIQUES,
     debatsPublics: null,
     codeUsageNonConseille: false
   },

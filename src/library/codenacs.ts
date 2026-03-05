@@ -1,18 +1,22 @@
 import { Filter } from 'mongodb'
-import { CodeNac } from 'dbsder-api-types'
+import { CodeNac, DebatsPublics, DecisionsPubliques } from 'dbsder-api-types'
 
 export const codeNacFiltersMongo = {
   unconditionalNonPublic: {
-    decisionsPubliques: { $in: ['décisions non publiques', 'décisions mixtes'] },
-    debatsPublics: { $in: ['débats non publics', 'débats mixtes'] }
+    decisionsPubliques: {
+      $in: [DecisionsPubliques.DECISIONS_NON_PUBLIQUES, DecisionsPubliques.DECISIONS_MIXTES]
+    },
+    debatsPublics: { $in: [DebatsPublics.DEBATS_NON_PUBLICS, DebatsPublics.DEBATS_MIXTES] }
   },
   conditionalNonPublic: {
-    decisionsPubliques: { $in: ['décisions non publiques', 'décisions mixtes'] },
-    debatsPublics: 'débats publics'
+    decisionsPubliques: {
+      $in: [DecisionsPubliques.DECISIONS_NON_PUBLIQUES, DecisionsPubliques.DECISIONS_MIXTES]
+    },
+    debatsPublics: DebatsPublics.DEBATS_PUBLICS
   },
   partiallyPublic: {
-    decisionsPubliques: 'décisions publiques',
-    debatsPublics: { $in: ['débats non publics', 'débats mixtes'] }
+    decisionsPubliques: DecisionsPubliques.DECISIONS_PUBLIQUES,
+    debatsPublics: { $in: [DebatsPublics.DEBATS_NON_PUBLICS, DebatsPublics.DEBATS_MIXTES] }
   }
 } as const
 
