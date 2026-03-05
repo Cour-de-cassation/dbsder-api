@@ -22,7 +22,7 @@ Configurer les variables d'environnement :
 ### Avec Docker
 
 ```bash
-npm run docker:start
+npm run start:docker
 ```
 
 ### Sans Docker

@@ -5,7 +5,6 @@ import {
   updateDocumentAssocie
 } from '../service/documentAssocie/handler'
 import { responseLog } from './logger'
-import { DocumentAssocie } from 'dbsder-api-types'
 import {
   parseDocumentAssocieCreateQuery,
   parseUpdatableDocumentAssocieFields,
@@ -20,9 +19,8 @@ app.get(
   async (req, res, next) => {
     try {
       const searchItems = parseDocumentAssocieSearchQuery(req.query)
-      const documentAssocie: DocumentAssocie | null =
-        await fetchDocumentAssocieByFilters(searchItems)
-      res.send(documentAssocie)
+      const documentAssocies = await fetchDocumentAssocieByFilters(searchItems)
+      res.send(documentAssocies)
       next()
     } catch (err: unknown) {
       next(err)
