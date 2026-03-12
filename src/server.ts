@@ -29,7 +29,7 @@ app
   .use((req, _, next) => next(new NotFound('path', `${req.method} ${req.path} doesn't exists`)))
   .use(errorHandler)
 
-app.listen(PORT, () => {
+app.listen(PORT as number, '0.0.0.0', () => {
   logger.info({
     path: 'src/server.ts',
     operations: ['other', 'startServer'],

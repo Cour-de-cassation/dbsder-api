@@ -30,6 +30,12 @@ export const errorHandler = (err: Error, req: Request, res: Response, _: NextFun
         res.status(403)
         res.send({ error: err })
         return responseLog(req, res)
+      case 'existingCodeNac':
+        res.status(409)
+        res.send({ error: err })
+        return responseLog(req, res)
+      case 'unexpectedError':
+        break
     }
   }
 
