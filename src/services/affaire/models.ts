@@ -6,7 +6,7 @@ import {
   parsePartialAffaire,
   UnIdentifiedAffaire
 } from 'dbsder-api-types'
-import { isCustomError, NotSupported, toNotSupported } from '../../library/error'
+import { isCustomError, NotSupported, toNotSupported } from '../error'
 import { Filter, ObjectId } from 'mongodb'
 
 export type AffaireSearchQuery = { decisionId?: ObjectId }

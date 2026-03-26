@@ -14,9 +14,9 @@ import {
   deleteDecision,
   PaginatedDecisions,
   Page
-} from '../../library/sderDB'
-import { logger } from '../../library/logger'
-import { NotFound } from '../../library/error'
+} from '../../connectors/sderDB'
+import { logger } from '../../config/logger'
+import { NotFound } from '../error'
 
 function computeDates(previousDecision: Exclude<Decision, DecisionDila> | null) {
   const now = new Date()
@@ -51,7 +51,7 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
 
   if (res.labelStatus !== LabelStatus.TOBETREATED)
     logger.info({
-      path: 'src/service/decision.ts',
+      path: 'src/services/decision.ts',
       operations: ['normalization', 'saveDecision'],
       message: 'Saved decision will not be treated',
       decision: {

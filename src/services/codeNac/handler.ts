@@ -1,5 +1,5 @@
 import { CodeNac } from 'dbsder-api-types'
-import { ExistingCodeNac, NotFound } from '../../library/error'
+import { ExistingCodeNac, NotFound } from '../error'
 import {
   createNAC,
   deleteCodeNAC,
@@ -9,7 +9,7 @@ import {
   findEveryValidCodeNAC,
   findValidCodeNAC,
   updateNacById
-} from '../../library/sderDB'
+} from '../../connectors/sderDB'
 import { Filter, WithoutId } from 'mongodb'
 
 export async function fetchCodeNacByNac(codeNac: CodeNac['codeNAC']): Promise<CodeNac> {

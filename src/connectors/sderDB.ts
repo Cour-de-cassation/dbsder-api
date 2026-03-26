@@ -1,6 +1,6 @@
 import { DeleteResult, Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
-import { NotFound, UnexpectedError } from './error'
-import { MONGO_DB_URL } from './env'
+import { NotFound, UnexpectedError } from '../services/error'
+import { MONGO_DB_URL } from '../config/env'
 import { Affaire, CodeNac, Decision, DocumentAssocie, UnIdentifiedDecision } from 'dbsder-api-types'
 
 const client = new MongoClient(MONGO_DB_URL, { directConnection: true })

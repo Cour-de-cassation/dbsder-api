@@ -1,7 +1,7 @@
 import { Affaire, UnIdentifiedAffaire } from 'dbsder-api-types'
-import { createAffaire, findAffaire, updateAffaireById } from '../../library/sderDB'
+import { createAffaire, findAffaire, updateAffaireById } from '../../connectors/sderDB'
 import { AffaireSearchQuery, mapQueryIntoFilter } from './models'
-import { NotFound, UnexpectedError } from '../../library/error'
+import { NotFound, UnexpectedError } from '../error'
 
 export async function fetchAffaireByFilters(searchValues: AffaireSearchQuery): Promise<Affaire> {
   const [response, ...rest] = (await findAffaire(mapQueryIntoFilter(searchValues))) ?? []

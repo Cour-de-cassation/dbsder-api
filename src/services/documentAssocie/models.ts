@@ -6,7 +6,7 @@ import {
   parseDocumentAssocie,
   parsePartialDocumentAssocie
 } from 'dbsder-api-types'
-import { isCustomError, NotSupported, toNotSupported } from '../../library/error'
+import { isCustomError, NotSupported, toNotSupported } from '../error'
 import { ObjectId } from 'mongodb'
 
 export function parseId(maybeId: unknown): ObjectId {

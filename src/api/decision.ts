@@ -6,16 +6,16 @@ import {
   parseUpdatableDecisionFields,
   UnIdentifiedDecisionSupported,
   UpdatableDecisionFields
-} from '../service/decision/models'
+} from '../services/decision/models'
 import {
   fetchDecisionById,
   fetchDecisions,
   saveDecision,
   updateDecision,
   deleteDecisionById
-} from '../service/decision/handler'
-import { ForbiddenError, MissingValue, NotSupported } from '../library/error'
-import { Service } from '../service/authentication'
+} from '../services/decision/handler'
+import { ForbiddenError, MissingValue, NotSupported } from '../services/error'
+import { Service } from '../services/authentication'
 import { Decision } from 'dbsder-api-types'
 import queryString from 'qs'
 import { responseLog } from './logger'

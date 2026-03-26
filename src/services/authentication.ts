@@ -7,8 +7,8 @@ import {
   OPENSDER_API_KEY,
   OPS_API_KEY,
   PUBLICATION_API_KEY
-} from '../library/env'
-import { UnauthorizedError } from '../library/error'
+} from '../config/env'
+import { UnauthorizedError } from './error'
 
 // Warn: I don't understand some of this services
 export enum Service {

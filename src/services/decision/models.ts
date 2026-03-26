@@ -17,7 +17,7 @@ import {
   ParseError
 } from 'dbsder-api-types'
 import { ObjectId } from 'mongodb'
-import { NotSupported, toNotSupported, UnexpectedError } from '../../library/error'
+import { NotSupported, toNotSupported, UnexpectedError } from '../error'
 
 export type DecisionSupported = Exclude<Decision, DecisionDila> & {
   originalText: string // Warn: current model accept empty but new data doesn't

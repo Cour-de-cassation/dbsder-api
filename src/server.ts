@@ -1,16 +1,16 @@
 import express, { Express, json } from 'express'
 import helmet from 'helmet'
 
-import { logger, loggerHttp } from './library/logger'
-import codeNacRouter from './controller/codeNac'
-import decisionRouter from './controller/decision'
-import affaireRouter from './controller/affaire'
-import documentAssocieRouter from './controller/documentAssocie'
-import { errorHandler } from './controller/error'
-import { apiKeyHandler } from './controller/authentication'
-import { PORT } from './library/env'
-import { NotFound } from './library/error'
-import { requestLog } from './controller/logger'
+import { logger, loggerHttp } from './config/logger'
+import codeNacRouter from './api/codeNac'
+import decisionRouter from './api/decision'
+import affaireRouter from './api/affaire'
+import documentAssocieRouter from './api/documentAssocie'
+import { errorHandler } from './api/error'
+import { apiKeyHandler } from './api/authentication'
+import { PORT } from './config/env'
+import { NotFound } from './services/error'
+import { requestLog } from './api/logger'
 
 const app: Express = express()
 

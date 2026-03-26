@@ -3,7 +3,7 @@ import {
   createAffaireHandler,
   fetchAffaireByFilters,
   updateAffaire
-} from '../service/affaire/handler'
+} from '../services/affaire/handler'
 import { responseLog } from './logger'
 import { Affaire } from 'dbsder-api-types'
 import {
@@ -11,7 +11,7 @@ import {
   parseAffaireSearchQuery,
   parseAffaireUpdateQuery,
   parseId
-} from '../service/affaire/models'
+} from '../services/affaire/models'
 
 const app = Router()
 

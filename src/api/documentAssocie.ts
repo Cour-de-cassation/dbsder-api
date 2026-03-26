@@ -3,14 +3,14 @@ import {
   createDocumentAssocieHandler,
   fetchDocumentAssocieByFilters,
   updateDocumentAssocie
-} from '../service/documentAssocie/handler'
+} from '../services/documentAssocie/handler'
 import { responseLog } from './logger'
 import {
   parseDocumentAssocieCreateQuery,
   parseUpdatableDocumentAssocieFields,
   parseId,
   parseDocumentAssocieSearchQuery
-} from '../service/documentAssocie/models'
+} from '../services/documentAssocie/models'
 
 const app = Router()
 
