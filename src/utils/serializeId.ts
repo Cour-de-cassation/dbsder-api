@@ -18,6 +18,8 @@ function parseId(field: string | string[]): ParseField<typeof field> {
 function serializeId(field: ObjectId): string
 function serializeId(field: ObjectId[]): string[]
 function serializeId(field: ObjectId | ObjectId[]): SerializeField<typeof field> {
+  if (Array.isArray(field)) return field.map((_) => serializeId(_))
+
   return field.toString()
 }
 
@@ -26,14 +28,16 @@ export function parseModelWithId<T, K extends keyof T>(model: T, ...keys: K[]): 
     return keys.reduce((acc, key) => {
       if (typeof acc[key] === 'string')
         return {
-          ...model,
+          ...acc,
           [key]: parseId(acc[key])
         }
+
       if (Array.isArray(acc[key]) && acc[key].every((_) => typeof _ === 'string'))
         return {
-          ...model,
+          ...acc,
           [key]: parseId(acc[key])
         }
+
       throw new Error(`parseId: not parsable to ObjectId`)
     }, model as Partial<T>) as IdParse<T, K> // because intermediate type during reduce.
   } catch (_) {
@@ -49,17 +53,17 @@ export function serializeModelWithId<T, K extends keyof T>(
     return keys.reduce((acc, key) => {
       if (acc[key] instanceof ObjectId)
         return {
-          ...model,
+          ...acc,
           [key]: serializeId(acc[key])
         }
       if (Array.isArray(acc[key]) && acc[key].every((_) => _ instanceof ObjectId))
         return {
-          ...model,
+          ...acc,
           [key]: serializeId(acc[key])
         }
-      throw new Error(`parseId: not parsable to ObjectId`)
+      throw new Error(`serializeId: not serializable from ObjectId`)
     }, model as Partial<T>) as Idserialize<T, K> // because intermediate type during reduce.
   } catch (_) {
-    throw new Error(`parseId: not parsable to ObjectId`)
+    throw new Error(`serializeId: not serializable from ObjectId`)
   }
 }
