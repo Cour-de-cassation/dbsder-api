@@ -5,13 +5,14 @@ import {
   updateAffaire
 } from '../services/affaire/handler'
 import { responseLog } from './logger'
-import { Affaire } from 'dbsder-api-types'
 import {
+  Affaire,
   parseAffaireCreateQuery,
   parseAffaireSearchQuery,
   parseAffaireUpdateQuery,
-  parseId
+  serializeAffaire,
 } from '../services/affaire/models'
+import { parseModelWithId } from '../utils/serializeId'
 
 const app = Router()
 
@@ -21,7 +22,7 @@ app.get(
     try {
       const searchItems = parseAffaireSearchQuery(req.query)
       const affaire: Affaire = await fetchAffaireByFilters(searchItems)
-      res.send(affaire)
+      res.send(serializeAffaire(affaire))
       next()
     } catch (err: unknown) {
       next(err)
@@ -35,7 +36,7 @@ app.post(
   async (req, res, next) => {
     try {
       const affaire: Affaire | null = await createAffaireHandler(parseAffaireCreateQuery(req.body))
-      res.send(affaire)
+      res.send(serializeAffaire(affaire))
     } catch (err: unknown) {
       next(err)
     }
@@ -47,10 +48,10 @@ app.patch(
   '/affaires/:id',
   async (req, res, next) => {
     try {
-      const id = parseId(req.params.id)
+      const { id } = parseModelWithId({ id: req.params.id }, 'id')
       const affaireUpdateQuery = parseAffaireUpdateQuery(req.body)
       const updatedAffaire = await updateAffaire(id, affaireUpdateQuery)
-      res.send(updatedAffaire)
+      res.send(serializeAffaire(updatedAffaire))
       next()
     } catch (err) {
       next(err)

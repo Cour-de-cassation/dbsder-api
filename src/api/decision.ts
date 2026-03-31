@@ -1,7 +1,6 @@
 import { Request, Router } from 'express'
 import {
   parseDecisionListFilters,
-  parseId,
   parseUnIdentifiedDecisionSupported,
   parseUpdatableDecisionFields,
   UnIdentifiedDecisionSupported,
@@ -19,6 +18,7 @@ import { Service } from '../services/authentication'
 import { Decision } from 'dbsder-api-types'
 import queryString from 'qs'
 import { responseLog } from './logger'
+import { parseModelWithId } from '../utils/serializeId'
 
 const app = Router()
 
@@ -26,7 +26,7 @@ app.get(
   '/decisions/:id',
   async (req, res, next) => {
     try {
-      const decisionId = parseId(req.params.id)
+      const { decisionId } = parseModelWithId({ decisionId: req.params.id })
       const decision = await fetchDecisionById(decisionId)
       res.send(decision)
       next()

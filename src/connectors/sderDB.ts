@@ -1,7 +1,14 @@
 import { DeleteResult, Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
 import { NotFound, UnexpectedError } from '../services/error'
 import { MONGO_DB_URL } from '../config/env'
-import { Affaire, CodeNac, Decision, DocumentAssocie, UnIdentifiedDecision } from 'dbsder-api-types'
+import { 
+  Affaire as AffairePayload, 
+  CodeNac, 
+  Decision as DecisionPayload, 
+  DocumentAssocie, 
+  UnIdentifiedDecision as UnIdentifiedDecisionPayload 
+} from 'dbsder-api-types'
+import { IdParse } from '../utils/serializeId'
 
 const client = new MongoClient(MONGO_DB_URL, { directConnection: true })
 
@@ -114,8 +121,11 @@ export async function findEveryNACBySubChapter(
 }
 
 //####################################################################
-// codenac end
+// Decision
 //####################################################################
+
+type Decision = IdParse<DecisionPayload, "_id">
+type UnIdentifiedDecision = UnIdentifiedDecisionPayload
 
 export async function findAndReplaceDecision(
   decisionFilters: Filter<UnIdentifiedDecision>,
@@ -195,11 +205,11 @@ export async function findDecisionsWithPagination(
 
   const [decisionBefore] = firstDecision
     ? (await findDecisionsFunction(filters, { _id: { $gt: firstDecision._id } }, { _id: 1 }, 1))
-        .decisions
+      .decisions
     : []
   const [decisionAfter] = lastDecision
     ? (await findDecisionsFunction(filters, { _id: { $lt: lastDecision._id } }, { _id: -1 }, 1))
-        .decisions
+      .decisions
     : []
 
   return {
@@ -209,6 +219,12 @@ export async function findDecisionsWithPagination(
     nextCursor: decisionAfter?._id
   }
 }
+
+//####################################################################
+// Affaire
+//####################################################################
+
+type Affaire = IdParse<AffairePayload, "_id" | "decisionIds" | "documentAssocieIds">
 
 export async function createAffaire(affaire: WithoutId<Affaire>): Promise<Affaire> {
   const db = await dbConnect()
@@ -236,6 +252,10 @@ export async function findAffaire(filter: Filter<Affaire>): Promise<Affaire[] | 
   const db = await dbConnect()
   return db.collection<Affaire>('affaires').find(filter).toArray()
 }
+
+//####################################################################
+// document associé
+//####################################################################
 
 export async function createDocumentAssocie(
   documentAssocie: WithoutId<DocumentAssocie>
