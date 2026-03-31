@@ -11,15 +11,18 @@ import { IdParse, parseModelWithId, serializeModelWithId } from '../../utils/ser
 
 export type AffaireSearchQuery = { decisionId?: ObjectId }
 export type Affaire = IdParse<AffairePayload, '_id' | 'decisionIds' | 'documentAssocieIds'>
-export type UnIdentifiedAffaire = IdParse<UnIdentifiedAffairePayload, 'decisionIds' | 'documentAssocieIds'>
+export type UnIdentifiedAffaire = IdParse<
+  UnIdentifiedAffairePayload,
+  'decisionIds' | 'documentAssocieIds'
+>
 
 export function parseAffaireSearchQuery(x: unknown): AffaireSearchQuery {
   try {
     if (typeof x !== 'object' || !x) throw new NotSupported('affaireSearchQuery', x)
 
     const decisionId = 'decisionId' in x ? x.decisionId : undefined
-    return parseModelWithId({ decisionId }, "decisionId")
-  } catch (err) {
+    return parseModelWithId({ decisionId }, 'decisionId')
+  } catch (_) {
     throw new NotSupported(
       'affaireSearchQuery',
       x,
@@ -37,7 +40,7 @@ export function parseAffaireUpdateQuery(x: unknown): Partial<Affaire> {
         x,
         'affaireUpdateQuery is empty or valids search fields are missing'
       )
-    return parseModelWithId(partialAffaire, "_id", "decisionIds", "documentAssocieIds")
+    return parseModelWithId(partialAffaire, '_id', 'decisionIds', 'documentAssocieIds')
   } catch (err) {
     if (isCustomError(err)) throw err
     if (err instanceof ParseError) throw toNotSupported('affaireUpdateQuery', x, err)
@@ -47,7 +50,7 @@ export function parseAffaireUpdateQuery(x: unknown): Partial<Affaire> {
 
 export function parseAffaireCreateQuery(x: unknown): UnIdentifiedAffaire {
   try {
-    return parseModelWithId(parseAffaire(x), "decisionIds", "documentAssocieIds")
+    return parseModelWithId(parseAffaire(x), 'decisionIds', 'documentAssocieIds')
   } catch (err) {
     if (isCustomError(err)) throw err
     if (err instanceof ParseError) throw toNotSupported('affaireCreateQuery', x, err)

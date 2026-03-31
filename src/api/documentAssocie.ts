@@ -35,7 +35,7 @@ app.post(
   async (req, res, next) => {
     try {
       const { _id } = await createDocumentAssocieHandler(parseDocumentAssocieCreateQuery(req.body))
-      res.send(serializeModelWithId({ _id, message: 'documentAssocié créé' }, "_id"))
+      res.send(serializeModelWithId({ _id, message: 'documentAssocié créé' }, '_id'))
     } catch (err: unknown) {
       next(err)
     }
@@ -47,10 +47,10 @@ app.patch(
   '/documentassocies/:id',
   async (req, res, next) => {
     try {
-      const { id } = parseModelWithId({ id: req.params.id }, "id")
+      const { id } = parseModelWithId({ id: req.params.id }, 'id')
       const updatableFields = parseUpdatableDocumentAssocieFields(req.body)
       const { _id } = await updateDocumentAssocie(id, updatableFields)
-      res.send(serializeModelWithId({ _id, message: 'documentAssocié mis a jour' }, "_id"))
+      res.send(serializeModelWithId({ _id, message: 'documentAssocié mis a jour' }, '_id'))
       next()
     } catch (err) {
       next(err)

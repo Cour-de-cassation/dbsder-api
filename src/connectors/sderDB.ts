@@ -1,12 +1,12 @@
 import { DeleteResult, Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
 import { NotFound, UnexpectedError } from '../services/error'
 import { MONGO_DB_URL } from '../config/env'
-import { 
-  Affaire as AffairePayload, 
-  CodeNac as CodeNacPayload, 
-  Decision as DecisionPayload, 
-  DocumentAssocie as DocumentAssociePayload, 
-  UnIdentifiedDecision as UnIdentifiedDecisionPayload 
+import {
+  Affaire as AffairePayload,
+  CodeNac as CodeNacPayload,
+  Decision as DecisionPayload,
+  DocumentAssocie as DocumentAssociePayload,
+  UnIdentifiedDecision as UnIdentifiedDecisionPayload
 } from 'dbsder-api-types'
 import { IdParse } from '../utils/serializeId'
 
@@ -22,7 +22,7 @@ async function dbConnect() {
 // Codenac
 //####################################################################
 
-type CodeNac = IdParse<CodeNacPayload, "_id">
+type CodeNac = IdParse<CodeNacPayload, '_id'>
 
 export async function findCodeNac(
   filters: Filter<CodeNac>,
@@ -128,7 +128,7 @@ export async function findEveryNACBySubChapter(
 // Decision
 //####################################################################
 
-type Decision = IdParse<DecisionPayload, "_id">
+type Decision = IdParse<DecisionPayload, '_id'>
 type UnIdentifiedDecision = UnIdentifiedDecisionPayload
 
 export async function findAndReplaceDecision(
@@ -209,11 +209,11 @@ export async function findDecisionsWithPagination(
 
   const [decisionBefore] = firstDecision
     ? (await findDecisionsFunction(filters, { _id: { $gt: firstDecision._id } }, { _id: 1 }, 1))
-      .decisions
+        .decisions
     : []
   const [decisionAfter] = lastDecision
     ? (await findDecisionsFunction(filters, { _id: { $lt: lastDecision._id } }, { _id: -1 }, 1))
-      .decisions
+        .decisions
     : []
 
   return {
@@ -228,7 +228,7 @@ export async function findDecisionsWithPagination(
 // Affaire
 //####################################################################
 
-type Affaire = IdParse<AffairePayload, "_id" | "decisionIds" | "documentAssocieIds">
+type Affaire = IdParse<AffairePayload, '_id' | 'decisionIds' | 'documentAssocieIds'>
 
 export async function createAffaire(affaire: WithoutId<Affaire>): Promise<Affaire> {
   const db = await dbConnect()
@@ -261,7 +261,7 @@ export async function findAffaire(filter: Filter<Affaire>): Promise<Affaire[] | 
 // document associé
 //####################################################################
 
-type DocumentAssocie = IdParse<DocumentAssociePayload, "_id" | "decisionId">
+type DocumentAssocie = IdParse<DocumentAssociePayload, '_id' | 'decisionId'>
 
 export async function createDocumentAssocie(
   documentAssocie: WithoutId<DocumentAssocie>

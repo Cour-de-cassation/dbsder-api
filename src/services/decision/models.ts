@@ -35,15 +35,15 @@ type UnIdentifiedDecisionPayloadSupported = Exclude<
 // Création du type de décision en travail (parsée)
 //####################################################################
 
-export type DecisionDila = IdParse<DecisionDilaPayload, "_id">
-export type DecisionCc = IdParse<DecisionCcPayload, "_id">
-export type DecisionCa = IdParse<DecisionCaPayload, "_id">
-export type DecisionTcom = IdParse<DecisionTcomPayload, "_id">
-export type DecisionTj = IdParse<DecisionTjPayload, "_id">
-export type DecisionCph = IdParse<DecisionCphPayload, "_id">
+export type DecisionDila = IdParse<DecisionDilaPayload, '_id'>
+export type DecisionCc = IdParse<DecisionCcPayload, '_id'>
+export type DecisionCa = IdParse<DecisionCaPayload, '_id'>
+export type DecisionTcom = IdParse<DecisionTcomPayload, '_id'>
+export type DecisionTj = IdParse<DecisionTjPayload, '_id'>
+export type DecisionCph = IdParse<DecisionCphPayload, '_id'>
 
-export type Decision = IdParse<DecisionPayload, "_id">
-export type DecisionSupported = IdParse<DecisionPayloadSupported, "_id">
+export type Decision = IdParse<DecisionPayload, '_id'>
+export type DecisionSupported = IdParse<DecisionPayloadSupported, '_id'>
 
 // payload is equal to parsed due there is no ID
 export type UnIdentifiedDecision = UnIdentifiedDecisionPayload
@@ -152,11 +152,11 @@ export function parseDecisionListFilters(x: object): DecisionListFilters {
 
 const protectedKeys = ['_id', 'sourceId', 'sourceName'] as const
 export type UpdatableDecisionFields =
-  | Partial<Omit<DecisionCc, '_id'|'sourceId'|'sourceName'>>
-  | Partial<Omit<DecisionCa, '_id'|'sourceId'|'sourceName'>>
-  | Partial<Omit<DecisionTj, '_id'|'sourceId'|'sourceName'>>
-  | Partial<Omit<DecisionTcom, '_id'|'sourceId'|'sourceName'>>
-  | Partial<Omit<DecisionCph, '_id'|'sourceId'|'sourceName'>>
+  | Partial<Omit<DecisionCc, '_id' | 'sourceId' | 'sourceName'>>
+  | Partial<Omit<DecisionCa, '_id' | 'sourceId' | 'sourceName'>>
+  | Partial<Omit<DecisionTj, '_id' | 'sourceId' | 'sourceName'>>
+  | Partial<Omit<DecisionTcom, '_id' | 'sourceId' | 'sourceName'>>
+  | Partial<Omit<DecisionCph, '_id' | 'sourceId' | 'sourceName'>>
 export function parseUpdatableDecisionFields(
   sourceName: Decision['sourceName'],
   x: unknown
@@ -237,5 +237,5 @@ export function mapDecisionListFiltersIntoDbFilters(filters: DecisionListFilters
 //####################################################################
 
 export function serializeDecision(decision: Decision): DecisionPayload {
-  return serializeModelWithId(decision, "_id") as DecisionPayload
+  return serializeModelWithId(decision, '_id') as DecisionPayload
 }

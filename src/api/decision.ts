@@ -50,12 +50,12 @@ function parseGetQuery(query: unknown) {
     )
 
   if ('searchBefore' in query && typeof query.searchBefore === 'string') {
-    const { searchBefore } = parseModelWithId({ searchBefore: query.searchBefore }, "searchBefore")
+    const { searchBefore } = parseModelWithId({ searchBefore: query.searchBefore }, 'searchBefore')
     return { filters, searchBefore }
   }
 
   if ('searchAfter' in query && typeof query.searchAfter === 'string') {
-    const { searchAfter } = parseModelWithId({ searchAfter: query.searchAfter }, "searchAfter")
+    const { searchAfter } = parseModelWithId({ searchAfter: query.searchAfter }, 'searchAfter')
     return { filters, searchAfter }
   }
 
@@ -107,10 +107,15 @@ app.patch(
       const { sourceName } = await fetchDecisionById(id)
       const updateFields = parsePatchBody(sourceName, req.body)
       const { _id } = await updateDecision(id, sourceName, updateFields)
-      res.send(serializeModelWithId({
-        _id,
-        message: 'Decision mise à jour'
-      }, '_id'))
+      res.send(
+        serializeModelWithId(
+          {
+            _id,
+            message: 'Decision mise à jour'
+          },
+          '_id'
+        )
+      )
       next()
     } catch (err: unknown) {
       next(err)
@@ -133,10 +138,15 @@ app.put(
 
       const decision = parsePutBody(req.body)
       const { _id } = await saveDecision(decision)
-      res.send(serializeModelWithId({
-        _id,
-        message: 'Decision créée ou mise à jour'
-      }, '_id'))
+      res.send(
+        serializeModelWithId(
+          {
+            _id,
+            message: 'Decision créée ou mise à jour'
+          },
+          '_id'
+        )
+      )
       next()
     } catch (err: unknown) {
       next(err)

@@ -9,9 +9,8 @@ import { isCustomError, NotSupported, toNotSupported } from '../error'
 import { ObjectId } from 'mongodb'
 import { IdParse, parseModelWithId, serializeModelWithId } from '../../utils/serializeId'
 
-export type DocumentAssocie = IdParse<DocumentAssociePayload, "_id" | "decisionId">
-export type UnIdentifiedDocumentAssocie =  IdParse<UnIdentifiedDocumentAssociePayload, "decisionId">
-
+export type DocumentAssocie = IdParse<DocumentAssociePayload, '_id' | 'decisionId'>
+export type UnIdentifiedDocumentAssocie = IdParse<UnIdentifiedDocumentAssociePayload, 'decisionId'>
 
 export type DocumentAssocieSearchQuery = { decisionId: ObjectId }
 export function parseDocumentAssocieSearchQuery(x: unknown): DocumentAssocieSearchQuery {
@@ -19,7 +18,7 @@ export function parseDocumentAssocieSearchQuery(x: unknown): DocumentAssocieSear
 
   const decisionId = 'decisionId' in x ? x.decisionId : undefined
 
-  if (decisionId) return parseModelWithId({ decisionId }, "decisionId")
+  if (decisionId) return parseModelWithId({ decisionId }, 'decisionId')
 
   throw new NotSupported(
     'documentAssocieSearchQuery',
@@ -30,7 +29,11 @@ export function parseDocumentAssocieSearchQuery(x: unknown): DocumentAssocieSear
 
 const protectedKeys = ['_id', 'decisionId', 'documentType', 'originalText', 'metadata'] as const
 
-export function parseUpdatableDocumentAssocieFields(x: unknown): Partial<Omit<DocumentAssocie, '_id' | 'decisionId' | 'documentType' | 'originalText' | 'metadata'>> {
+export function parseUpdatableDocumentAssocieFields(
+  x: unknown
+): Partial<
+  Omit<DocumentAssocie, '_id' | 'decisionId' | 'documentType' | 'originalText' | 'metadata'>
+> {
   try {
     if (typeof x !== 'object' || !x) throw new NotSupported('documentAssocieFields', x)
 
@@ -58,7 +61,7 @@ export function parseUpdatableDocumentAssocieFields(x: unknown): Partial<Omit<Do
 
 export function parseDocumentAssocieCreateQuery(x: unknown): UnIdentifiedDocumentAssocie {
   try {
-    return parseModelWithId(parseDocumentAssocie(x), "decisionId")
+    return parseModelWithId(parseDocumentAssocie(x), 'decisionId')
   } catch (err) {
     if (isCustomError(err)) throw err
     if (err instanceof ParseError) throw toNotSupported('documentAssocieCreateQuery', x, err)
@@ -67,5 +70,5 @@ export function parseDocumentAssocieCreateQuery(x: unknown): UnIdentifiedDocumen
 }
 
 export function serializeDocumentAssocie(documentAssocie: DocumentAssocie): DocumentAssociePayload {
-  return serializeModelWithId(documentAssocie, "_id", "decisionId")
+  return serializeModelWithId(documentAssocie, '_id', 'decisionId')
 }

@@ -2,7 +2,7 @@ import { Filter } from 'mongodb'
 import { CodeNac as CodeNacPayload, DebatsPublics, DecisionsPubliques } from 'dbsder-api-types'
 import { IdParse } from '../../utils/serializeId'
 
-export type CodeNac = IdParse<CodeNacPayload, "_id">
+export type CodeNac = IdParse<CodeNacPayload, '_id'>
 
 export const codeNacFiltersMongo = {
   unconditionalNonPublic: {
@@ -29,9 +29,9 @@ function isFilterNacKey(value: unknown): value is FilterNacKey {
   return typeof value === 'string' && value in codeNacFiltersMongo
 }
 
-export function parseFilterNAC(query: unknown): Filter<Omit<CodeNac, "id">> {
+export function parseFilterNAC(query: unknown): Filter<Omit<CodeNac, 'id'>> {
   const now = new Date()
-  const defaultFilters: Filter<Omit<CodeNac, "id">> = {
+  const defaultFilters: Filter<Omit<CodeNac, 'id'>> = {
     dateDebutValidite: { $lte: now },
     $or: [{ dateFinValidite: null }, { dateFinValidite: { $gte: now } }]
   }

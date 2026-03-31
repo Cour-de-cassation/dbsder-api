@@ -10,7 +10,7 @@ import {
   parseAffaireCreateQuery,
   parseAffaireSearchQuery,
   parseAffaireUpdateQuery,
-  serializeAffaire,
+  serializeAffaire
 } from '../services/affaire/models'
 import { parseModelWithId } from '../utils/serializeId'
 

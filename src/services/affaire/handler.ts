@@ -12,10 +12,7 @@ export async function fetchAffaireByFilters(searchValues: AffaireSearchQuery): P
   return response
 }
 
-export async function updateAffaire(
-  id: ObjectId,
-  affaire: Partial<Affaire>
-): Promise<Affaire> {
+export async function updateAffaire(id: ObjectId, affaire: Partial<Affaire>): Promise<Affaire> {
   return updateAffaireById(id, affaire)
 }
 

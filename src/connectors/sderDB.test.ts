@@ -1,9 +1,11 @@
 import { expect, jest } from '@jest/globals'
-import { Filter, WithId } from 'mongodb'
+import { Filter, ObjectId, WithId } from 'mongodb'
 
-import { Decision } from 'dbsder-api-types'
+import { Decision as DecisionPayload } from 'dbsder-api-types'
 
 import * as sderDb from './sderDB'
+
+type Decision = Omit<DecisionPayload, '_id'> & { _id: ObjectId}
 
 const decisions = [
   { _id: 1 },
