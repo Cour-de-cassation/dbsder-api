@@ -3,9 +3,9 @@ import { NotFound, UnexpectedError } from '../services/error'
 import { MONGO_DB_URL } from '../config/env'
 import { 
   Affaire as AffairePayload, 
-  CodeNac, 
+  CodeNac as CodeNacPayload, 
   Decision as DecisionPayload, 
-  DocumentAssocie, 
+  DocumentAssocie as DocumentAssociePayload, 
   UnIdentifiedDecision as UnIdentifiedDecisionPayload 
 } from 'dbsder-api-types'
 import { IdParse } from '../utils/serializeId'
@@ -17,6 +17,12 @@ async function dbConnect() {
   await client.connect()
   return db
 }
+
+//####################################################################
+// Codenac
+//####################################################################
+
+type CodeNac = IdParse<CodeNacPayload, "_id">
 
 export async function findCodeNac(
   filters: Filter<CodeNac>,
@@ -44,9 +50,7 @@ export async function updateNacById(
     throw new UnexpectedError('The update behave like there were no document and cannot update')
   return codeNacWithId
 }
-//####################################################################
-// codenac suite
-//####################################################################
+
 export async function createNAC(codeNac: WithoutId<Partial<CodeNac>>): Promise<Partial<CodeNac>> {
   const db = await dbConnect()
   codeNac.dateDebutValidite = new Date()
@@ -256,6 +260,8 @@ export async function findAffaire(filter: Filter<Affaire>): Promise<Affaire[] | 
 //####################################################################
 // document associé
 //####################################################################
+
+type DocumentAssocie = IdParse<DocumentAssociePayload, "_id" | "decisionId">
 
 export async function createDocumentAssocie(
   documentAssocie: WithoutId<DocumentAssocie>

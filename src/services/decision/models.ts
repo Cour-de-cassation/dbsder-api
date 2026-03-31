@@ -16,7 +16,7 @@ import {
   ParseError
 } from 'dbsder-api-types'
 import { NotSupported, toNotSupported, UnexpectedError } from '../error'
-import { IdParse } from '../../utils/serializeId'
+import { IdParse, serializeModelWithId } from '../../utils/serializeId'
 
 //####################################################################
 // Création du type de décision supportée
@@ -35,19 +35,19 @@ type UnIdentifiedDecisionPayloadSupported = Exclude<
 // Création du type de décision en travail (parsée)
 //####################################################################
 
-export type Decision = IdParse<DecisionPayload, "_id">
-export type DecisionSupported = IdParse<DecisionPayloadSupported, "_id">
-
-// payload is equal to parsed due there is no ID
-export type UnIdentifiedDecision = UnIdentifiedDecisionPayload
-export type UnIdentifiedDecisionSupported = UnIdentifiedDecisionPayloadSupported
-
+export type DecisionDila = IdParse<DecisionDilaPayload, "_id">
 export type DecisionCc = IdParse<DecisionCcPayload, "_id">
 export type DecisionCa = IdParse<DecisionCaPayload, "_id">
 export type DecisionTcom = IdParse<DecisionTcomPayload, "_id">
 export type DecisionTj = IdParse<DecisionTjPayload, "_id">
 export type DecisionCph = IdParse<DecisionCphPayload, "_id">
 
+export type Decision = IdParse<DecisionPayload, "_id">
+export type DecisionSupported = IdParse<DecisionPayloadSupported, "_id">
+
+// payload is equal to parsed due there is no ID
+export type UnIdentifiedDecision = UnIdentifiedDecisionPayload
+export type UnIdentifiedDecisionSupported = UnIdentifiedDecisionPayloadSupported
 
 //####################################################################
 // Utils
@@ -230,4 +230,12 @@ export function mapDecisionListFiltersIntoDbFilters(filters: DecisionListFilters
     ...filtersOnEqual,
     ...dateFilter
   }
+}
+
+//####################################################################
+// Serialization de sortie
+//####################################################################
+
+export function serializeDecision(decision: Decision): DecisionPayload {
+  return serializeModelWithId(decision, "_id") as DecisionPayload
 }

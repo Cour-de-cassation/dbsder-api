@@ -1,5 +1,4 @@
-import { DocumentAssocie, UnIdentifiedDocumentAssocie } from 'dbsder-api-types'
-import { DocumentAssocieSearchQuery } from './models'
+import { DocumentAssocie, DocumentAssocieSearchQuery, UnIdentifiedDocumentAssocie } from './models'
 import { NotFound } from '../error'
 import {
   findDocumentAssocie,

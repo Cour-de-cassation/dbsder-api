@@ -95,7 +95,7 @@ app.post(
   async (req, res, next) => {
     try {
       const codenac = parseNAC(req.body)
-      const createdCodeNac: Partial<CodeNac> = await createCodeNac(codenac)
+      const createdCodeNac: Partial<Omit<CodeNac, "_id">> = await createCodeNac(codenac)
       if (createdCodeNac) res.status(201)
       res.send(createdCodeNac)
       next()

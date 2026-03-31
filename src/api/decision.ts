@@ -3,6 +3,7 @@ import {
   parseDecisionListFilters,
   parseUnIdentifiedDecisionSupported,
   parseUpdatableDecisionFields,
+  serializeDecision,
   UnIdentifiedDecisionSupported,
   UpdatableDecisionFields
 } from '../services/decision/models'
@@ -18,7 +19,7 @@ import { Service } from '../services/authentication'
 import { Decision } from 'dbsder-api-types'
 import queryString from 'qs'
 import { responseLog } from './logger'
-import { parseModelWithId } from '../utils/serializeId'
+import { parseModelWithId, serializeModelWithId } from '../utils/serializeId'
 
 const app = Router()
 
@@ -28,7 +29,7 @@ app.get(
     try {
       const { decisionId } = parseModelWithId({ decisionId: req.params.id })
       const decision = await fetchDecisionById(decisionId)
-      res.send(decision)
+      res.send(serializeDecision(decision))
       next()
     } catch (err: unknown) {
       next(err)
@@ -48,8 +49,16 @@ function parseGetQuery(query: unknown) {
       'searchBefore cannot be combinated with SearchAfter'
     )
 
-  if ('searchBefore' in query) return { filters, searchBefore: parseId(query.searchBefore) }
-  if ('searchAfter' in query) return { filters, searchAfter: parseId(query.searchAfter) }
+  if ('searchBefore' in query && typeof query.searchBefore === 'string') {
+    const { searchBefore } = parseModelWithId({ searchBefore: query.searchBefore }, "searchBefore")
+    return { filters, searchBefore }
+  }
+
+  if ('searchAfter' in query && typeof query.searchAfter === 'string') {
+    const { searchAfter } = parseModelWithId({ searchAfter: query.searchAfter }, "searchAfter")
+    return { filters, searchAfter }
+  }
+
   return { filters }
 }
 
@@ -61,6 +70,7 @@ app.get(
 
       const result = await fetchDecisions(filters, pagination)
 
+      const decisions = result.decisions.map(serializeDecision)
       const previousPage = result.previousCursor
         ? queryString.stringify({ ...filters, searchBefore: result.previousCursor.toString() })
         : undefined
@@ -68,7 +78,7 @@ app.get(
         ? queryString.stringify({ ...filters, searchAfter: result.nextCursor.toString() })
         : undefined
 
-      res.send({ ...result, previousPage, nextPage })
+      res.send({ ...result, decisions, previousPage, nextPage })
       next()
     } catch (err: unknown) {
       next(err)
@@ -93,14 +103,14 @@ app.patch(
   '/decisions/:id',
   async (req, res, next) => {
     try {
-      const id = parseId(req.params.id)
+      const { id } = parseModelWithId({ id: req.params.id })
       const { sourceName } = await fetchDecisionById(id)
       const updateFields = parsePatchBody(sourceName, req.body)
       const { _id } = await updateDecision(id, sourceName, updateFields)
-      res.send({
+      res.send(serializeModelWithId({
         _id,
         message: 'Decision mise à jour'
-      })
+      }, '_id'))
       next()
     } catch (err: unknown) {
       next(err)
@@ -123,10 +133,10 @@ app.put(
 
       const decision = parsePutBody(req.body)
       const { _id } = await saveDecision(decision)
-      res.send({
+      res.send(serializeModelWithId({
         _id,
         message: 'Decision créée ou mise à jour'
-      })
+      }, '_id'))
       next()
     } catch (err: unknown) {
       next(err)
@@ -139,7 +149,7 @@ app.delete(
   '/decisions/:id',
   async (req, res, next) => {
     try {
-      const decisionId = parseId(req.params.id)
+      const { decisionId } = parseModelWithId({ decisionId: req.params.id })
       const deleted = await deleteDecisionById(decisionId)
       res.send({
         message: deleted ? 'Decision supprimée' : 'Decision non supprimée'

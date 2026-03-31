@@ -1,5 +1,7 @@
 import { LabelStatus } from 'dbsder-api-types'
 import {
+  Decision,
+  DecisionDila,
   DecisionListFilters,
   DecisionSupported,
   mapDecisionIntoUniqueFilters,
@@ -19,7 +21,7 @@ import {
 import { logger } from '../../config/logger'
 import { NotFound } from '../error'
 
-function computeDates(previousDecision: Exclude<Decision, DecisionDila> | null) {
+function computeDates(previousDecision: DecisionSupported | null) {
   const now = new Date()
   return {
     firstImportDate: previousDecision
@@ -31,7 +33,7 @@ function computeDates(previousDecision: Exclude<Decision, DecisionDila> | null) 
   }
 }
 
-export async function saveDecision(decision: UnIdentifiedDecisionSupported): Promise<DecisionSupported> {
+export async function saveDecision(decision: UnIdentifiedDecisionSupported): Promise<Decision> {
   const uniqueFilters = mapDecisionIntoUniqueFilters(decision)
   const previousDecision = (await findDecision(uniqueFilters)) as DecisionSupported // decision cannot coming from dila
   const { firstImportDate, unpublishDate, publishDate, lastImportDate } =
