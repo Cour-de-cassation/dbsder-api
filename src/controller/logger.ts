@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
+import { logger } from '../library/logger'
 
 export const requestLog = (req: Request, _: Response, next: NextFunction) => {
-  req.log.info({
+  logger.info({
     path: 'src/controller/logger.ts',
     operations: ['other', `${req.method} ${req.path} received`]
   })
@@ -9,7 +10,7 @@ export const requestLog = (req: Request, _: Response, next: NextFunction) => {
 }
 
 export const responseLog = (req: Request, res: Response) => {
-  res.log.info({
+  logger.info({
     path: 'src/controller/logger.ts',
     operations: ['other', `${req.method} ${req.path} responded`],
     message: `Done with statusCode: ${res.statusCode}`
