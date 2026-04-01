@@ -49,8 +49,8 @@ describe('utils/serializeId', () => {
       }
 
       // @ts-expect-error: "Argument of type '"myBadId"' is not assignable to parameter of type ..."
-      const result = () => parseModelWithId(example, 'myBadId')
-      expect(result).toThrow(new Error('parseId: not parsable to ObjectId'))
+      const result = parseModelWithId(example, 'myBadId')
+      expect(result).toEqual(example)
     })
   })
 
@@ -89,8 +89,8 @@ describe('utils/serializeId', () => {
         field1: 'notChanged'
       }
       // @ts-expect-error: "Argument of type '"myBadId"' is not assignable to parameter of type ..."
-      const result = () => serializeModelWithId(example, 'myBadId')
-      expect(result).toThrow(new Error('serializeId: not serializable from ObjectId'))
+      const result = serializeModelWithId(example, 'myBadId')
+      expect(result).toEqual(example)
     })
   })
 })
