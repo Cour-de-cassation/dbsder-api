@@ -5,7 +5,7 @@ import { Decision as DecisionPayload } from 'dbsder-api-types'
 
 import * as sderDb from './sderDB'
 
-type Decision = Omit<DecisionPayload, '_id'> & { _id: ObjectId}
+type Decision = Omit<DecisionPayload, '_id'> & { _id: ObjectId }
 
 const decisions = [
   { _id: 1 },
