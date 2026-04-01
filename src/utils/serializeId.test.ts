@@ -82,7 +82,6 @@ describe('utils/serializeId', () => {
       const example = {
         field1: "notChanged"
       }
-
       // @ts-expect-error: "Argument of type '"myBadId"' is not assignable to parameter of type ..."
       const result = () => serializeModelWithId(example, "myBadId")
       expect(result).toThrow(new Error("serializeId: not serializable from ObjectId"))

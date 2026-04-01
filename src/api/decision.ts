@@ -27,7 +27,7 @@ app.get(
   '/decisions/:id',
   async (req, res, next) => {
     try {
-      const { decisionId } = parseModelWithId({ decisionId: req.params.id })
+      const { decisionId } = parseModelWithId({ decisionId: req.params.id }, "decisionId")
       const decision = await fetchDecisionById(decisionId)
       res.send(serializeDecision(decision))
       next()
@@ -103,7 +103,7 @@ app.patch(
   '/decisions/:id',
   async (req, res, next) => {
     try {
-      const { id } = parseModelWithId({ id: req.params.id })
+      const { id } = parseModelWithId({ id: req.params.id }, "id")
       const { sourceName } = await fetchDecisionById(id)
       const updateFields = parsePatchBody(sourceName, req.body)
       const { _id } = await updateDecision(id, sourceName, updateFields)
@@ -159,7 +159,7 @@ app.delete(
   '/decisions/:id',
   async (req, res, next) => {
     try {
-      const { decisionId } = parseModelWithId({ decisionId: req.params.id })
+      const { decisionId } = parseModelWithId({ decisionId: req.params.id }, "decisionId")
       const deleted = await deleteDecisionById(decisionId)
       res.send({
         message: deleted ? 'Decision supprimée' : 'Decision non supprimée'

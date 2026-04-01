@@ -38,6 +38,9 @@ export function parseModelWithId<T, K extends keyof T>(model: T, ...keys: K[]): 
           [key]: parseId(acc[key])
         }
 
+      if (acc[key] === undefined)
+        return acc
+
       throw new Error(`parseId: not parsable to ObjectId`)
     }, model as Partial<T>) as IdParse<T, K> // because intermediate type during reduce.
   } catch (_) {
