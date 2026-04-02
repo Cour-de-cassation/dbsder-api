@@ -22,7 +22,7 @@ export function parseAffaireSearchQuery(x: unknown): AffaireSearchQuery {
 
     const decisionId = 'decisionId' in x ? x.decisionId : undefined
     return parseModelWithId({ decisionId }, 'decisionId')
-  } catch (_) {
+  } catch {
     throw new NotSupported(
       'affaireSearchQuery',
       x,

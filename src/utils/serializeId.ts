@@ -39,7 +39,7 @@ export function parseModelWithId<T, K extends keyof T>(model: T, ...keys: K[]): 
       if (acc[key] === undefined) return acc
       throw new Error(`parseId: not parsable to ObjectId`)
     }, model as Partial<T>) as IdParse<T, K> // because intermediate type during reduce.
-  } catch (_) {
+  } catch {
     throw new Error(`parseId: not parsable to ObjectId`)
   }
 }
@@ -63,7 +63,7 @@ export function serializeModelWithId<T, K extends keyof T>(
       if (acc[key] === undefined) return acc
       throw new Error(`serializeId: not serializable from ObjectId`)
     }, model as Partial<T>) as Idserialize<T, K> // because intermediate type during reduce.
-  } catch (_) {
+  } catch {
     throw new Error(`serializeId: not serializable from ObjectId`)
   }
 }
