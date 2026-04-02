@@ -15,12 +15,12 @@
     "format": "prettier \"src/**/*.ts\" --check",
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
     "fix": "eslint \"src/**/*.ts\" --fix && prettier \"src/**/*.ts\" --write",
-    "test": "jest --detectOpenHandles -c jest.config.js",
+    "test": "jest --testPathIgnorePatterns=codenacs.test.ts --detectOpenHandles -c jest.config.js",
     "test:codenacs": "jest codenacs.test.ts --detectOpenHandles -c jest.config.js"
   },
   "dependencies": {
     "axios": "1.13.4",
-    "dbsder-api-types": "../dbsder-api-types",
+    "dbsder-api-types": "2.1.49",
     "dotenv": "17.2.3",
     "express": "5.2.1",
     "helmet": "8.1.0",

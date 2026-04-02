@@ -12,4 +12,3 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - .:/home/node
-      - ../dbsder-api-types:/home/node/node_modules/dbsder-api-types

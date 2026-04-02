@@ -35,7 +35,6 @@ type UnIdentifiedDecisionPayloadSupported = Exclude<
 // Création du type de décision en travail (parsée)
 //####################################################################
 
-export type DecisionDila = IdParse<DecisionDilaPayload, '_id'>
 export type DecisionCc = IdParse<DecisionCcPayload, '_id'>
 export type DecisionCa = IdParse<DecisionCaPayload, '_id'>
 export type DecisionTcom = IdParse<DecisionTcomPayload, '_id'>
