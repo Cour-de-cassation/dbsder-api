@@ -3,14 +3,15 @@ import {
   createDocumentAssocieHandler,
   fetchDocumentAssocieByFilters,
   updateDocumentAssocie
-} from '../service/documentAssocie/handler'
+} from '../services/documentAssocie/handler'
 import { responseLog } from './logger'
 import {
   parseDocumentAssocieCreateQuery,
   parseUpdatableDocumentAssocieFields,
-  parseId,
-  parseDocumentAssocieSearchQuery
-} from '../service/documentAssocie/models'
+  parseDocumentAssocieSearchQuery,
+  serializeDocumentAssocie
+} from '../services/documentAssocie/models'
+import { parseModelWithId, serializeModelWithId } from '../utils/serializeId'
 
 const app = Router()
 
@@ -20,7 +21,7 @@ app.get(
     try {
       const searchItems = parseDocumentAssocieSearchQuery(req.query)
       const documentAssocies = await fetchDocumentAssocieByFilters(searchItems)
-      res.send(documentAssocies)
+      res.send(documentAssocies.map(serializeDocumentAssocie))
       next()
     } catch (err: unknown) {
       next(err)
@@ -34,7 +35,7 @@ app.post(
   async (req, res, next) => {
     try {
       const { _id } = await createDocumentAssocieHandler(parseDocumentAssocieCreateQuery(req.body))
-      res.send({ _id, message: 'documentAssocié créé' })
+      res.send(serializeModelWithId({ _id, message: 'documentAssocié créé' }, '_id'))
     } catch (err: unknown) {
       next(err)
     }
@@ -46,10 +47,10 @@ app.patch(
   '/documentassocies/:id',
   async (req, res, next) => {
     try {
-      const id = parseId(req.params.id)
+      const { id } = parseModelWithId({ id: req.params.id }, 'id')
       const updatableFields = parseUpdatableDocumentAssocieFields(req.body)
       const { _id } = await updateDocumentAssocie(id, updatableFields)
-      res.send({ _id, message: 'documentAssocié mis a jour' })
+      res.send(serializeModelWithId({ _id, message: 'documentAssocié mis a jour' }, '_id'))
       next()
     } catch (err) {
       next(err)

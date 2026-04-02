@@ -7,12 +7,12 @@ import {
   fetchEverySubChapter,
   fetchEveryValidCodeNac,
   updateNacIfExistsOrCreate
-} from '../service/codeNac/handler'
+} from '../services/codeNac/handler'
 import { responseLog } from './logger'
-import { MissingValue } from '../library/error'
+import { MissingValue } from '../services/error'
 import { CodeNac, parsePartialCodeNac } from 'dbsder-api-types'
 import { WithoutId } from 'mongodb'
-import { parseFilterNAC } from '../library/codenacs'
+import { parseFilterNAC } from '../services/codeNac/codenacs'
 
 const app = Router()
 
@@ -95,7 +95,7 @@ app.post(
   async (req, res, next) => {
     try {
       const codenac = parseNAC(req.body)
-      const createdCodeNac: Partial<CodeNac> = await createCodeNac(codenac)
+      const createdCodeNac: Partial<Omit<CodeNac, '_id'>> = await createCodeNac(codenac)
       if (createdCodeNac) res.status(201)
       res.send(createdCodeNac)
       next()

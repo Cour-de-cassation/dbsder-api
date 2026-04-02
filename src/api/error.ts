@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { isCustomError } from '../library/error'
+import { isCustomError } from '../services/error'
 import { responseLog } from './logger'
 
 /* eslint-disable @typescript-eslint/no-unused-vars -- maybe we can remove */

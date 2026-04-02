@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import { apiKeyToService, Service } from '../service/authentication'
-import { UnauthorizedError } from '../library/error'
+import { apiKeyToService, Service } from '../services/authentication'
+import { UnauthorizedError } from '../services/error'
 
 declare global {
   namespace Express {

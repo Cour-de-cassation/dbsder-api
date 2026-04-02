@@ -1,11 +1,10 @@
-import { DocumentAssocie, UnIdentifiedDocumentAssocie } from 'dbsder-api-types'
-import { DocumentAssocieSearchQuery } from './models'
-import { NotFound } from '../../library/error'
+import { DocumentAssocie, DocumentAssocieSearchQuery, UnIdentifiedDocumentAssocie } from './models'
+import { NotFound } from '../error'
 import {
   findDocumentAssocie,
   updateDocumentAssocieById,
   createDocumentAssocie
-} from '../../library/sderDB'
+} from '../../connectors/sderDB'
 
 export async function fetchDocumentAssocieByFilters(
   searchValues: DocumentAssocieSearchQuery

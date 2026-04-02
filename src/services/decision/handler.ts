@@ -1,6 +1,8 @@
-import { Decision, DecisionDila, LabelStatus } from 'dbsder-api-types'
+import { LabelStatus } from 'dbsder-api-types'
 import {
+  Decision,
   DecisionListFilters,
+  DecisionSupported,
   mapDecisionIntoUniqueFilters,
   mapDecisionListFiltersIntoDbFilters,
   UnIdentifiedDecisionSupported,
@@ -14,11 +16,11 @@ import {
   deleteDecision,
   PaginatedDecisions,
   Page
-} from '../../library/sderDB'
-import { logger } from '../../library/logger'
-import { NotFound } from '../../library/error'
+} from '../../connectors/sderDB'
+import { logger } from '../../config/logger'
+import { NotFound } from '../error'
 
-function computeDates(previousDecision: Exclude<Decision, DecisionDila> | null) {
+function computeDates(previousDecision: DecisionSupported | null) {
   const now = new Date()
   return {
     firstImportDate: previousDecision
@@ -32,7 +34,7 @@ function computeDates(previousDecision: Exclude<Decision, DecisionDila> | null) 
 
 export async function saveDecision(decision: UnIdentifiedDecisionSupported): Promise<Decision> {
   const uniqueFilters = mapDecisionIntoUniqueFilters(decision)
-  const previousDecision = (await findDecision(uniqueFilters)) as Exclude<Decision, DecisionDila> // decision cannot coming from dila
+  const previousDecision = (await findDecision(uniqueFilters)) as DecisionSupported // decision cannot coming from dila
   const { firstImportDate, unpublishDate, publishDate, lastImportDate } =
     computeDates(previousDecision)
 
@@ -51,7 +53,7 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
 
   if (res.labelStatus !== LabelStatus.TOBETREATED)
     logger.info({
-      path: 'src/service/decision.ts',
+      path: 'src/services/decision.ts',
       operations: ['normalization', 'saveDecision'],
       message: 'Saved decision will not be treated',
       decision: {
@@ -81,7 +83,7 @@ export async function updateDecision(
   return decision
 }
 
-export async function fetchDecisionById(decisionId: Decision['_id']): Promise<Decision> {
+export async function fetchDecisionById(decisionId: DecisionSupported['_id']): Promise<Decision> {
   const decision = await findDecision({ _id: decisionId })
   if (!decision) throw new NotFound('decision')
   return decision

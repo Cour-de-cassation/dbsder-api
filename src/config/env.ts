@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { MissingValue } from './error'
+import { MissingValue } from '../services/error'
 
 if (!process.env.NODE_ENV) dotenv.config()
 

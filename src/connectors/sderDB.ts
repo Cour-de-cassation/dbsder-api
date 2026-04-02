@@ -1,7 +1,14 @@
 import { DeleteResult, Filter, MongoClient, ObjectId, Sort, WithoutId } from 'mongodb'
-import { NotFound, UnexpectedError } from './error'
-import { MONGO_DB_URL } from './env'
-import { Affaire, CodeNac, Decision, DocumentAssocie, UnIdentifiedDecision } from 'dbsder-api-types'
+import { NotFound, UnexpectedError } from '../services/error'
+import { MONGO_DB_URL } from '../config/env'
+import {
+  Affaire as AffairePayload,
+  CodeNac as CodeNacPayload,
+  Decision as DecisionPayload,
+  DocumentAssocie as DocumentAssociePayload,
+  UnIdentifiedDecision as UnIdentifiedDecisionPayload
+} from 'dbsder-api-types'
+import { IdParse } from '../utils/serializeId'
 
 const client = new MongoClient(MONGO_DB_URL, { directConnection: true })
 
@@ -10,6 +17,12 @@ async function dbConnect() {
   await client.connect()
   return db
 }
+
+//####################################################################
+// Codenac
+//####################################################################
+
+type CodeNac = IdParse<CodeNacPayload, '_id'>
 
 export async function findCodeNac(
   filters: Filter<CodeNac>,
@@ -37,9 +50,7 @@ export async function updateNacById(
     throw new UnexpectedError('The update behave like there were no document and cannot update')
   return codeNacWithId
 }
-//####################################################################
-// codenac suite
-//####################################################################
+
 export async function createNAC(codeNac: WithoutId<Partial<CodeNac>>): Promise<Partial<CodeNac>> {
   const db = await dbConnect()
   codeNac.dateDebutValidite = new Date()
@@ -114,8 +125,11 @@ export async function findEveryNACBySubChapter(
 }
 
 //####################################################################
-// codenac end
+// Decision
 //####################################################################
+
+type Decision = IdParse<DecisionPayload, '_id'>
+type UnIdentifiedDecision = UnIdentifiedDecisionPayload
 
 export async function findAndReplaceDecision(
   decisionFilters: Filter<UnIdentifiedDecision>,
@@ -210,6 +224,12 @@ export async function findDecisionsWithPagination(
   }
 }
 
+//####################################################################
+// Affaire
+//####################################################################
+
+type Affaire = IdParse<AffairePayload, '_id' | 'decisionIds' | 'documentAssocieIds'>
+
 export async function createAffaire(affaire: WithoutId<Affaire>): Promise<Affaire> {
   const db = await dbConnect()
   const affaireWithId = await db.collection<WithoutId<Affaire>>('affaires').insertOne(affaire)
@@ -236,6 +256,12 @@ export async function findAffaire(filter: Filter<Affaire>): Promise<Affaire[] | 
   const db = await dbConnect()
   return db.collection<Affaire>('affaires').find(filter).toArray()
 }
+
+//####################################################################
+// document associé
+//####################################################################
+
+type DocumentAssocie = IdParse<DocumentAssociePayload, '_id' | 'decisionId'>
 
 export async function createDocumentAssocie(
   documentAssocie: WithoutId<DocumentAssocie>
