@@ -2,8 +2,25 @@ import { ObjectId } from 'mongodb'
 import { CodeNac as CodeNacPayload } from 'dbsder-api-types'
 import { ExistingCodeNac, NotFound } from '../error'
 import { Filter } from 'mongodb'
-import { findValidCodeNAC, findEveryByNAC, findEveryValidCodeNAC, findCodeNac, createNAC, updateNacById, deleteCodeNAC, findEveryNACBySubChapter } from '../../connectors/sderDB'
-import { fetchCodeNacByNac, fetchEveryCodeNacByNac, fetchEveryValidCodeNac, createCodeNac, updateNacIfExistsOrCreate, deleteCodeNac, fetchEverySubChapter } from './handler'
+import {
+  findValidCodeNAC,
+  findEveryByNAC,
+  findEveryValidCodeNAC,
+  findCodeNac,
+  createNAC,
+  updateNacById,
+  deleteCodeNAC,
+  findEveryNACBySubChapter
+} from '../../connectors/sderDB'
+import {
+  fetchCodeNacByNac,
+  fetchEveryCodeNacByNac,
+  fetchEveryValidCodeNac,
+  createCodeNac,
+  updateNacIfExistsOrCreate,
+  deleteCodeNac,
+  fetchEverySubChapter
+} from './handler'
 import { IdParse } from '../../utils/serializeId'
 
 jest.mock('../../connectors/sderDB', () => ({
@@ -19,12 +36,16 @@ jest.mock('../../connectors/sderDB', () => ({
 
 const mockFindValidCodeNAC = findValidCodeNAC as jest.MockedFunction<typeof findValidCodeNAC>
 const mockFindEveryByNAC = findEveryByNAC as jest.MockedFunction<typeof findEveryByNAC>
-const mockFindEveryValidCodeNAC = findEveryValidCodeNAC as jest.MockedFunction<typeof findEveryValidCodeNAC>
+const mockFindEveryValidCodeNAC = findEveryValidCodeNAC as jest.MockedFunction<
+  typeof findEveryValidCodeNAC
+>
 const mockFindCodeNac = findCodeNac as jest.MockedFunction<typeof findCodeNac>
 const mockCreateNAC = createNAC as jest.MockedFunction<typeof createNAC>
 const mockUpdateNacById = updateNacById as jest.MockedFunction<typeof updateNacById>
 const mockDeleteCodeNAC = deleteCodeNAC as jest.MockedFunction<typeof deleteCodeNAC>
-const mockFindEveryNACBySubChapter = findEveryNACBySubChapter as jest.MockedFunction<typeof findEveryNACBySubChapter>
+const mockFindEveryNACBySubChapter = findEveryNACBySubChapter as jest.MockedFunction<
+  typeof findEveryNACBySubChapter
+>
 export type CodeNac = IdParse<CodeNacPayload, '_id'>
 
 const mockCodeNacAAA: CodeNac = {
@@ -124,7 +145,13 @@ const mockCodeNacBB2: CodeNac = {
 }
 
 // Groupes de données
-const allValidCodeNacs: CodeNac[] = [mockCodeNacAAA, mockCodeNacAA2, mockCodeNacAA5, mockCodeNacBB1, mockCodeNacBB2]
+const allValidCodeNacs: CodeNac[] = [
+  mockCodeNacAAA,
+  mockCodeNacAA2,
+  mockCodeNacAA5,
+  mockCodeNacBB1,
+  mockCodeNacBB2
+]
 const subChapterAACodeNacs: CodeNac[] = [mockCodeNacAAA, mockCodeNacAA2, mockCodeNacAA5]
 const subChapterBBCodeNacs: CodeNac[] = [mockCodeNacBB1, mockCodeNacBB2]
 const versionsAAA: CodeNac[] = [
@@ -234,7 +261,7 @@ describe('fetchEveryValidCodeNac', () => {
 
     expect(findEveryValidCodeNAC).toHaveBeenCalledWith(filter)
     expect(result).toHaveLength(3)
-    expect(result.every(c => c.sousChapitre.code === 'AA')).toBe(true)
+    expect(result.every((c) => c.sousChapitre.code === 'AA')).toBe(true)
   })
 
   it('devrait lever NotFound si aucun codenac valide', async () => {
@@ -360,7 +387,7 @@ describe('fetchEverySubChapter', () => {
 
     expect(findEveryNACBySubChapter).toHaveBeenCalledWith('AA')
     expect(result).toHaveLength(3)
-    expect(result.every(c => c.sousChapitre.code === 'AA')).toBe(true)
+    expect(result.every((c) => c.sousChapitre.code === 'AA')).toBe(true)
   })
 
   it('devrait retourner tous les codenacs du sous-chapitre BB', async () => {
@@ -370,7 +397,7 @@ describe('fetchEverySubChapter', () => {
 
     expect(findEveryNACBySubChapter).toHaveBeenCalledWith('BB')
     expect(result).toHaveLength(2)
-    expect(result.every(c => c.sousChapitre.code === 'BB')).toBe(true)
+    expect(result.every((c) => c.sousChapitre.code === 'BB')).toBe(true)
   })
 
   it('devrait retourner un tableau vide si sous-chapitre inexistant', async () => {
