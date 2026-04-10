@@ -1,9 +1,9 @@
 import { expect } from '@jest/globals'
 import { MongoClient, WithoutId } from 'mongodb'
 
-import { Category, CodeNac, DebatsPublics, DecisionsPubliques } from 'dbsder-api-types'
+import { Category, CodeNac, DebatsPublics, DecisionsPubliques } from '@dbsder-api-types'
 import request from 'supertest'
-import { LabelRoute } from 'dbsder-api-types/dist/typeGuards/common.zod'
+import { LabelRoute } from '@dbsder-api-types'
 
 // Données de test pour les codenacs
 const testData: Record<string, Partial<WithoutId<CodeNac>>> = {

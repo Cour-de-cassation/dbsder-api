@@ -1,7 +1,7 @@
 import { expect, jest } from '@jest/globals'
 import { Filter, ObjectId, WithId } from 'mongodb'
 
-import { Decision as DecisionPayload } from 'dbsder-api-types'
+import { Decision as DecisionPayload } from '@dbsder-api-types'
 
 import * as sderDb from './sderDB'
 

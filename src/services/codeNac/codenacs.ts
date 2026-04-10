@@ -1,5 +1,5 @@
 import { Filter } from 'mongodb'
-import { CodeNac as CodeNacPayload, DebatsPublics, DecisionsPubliques } from 'dbsder-api-types'
+import { CodeNac as CodeNacPayload, DebatsPublics, DecisionsPubliques } from '@dbsder-api-types'
 import { IdParse } from '../../utils/serializeId'
 
 export type CodeNac = IdParse<CodeNacPayload, '_id'>
