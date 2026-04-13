@@ -6,12 +6,12 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "start:watch": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'npx ts-node src/server.ts'",
+    "start:watch": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'npx ts-node -r tsconfig-paths/register src/server.ts'",
     "start": "node dist/server.js",
     "start:docker": "docker compose up -d",
     "stop:docker": "docker compose stop",
     "build:watch": "tsc --watch",
-    "build": "tsc --build",
+    "build": "tsc --build && tsc-alias",
     "format": "prettier \"src/**/*.ts\" --check",
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
     "fix": "eslint \"src/**/*.ts\" --fix && prettier \"src/**/*.ts\" --write",
@@ -28,7 +28,7 @@
     "zod": "4.3.6"
   },
   "devDependencies": {
-    "@types/supertest": "^6.0.3",
+    "@types/supertest": "6.0.3",
     "@eslint/js": "9.39.2",
     "@types/express": "5.0.6",
     "@types/jest": "30.0.0",
@@ -46,6 +46,8 @@
     "supertest": "7.2.2",
     "ts-jest": "29.4.6",
     "ts-node": "10.9.2",
+    "tsc-alias": "1.8.16",
+    "tsconfig-paths": "4.2.0",
     "typescript": "5.9.3",
     "typescript-eslint": "8.41.0"
   }
