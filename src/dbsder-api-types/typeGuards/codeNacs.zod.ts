@@ -10,6 +10,8 @@ import {
 
 const zCategory = z.enum(Category)
 
+// NiveauCodeNACSchema is only use for type definition, keeping it as a zod schema for consistency
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const NiveauCodeNACSchema = z.object({
   code: z.string(),
   libelle: z.string()

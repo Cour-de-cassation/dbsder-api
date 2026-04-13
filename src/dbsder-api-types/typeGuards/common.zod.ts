@@ -236,11 +236,9 @@ export const zLabelRoute = z.enum(LabelRoute)
 
 export const zRaisonInteretParticulier = z.enum(RaisonInteretParticulier)
 
-export const zObjectId = z
-  .string()
-  .refine((id: string) => {
-    return ObjectId.isValid(id) && new ObjectId(id).toString() === id
-  })
+export const zObjectId = z.string().refine((id: string) => {
+  return ObjectId.isValid(id) && new ObjectId(id).toString() === id
+})
 
 export type DbsderId = z.infer<typeof zObjectId>
 
