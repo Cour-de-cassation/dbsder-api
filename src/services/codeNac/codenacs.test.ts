@@ -22,7 +22,6 @@ import {
   fetchEverySubChapter
 } from './handler'
 import { IdParse } from '../../utils/serializeId'
-import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 
 jest.mock('../../connectors/sderDB', () => ({
   findValidCodeNAC: jest.fn(),
