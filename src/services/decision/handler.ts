@@ -1,4 +1,4 @@
-import { LabelStatus } from 'dbsder-api-types'
+import { LabelStatus, PublishStatus } from 'dbsder-api-types'
 import {
   Decision,
   DecisionListFilters,
@@ -20,8 +20,7 @@ import {
 import { logger } from '../../config/logger'
 import { NotFound } from '../error'
 
-function computeDates(previousDecision: DecisionSupported | null) {
-  const now = new Date()
+function computeDates(now: Date, previousDecision: DecisionSupported | null) {
   return {
     firstImportDate: previousDecision
       ? (previousDecision.firstImportDate ?? undefined)
@@ -32,18 +31,33 @@ function computeDates(previousDecision: DecisionSupported | null) {
   }
 }
 
+function computeEvents(
+  now: Date, 
+  labelStatus: DecisionSupported["labelStatus"], 
+  publishStatus: DecisionSupported["publishStatus"], 
+  previousDecision: DecisionSupported | null
+) {
+  return [
+      ...(previousDecision?.events ?? []), 
+      { date: now, type: previousDecision ? 'updated' : 'created', withStatus: { labelStatus, publishStatus }}
+    ]
+}
+
 export async function saveDecision(decision: UnIdentifiedDecisionSupported): Promise<Decision> {
+  const now = new Date()
   const uniqueFilters = mapDecisionIntoUniqueFilters(decision)
   const previousDecision = (await findDecision(uniqueFilters)) as DecisionSupported // decision cannot coming from dila
-  const { firstImportDate, unpublishDate, publishDate, lastImportDate } =
-    computeDates(previousDecision)
+
+  const { firstImportDate, unpublishDate, publishDate, lastImportDate } = computeDates(now, previousDecision)
+  const events = computeEvents(now, decision.labelStatus, decision.publishStatus, previousDecision)
 
   const decisionNormalized: UnIdentifiedDecisionSupported = {
     ...decision,
     firstImportDate,
     lastImportDate,
     publishDate,
-    unpublishDate
+    unpublishDate,
+    events
   }
 
   const res = await findAndReplaceDecision(
