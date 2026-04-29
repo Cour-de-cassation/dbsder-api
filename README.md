@@ -4,6 +4,8 @@ dbsder-api est une brique applicative du projet [Judilibre](https://www.courdeca
 
 Ce repo contient aussi les types representant les objets stockées dans la base de donnée. Ces types sont définis par des schémas [zod](https://www.npmjs.com/package/zod). Ces types (dbsder-api-types) sont publiés sur [npmjs](https://www.npmjs.com/package/dbsder-api-types) afin de pouvoir être utilisés dans les projets qui consomment cette API.
 
+[![npm](https://img.shields.io/npm/v/dbsder-api-types)](https://www.npmjs.com/package/dbsder-api-types)
+
 ## Dépendances
 
 L'application nécessite node ainsi qu'une base de donnée mongo, n'hésitez pas à jeter un coup d'oeil à [juridependencies](https://github.com/Cour-de-cassation/juridependencies) qui contient nottament des données permettant de peupler votre base de donnée.
