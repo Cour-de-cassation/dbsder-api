@@ -1,9 +1,7 @@
 {
-  "name": "api-dbsder",
-  "version": "0.0.1",
-  "description": "API DBSDER",
-  "author": "Cour de Cassation",
-  "private": true,
+  "name": "dbsder-api",
+  "description": "API permettant l'interraction avec la base de donnée dbsder",
+  "author": "Cour de cassation",
   "license": "MIT",
   "scripts": {
     "start:watch": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'npx ts-node -r tsconfig-paths/register src/server.ts'",
@@ -15,7 +13,9 @@
     "format": "prettier \"src/**/*.ts\" --check",
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
     "fix": "eslint \"src/**/*.ts\" --fix && prettier \"src/**/*.ts\" --write",
-    "test": "jest --detectOpenHandles -c jest.config.js"
+    "test": "jest --detectOpenHandles -c jest.config.js",
+    "types:build": "tsc -p tsconfig.types.json && cp package.types.json dist-types/package.json",
+    "types:link": "npm run types:build && cd dist-types && npm link"
   },
   "dependencies": {
     "axios": "1.13.4",
