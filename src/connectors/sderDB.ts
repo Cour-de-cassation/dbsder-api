@@ -7,7 +7,7 @@ import {
   Decision as DecisionPayload,
   DocumentAssocie as DocumentAssociePayload,
   UnIdentifiedDecision as UnIdentifiedDecisionPayload
-} from 'dbsder-api-types'
+} from '@dbsder-api-types'
 import { IdParse } from '../utils/serializeId'
 
 const client = new MongoClient(MONGO_DB_URL, { directConnection: true })

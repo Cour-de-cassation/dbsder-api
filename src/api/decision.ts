@@ -16,7 +16,7 @@ import {
 } from '../services/decision/handler'
 import { ForbiddenError, MissingValue, NotSupported } from '../services/error'
 import { Service } from '../services/authentication'
-import { Decision } from 'dbsder-api-types'
+import { Decision } from '@dbsder-api-types'
 import queryString from 'qs'
 import { responseLog } from './logger'
 import { parseModelWithId, serializeModelWithId } from '../utils/serializeId'

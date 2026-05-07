@@ -14,7 +14,7 @@ import {
   DecisionCa as DecisionCaPayload,
   DecisionCph as DecisionCphPayload,
   ParseError
-} from 'dbsder-api-types'
+} from '@dbsder-api-types'
 import { NotSupported, toNotSupported, UnexpectedError } from '../error'
 import { IdParse, serializeModelWithId } from '../../utils/serializeId'
 

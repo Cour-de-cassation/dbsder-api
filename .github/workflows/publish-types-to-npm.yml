@@ -1,0 +1,45 @@
+name: Publish package from tag
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: tag
+        run: |
+          VERSION="${GITHUB_REF##*/}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build types package
+        run: tsc -p tsconfig.types.json
+
+      - name: Prepare publish directory
+        run: cp src/package.json dist-types/package.json
+
+      - name: Set version from tag
+        run: npm version ${{ steps.tag.outputs.version }} --no-git-tag-version
+        working-directory: dist-types
+
+      - name: Publish to npm
+        run: npm publish --provenance
+        working-directory: dist-types

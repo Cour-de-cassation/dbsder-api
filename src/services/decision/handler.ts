@@ -1,4 +1,4 @@
-import { LabelStatus } from 'dbsder-api-types'
+import { LabelStatus } from '@dbsder-api-types'
 import {
   Decision,
   DecisionListFilters,
