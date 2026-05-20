@@ -18,35 +18,32 @@
     "test": "jest --detectOpenHandles -c jest.config.js"
   },
   "dependencies": {
-    "axios": "1.13.4",
-    "dbsder-api-types": "3.0.0",
-    "dotenv": "17.2.3",
+    "axios": "1.16.1",
+    "dbsder-api-types": "3.0.3",
+    "dotenv": "17.4.2",
     "express": "5.2.1",
     "helmet": "8.1.0",
-    "mongodb": "7.0.0",
-    "pino": "10.3.0",
-    "zod": "4.3.6"
+    "mongodb": "7.2.0",
+    "pino": "10.3.1",
+    "zod": "4.4.3"
   },
   "devDependencies": {
-    "@types/supertest": "6.0.3",
-    "@eslint/js": "9.39.2",
+    "@eslint/js": "9.39.4",
     "@types/express": "5.0.6",
     "@types/jest": "30.0.0",
     "@types/node": "24.10.9",
-    "@typescript-eslint/eslint-plugin": "8.41.0",
-    "@typescript-eslint/parser": "8.41.0",
-    "eslint": "9.39.2",
+    "@types/supertest": "7.2.0",
+    "eslint": "9.39.4",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.5",
-    "globals": "16.5.0",
-    "jest": "30.2.0",
-    "nodemon": "3.1.11",
+    "jest": "30.4.2",
+    "nodemon": "3.1.14",
     "pino-pretty": "13.1.3",
-    "prettier": "3.8.1",
+    "prettier": "3.8.3",
     "supertest": "7.2.2",
-    "ts-jest": "29.4.6",
+    "ts-jest": "29.4.9",
     "ts-node": "10.9.2",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.41.0"
+    "typescript-eslint": "8.59.3"
   }
 }
