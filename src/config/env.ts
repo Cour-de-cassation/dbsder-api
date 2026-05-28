@@ -7,6 +7,7 @@ if (process.env.ATTACHMENTS_API_KEY == null)
   throw new MissingValue('process.env.ATTACHMENTS_API_KEY')
 if (process.env.INDEX_API_KEY == null) throw new MissingValue('process.env.INDEX_API_KEY')
 if (process.env.LABEL_API_KEY == null) throw new MissingValue('process.env.LABEL_API_KEY')
+if (process.env.JURINACS_API_KEY == null) throw new MissingValue('process.env.JURINACS_API_KEY')
 if (process.env.ODDJ_DASHBOARD_API_KEY == null)
   throw new MissingValue('process.env.ODDJ_DASHBOARD_API_KEY')
 if (process.env.MONGO_DB_URL == null) throw new MissingValue('process.env.MONGO_DB_URL')
@@ -22,6 +23,7 @@ export const {
   ATTACHMENTS_API_KEY,
   INDEX_API_KEY,
   LABEL_API_KEY,
+  JURINACS_API_KEY,
   ODDJ_DASHBOARD_API_KEY,
   MONGO_DB_URL,
   NODE_ENV,

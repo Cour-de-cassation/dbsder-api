@@ -3,6 +3,7 @@ process.env = {
   ATTACHMENTS_API_KEY: '',
   INDEX_API_KEY: '',
   LABEL_API_KEY: '',
+  JURINACS_API_KEY: '',
   ODDJ_DASHBOARD_API_KEY: '',
   MONGO_DB_URL: 'mongodb://useless', // set to pass scheme
   NODE_ENV: 'test',
@@ -10,5 +11,5 @@ process.env = {
   OPENSDER_API_KEY: '',
   OPS_API_KEY: '',
   PORT: '',
-  PUBLICATION_API_KEY: '',
+  PUBLICATION_API_KEY: ''
 }
