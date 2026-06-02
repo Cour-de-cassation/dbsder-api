@@ -4,7 +4,7 @@ process.env = {
   INDEX_API_KEY: '',
   LABEL_API_KEY: '',
   JURINACS_API_KEY: '',
-  ODDJ_DASHBOARD_API_KEY: '',
+  JURIPILOT_API_KEY: '',
   MONGO_DB_URL: 'mongodb://useless', // set to pass scheme
   NODE_ENV: 'test',
   NORMALIZATION_API_KEY: '',
