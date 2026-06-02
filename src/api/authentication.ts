@@ -10,7 +10,6 @@ declare global {
   }
 }
 
-//Bloquer tout les autres routes pour ne donner accès qu'à la rounte /codenacs à JURINACS
 const ROUTE_PERMISSIONS: Partial<Record<Service, RegExp[]>> = {
   [Service.JURINACS]: [/^\/codenacs/]
 }
