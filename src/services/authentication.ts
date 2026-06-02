@@ -2,6 +2,7 @@ import {
   ATTACHMENTS_API_KEY,
   INDEX_API_KEY,
   LABEL_API_KEY,
+  JURINACS_API_KEY,
   JURIPILOT_API_KEY,
   NORMALIZATION_API_KEY,
   OPENSDER_API_KEY,
@@ -14,6 +15,7 @@ import { UnauthorizedError } from './error'
 export enum Service {
   INDEX = 'index',
   LABEL = 'label',
+  JURINACS = 'jurinacs',
   JURIPILOT_API_KEY = 'juripilot',
   NORMALIZATION = 'normalization',
   OPS = 'ops',
@@ -28,6 +30,8 @@ export function apiKeyToService(apiKey: string): Service {
       return Service.INDEX
     case LABEL_API_KEY:
       return Service.LABEL
+    case JURINACS_API_KEY:
+      return Service.JURINACS
     case JURIPILOT_API_KEY:
       return Service.JURIPILOT_API_KEY
     case NORMALIZATION_API_KEY:
