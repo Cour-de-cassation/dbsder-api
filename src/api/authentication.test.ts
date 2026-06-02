@@ -7,10 +7,6 @@ describe('apiKeyToService', () => {
   let UnauthorizedError: typeof import('../services/error').UnauthorizedError
 
   beforeAll(async () => {
-    process.env.INDEX_API_KEY = 'test-index-key'
-    process.env.LABEL_API_KEY = 'test-label-key'
-    process.env.JURINACS_API_KEY = 'test-jurinacs-key'
-
     jest.resetModules()
 
     const auth = await import('../services/authentication')
@@ -23,15 +19,12 @@ describe('apiKeyToService', () => {
 
   afterAll(() => {
     jest.resetModules()
-    delete process.env.INDEX_API_KEY
-    delete process.env.LABEL_API_KEY
-    delete process.env.JURINACS_API_KEY
   })
 
   it('retourne le bon service pour chaque clé', () => {
-    expect(apiKeyToService('test-index-key')).toBe(Service.INDEX)
-    expect(apiKeyToService('test-label-key')).toBe(Service.LABEL)
-    expect(apiKeyToService('test-jurinacs-key')).toBe(Service.JURINACS)
+    expect(apiKeyToService(process.env.INDEX_API_KEY!)).toBe(Service.INDEX)
+    expect(apiKeyToService(process.env.LABEL_API_KEY!)).toBe(Service.LABEL)
+    expect(apiKeyToService(process.env.JURINACS_API_KEY!)).toBe(Service.JURINACS)
   })
 
   it('lève UnauthorizedError pour une clé inconnue', () => {
@@ -44,10 +37,6 @@ describe('apiKeyHandler', () => {
   let ForbiddenError: typeof import('../services/error').ForbiddenError
 
   beforeAll(async () => {
-    process.env.INDEX_API_KEY = 'test-index-key'
-    process.env.LABEL_API_KEY = 'test-label-key'
-    process.env.JURINACS_API_KEY = 'test-jurinacs-key'
-
     jest.resetModules()
 
     const auth = await import('./authentication')
@@ -59,15 +48,12 @@ describe('apiKeyHandler', () => {
 
   afterAll(() => {
     jest.resetModules()
-    delete process.env.INDEX_API_KEY
-    delete process.env.LABEL_API_KEY
-    delete process.env.JURINACS_API_KEY
   })
 
   it('JURINACS — autorise /codenacs', async () => {
     const next = jest.fn() as unknown as NextFunction
     const req = {
-      headers: { 'x-api-key': 'test-jurinacs-key' },
+      headers: { 'x-api-key': process.env.JURINACS_API_KEY! },
       path: '/codenacs',
       context: {}
     } as unknown as Request
@@ -80,7 +66,7 @@ describe('apiKeyHandler', () => {
   it('LABEL — autorise /decisions', async () => {
     const next = jest.fn() as unknown as NextFunction
     const req = {
-      headers: { 'x-api-key': 'test-label-key' },
+      headers: { 'x-api-key': process.env.LABEL_API_KEY! },
       path: '/decisions',
       context: {}
     } as unknown as Request
@@ -93,7 +79,7 @@ describe('apiKeyHandler', () => {
   it('JURINACS — bloque /decisions', async () => {
     const next = jest.fn() as unknown as NextFunction
     const req = {
-      headers: { 'x-api-key': 'test-jurinacs-key' },
+      headers: { 'x-api-key': process.env.JURINACS_API_KEY! },
       path: '/decisions',
       context: {}
     } as unknown as Request
