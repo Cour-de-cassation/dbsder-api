@@ -11,5 +11,6 @@ process.env = {
   OPENSDER_API_KEY: '',
   OPS_API_KEY: '',
   PORT: '',
-  PUBLICATION_API_KEY: ''
+  PUBLICATION_API_KEY: '',
+  JURISCRIPTS_API_KEY: ''
 }
