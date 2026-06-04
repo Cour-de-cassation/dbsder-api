@@ -7,7 +7,8 @@ import {
   NORMALIZATION_API_KEY,
   OPENSDER_API_KEY,
   OPS_API_KEY,
-  PUBLICATION_API_KEY
+  PUBLICATION_API_KEY,
+  JURISCRIPTS_API_KEY
 } from '../config/env'
 import { UnauthorizedError } from './error'
 
@@ -21,7 +22,8 @@ export enum Service {
   OPS = 'ops',
   PUBLICATION = 'publication',
   ATTACHEMENTS = 'attachements',
-  OPENSDER = 'opensder'
+  OPENSDER = 'opensder',
+  JURISCRIPTS = 'juriscripts'
 }
 
 export function apiKeyToService(apiKey: string): Service {
@@ -44,6 +46,8 @@ export function apiKeyToService(apiKey: string): Service {
       return Service.PUBLICATION
     case ATTACHMENTS_API_KEY:
       return Service.ATTACHEMENTS
+    case JURISCRIPTS_API_KEY:
+      return Service.JURISCRIPTS
     default:
       throw new UnauthorizedError()
   }
