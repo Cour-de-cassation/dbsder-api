@@ -13,11 +13,10 @@ import {
   DecisionCc as DecisionCcPayload,
   DecisionCa as DecisionCaPayload,
   DecisionCph as DecisionCphPayload,
-  ParseError,
-  parseId
+  ParseError
 } from 'dbsder-api-types'
 import { NotSupported, toNotSupported, UnexpectedError } from '../error'
-import { IdParse, parseModelWithId, serializeModelWithId } from '../../utils/serializeId'
+import { IdParse, serializeModelWithId } from '../../utils/serializeId'
 
 //####################################################################
 // Création du type de décision supportée
@@ -93,7 +92,7 @@ export function parseUnIdentifiedDecisionSupported(x: unknown): UnIdentifiedDeci
 }
 
 export function idDecisionSupported(x: Decision): x is DecisionSupported {
-  return x.sourceName !== "dila"
+  return x.sourceName !== 'dila'
 }
 
 export type DecisionListFilters = {

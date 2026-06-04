@@ -1,4 +1,4 @@
-import { DecisionDila, hasSourceNameDila, LabelStatus, PublishStatus, UnIdentifiedDecision } from 'dbsder-api-types'
+import { LabelStatus } from 'dbsder-api-types'
 import {
   Decision,
   DecisionListFilters,
@@ -33,38 +33,38 @@ function computeDates(now: Date, previousDecision: DecisionSupported | null) {
 }
 
 function computeUpsertEvents(
-  now: Date, 
+  now: Date,
   previousDecision: DecisionSupported | null,
-  labelStatus: DecisionSupported["labelStatus"],
-  publishStatus: DecisionSupported["publishStatus"],
-): DecisionSupported["events"] {
+  labelStatus: DecisionSupported['labelStatus'],
+  publishStatus: DecisionSupported['publishStatus']
+): DecisionSupported['events'] {
   return [
-      ...(previousDecision?.events ?? []), 
-      { 
-        date: now, 
-        type: previousDecision ? 'recreated' : 'created', 
-        withStatus: { labelStatus, publishStatus }
-      }
-    ]
+    ...(previousDecision?.events ?? []),
+    {
+      date: now,
+      type: previousDecision ? 'recreated' : 'created',
+      withStatus: { labelStatus, publishStatus }
+    }
+  ]
 }
 
 function computePatchEvents(
-  now: Date, 
+  now: Date,
   previousDecision: DecisionSupported,
-  labelStatus?: DecisionSupported["labelStatus"],
-  publishStatus?: DecisionSupported["publishStatus"],
-): DecisionSupported["events"] {
+  labelStatus?: DecisionSupported['labelStatus'],
+  publishStatus?: DecisionSupported['publishStatus']
+): DecisionSupported['events'] {
   return [
-      ...(previousDecision?.events ?? []),
-      { 
-        date: now, 
-        type: 'patched', 
-        withStatus: { 
-          labelStatus: labelStatus ?? previousDecision.labelStatus, 
-          publishStatus: publishStatus ?? previousDecision.publishStatus
-        }
+    ...(previousDecision?.events ?? []),
+    {
+      date: now,
+      type: 'patched',
+      withStatus: {
+        labelStatus: labelStatus ?? previousDecision.labelStatus,
+        publishStatus: publishStatus ?? previousDecision.publishStatus
       }
-    ]
+    }
+  ]
 }
 
 export async function saveDecision(decision: UnIdentifiedDecisionSupported): Promise<Decision> {
@@ -72,10 +72,19 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
   const uniqueFilters = mapDecisionIntoUniqueFilters(decision)
   const previousDecision = await findDecision(uniqueFilters)
 
-  if (previousDecision && !idDecisionSupported(previousDecision)) throw new NotSupported("decision.sourceName", "dila")
+  if (previousDecision && !idDecisionSupported(previousDecision))
+    throw new NotSupported('decision.sourceName', 'dila')
 
-  const { firstImportDate, unpublishDate, publishDate, lastImportDate } = computeDates(now, previousDecision)
-  const events = computeUpsertEvents(now, previousDecision, decision.labelStatus, decision.publishStatus)
+  const { firstImportDate, unpublishDate, publishDate, lastImportDate } = computeDates(
+    now,
+    previousDecision
+  )
+  const events = computeUpsertEvents(
+    now,
+    previousDecision,
+    decision.labelStatus,
+    decision.publishStatus
+  )
 
   const decisionNormalized: UnIdentifiedDecisionSupported = {
     ...decision,
@@ -113,8 +122,20 @@ export async function updateDecision(
   previousDecision: Decision,
   updateFields: UpdatableDecisionFields
 ): Promise<Decision> {
+  const now = new Date()
+
+  if (previousDecision && !idDecisionSupported(previousDecision))
+    throw new NotSupported('decision.sourceName', 'dila')
+
+  const events = computePatchEvents(
+    now,
+    previousDecision,
+    updateFields.labelStatus,
+    updateFields.publishStatus
+  )
+
   const filter = { _id: targetId, sourceName: previousDecision.sourceName }
-  const decision = await findAndUpdateDecision(filter, updateFields)
+  const decision = await findAndUpdateDecision(filter, { ...updateFields, events })
   if (!decision)
     throw new NotFound(
       'Decision',
