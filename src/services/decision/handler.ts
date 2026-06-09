@@ -35,15 +35,15 @@ function computeDates(now: Date, previousDecision: DecisionSupported | null) {
 function computeUpsertEvents(
   now: Date,
   previousDecision: DecisionSupported | null,
-  labelStatus: DecisionSupported['labelStatus'],
-  publishStatus: DecisionSupported['publishStatus']
+  decision: UnIdentifiedDecisionSupported,
 ): DecisionSupported['events'] {
   return [
     ...(previousDecision?.events ?? []),
     {
       date: now,
       type: previousDecision ? 'recreated' : 'created',
-      withStatus: { labelStatus, publishStatus }
+      rawFileId: decision.rawFileSource,
+      withStatus: { labelStatus: decision.labelStatus, publishStatus: decision.publishStatus }
     }
   ]
 }
@@ -67,7 +67,9 @@ function computePatchEvents(
   ]
 }
 
-export async function saveDecision(decision: UnIdentifiedDecisionSupported): Promise<Decision> {
+export async function saveDecision(
+  decision: UnIdentifiedDecisionSupported,
+): Promise<Decision> {
   const now = new Date()
   const uniqueFilters = mapDecisionIntoUniqueFilters(decision)
   const previousDecision = await findDecision(uniqueFilters)
@@ -82,8 +84,7 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
   const events = computeUpsertEvents(
     now,
     previousDecision,
-    decision.labelStatus,
-    decision.publishStatus
+    decision,
   )
 
   const decisionNormalized: UnIdentifiedDecisionSupported = {
