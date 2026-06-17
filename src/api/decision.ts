@@ -19,7 +19,7 @@ import { Service } from '../services/authentication'
 import { Decision } from 'dbsder-api-types'
 import queryString from 'qs'
 import { responseLog } from './logger'
-import { IdParse, parseId, parseModelWithId, serializeModelWithId } from '../utils/serializeId'
+import { parseModelWithId, serializeModelWithId } from '../utils/serializeId'
 
 const app = Router()
 

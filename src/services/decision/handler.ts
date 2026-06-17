@@ -35,15 +35,18 @@ function computeDates(now: Date, previousDecision: DecisionSupported | null) {
 function computeUpsertEvents(
   now: Date,
   previousDecision: DecisionSupported | null,
-  decision: UnIdentifiedDecisionSupported,
+  decision: UnIdentifiedDecisionSupported
 ): DecisionSupported['events'] {
   return [
     ...(previousDecision?.events ?? []),
     {
       date: now,
       type: previousDecision ? 'recreated' : 'created',
-      rawFileId: decision.rawFileSource,
-      withStatus: { labelStatus: decision.labelStatus, publishStatus: decision.publishStatus }
+      state: {
+        rawFileId: decision.rawFileId,
+        labelStatus: decision.labelStatus,
+        publishStatus: decision.publishStatus
+      }
     }
   ]
 }
@@ -51,6 +54,7 @@ function computeUpsertEvents(
 function computePatchEvents(
   now: Date,
   previousDecision: DecisionSupported,
+  rawFileId?: DecisionSupported['rawFileId'],
   labelStatus?: DecisionSupported['labelStatus'],
   publishStatus?: DecisionSupported['publishStatus']
 ): DecisionSupported['events'] {
@@ -59,7 +63,8 @@ function computePatchEvents(
     {
       date: now,
       type: 'patched',
-      withStatus: {
+      state: {
+        rawFileId: rawFileId ?? previousDecision.rawFileId,
         labelStatus: labelStatus ?? previousDecision.labelStatus,
         publishStatus: publishStatus ?? previousDecision.publishStatus
       }
@@ -67,9 +72,7 @@ function computePatchEvents(
   ]
 }
 
-export async function saveDecision(
-  decision: UnIdentifiedDecisionSupported,
-): Promise<Decision> {
+export async function saveDecision(decision: UnIdentifiedDecisionSupported): Promise<Decision> {
   const now = new Date()
   const uniqueFilters = mapDecisionIntoUniqueFilters(decision)
   const previousDecision = await findDecision(uniqueFilters)
@@ -81,11 +84,7 @@ export async function saveDecision(
     now,
     previousDecision
   )
-  const events = computeUpsertEvents(
-    now,
-    previousDecision,
-    decision,
-  )
+  const events = computeUpsertEvents(now, previousDecision, decision)
 
   const decisionNormalized: UnIdentifiedDecisionSupported = {
     ...decision,
@@ -131,6 +130,7 @@ export async function updateDecision(
   const events = computePatchEvents(
     now,
     previousDecision,
+    updateFields.rawFileId,
     updateFields.labelStatus,
     updateFields.publishStatus
   )
