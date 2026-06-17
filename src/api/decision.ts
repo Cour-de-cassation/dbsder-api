@@ -104,9 +104,9 @@ app.patch(
   async (req, res, next) => {
     try {
       const { id } = parseModelWithId({ id: req.params.id }, 'id')
-      const { sourceName } = await fetchDecisionById(id)
-      const updateFields = parsePatchBody(sourceName, req.body)
-      const { _id } = await updateDecision(id, sourceName, updateFields)
+      const decision = await fetchDecisionById(id)
+      const updateFields = parsePatchBody(decision.sourceName, req.body)
+      const { _id } = await updateDecision(id, decision, updateFields)
       res.send(
         serializeModelWithId(
           {
