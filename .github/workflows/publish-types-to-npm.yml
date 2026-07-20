@@ -34,7 +34,7 @@ jobs:
         run: tsc -p tsconfig.types.json
 
       - name: Prepare publish directory
-        run: cp src/package.json dist-types/package.json
+        run: cp src/package.types.json dist-types/package.json
 
       - name: Set version from tag
         run: npm version ${{ steps.tag.outputs.version }} --no-git-tag-version
