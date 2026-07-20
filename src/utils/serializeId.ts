@@ -6,18 +6,18 @@ type SerializeField<T> = T extends ObjectId ? string : T extends ObjectId[] ? st
 export type IdParse<T, K extends keyof T> = Omit<T, K> & { [k in K]: ParseField<T[k]> }
 export type Idserialize<T, K extends keyof T> = Omit<T, K> & { [k in K]: SerializeField<T[k]> }
 
-function parseId(field: string): ObjectId
-function parseId(field: string[]): ObjectId[]
-function parseId(field: string | string[]): ParseField<typeof field> {
+export function parseId(field: string): ObjectId
+export function parseId(field: string[]): ObjectId[]
+export function parseId(field: string | string[]): ParseField<typeof field> {
   if (Array.isArray(field)) return field.map((_) => parseId(_))
 
   if (!ObjectId.isValid(field)) throw new Error(`parseId: not parsable to ObjectId`)
   return new ObjectId(field)
 }
 
-function serializeId(field: ObjectId): string
-function serializeId(field: ObjectId[]): string[]
-function serializeId(field: ObjectId | ObjectId[]): SerializeField<typeof field> {
+export function serializeId(field: ObjectId): string
+export function serializeId(field: ObjectId[]): string[]
+export function serializeId(field: ObjectId | ObjectId[]): SerializeField<typeof field> {
   if (Array.isArray(field)) return field.map((_) => serializeId(_))
 
   return field.toString()

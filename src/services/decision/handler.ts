@@ -3,6 +3,7 @@ import {
   Decision,
   DecisionListFilters,
   DecisionSupported,
+  idDecisionSupported,
   mapDecisionIntoUniqueFilters,
   mapDecisionListFiltersIntoDbFilters,
   UnIdentifiedDecisionSupported,
@@ -18,10 +19,9 @@ import {
   Page
 } from '../../connectors/sderDB'
 import { logger } from '../../config/logger'
-import { NotFound } from '../error'
+import { NotFound, NotSupported } from '../error'
 
-function computeDates(previousDecision: DecisionSupported | null) {
-  const now = new Date()
+function computeDates(now: Date, previousDecision: DecisionSupported | null) {
   return {
     firstImportDate: previousDecision
       ? (previousDecision.firstImportDate ?? undefined)
@@ -32,18 +32,67 @@ function computeDates(previousDecision: DecisionSupported | null) {
   }
 }
 
+function computeUpsertEvents(
+  now: Date,
+  previousDecision: DecisionSupported | null,
+  decision: UnIdentifiedDecisionSupported
+): DecisionSupported['events'] {
+  return [
+    ...(previousDecision?.events ?? []),
+    {
+      date: now,
+      type: previousDecision ? 'recreated' : 'created',
+      state: {
+        rawFileId: decision.rawFileId,
+        labelStatus: decision.labelStatus,
+        publishStatus: decision.publishStatus
+      }
+    }
+  ]
+}
+
+function computePatchEvents(
+  now: Date,
+  previousDecision: DecisionSupported,
+  rawFileId?: DecisionSupported['rawFileId'],
+  labelStatus?: DecisionSupported['labelStatus'],
+  publishStatus?: DecisionSupported['publishStatus']
+): DecisionSupported['events'] {
+  return [
+    ...(previousDecision?.events ?? []),
+    {
+      date: now,
+      type: 'patched',
+      state: {
+        rawFileId: rawFileId ?? previousDecision.rawFileId,
+        labelStatus: labelStatus ?? previousDecision.labelStatus,
+        publishStatus: publishStatus ?? previousDecision.publishStatus
+      }
+    }
+  ]
+}
+
 export async function saveDecision(decision: UnIdentifiedDecisionSupported): Promise<Decision> {
+  const now = new Date()
   const uniqueFilters = mapDecisionIntoUniqueFilters(decision)
-  const previousDecision = (await findDecision(uniqueFilters)) as DecisionSupported // decision cannot coming from dila
-  const { firstImportDate, unpublishDate, publishDate, lastImportDate } =
-    computeDates(previousDecision)
+  const previousDecision = await findDecision(uniqueFilters)
+
+  if (previousDecision && !idDecisionSupported(previousDecision))
+    throw new NotSupported('decision.sourceName', 'dila')
+
+  const { firstImportDate, unpublishDate, publishDate, lastImportDate } = computeDates(
+    now,
+    previousDecision
+  )
+  const events = computeUpsertEvents(now, previousDecision, decision)
 
   const decisionNormalized: UnIdentifiedDecisionSupported = {
     ...decision,
     firstImportDate,
     lastImportDate,
     publishDate,
-    unpublishDate
+    unpublishDate,
+    events
   }
 
   const res = await findAndReplaceDecision(
@@ -70,11 +119,24 @@ export async function saveDecision(decision: UnIdentifiedDecisionSupported): Pro
 
 export async function updateDecision(
   targetId: Decision['_id'],
-  sourceName: Decision['sourceName'],
+  previousDecision: Decision,
   updateFields: UpdatableDecisionFields
 ): Promise<Decision> {
-  const filter = { _id: targetId, sourceName }
-  const decision = await findAndUpdateDecision(filter, updateFields)
+  const now = new Date()
+
+  if (previousDecision && !idDecisionSupported(previousDecision))
+    throw new NotSupported('decision.sourceName', 'dila')
+
+  const events = computePatchEvents(
+    now,
+    previousDecision,
+    updateFields.rawFileId,
+    updateFields.labelStatus,
+    updateFields.publishStatus
+  )
+
+  const filter = { _id: targetId, sourceName: previousDecision.sourceName }
+  const decision = await findAndUpdateDecision(filter, { ...updateFields, events })
   if (!decision)
     throw new NotFound(
       'Decision',

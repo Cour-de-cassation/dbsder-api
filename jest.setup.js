@@ -1,9 +1,10 @@
 process.env = {
   ...process.env,
   ATTACHMENTS_API_KEY: '',
-  INDEX_API_KEY: '',
-  LABEL_API_KEY: '',
-  ODDJ_DASHBOARD_API_KEY: '',
+  INDEX_API_KEY: 'test-index-key',
+  LABEL_API_KEY: 'test-label-key',
+  JURINACS_API_KEY: 'test-jurinacs-key',
+  JURIPILOT_API_KEY: '',
   MONGO_DB_URL: 'mongodb://useless', // set to pass scheme
   NODE_ENV: 'test',
   NORMALIZATION_API_KEY: '',
@@ -11,4 +12,5 @@ process.env = {
   OPS_API_KEY: '',
   PORT: '',
   PUBLICATION_API_KEY: '',
+  JURISCRIPTS_API_KEY: ''
 }

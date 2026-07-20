@@ -13,7 +13,8 @@ import {
   DecisionCc as DecisionCcPayload,
   DecisionCa as DecisionCaPayload,
   DecisionCph as DecisionCphPayload,
-  ParseError
+  ParseError,
+  DecisionCaV2
 } from '@dbsder-api-types'
 import { NotSupported, toNotSupported, UnexpectedError } from '../error'
 import { IdParse, serializeModelWithId } from '../../utils/serializeId'
@@ -91,6 +92,10 @@ export function parseUnIdentifiedDecisionSupported(x: unknown): UnIdentifiedDeci
   }
 }
 
+export function idDecisionSupported(x: Decision): x is DecisionSupported {
+  return x.sourceName !== 'dila'
+}
+
 export type DecisionListFilters = {
   sourceName?: Decision['sourceName']
   labelStatus?: Decision['labelStatus']
@@ -153,6 +158,7 @@ const protectedKeys = ['_id', 'sourceId', 'sourceName'] as const
 export type UpdatableDecisionFields =
   | Partial<Omit<DecisionCc, '_id' | 'sourceId' | 'sourceName'>>
   | Partial<Omit<DecisionCa, '_id' | 'sourceId' | 'sourceName'>>
+  | Partial<Omit<DecisionCaV2, '_id' | 'sourceId' | 'sourceName'>>
   | Partial<Omit<DecisionTj, '_id' | 'sourceId' | 'sourceName'>>
   | Partial<Omit<DecisionTcom, '_id' | 'sourceId' | 'sourceName'>>
   | Partial<Omit<DecisionCph, '_id' | 'sourceId' | 'sourceName'>>
