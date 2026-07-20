@@ -3,16 +3,17 @@ import { Category, zObjectId } from './common.zod'
 
 export const zCategory = z.enum(Category)
 
-export const zReplacementTerms = z.object({
+export const zReplacementTerm = z.object({
   entityId: z.string(),
   replacementTerm: z.string(),
   originalTextInstances: z.array(z.string()),
   category: zCategory
 })
+export type ReplacementTerm = z.infer<typeof zReplacementTerm>
 
 export const zAffaireSchema = z.object({
   _id: zObjectId,
-  replacementTerms: z.array(zReplacementTerms),
+  replacementTerms: z.array(zReplacementTerm),
   decisionIds: z.array(zObjectId).nonempty(),
   documentAssocieIds: z.array(zObjectId)
 })

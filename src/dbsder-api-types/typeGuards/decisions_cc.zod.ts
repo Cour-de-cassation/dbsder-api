@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import {
   zBlocOccultation,
+  zEvents,
   zLabelStatus,
   zLabelTreatments,
   zObjectId,
@@ -48,7 +49,9 @@ export type PublicationCategoryCC = z.infer<typeof publicationCategoryCcSchema>
 export const decisionCcSchema = z.object({
   _id: zObjectId,
   sourceId: z.number(),
+  rawFileId: z.string().optional(),
   sourceName: z.literal('jurinet'),
+  events: zEvents.optional(),
   _rev: z.number().or(z.nan()).optional(),
   __v: z.number().or(z.nan()).optional(),
   _version: z.number().or(z.nan()).optional().nullable(),

@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import {
   zBlocOccultation,
+  zEvents,
   zLabelStatus,
   zLabelTreatments,
   zObjectId,
@@ -71,6 +72,7 @@ export const decisionTcomSchema = z.object({
   _id: zObjectId,
   sourceId: z.number(),
   sourceName: z.literal('juritcom'),
+  events: zEvents.optional(),
   __v: z.number().or(z.nan()),
   originalText: z.string(),
   pseudoText: z.string().optional(),
@@ -100,6 +102,7 @@ export const decisionTcomSchema = z.object({
   occultation: zOccultation,
   parties: z.array(partieTcomSchema).nullable().optional(),
   filenameSource: z.string(),
+  rawFileId: z.string().optional(),
   appeals: z.array(z.never()),
   codeMatiereCivil: z.string().nullable().optional(),
   idGroupement: z.string(),

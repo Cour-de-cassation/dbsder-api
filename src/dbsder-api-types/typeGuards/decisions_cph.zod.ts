@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import {
   zBlocOccultation,
+  zEvents,
   zLabelStatus,
   zLabelTreatments,
   zObjectId,
@@ -17,6 +18,8 @@ export const decisionCphSchema = z.object({
   _id: zObjectId,
   sourceId: z.string(),
   sourceName: z.literal('portalis-cph'),
+  events: zEvents.optional(),
+  portalisNumber: z.string(),
   originalText: z.string(),
   pseudoText: z.string().optional(),
   originalTextZoning: zZoning.optional(),
@@ -32,7 +35,7 @@ export const decisionCphSchema = z.object({
   unpublishDate: z.string().optional().nullable(),
   NACCode: z.string(),
   NACLibelle: z.string().optional(),
-  endCaseCode: z.string(),
+  endCaseCode: z.string().optional(),
   libelleEndCaseCode: z.string().optional(),
   chamberId: z.string().optional(),
   chamberName: z.string().optional(),
@@ -55,6 +58,7 @@ export const decisionCphSchema = z.object({
   pourvoiCourDeCassation: z.boolean(),
   pourvoiLocal: z.boolean(),
   filenameSource: z.string(),
+  rawFileId: z.string().optional(),
   raisonInteretParticulier: zRaisonInteretParticulier.nullable().optional()
 })
 export type DecisionCph = z.infer<typeof decisionCphSchema>

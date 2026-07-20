@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import {
   zBlocOccultation,
+  zEvents,
   zLabelStatus,
   zLabelTreatments,
   zObjectId,
@@ -45,6 +46,7 @@ export const decisionTjSchema = z.object({
   _id: zObjectId,
   sourceId: z.number(),
   sourceName: z.literal('juritj'),
+  events: zEvents.optional(),
   _rev: z.number().or(z.nan()).optional(),
   __v: z.number().or(z.nan()),
   originalText: z.string(),
@@ -91,6 +93,7 @@ export const decisionTjSchema = z.object({
   president: presidentTJSchema.nullable().optional(),
   parties: z.array(partieTJSchema).nullable().optional(),
   filenameSource: z.string(),
+  rawFileId: z.string().optional(),
   idDecisionTJ: z.string(),
   idDecisionWinci: z.string().nullable().optional(),
   numeroRoleGeneral: z.string(),
