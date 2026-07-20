@@ -7,8 +7,7 @@ export enum DocumentAssocieType {
   AVIS_COMP = 'avis complémentaire',
   RAPPORT = 'rapport',
   RAPPORT_QPC = 'rapport QPC',
-  RAPPORT_COMP = 'rapport complémentaire',
-
+  RAPPORT_COMP = 'rapport complémentaire'
 }
 
 export const documentAssocieTypeSchema = z.enum(DocumentAssocieType)
