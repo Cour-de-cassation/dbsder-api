@@ -10,12 +10,6 @@ import {
 
 const zCategory = z.enum(Category)
 
-const NiveauCodeNACSchema = z.object({
-  code: z.string(),
-  libelle: z.string()
-})
-export type NiveauCodeNAC = z.infer<typeof NiveauCodeNACSchema>
-
 const ChapitreSchema = z.object({
   code: z.string().length(1),
   libelle: z.string()

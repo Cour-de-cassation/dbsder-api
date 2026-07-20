@@ -138,7 +138,7 @@ export {
   ReplacementTerm
 } from './affaires.zod'
 export { CategorieCodeDecision, CodeDecision } from './codeDecisions.zod'
-export { NiveauCodeNAC, CodeNac, CategoriesToOmit, parsePartialCodeNac } from './codeNacs.zod'
+export { CodeNac, CategoriesToOmit, parsePartialCodeNac } from './codeNacs.zod'
 export {
   DocumentAssocie,
   UnIdentifiedDocumentAssocie,
