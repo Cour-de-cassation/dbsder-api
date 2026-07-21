@@ -3,5 +3,9 @@
   "description": "Librairie facilitant les interactions avec l'API DBSDER",
   "main": "dist/index.js",
   "author": "Cour de cassation",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cour-de-cassation/dbsder-api.git"
+  }
 }
