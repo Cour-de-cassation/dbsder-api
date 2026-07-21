@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src/dbsder-api-types",
+    "outDir": "./dist-types",
+    "declaration": true,
+    "declarationMap": true
+  },
+  "include": ["src/dbsder-api-types/**/*"]
+}

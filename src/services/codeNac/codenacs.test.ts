@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { CodeNac as CodeNacPayload } from 'dbsder-api-types'
+import { CodeNac as CodeNacPayload } from '@dbsder-api-types'
 import { ExistingCodeNac, NotFound } from '../error'
 import { Filter } from 'mongodb'
 import {

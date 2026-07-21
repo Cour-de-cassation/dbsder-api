@@ -4,7 +4,7 @@ import {
   ParseError,
   parsePartialAffaire,
   UnIdentifiedAffaire as UnIdentifiedAffairePayload
-} from 'dbsder-api-types'
+} from '@dbsder-api-types'
 import { isCustomError, NotSupported, toNotSupported } from '../error'
 import { Filter, ObjectId } from 'mongodb'
 import { IdParse, parseModelWithId, serializeModelWithId } from '../../utils/serializeId'

@@ -4,7 +4,7 @@ import {
   UnIdentifiedDocumentAssocie as UnIdentifiedDocumentAssociePayload,
   parseDocumentAssocie,
   parsePartialDocumentAssocie
-} from 'dbsder-api-types'
+} from '@dbsder-api-types'
 import { isCustomError, NotSupported, toNotSupported } from '../error'
 import { ObjectId } from 'mongodb'
 import { IdParse, parseModelWithId, serializeModelWithId } from '../../utils/serializeId'

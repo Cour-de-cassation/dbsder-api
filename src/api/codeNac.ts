@@ -10,7 +10,7 @@ import {
 } from '../services/codeNac/handler'
 import { responseLog } from './logger'
 import { MissingValue } from '../services/error'
-import { CodeNac, parsePartialCodeNac } from 'dbsder-api-types'
+import { CodeNac, parsePartialCodeNac } from '@dbsder-api-types'
 import { WithoutId } from 'mongodb'
 import { parseFilterNAC } from '../services/codeNac/codenacs'
 
