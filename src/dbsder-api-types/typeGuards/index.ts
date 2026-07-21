@@ -118,6 +118,7 @@ export {
   QualitePartie,
   TypePartie,
   ZoningZone,
+  Zoning,
   IntroductionSubzonageJurica,
   IntroductionSubzonageJurinet,
   SentenceIndex,
