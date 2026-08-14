@@ -328,3 +328,7 @@ export function parseLabelTreatments(x: unknown): LabelTreatments {
 export function parsePublishStatus(x: unknown): PublishStatus {
   return zPublishStatus.parse(x)
 }
+
+export function parseRaisonInteretParticulier(x: unknown): RaisonInteretParticulier {
+  return zRaisonInteretParticulier.parse(x)
+}
