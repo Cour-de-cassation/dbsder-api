@@ -46,9 +46,15 @@ npm run test
 
 ## Librairie de types
 
-### Publication automatique des types sur npmjs
+### Publication des types sur npmjs
 
-Le package est publié automatiquement sur npmjs lorsqu'un tag est ajouté. Le tag doit respecter le format [0-9]+.[0-9]+.[0-9]+. Pour clarifier le suivi il est préconisé d'ajouter le tag via une release github une fois la branche mergée sur master.
+La publication du package se fait manuellement via le workflow GitHub Actions [`publish-types-to-npm`](https://github.com/Cour-de-cassation/dbsder-api/blob/master/.github/workflows/publish-types-to-npm.yml).
+
+Pour publier une nouvelle version :
+
+1. Ouvrir le workflow [`Publish package`](https://github.com/Cour-de-cassation/dbsder-api/actions/workflows/publish-types-to-npm.yml).
+2. Cliquer sur **Run workflow** et renseigner la version à publier au format `X.Y.Z` (ex: `1.2.3`).
+3. Le workflow build les types, met à jour la version dans le `package.json` du dossier `dist-types` et publie sur npmjs avec la provenance.
 
 ### Utilisation des types dans un autre projet
 
