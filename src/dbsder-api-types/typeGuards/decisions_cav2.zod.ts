@@ -35,7 +35,6 @@ export const decisionCaV2Schema = z.object({
   events: zEvents.optional(),
   sourceName: z.literal('juricav2'),
   oracle_id: z.number().optional().nullable(),
-  jurica_mongo_id: zObjectId.optional().nullable(),
   originalText: z.string(),
   pseudoText: z.string().optional(),
   zoning: zZoning.optional(),
