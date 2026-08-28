@@ -99,7 +99,7 @@ export function idDecisionSupported(x: Decision): x is DecisionSupported {
 export type DecisionListFilters = {
   sourceName?: Decision['sourceName']
   labelStatus?: Decision['labelStatus']
-  sourceId?: Decision['sourceId']
+  sourceId?: Decision['sourceId'] | { $in: (string | number)[] }
   startDate?: Date
   endDate?: Date
   dateType: 'dateDecision' | 'dateCreation'
@@ -135,7 +135,7 @@ export function parseDecisionListFilters(x: object): DecisionListFilters {
     const sourceIdAsNumber = parseInt(sourceId)
     filter = {
       ...filter,
-      sourceId: isNaN(sourceIdAsNumber) ? sourceId : ({ $in: [sourceId, sourceIdAsNumber] } as any)
+      sourceId: isNaN(sourceIdAsNumber) ? sourceId : { $in: [sourceId, sourceIdAsNumber] }
     }
   }
 
@@ -202,7 +202,7 @@ type DateFilters =
 export function mapDecisionListFiltersIntoDbFilters(filters: DecisionListFilters): {
   sourceName?: Decision['sourceName']
   labelStatus?: Decision['labelStatus']
-  sourceId?: Decision['sourceId']
+  sourceId?: Decision['sourceId'] | { $in: (string | number)[] }
 } & DateFilters {
   const { startDate, endDate, dateType, ...filtersOnEqual } = filters
   const dateFilter =
