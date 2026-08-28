@@ -132,12 +132,10 @@ export function parseDecisionListFilters(x: object): DecisionListFilters {
   if ('sourceId' in x) {
     const sourceId = x.sourceId
     if (typeof sourceId !== 'string') throw new NotSupported('sourceId', sourceId)
-
-    if (filter.sourceName === 'dila') filter = { ...filter, sourceId }
-    else {
-      const sourceIdAsNumber = parseInt(sourceId)
-      if (isNaN(sourceIdAsNumber)) throw new NotSupported('sourceId', sourceId)
-      filter = { ...filter, sourceId: sourceIdAsNumber }
+    const sourceIdAsNumber = parseInt(sourceId)
+    filter = {
+      ...filter,
+      sourceId: isNaN(sourceIdAsNumber) ? sourceId : ({ $in: [sourceId, sourceIdAsNumber] } as any)
     }
   }
 
