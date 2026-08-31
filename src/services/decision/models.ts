@@ -5,6 +5,7 @@ import {
   parseSourceName,
   Decision as DecisionPayload,
   parseLabelStatus,
+  parsePublishStatus,
   DecisionDila as DecisionDilaPayload,
   hasSourceNameDila,
   DecisionTcom as DecisionTcomPayload,
@@ -99,6 +100,7 @@ export function idDecisionSupported(x: Decision): x is DecisionSupported {
 export type DecisionListFilters = {
   sourceName?: Decision['sourceName']
   labelStatus?: Decision['labelStatus']
+  publishStatus?: Decision['publishStatus']
   sourceId?: Decision['sourceId']
   startDate?: Date
   endDate?: Date
@@ -126,6 +128,16 @@ export function parseDecisionListFilters(x: object): DecisionListFilters {
       throw err instanceof Error
         ? toNotSupported('labelStatus', x.labelStatus, err)
         : new NotSupported('labelStatus', x.labelStatus)
+    }
+  }
+
+  if ('publishStatus' in x) {
+    try {
+      filter = { ...filter, publishStatus: parsePublishStatus(x.publishStatus) }
+    } catch (err) {
+      throw err instanceof Error
+        ? toNotSupported('publishStatus', x.publishStatus, err)
+        : new NotSupported('publishStatus', x.publishStatus)
     }
   }
 
