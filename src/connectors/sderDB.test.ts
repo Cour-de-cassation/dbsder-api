@@ -76,7 +76,7 @@ describe('service/decision', () => {
 
       await sderDb.findDecisionsWithPagination(filters, pages, mocked)
 
-      expect(findDecisions.mock.calls[0]).toStrictEqual([filters, pages])
+      expect(findDecisions.mock.calls[0]).toStrictEqual([filters, pages, undefined, undefined])
     })
 
     it('should call findDecisions with pageFilters to searchBefore', async () => {
@@ -91,7 +91,9 @@ describe('service/decision', () => {
 
       expect(findDecisions.mock.calls[0]).toStrictEqual([
         filters,
-        { _id: { $gte: pages.searchBefore } }
+        { _id: { $gte: pages.searchBefore } },
+        undefined,
+        undefined
       ])
     })
 
@@ -107,8 +109,23 @@ describe('service/decision', () => {
 
       expect(findDecisions.mock.calls[0]).toStrictEqual([
         filters,
-        { _id: { $lte: pages.searchAfter } }
+        { _id: { $lte: pages.searchAfter } },
+        undefined,
+        undefined
       ])
+    })
+
+    it('should call findDecisions with limit', async () => {
+      const mocked = findDecisions.mockResolvedValue({
+        decisions: [],
+        length: decisions.length
+      }) as unknown as typeof sderDb.findDecisions
+      const pages = { limit: 100 }
+      const filters: Filter<Decision> = { sourceName: 'juritj' }
+
+      await sderDb.findDecisionsWithPagination(filters, pages, mocked)
+
+      expect(findDecisions.mock.calls[0]).toStrictEqual([filters, {}, undefined, 100])
     })
   })
 
