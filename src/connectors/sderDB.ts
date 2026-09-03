@@ -168,21 +168,25 @@ export async function deleteDecision(filters: Filter<Decision>): Promise<DeleteR
 export async function findDecisions(
   filters: Filter<Decision>,
   pageFilters: Filter<Decision> = {},
-  sort: Sort = { _id: -1 },
-  limit: number = 50
+  sort?: Sort,
+  limit?: number
 ) {
   const db = await dbConnect()
   const length = await db.collection<Decision>('decisions').countDocuments(filters)
   const decisions = await db
     .collection<Decision>('decisions')
     .find({ ...filters, ...pageFilters })
-    .sort(sort)
-    .limit(limit)
+    .sort(sort ?? { _id: -1 })
+    .limit(limit ?? 50)
     .toArray()
   return { length, decisions }
 }
 
-export type Page = { searchBefore: ObjectId } | { searchAfter: ObjectId } | object
+export type Page = { limit?: number } & (
+  | { searchBefore: ObjectId }
+  | { searchAfter: ObjectId }
+  | object
+)
 export type PaginatedDecisions = {
   decisions: Decision[]
   previousCursor?: ObjectId
@@ -202,7 +206,12 @@ export async function findDecisionsWithPagination(
         ? { _id: { $lte: page.searchAfter } }
         : {}
 
-  const { decisions, length } = await findDecisionsFunction(filters, pageFilters)
+  const { decisions, length } = await findDecisionsFunction(
+    filters,
+    pageFilters,
+    undefined,
+    page.limit
+  )
 
   const firstDecision = decisions[0]
   const lastDecision = decisions[decisions.length - 1]
