@@ -20,6 +20,7 @@ import { Decision } from '@dbsder-api-types'
 import queryString from 'qs'
 import { responseLog } from './logger'
 import { parseModelWithId, serializeModelWithId } from '../utils/serializeId'
+import { parsePaginationFilters } from '../utils/pagination'
 
 const app = Router()
 
@@ -41,25 +42,9 @@ app.get(
 function parseGetQuery(query: unknown) {
   if (typeof query !== 'object' || !query) throw new NotSupported('querystring', query)
   const filters = parseDecisionListFilters(query)
+  const pagination = parsePaginationFilters(query)
 
-  if ('searchBefore' in query && 'searchAfter' in query)
-    throw new NotSupported(
-      'querystring',
-      query,
-      'searchBefore cannot be combinated with SearchAfter'
-    )
-
-  if ('searchBefore' in query && typeof query.searchBefore === 'string') {
-    const { searchBefore } = parseModelWithId({ searchBefore: query.searchBefore }, 'searchBefore')
-    return { filters, searchBefore }
-  }
-
-  if ('searchAfter' in query && typeof query.searchAfter === 'string') {
-    const { searchAfter } = parseModelWithId({ searchAfter: query.searchAfter }, 'searchAfter')
-    return { filters, searchAfter }
-  }
-
-  return { filters }
+  return { filters, ...pagination }
 }
 
 app.get(
