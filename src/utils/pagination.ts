@@ -5,15 +5,13 @@ import { parseModelWithId } from './serializeId'
 function parseLimit(query: object) {
   if (!('limit' in query)) return undefined
 
-  if (typeof query.limit !== 'number' || query.limit < 10 || query.limit > 100) {
-    throw new NotSupported(
-      'query.limit',
-      query.limit,
-      'limit should be between 10 and 200 (inclusive)'
-    )
+  const limit = parseInt(`${query.limit}`)
+
+  if (isNaN(limit) || limit < 10 || limit > 100) {
+    throw new NotSupported('query.limit', limit, 'limit should be between 10 and 200 (inclusive)')
   }
 
-  return query.limit
+  return limit
 }
 
 export type PaginationFilters = { limit?: number } & (
