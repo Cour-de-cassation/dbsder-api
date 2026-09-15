@@ -8,12 +8,23 @@ on:
         required: true
         type: string
 
+jobs:
+  check-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure running on master
+        if: github.ref != 'refs/heads/master'
+        run: |
+          echo "This workflow can only be triggered from the master branch."
+          exit 1
+
 permissions:
   contents: write
   id-token: write
 
 jobs:
   publish:
+    needs: check-branch
     runs-on: ubuntu-latest
 
     steps:
