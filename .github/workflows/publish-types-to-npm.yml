@@ -8,6 +8,10 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   check-branch:
     runs-on: ubuntu-latest
@@ -18,11 +22,6 @@ jobs:
           echo "This workflow can only be triggered from the master branch."
           exit 1
 
-permissions:
-  contents: write
-  id-token: write
-
-jobs:
   publish:
     needs: check-branch
     runs-on: ubuntu-latest
@@ -42,14 +41,17 @@ jobs:
           node-version: 24
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Replace package.json file
+        run: cp package.types.json package.json
+
       - name: Install deps
-        run: npm ci
+        run: npm i
 
       - name: Build types package
         run: tsc -p tsconfig.types.json
 
-      - name: Prepare publish directory
-        run: cp package.types.json dist-types/package.json
+      - name: Copy package.json to dist output
+        run: cp package.json dist-types/package.json
 
       - name: Set version from input
         run: npm version ${{ inputs.version }} --no-git-tag-version
