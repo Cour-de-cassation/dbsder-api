@@ -173,12 +173,14 @@ export async function findDecisions(
 ) {
   const db = await dbConnect()
   const length = await db.collection<Decision>('decisions').countDocuments(filters)
+  console.log({ ...filters, ...pageFilters })
   const decisions = await db
     .collection<Decision>('decisions')
     .find({ ...filters, ...pageFilters })
     .sort(sort ?? { _id: -1 })
     .limit(limit ?? 50)
     .toArray()
+  console.log(length)
   return { length, decisions }
 }
 
