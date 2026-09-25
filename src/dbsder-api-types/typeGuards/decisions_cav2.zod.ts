@@ -73,7 +73,7 @@ export const decisionCaV2Schema = z.object({
   matiereDeterminee: z.boolean().optional(),
   pourvoiLocal: z.boolean().optional(),
   pourvoiCourDeCassation: z.boolean().optional(),
-  raisonInteretParticulier: zRaisonInteretParticulier.nullable().optional(),
+  raisonInteretParticulier: zRaisonInteretParticulier.nullable(),
   solution: z.string().optional(),
   decatt: zDecisionAttaquee.nullable().optional(),
   filenameSource: z.string().optional()
