@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import {
+  Origin,
   zBlocOccultation,
   zEvents,
   zLabelStatus,
@@ -17,7 +18,7 @@ import { Decision, UnIdentifiedDecision } from './index'
 export const decisionCphSchema = z.object({
   _id: zObjectId,
   sourceId: z.string(),
-  sourceName: z.literal('portalis-cph'),
+  sourceName: z.literal(Origin.PORTALIS_CPH),
   events: zEvents.optional(),
   portalisNumber: z.string(),
   originalText: z.string(),
@@ -63,7 +64,7 @@ export function hasSourceNameCph(x: Decision): x is DecisionCph
 export function hasSourceNameCph(
   x: Decision | UnIdentifiedDecision
 ): x is DecisionCph | UnIdentifiedDecisionCph {
-  return x.sourceName === 'portalis-cph'
+  return x.sourceName === Origin.PORTALIS_CPH
 }
 
 export function parseDecisionCph(x: unknown): UnIdentifiedDecisionCph {

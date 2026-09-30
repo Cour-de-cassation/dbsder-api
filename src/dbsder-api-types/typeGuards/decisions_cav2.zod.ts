@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import {
+  Origin,
   zBlocOccultation,
   zEvents,
   zLabelStatus,
@@ -33,7 +34,7 @@ export const decisionCaV2Schema = z.object({
   sourceId: zObjectId,
   rawFileId: z.string().optional(),
   events: zEvents.optional(),
-  sourceName: z.literal('juricav2'),
+  sourceName: z.literal(Origin.JURICA_V2),
   oracle_id: z.number().optional().nullable(),
   jurica_mongo_id: zObjectId.optional().nullable(),
   originalText: z.string(),
@@ -86,7 +87,7 @@ export function hasSourceNameCaV2(x: Decision): x is DecisionCaV2
 export function hasSourceNameCaV2(
   x: Decision | UnIdentifiedDecision
 ): x is DecisionCaV2 | UnIdentifiedDecisionCaV2 {
-  return x.sourceName === 'juricav2'
+  return x.sourceName === Origin.JURICA_V2
 }
 
 export function parseDecisionCaV2(x: unknown): UnIdentifiedDecisionCaV2 {

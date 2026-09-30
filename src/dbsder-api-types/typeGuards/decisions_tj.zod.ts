@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import {
+  Origin,
   zBlocOccultation,
   zEvents,
   zLabelStatus,
@@ -45,7 +46,7 @@ export type PartieTJ = z.infer<typeof partieTJSchema>
 export const decisionTjSchema = z.object({
   _id: zObjectId,
   sourceId: z.number(),
-  sourceName: z.literal('juritj'),
+  sourceName: z.literal(Origin.JURITJ),
   events: zEvents.optional(),
   _rev: z.number().or(z.nan()).optional(),
   __v: z.number().or(z.nan()),
@@ -111,7 +112,7 @@ export function hasSourceNameTj(x: Decision): x is DecisionTj
 export function hasSourceNameTj(
   x: Decision | UnIdentifiedDecision
 ): x is DecisionTj | UnIdentifiedDecisionTj {
-  return x.sourceName === 'juritj'
+  return x.sourceName === Origin.JURITJ
 }
 
 export function parseDecisionTj(x: unknown): UnIdentifiedDecisionTj {

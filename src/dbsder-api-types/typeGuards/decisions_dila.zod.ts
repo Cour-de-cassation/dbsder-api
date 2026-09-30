@@ -1,6 +1,13 @@
 import { z } from 'zod'
 
-import { zEvents, zLabelStatus, zObjectId, zPseudoStatus, zPublishStatus } from './common.zod'
+import {
+  Origin,
+  zEvents,
+  zLabelStatus,
+  zObjectId,
+  zPseudoStatus,
+  zPublishStatus
+} from './common.zod'
 import { Decision, UnIdentifiedDecision } from './index'
 
 const jurisdictionCodeDILASchema = z.union([
@@ -44,7 +51,7 @@ export type OccultationDILA = z.infer<typeof occultationDILASchema>
 export const decisionDilaSchema = z.object({
   _id: zObjectId,
   sourceId: z.string(),
-  sourceName: z.literal('dila'),
+  sourceName: z.literal(Origin.DILA),
   events: zEvents.optional(),
   _rev: z.number().or(z.nan()),
   _version: z.number().or(z.nan()),
@@ -91,7 +98,7 @@ export function hasSourceNameDila(x: Decision): x is DecisionDila
 export function hasSourceNameDila(
   x: Decision | UnIdentifiedDecision
 ): x is DecisionDila | UnIdentifiedDecisionDila {
-  return x.sourceName === 'dila'
+  return x.sourceName === Origin.DILA
 }
 
 export function parseDecisionDila(x: unknown): UnIdentifiedDecisionDila {
