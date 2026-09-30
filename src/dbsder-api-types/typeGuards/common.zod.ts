@@ -329,6 +329,5 @@ export function parsePublishStatus(x: unknown): PublishStatus {
 }
 
 export function parseRaisonInteretParticulier(x: unknown): RaisonInteretParticulier | null {
-  const result = zRaisonInteretParticulier.safeParse(x)
-  return result.success ? result.data : null
+  return zRaisonInteretParticulier.nullable().parse(x)
 }
