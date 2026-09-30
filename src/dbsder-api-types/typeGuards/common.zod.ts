@@ -328,7 +328,7 @@ export function parsePublishStatus(x: unknown): PublishStatus {
   return zPublishStatus.parse(x)
 }
 
-export function parseParticularInterestReason(x: unknown): RaisonInteretParticulier | null {
+export function parseRaisonInteretParticulier(x: unknown): RaisonInteretParticulier | null {
   const result = zRaisonInteretParticulier.safeParse(x)
   return result.success ? result.data : null
 }

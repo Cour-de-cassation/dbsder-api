@@ -127,11 +127,12 @@ export {
   BlocOccultation,
   LabelRoute,
   RaisonInteretParticulier,
-  parseParticularInterestReason,
+  parseRaisonInteretParticulier,
   DecisionsPubliques,
   DebatsPublics,
   DbsderId
 } from './common.zod'
+
 export {
   parseAffaire,
   parsePartialAffaire,
