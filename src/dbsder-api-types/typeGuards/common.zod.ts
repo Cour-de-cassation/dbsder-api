@@ -125,7 +125,7 @@ export enum RaisonInteretParticulier {
   S3_DIVERGENCE_JURISPRUDENCE_DEBAT_DOCTRINAL = 'S3 - Divergence de jurisprudence ou débat doctrinal',
   S4_SUJET_INTERET_PUBLIC_MAJEUR = "S4 - Sujet d'intérêt public majeur",
   S5_CONTENTIEUX_RARE = 'S5 - Contentieux rare',
-  S6_CONTENTIEUX_SERIEL = 'S6 - Contentieux sériel'
+  S6_CONTENTIEUX_SERIEL = 'S6 - Contentieux sériel',
 }
 
 export enum DecisionsPubliques {
@@ -328,6 +328,7 @@ export function parsePublishStatus(x: unknown): PublishStatus {
   return zPublishStatus.parse(x)
 }
 
-export function parseRaisonInteretParticulier(x: unknown): RaisonInteretParticulier {
-  return zRaisonInteretParticulier.parse(x)
+export function parseRaisonInteretParticulier(x: unknown): RaisonInteretParticulier | null {
+  const result = zRaisonInteretParticulier.safeParse(x)
+  return result.success ? result.data : null
 }
