@@ -127,7 +127,7 @@ export {
   BlocOccultation,
   LabelRoute,
   RaisonInteretParticulier,
-  parseRaisonInteretParticulier,
+  parseParticularInterestReason,
   DecisionsPubliques,
   DebatsPublics,
   DbsderId
