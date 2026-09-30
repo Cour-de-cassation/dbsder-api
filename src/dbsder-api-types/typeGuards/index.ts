@@ -1,54 +1,47 @@
 import {
   DecisionTcom,
-  decisionTcomSchema,
   parseDecisionTcom,
   parsePartialDecisionTcom,
   UnIdentifiedDecisionTcom
 } from './decisions_tcom.zod'
 import {
   DecisionTj,
-  decisionTjSchema,
   parseDecisionTj,
   parsePartialDecisionTj,
   UnIdentifiedDecisionTj
 } from './decisions_tj.zod'
 import {
   DecisionCa,
-  decisionCaSchema,
   parseDecisionCa,
   parsePartialDecisionCa,
   UnIdentifiedDecisionCa
 } from './decisions_ca.zod'
 import {
   DecisionCc,
-  decisionCcSchema,
   parseDecisionCc,
   parsePartialDecisionCc,
   UnIdentifiedDecisionCc
 } from './decisions_cc.zod'
 import {
   DecisionCph,
-  decisionCphSchema,
   parseDecisionCph,
   parsePartialDecisionCph,
   UnIdentifiedDecisionCph
 } from './decisions_cph.zod'
 import {
   DecisionDila,
-  decisionDilaSchema,
   parseDecisionDila,
   parsePartialDecisionDila,
   UnIdentifiedDecisionDila
 } from './decisions_dila.zod'
 import {
   DecisionCaV2,
-  decisionCaV2Schema,
   parseDecisionCaV2,
   parsePartialDecisionCaV2,
   UnIdentifiedDecisionCaV2
 } from './decisions_cav2.zod'
 
-import { zObjectId, DbsderId } from './common.zod'
+import { Origin, zObjectId, DbsderId, parseOrigin } from './common.zod'
 import { ZodError } from 'zod'
 
 export {
@@ -130,7 +123,9 @@ export {
   parseRaisonInteretParticulier,
   DecisionsPubliques,
   DebatsPublics,
-  DbsderId
+  DbsderId,
+  Origin,
+  parseOrigin
 } from './common.zod'
 export {
   parseAffaire,
@@ -170,46 +165,26 @@ export function parseId(x: unknown): DbsderId {
   return zObjectId.parse(x)
 }
 
-export function parseSourceName(x: unknown): Decision['sourceName'] {
-  const sourceName = decisionCaSchema
-    .pick({ sourceName: true })
-    .or(decisionCcSchema.pick({ sourceName: true }))
-    .or(decisionTjSchema.pick({ sourceName: true }))
-    .or(decisionTcomSchema.pick({ sourceName: true }))
-    .or(decisionDilaSchema.pick({ sourceName: true }))
-    .or(decisionCphSchema.pick({ sourceName: true }))
-    .or(decisionCaV2Schema.pick({ sourceName: true }))
-    .parse({ sourceName: x }).sourceName
-
-  // /!\ used to check exhaustivity: error type means you forget a schema /!\
-  type ExhaustiveSourceName = Decision['sourceName'] extends typeof sourceName
-    ? typeof sourceName
-    : never
-  const exhaustiveSourceName: ExhaustiveSourceName = sourceName
-
-  return exhaustiveSourceName
-}
-
 export function parseUnIdentifiedDecision(x: unknown): UnIdentifiedDecision {
   const isValidX = typeof x === 'object' && x != null && 'sourceName' in x
   if (!isValidX) throw new Error('There is no sourceName in decision')
 
-  const sourceName = parseSourceName(x.sourceName)
+  const sourceName = parseOrigin(x.sourceName)
 
   switch (sourceName) {
-    case 'jurinet':
+    case Origin.JURINET:
       return parseDecisionCc(x)
-    case 'jurica':
+    case Origin.JURICA:
       return parseDecisionCa(x)
-    case 'juritj':
+    case Origin.JURITJ:
       return parseDecisionTj(x)
-    case 'dila':
+    case Origin.DILA:
       return parseDecisionDila(x)
-    case 'juritcom':
+    case Origin.JURITCOM:
       return parseDecisionTcom(x)
-    case 'portalis-cph':
+    case Origin.PORTALIS_CPH:
       return parseDecisionCph(x)
-    case 'juricav2':
+    case Origin.JURICA_V2:
       return parseDecisionCaV2(x)
     default:
       sourceName satisfies never
@@ -229,19 +204,19 @@ export function parsePartialDecision(
   | Partial<DecisionCph>
   | Partial<DecisionCaV2> {
   switch (sourceName) {
-    case 'jurinet':
+    case Origin.JURINET:
       return parsePartialDecisionCc(x)
-    case 'jurica':
+    case Origin.JURICA:
       return parsePartialDecisionCa(x)
-    case 'juritj':
+    case Origin.JURITJ:
       return parsePartialDecisionTj(x)
-    case 'dila':
+    case Origin.DILA:
       return parsePartialDecisionDila(x)
-    case 'juritcom':
+    case Origin.JURITCOM:
       return parsePartialDecisionTcom(x)
-    case 'portalis-cph':
+    case Origin.PORTALIS_CPH:
       return parsePartialDecisionCph(x)
-    case 'juricav2':
+    case Origin.JURICA_V2:
       return parsePartialDecisionCaV2(x)
     default:
       sourceName satisfies never

@@ -141,6 +141,17 @@ export enum DebatsPublics {
   DEBATS_MIXTES = 'débats mixtes'
 }
 
+export enum Origin {
+  JURINET = 'jurinet',
+  JURICA = 'jurica',
+  JURICA_V2 = 'juricav2',
+  JURITJ = 'juritj',
+  JURITCOM = 'juritcom',
+  PORTALIS_CPH = 'portalis-cph',
+  DILA = 'dila'
+}
+export const zOrigin = z.enum(Origin)
+
 export const zDecisionsPubliques = z.enum(DecisionsPubliques)
 export const zDebatsPublics = z.enum(DebatsPublics)
 
@@ -331,4 +342,8 @@ export function parsePublishStatus(x: unknown): PublishStatus {
 
 export function parseRaisonInteretParticulier(x: unknown): RaisonInteretParticulier {
   return zRaisonInteretParticulier.parse(x)
+}
+
+export function parseOrigin(x: unknown): Origin {
+  return zOrigin.parse(x)
 }
