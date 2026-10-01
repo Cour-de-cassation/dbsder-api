@@ -233,7 +233,7 @@ export const zBlocOccultation = z.enum(BlocOccultation)
 
 export const zLabelRoute = z.enum(LabelRoute)
 
-export const zRaisonInteretParticulier = z.enum(RaisonInteretParticulier)
+export const zRaisonInteretParticulier = z.enum(RaisonInteretParticulier).nullable()
 
 export const zObjectId = z.string().refine((id: string) => {
   return ObjectId.isValid(id) && new ObjectId(id).toString() === id
@@ -329,5 +329,5 @@ export function parsePublishStatus(x: unknown): PublishStatus {
 }
 
 export function parseRaisonInteretParticulier(x: unknown): RaisonInteretParticulier | null {
-  return zRaisonInteretParticulier.nullable().parse(x)
+  return zRaisonInteretParticulier.parse(x)
 }
