@@ -76,8 +76,6 @@ export const decisionTjSchema = z.object({
   libelleNatureParticuliere: z.string().nullable().optional(),
   endCaseCode: z.string(),
   libelleEndCaseCode: z.string(),
-  chamberId: z.literal(''),
-  chamberName: z.literal(''),
   codeService: z.string(),
   libelleService: z.string(),
   debatPublic: z.boolean(),
@@ -98,8 +96,6 @@ export const decisionTjSchema = z.object({
   idDecisionWinci: z.string().nullable().optional(),
   numeroRoleGeneral: z.string(),
   appeals: z.array(z.string()),
-  decatt: z.array(z.never()),
-  publication: z.array(z.never()),
   decisionAssociee: decisionAssocieeTJSchema.nullable().optional(),
   raisonInteretParticulier: zRaisonInteretParticulier.nullable()
 })
