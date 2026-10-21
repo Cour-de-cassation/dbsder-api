@@ -1,6 +1,8 @@
 import { z } from 'zod'
 
 import {
+  JurisdictionType,
+  Origin,
   zBlocOccultation,
   zEvents,
   zLabelStatus,
@@ -49,7 +51,8 @@ export const decisionCaSchema = z.object({
   _id: zObjectId,
   sourceId: z.number(),
   rawFileId: z.string().optional(),
-  sourceName: z.literal('jurica'),
+  sourceName: z.literal(Origin.JURICA),
+  jurisdictionType: z.literal(JurisdictionType.CA),
   events: zEvents.optional(),
   _rev: z.number().or(z.nan()).optional(),
   _version: z.number().or(z.nan()).optional().nullable(),
@@ -109,7 +112,7 @@ export function hasSourceNameCa(x: Decision): x is DecisionCa
 export function hasSourceNameCa(
   x: Decision | UnIdentifiedDecision
 ): x is DecisionCa | UnIdentifiedDecisionCa {
-  return x.sourceName === 'jurica'
+  return x.sourceName === Origin.JURICA
 }
 
 export function parseDecisionCa(x: unknown): UnIdentifiedDecisionCa {

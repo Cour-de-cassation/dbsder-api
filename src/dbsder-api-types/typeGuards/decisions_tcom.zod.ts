@@ -1,6 +1,8 @@
 import { z } from 'zod'
 
 import {
+  JurisdictionType,
+  Origin,
   zBlocOccultation,
   zEvents,
   zLabelStatus,
@@ -71,7 +73,8 @@ export type PartieTcom = z.infer<typeof partieTcomSchema>
 export const decisionTcomSchema = z.object({
   _id: zObjectId,
   sourceId: z.number(),
-  sourceName: z.literal('juritcom'),
+  sourceName: z.literal(Origin.JURITCOM),
+  jurisdictionType: z.literal(JurisdictionType.TCOM),
   events: zEvents.optional(),
   __v: z.number().or(z.nan()),
   originalText: z.string(),
@@ -121,7 +124,7 @@ export function hasSourceNameTcom(x: Decision): x is DecisionTcom
 export function hasSourceNameTcom(
   x: Decision | UnIdentifiedDecision
 ): x is DecisionTcom | UnIdentifiedDecisionTcom {
-  return x.sourceName === 'juritcom'
+  return x.sourceName === Origin.JURITCOM
 }
 
 export function parseDecisionTcom(x: unknown): UnIdentifiedDecisionTcom {

@@ -2,7 +2,7 @@ import {
   UnIdentifiedDecisionDila as UnIdentifiedDecisionDilaPayload,
   UnIdentifiedDecision as UnIdentifiedDecisionPayload,
   parseUnIdentifiedDecision,
-  parseSourceName,
+  parseOrigin,
   Decision as DecisionPayload,
   parseLabelStatus,
   parsePublishStatus,
@@ -113,7 +113,7 @@ export function parseDecisionListFilters(x: object): DecisionListFilters {
 
   if ('sourceName' in x) {
     try {
-      filter = { ...filter, sourceName: parseSourceName(x.sourceName) }
+      filter = { ...filter, sourceName: parseOrigin(x.sourceName) }
     } catch (err) {
       throw err instanceof Error
         ? toNotSupported('sourceName', x.sourceName, err)

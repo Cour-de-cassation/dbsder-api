@@ -1,6 +1,6 @@
 import { Filter, ObjectId, WithId } from 'mongodb'
 
-import { Decision as DecisionPayload } from '@dbsder-api-types'
+import { Decision as DecisionPayload, Origin } from '@dbsder-api-types'
 
 import * as sderDb from './sderDB'
 
@@ -72,7 +72,7 @@ describe('service/decision', () => {
         length: decisions.length
       }) as unknown as typeof sderDb.findDecisions
       const pages = {}
-      const filters: Filter<Decision> = { sourceName: 'juritj' }
+      const filters: Filter<Decision> = { sourceName: Origin.JURITJ }
 
       await sderDb.findDecisionsWithPagination(filters, pages, mocked)
 
@@ -85,7 +85,7 @@ describe('service/decision', () => {
         length: decisions.length
       }) as unknown as typeof sderDb.findDecisions
       const pages = { searchBefore: 1 }
-      const filters: Filter<Decision> = { sourceName: 'juritj' }
+      const filters: Filter<Decision> = { sourceName: Origin.JURITJ }
 
       await sderDb.findDecisionsWithPagination(filters, pages, mocked)
 
@@ -103,7 +103,7 @@ describe('service/decision', () => {
         length: decisions.length
       }) as unknown as typeof sderDb.findDecisions
       const pages = { searchAfter: 5 }
-      const filters: Filter<Decision> = { sourceName: 'juritj' }
+      const filters: Filter<Decision> = { sourceName: Origin.JURITJ }
 
       await sderDb.findDecisionsWithPagination(filters, pages, mocked)
 
@@ -121,7 +121,7 @@ describe('service/decision', () => {
         length: decisions.length
       }) as unknown as typeof sderDb.findDecisions
       const pages = { limit: 100 }
-      const filters: Filter<Decision> = { sourceName: 'juritj' }
+      const filters: Filter<Decision> = { sourceName: Origin.JURITJ }
 
       await sderDb.findDecisionsWithPagination(filters, pages, mocked)
 

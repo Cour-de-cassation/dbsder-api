@@ -1,6 +1,8 @@
 import { z } from 'zod'
 
 import {
+  JurisdictionType,
+  Origin,
   zBlocOccultation,
   zEvents,
   zLabelStatus,
@@ -50,7 +52,8 @@ export const decisionCcSchema = z.object({
   _id: zObjectId,
   sourceId: z.number(),
   rawFileId: z.string().optional(),
-  sourceName: z.literal('jurinet'),
+  sourceName: z.literal(Origin.JURINET),
+  jurisdictionType: z.literal(JurisdictionType.CC),
   events: zEvents.optional(),
   _rev: z.number().or(z.nan()).optional(),
   __v: z.number().or(z.nan()).optional(),
@@ -114,7 +117,7 @@ export function hasSourceNameCc(x: Decision): x is DecisionCc
 export function hasSourceNameCc(
   x: Decision | UnIdentifiedDecision
 ): x is DecisionCc | UnIdentifiedDecisionCc {
-  return x.sourceName === 'jurinet'
+  return x.sourceName === Origin.JURINET
 }
 
 export function parseDecisionCc(x: unknown): UnIdentifiedDecisionCc {
