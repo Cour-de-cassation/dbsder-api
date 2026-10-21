@@ -152,6 +152,15 @@ export enum Origin {
 }
 export const zOrigin = z.enum(Origin)
 
+export enum JurisdictionType {
+  CC = 'cc',
+  CA = 'ca',
+  TJ = 'tj',
+  TCOM = 'tcom',
+  CPH = 'cph',
+}
+export const zJurisdictionType = z.enum(JurisdictionType)
+
 export const zDecisionsPubliques = z.enum(DecisionsPubliques)
 export const zDebatsPublics = z.enum(DebatsPublics)
 

@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import {
+  JurisdictionType,
   Origin,
   zBlocOccultation,
   zEvents,
@@ -52,6 +53,7 @@ export const decisionCcSchema = z.object({
   sourceId: z.number(),
   rawFileId: z.string().optional(),
   sourceName: z.literal(Origin.JURINET),
+  jurisdictionType: z.literal(JurisdictionType.CC),
   events: zEvents.optional(),
   _rev: z.number().or(z.nan()).optional(),
   __v: z.number().or(z.nan()).optional(),

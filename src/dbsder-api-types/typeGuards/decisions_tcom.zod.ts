@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import {
+  JurisdictionType,
   Origin,
   zBlocOccultation,
   zEvents,
@@ -73,6 +74,7 @@ export const decisionTcomSchema = z.object({
   _id: zObjectId,
   sourceId: z.number(),
   sourceName: z.literal(Origin.JURITCOM),
+  jurisdictionType: z.literal(JurisdictionType.TCOM),
   events: zEvents.optional(),
   __v: z.number().or(z.nan()),
   originalText: z.string(),

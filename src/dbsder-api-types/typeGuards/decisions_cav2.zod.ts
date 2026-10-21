@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import {
+  JurisdictionType,
   Origin,
   zBlocOccultation,
   zEvents,
@@ -35,6 +36,7 @@ export const decisionCaV2Schema = z.object({
   rawFileId: z.string().optional(),
   events: zEvents.optional(),
   sourceName: z.literal(Origin.JURICA_V2),
+  jurisdictionType: z.literal(JurisdictionType.CA),
   oracle_id: z.number().optional().nullable(),
   jurica_mongo_id: zObjectId.optional().nullable(),
   originalText: z.string(),

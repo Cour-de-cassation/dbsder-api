@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import {
+  JurisdictionType,
   Origin,
   zBlocOccultation,
   zEvents,
@@ -47,6 +48,7 @@ export const decisionTjSchema = z.object({
   _id: zObjectId,
   sourceId: z.number(),
   sourceName: z.literal(Origin.JURITJ),
+  jurisdictionType: z.literal(JurisdictionType.TJ),
   events: zEvents.optional(),
   _rev: z.number().or(z.nan()).optional(),
   __v: z.number().or(z.nan()),

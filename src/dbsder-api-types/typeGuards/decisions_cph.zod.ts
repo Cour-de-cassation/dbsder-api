@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import {
+  JurisdictionType,
   Origin,
   zBlocOccultation,
   zEvents,
@@ -19,6 +20,7 @@ export const decisionCphSchema = z.object({
   _id: zObjectId,
   sourceId: z.string(),
   sourceName: z.literal(Origin.PORTALIS_CPH),
+  jurisdictionType: z.literal(JurisdictionType.CPH),
   events: zEvents.optional(),
   portalisNumber: z.string(),
   originalText: z.string(),
