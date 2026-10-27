@@ -15,9 +15,7 @@ function parseLimit(query: object) {
 }
 
 export type PaginationFilters = { limit?: number } & (
-  | { searchBefore: ObjectId }
-  | { searchAfter: ObjectId }
-  | object
+  { searchBefore: ObjectId } | { searchAfter: ObjectId } | object
 )
 export function parsePaginationFilters(query: object): PaginationFilters {
   const limit = parseLimit(query)
