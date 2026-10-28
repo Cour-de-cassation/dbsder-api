@@ -150,13 +150,7 @@ export {
 export { ZodError as ParseError } from 'zod'
 
 export type Decision =
-  | DecisionTj
-  | DecisionTcom
-  | DecisionCa
-  | DecisionCc
-  | DecisionDila
-  | DecisionCph
-  | DecisionCaV2
+  DecisionTj | DecisionTcom | DecisionCa | DecisionCc | DecisionDila | DecisionCph | DecisionCaV2
 export type UnIdentifiedDecision =
   | UnIdentifiedDecisionTj
   | UnIdentifiedDecisionTcom
