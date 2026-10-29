@@ -9,10 +9,10 @@
     "url": "git+https://github.com/Cour-de-cassation/dbsder-api.git"
   },
   "devDependencies": {
-    "typescript": "5.9.3"
+    "typescript": "6.0.3"
   },
   "dependencies": {
-    "bson": "7.2.0",
-    "zod": "4.4.3"
+    "bson": "7.3.3",
+    "zod": "4.6.7"
   }
 }

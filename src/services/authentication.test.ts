@@ -1,3 +1,4 @@
+import { describe, it, expect } from '@jest/globals'
 import { INDEX_API_KEY, LABEL_API_KEY, JURINACS_API_KEY } from '../config/env'
 import { Service } from '../services/authentication'
 import { apiKeyToService } from '../services/authentication'
