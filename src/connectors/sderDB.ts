@@ -183,9 +183,7 @@ export async function findDecisions(
 }
 
 export type Page = { limit?: number } & (
-  | { searchBefore: ObjectId }
-  | { searchAfter: ObjectId }
-  | object
+  { searchBefore: ObjectId } | { searchAfter: ObjectId } | object
 )
 export type PaginatedDecisions = {
   decisions: Decision[]
