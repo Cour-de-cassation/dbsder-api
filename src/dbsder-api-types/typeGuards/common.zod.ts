@@ -288,7 +288,7 @@ export const zCurrentZoning = z.object({
   visa: z.array(z.string()).optional().nullable(),
   is_public: z.number().optional().nullable(),
   is_public_text: z.array(z.string()).optional().nullable(),
-  arret_id: z.number()
+  arret_id: z.number().or(z.string())
 })
 export type CurrentZoning = z.infer<typeof zCurrentZoning>
 
