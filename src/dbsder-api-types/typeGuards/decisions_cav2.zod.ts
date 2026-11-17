@@ -61,7 +61,7 @@ export const decisionCaV2Schema = z.object({
   jurisdictionId: z.string(),
   jurisdictionName: z.string(),
   selection: z.boolean(),
-  sommaire: z.string().optional(),
+  sommaire: z.string().optional().nullable(),
   blocOccultation: zBlocOccultation.optional().nullable(),
   occultation: zOccultation,
   recommandationOccultation: zSuiviOccultation,
