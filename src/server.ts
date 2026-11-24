@@ -3,6 +3,7 @@ import helmet from 'helmet'
 
 import { logger, loggerHttp } from './config/logger'
 import codeNacRouter from './api/codeNac'
+import codeJurisdictionRouter from './api/codeJurisdiction'
 import decisionRouter from './api/decision'
 import affaireRouter from './api/affaire'
 import documentAssocieRouter from './api/documentAssocie'
@@ -22,6 +23,7 @@ app
 
   .use(requestLog)
   .use(codeNacRouter)
+  .use(codeJurisdictionRouter)
   .use(decisionRouter)
   .use(affaireRouter)
   .use(documentAssocieRouter)
