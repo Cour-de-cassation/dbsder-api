@@ -16,6 +16,7 @@ import { Decision, UnIdentifiedDecision } from './index'
 
 export const decisionCphSchema = z.object({
   _id: zObjectId,
+  decisionId: z.string(),
   sourceId: z.string(),
   sourceName: z.literal('portalis-cph'),
   events: zEvents.optional(),

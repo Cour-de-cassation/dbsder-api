@@ -30,6 +30,7 @@ export type PartyCaV2 = z.infer<typeof zParty>
 
 export const decisionCaV2Schema = z.object({
   _id: zObjectId,
+  decisionId: z.string(),
   sourceId: zObjectId,
   rawFileId: z.string().optional(),
   events: zEvents.optional(),
