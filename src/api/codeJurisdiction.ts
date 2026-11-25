@@ -10,7 +10,8 @@ app.get(
   async (req, res, next) => {
     try {
       const codeJurisdiction = req.params.codeJurisdiction
-      if (!codeJurisdiction) throw new MissingValue('codeJurisdiction', 'Request needs a codeJurisdiction param')
+      if (!codeJurisdiction)
+        throw new MissingValue('codeJurisdiction', 'Request needs a codeJurisdiction param')
 
       const responseCodeJurisdiction = await fetchJurisdictionByCode(codeJurisdiction)
       res.send(responseCodeJurisdiction)

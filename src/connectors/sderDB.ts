@@ -313,7 +313,7 @@ export async function findDocumentAssocie(
 type CodeJurisdiction = IdParse<CodeJurisdictionPayload, '_id'>
 
 export async function findCodeJurisdiction(
-  filters: Filter<CodeJurisdiction>,
+  filters: Filter<CodeJurisdiction>
 ): Promise<CodeJurisdiction | null> {
   const db = await dbConnect()
   return db.collection<CodeJurisdiction>('codejurisdictions').findOne(filters)
