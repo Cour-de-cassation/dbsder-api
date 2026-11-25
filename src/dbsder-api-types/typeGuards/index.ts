@@ -141,6 +141,8 @@ export {
 } from './affaires.zod'
 export { CategorieCodeDecision, CodeDecision } from './codeDecisions.zod'
 export { CodeNac, CategoriesToOmit, parsePartialCodeNac } from './codeNacs.zod'
+export { CodeJurisdiction } from './codeJurisdictions.zod'
+
 export {
   DocumentAssocie,
   UnIdentifiedDocumentAssocie,

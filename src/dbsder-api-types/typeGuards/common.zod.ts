@@ -1,6 +1,15 @@
 import { record, z } from 'zod'
 import { ObjectId } from 'bson'
 
+export enum JurisdictionType {
+  CC = 'CC',
+  CA = 'CA',
+  TJ = 'TJ',
+  TCOM = 'TCOM',
+  CPH = 'CPH',
+  AUTRE = 'AUTRE'
+}
+
 export enum LabelStatus {
   WAITING_FOR_AFFAIRE_RESOLUTION = 'waitingForAffaireResolution',
   TOBETREATED = 'toBeTreated',

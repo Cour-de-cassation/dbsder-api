@@ -4,6 +4,7 @@ import { MONGO_DB_URL } from '../config/env'
 import {
   Affaire as AffairePayload,
   CodeNac as CodeNacPayload,
+  CodeJurisdiction as CodeJurisdictionPayload,
   Decision as DecisionPayload,
   DocumentAssocie as DocumentAssociePayload,
   UnIdentifiedDecision as UnIdentifiedDecisionPayload
@@ -303,4 +304,17 @@ export async function findDocumentAssocie(
 ): Promise<DocumentAssocie[] | null> {
   const db = await dbConnect()
   return db.collection<DocumentAssocie>('documentassocies').find(filter).toArray()
+}
+
+//####################################################################
+// CodeJurisdiction
+//####################################################################
+
+type CodeJurisdiction = IdParse<CodeJurisdictionPayload, '_id'>
+
+export async function findCodeJurisdiction(
+  filters: Filter<CodeJurisdiction>
+): Promise<CodeJurisdiction | null> {
+  const db = await dbConnect()
+  return db.collection<CodeJurisdiction>('codejurisdictions').findOne(filters)
 }
