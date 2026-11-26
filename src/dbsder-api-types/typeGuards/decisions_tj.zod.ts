@@ -44,6 +44,7 @@ export type PartieTJ = z.infer<typeof partieTJSchema>
 
 export const decisionTjSchema = z.object({
   _id: zObjectId,
+  decisionId: z.string(),
   sourceId: z.number(),
   sourceName: z.literal('juritj'),
   events: zEvents.optional(),
